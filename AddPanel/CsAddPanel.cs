@@ -21,14 +21,14 @@ namespace AddPanel
         public Result OnStartup(UIControlledApplication application)
         {
             // Create a custom ribbon tab
-            string tabName = "This Tab Name";
+            string tabName = "Apartment Panel";
             application.CreateRibbonTab(tabName);
 
             // Create a push button to trigger a command add it to the ribbon panel.
             string thisAssemblyPath = Assembly.GetExecutingAssembly().Location;
             // Create two push buttons
-            var button1 = new PushButtonData("Button1", "My Button #1", thisAssemblyPath, "AddPanel.HelloWorld");
-            var button2 = new PushButtonData("Button2", "My Button #2", thisAssemblyPath, "AddPanel.HelloWorld");
+            var button1 = new PushButtonData("Button1", "Trissa", thisAssemblyPath, "AddPanel.CreatingTrissa1");
+            var button2 = new PushButtonData("Button2", "Trissa 2", thisAssemblyPath, "AddPanel.CreatingTrissa2");
 
             // Add a new ribbon panel
             RibbonPanel ribbonPanel = application.CreateRibbonPanel(tabName, "NewRibbonPanel");
@@ -52,7 +52,7 @@ namespace AddPanel
     /// </remarks>
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class HelloWorld : IExternalCommand
+    public class CreatingTrissa1 : IExternalCommand
     {
         // The main Execute method (inherited from IExternalCommand) must be public
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
@@ -120,4 +120,46 @@ namespace AddPanel
             return Result.Succeeded;
         }
     }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class CreatingTrissa2 : IExternalCommand
+    {
+        // The main Execute method (inherited from IExternalCommand) must be public
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            if (null == commandData.Application.ActiveUIDocument.Document)
+            {
+                message = "Active document is null.";
+                return Result.Failed;
+            }
+
+            UIApplication application = commandData.Application;
+            UIDocument uiDocument = application.ActiveUIDocument;
+            Document document = uiDocument.Document;
+            Selection selection = uiDocument.Selection;
+            try
+            {
+                Family family = new FilteredElementCollector(document)
+                    .OfClass(typeof(Family))
+                    .ToElements()
+                    .FirstOrDefault(e => e.Name.CompareTo("Power Switch") == 0) as Family;
+
+                FamilySymbol symbol = new FilteredElementCollector(document)
+                    .WherePasses(new FamilySymbolFilter(family.Id))
+                    .ToElements()
+                    .FirstOrDefault(e => e.Name.CompareTo("Trissa Switch 2") == 0) as FamilySymbol
+                    ;
+
+                uiDocument.PostRequestForElementTypePlacement(symbol);
+            }
+            catch (Exception e)
+            {
+                TaskDialog.Show("Revit", e.Message);
+            }
+
+            return Result.Succeeded;
+        }
+    }
+
 }
