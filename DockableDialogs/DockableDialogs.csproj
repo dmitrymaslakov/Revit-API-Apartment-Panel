@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3A4394B0-E544-4AF5-8CE4-36F0201657F4}</ProjectGuid>
+    <ProjectGuid>{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WpfPanel</RootNamespace>
-    <AssemblyName>WpfPanel</AssemblyName>
+    <RootNamespace>DockableDialogs</RootNamespace>
+    <AssemblyName>DockableDialogs</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -33,6 +33,10 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RevitAddInUtility">
+      <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAddInUtility.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="RevitAPI">
       <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPI.dll</HintPath>
       <Private>False</Private>
@@ -53,15 +57,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Program.cs" />
     <Compile Include="Domain\BaseCommand.cs" />
     <Compile Include="Domain\ExternalEventHandler.cs" />
     <Compile Include="Domain\PlacementFixturiesCommand.cs" />
-    <Compile Include="Domain\GreetingCommand.cs" />
-    <Compile Include="Domain\Request.cs" />
-    <Compile Include="Domain\RequestHandler.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="ViewModel\UIViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\UIViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\UI.xaml.cs">
       <DependentUpon>UI.xaml</DependentUpon>

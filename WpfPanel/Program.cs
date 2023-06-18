@@ -10,29 +10,31 @@ using System.Threading.Tasks;
 using WpfPanel.ViewModel;
 using WpfPanel.View;
 using Autodesk.Revit.UI.Events;
+using WpfPanel.Domain;
 
 namespace WpfPanel
 {
     public class WpfApp : IExternalApplication
     {
         internal static WpfApp thisApp = null;
-        private UI myForm;
+        private UIViewModel _viewModel;
+        private UI _ui;
 
         public Result OnStartup(UIControlledApplication application)
         {
-            myForm = null;   // no dialog needed yet; the command will bring it
+            _viewModel = null;
+            _ui = null;
             thisApp = this;
             return Result.Succeeded;
         }
 
         public Result OnShutdown(UIControlledApplication application)
         {
-            if (myForm != null && !myForm.IsDisposed)
+            if (_ui != null && _viewModel != null)
             {
-                myForm.Dispose();
-                myForm = null;
+                _ui = null;
+                _viewModel = null;
 
-                // if we've had a dialog, we had subscribed
                 application.Idling -= IdlingHandler;
             }
 
@@ -42,11 +44,11 @@ namespace WpfPanel
         public void ShowForm(UIApplication uiapp)
         {
             // If we do not have a dialog yet, create and show it
-            if (myForm == null)
+            if (_ui == null)
             {
-                var viewModel = new UIViewModel();
-                myForm = new UI(viewModel);
-                myForm.ShowDialog();
+                _viewModel = new UIViewModel(uiapp);
+                _ui = new UI(_viewModel);
+                _ui.Show();
 
                 // if we have a dialog, we need Idling too
                 uiapp.Idling += IdlingHandler;
@@ -56,52 +58,46 @@ namespace WpfPanel
         public void IdlingHandler(object sender, IdlingEventArgs args)
         {
             UIApplication uiapp = sender as UIApplication;
-
-            if (myForm.IsDisposed)
+            if (_ui == null || _viewModel == null)
             {
                 uiapp.Idling -= IdlingHandler;
                 return;
             }
-            else   // dialog still exists
+            RequestId request = _viewModel.Request.Take();
+            if (request != RequestId.None)
             {
-                // fetch the request from the dialog
-
-                RequestId request = myForm.Request.Take();
-
-                if (request != RequestId.None)
+                try
                 {
-                    try
-                    {
-                        // we take the request, if any was made,
-                        // and pass it on to the request executor
-
-                        RequestHandler.Execute(uiapp, request);
-                    }
-                    finally
-                    {
-                        // The dialog may be in its waiting state;
-                        // make sure we wake it up even if we get an exception.
-
-                        m_MyForm.WakeUp();
-                    }
+                    RequestHandler.Execute(uiapp, request);
+                }
+                catch (Exception ex)
+                {
+                    TaskDialog.Show("Revit", ex.Message);
                 }
             }
-
             return;
         }
-
     }
 
 
     [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
     public class Program : IExternalCommand
     {
+
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            var viewModel = new UIViewModel();
-            var ui = new UI(viewModel);
-            ui.ShowDialog();
-            return Result.Succeeded;
+            try
+            {
+                WpfApp.thisApp.ShowForm(commandData.Application);
+
+                return Result.Succeeded;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                return Result.Failed;
+            }
         }
     }
 }

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfPanel"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="350" d:DesignWidth="300">
     <Grid>
         <StackPanel>
 
@@ -13,7 +13,7 @@
             <Button Content="Приветствие" Padding="3" Margin="0 3" HorizontalAlignment="Left"
                     Command="{Binding Greeting}"/>
             <Button Content="Трисса" Padding="3" Margin="0 3" HorizontalAlignment="Left"
-                    Command="{Binding Greeting}"/>
+                    Command="{Binding PlacementFixturies}"/>
 
             <TextBox Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}" 
                  HorizontalAlignment="Center" 

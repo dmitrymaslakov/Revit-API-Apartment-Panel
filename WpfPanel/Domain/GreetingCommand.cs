@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Autodesk.Revit.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,9 @@ namespace WpfPanel.Domain
 
         public override void Execute(object parameter)
         {
-            UIViewModel.Message = "Hello, MVVM";
+            
         }
+
+
     }
 }

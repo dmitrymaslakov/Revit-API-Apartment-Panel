@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddPanel", "AddPanel\AddPan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfPanel", "WpfPanel\WpfPanel.csproj", "{3A4394B0-E544-4AF5-8CE4-36F0201657F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockableDialogs", "DockableDialogs\DockableDialogs.csproj", "{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{3A4394B0-E544-4AF5-8CE4-36F0201657F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A4394B0-E544-4AF5-8CE4-36F0201657F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A4394B0-E544-4AF5-8CE4-36F0201657F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
