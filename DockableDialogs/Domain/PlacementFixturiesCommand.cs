@@ -14,16 +14,16 @@ namespace DockableDialogs.Domain
 {
     public class PlacementFixturiesCommand : BaseCommand
     {
-        public UIViewModel UIViewModel { get; set; }
+        private readonly Action<object> _execute;
 
-        public PlacementFixturiesCommand(UIViewModel uIViewModel)
+        public PlacementFixturiesCommand(Action<object> execute)
         {
-            UIViewModel = uIViewModel;
+            _execute = execute;
         }
 
         public override void Execute(object parameter)
         {
-            ExternalEvent.Create(new ExternalEventHandler()).Raise();
+            _execute(parameter);
         }
     }
 }

@@ -13,9 +13,20 @@ namespace DockableDialogs.ViewModel
 {
     public class UIViewModel : ViewModelBase
     {
-        public UIViewModel(UIApplication uiapp)
+        private readonly RequestHandler _handler;
+        private readonly ExternalEvent _exEvent;
+
+        //public Action<object> Execute { get; set; }
+
+        public UIViewModel(ExternalEvent exEvent, RequestHandler handler)
         {
-            PlacementFixturies = new PlacementFixturiesCommand(this);
+            _handler = handler;
+            _exEvent = exEvent;
+
+            PlacementFixturies = new PlacementFixturiesCommand(o => {
+                _handler.Request.Make(RequestId.Insert);
+                _exEvent.Raise();
+            });
         }
 
         public ICommand PlacementFixturies
