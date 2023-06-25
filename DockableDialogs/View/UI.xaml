@@ -3,11 +3,59 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:DockableDialogs.View"
+             xmlns:local="clr-namespace:DockableDialogs.View" 
+             xmlns:viewmodel="clr-namespace:DockableDialogs.ViewModel" 
+             d:DataContext="{d:DesignInstance Type=viewmodel:UIViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="200">
+    <UserControl.Resources>
+        <Style x:Key="circuitButton" TargetType="Button">
+            <Setter Property="Width" Value="20"/>
+        </Style>
+        <Style x:Key="circuitTextBlock" TargetType="TextBlock">
+            <Setter Property="Margin" Value="0 0 100 0"/>            
+        </Style>
+    </UserControl.Resources>
     <Grid Background="White">
-        <StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <ListView Grid.Row="0" ItemsSource="{Binding Circuits}" Name="ApartmentCircuits">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Number}" Style="{StaticResource circuitTextBlock}"/>
+                        <ListView ItemsSource="{Binding ApartmentElements}" Name="ApartmentElements" >
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                    <!--<StackPanel Orientation="Horizontal"/>-->
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Content="{Binding}" Style="{StaticResource circuitButton}"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <!--<StackPanel Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="14" Style="{StaticResource circuit}"/>
+                <Button Content="S" Style="{StaticResource circuit}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="16" Style="{StaticResource circuit}"/>
+                <Button Content="S" Style="{StaticResource circuit}"/>
+            </StackPanel>
+        </StackPanel>-->
+        <StackPanel Grid.Row="2">
             <Button Content="Трисса" Padding="3" Margin="0 3" HorizontalAlignment="Left"
                     Command="{Binding PlacementFixturies}"/>
         </StackPanel>

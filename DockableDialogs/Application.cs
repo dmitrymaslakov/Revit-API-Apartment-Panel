@@ -7,12 +7,14 @@ using DockableDialogs.Utility;
 using DockableDialogs.View;
 using DockableDialogs.ViewModel;
 using System;
+using WPF = System.Windows;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Windows;
 
 namespace DockableDialogs
 {
@@ -52,11 +54,6 @@ namespace DockableDialogs
         {
             if (e.Document == null)
                 return;
-
-            /*if (View.DataContext is UIViewModel viewModel)
-            {
-                viewModel.DocumentTitle = e.Document.Title;
-            }*/
         }
         /// <summary>
         /// Create the new WPF Page that Revit will dock.
@@ -92,62 +89,20 @@ namespace DockableDialogs
             return Result.Succeeded;
         }
     }
-    /*public class Application : IExternalApplication
+    
+    /*public class Application : WPF.Application
     {
-        internal static Application thisApp = null;
-        private UI myForm;
-
-        public Result OnShutdown(UIControlledApplication application)
+        [STAThread]
+        public static void Main()
         {
-            if (myForm != null)
-            {
-                myForm.Close();
-            }
-
-            return Result.Succeeded;
+            var app = new Application();
+            app.Run();
         }
 
-        public Result OnStartup(UIControlledApplication application)
+        protected override void OnStartup(StartupEventArgs e)
         {
-            myForm = null;   // no dialog needed yet; the command will bring it
-            thisApp = this;  // static access to this application instance
-
-            return Result.Succeeded;
-        }
-
-        public void ShowForm(UIApplication uiapp)
-        {
-            if (myForm == null)
-            {
-                RequestHandler handler = new RequestHandler();
-
-                ExternalEvent exEvent = ExternalEvent.Create(handler);
-                var viewModel = new UIViewModel(exEvent, handler);
-                myForm = new UI(viewModel);
-                myForm.Show();
-            }
-        }
-    }
-
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class Command : IExternalCommand
-    {
-        public virtual Result Execute(ExternalCommandData commandData
-            , ref string message, ElementSet elements)
-        {
-            try
-            {
-                Application.thisApp.ShowForm(commandData.Application);
-
-                return Result.Succeeded;
-            }
-            catch (Exception ex)
-            {
-                message = ex.Message;
-                return Result.Failed;
-            }
+            var ui = new UI(new UIViewModel());
+            ui.Show();
         }
     }*/
-
 }

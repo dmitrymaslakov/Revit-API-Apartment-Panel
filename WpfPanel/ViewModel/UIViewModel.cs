@@ -1,44 +1,33 @@
-﻿using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Events;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using WpfPanel.Domain;
+using WpfPanel.Domain.Models;
 
 namespace WpfPanel.ViewModel
 {
     public class UIViewModel : ViewModelBase
     {
-        private string _message;
-        //private readonly UIApplication _uiapp;
-        public Request Request { get; private set; }
+        public UIViewModel()
+        {
+            Circuits = new ObservableCollection<Circuit>
+            {
+                new Circuit { Number = 1 },
+                new Circuit { Number = 2 },
+                new Circuit { Number = 3 },
+            };
 
-        public UIViewModel(UIApplication uiapp)
-        {
-            //_uiapp = uiapp;
-            Greeting = new GreetingCommand(this);
-            PlacementFixturies = new PlacementFixturiesCommand(this);
-            Request = new Request();
         }
+        private ObservableCollection<Circuit> _circuits;
 
-        public string Message
+        public ObservableCollection<Circuit> Circuits
         {
-            get => _message;
-            set => Set(ref _message, value);
-        }
-        public ICommand Greeting 
-        { 
-            get; 
-            set; 
-        }
-        public ICommand PlacementFixturies
-        {
-            get;
-            set;
+            get => _circuits;
+            set => Set(ref _circuits, value);
         }
 
     }

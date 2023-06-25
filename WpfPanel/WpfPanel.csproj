@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3A4394B0-E544-4AF5-8CE4-36F0201657F4}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WpfPanel</RootNamespace>
     <AssemblyName>WpfPanel</AssemblyName>
@@ -30,17 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="RevitAPI">
-      <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIUI">
-      <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml" />
@@ -55,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Domain\BaseCommand.cs" />
     <Compile Include="Domain\ExternalEventHandler.cs" />
+    <Compile Include="Domain\Models\Circuit.cs" />
     <Compile Include="Domain\PlacementFixturiesCommand.cs" />
     <Compile Include="Domain\GreetingCommand.cs" />
     <Compile Include="Domain\Request.cs" />

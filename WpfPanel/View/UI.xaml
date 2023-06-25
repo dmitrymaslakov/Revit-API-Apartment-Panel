@@ -1,53 +1,47 @@
 ﻿<Window x:Class="WpfPanel.View.UI"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:WpfPanel"
-             mc:Ignorable="d" 
-             d:DesignHeight="350" d:DesignWidth="300">
-    <Grid>
-        <StackPanel>
-
-            <TextBlock Text="{Binding Message}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
-            <Button Content="Приветствие" Padding="3" Margin="0 3" HorizontalAlignment="Left"
-                    Command="{Binding Greeting}"/>
-            <Button Content="Трисса" Padding="3" Margin="0 3" HorizontalAlignment="Left"
-                    Command="{Binding PlacementFixturies}"/>
-
-            <TextBox Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}" 
-                 HorizontalAlignment="Center" 
-                 VerticalAlignment="Center" 
-                 Width="120"
-                 FontSize="24"/>
-        </StackPanel>
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:WpfPanel" 
+        xmlns:viewmodel="clr-namespace:WpfPanel.ViewModel" 
+        d:DataContext="{d:DesignInstance Type=viewmodel:UIViewModel}"
+        mc:Ignorable="d" 
+        d:DesignHeight="350" d:DesignWidth="300" Height="750" Width="300">
+    <Window.Resources>
+        <Style x:Key="circuitButton" TargetType="Button">
+            <Setter Property="Width" Value="20"/>
+        </Style>
+        <Style x:Key="circuitTextBlock" TargetType="TextBlock">
+            <Setter Property="Margin" Value="0 0 100 0"/>
+        </Style>
+    </Window.Resources>
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <ListView Grid.Row="0" ItemsSource="{Binding Circuits}" Name="ApartmentCircuits">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Number}" Style="{StaticResource circuitTextBlock}"/>
+                        <ListView ItemsSource="{Binding ApartmentElements}" Name="ApartmentElements" >
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Content="{Binding}" Style="{StaticResource circuitButton}"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
-    <!--<Grid>
-        <Rectangle Fill="Transparent" Stroke="#FFFB2E00" StrokeThickness="3"/>
-        <Rectangle Stroke="#FF002040" Opacity="0.6" StrokeMiterLimit="0" Margin="0,0,0,-5"
-                   StrokeThickness="0">
-            <Rectangle.Effect>
-                <DropShadowEffect x:Name="DS" BlurRadius="25" ShadowDepth="0" Color="Black" />
-            </Rectangle.Effect>
-            <Rectangle.Fill>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FF05121F" Offset="0"/>
-                    <GradientStop Color="#FF2A74BD" Offset="1"/>
-                </LinearGradientBrush>
-            </Rectangle.Fill>
-        </Rectangle>
-        <Rectangle x:Name="TitleBar" Height="40" Stroke="#FF002040" VerticalAlignment="Top"
-                   StrokeThickness="3" Fill="#FF05121F" Opacity="0.7"/>
-        <Button Content="Button" HorizontalAlignment="Left" Height="44" Margin="21,55,0,0"
-                VerticalAlignment="Top" Width="232" Background="#FFF73901"
-                BorderBrush="#FF052B91" BorderThickness="3" Click="Button_Click">
-            <Button.Effect>
-                <DropShadowEffect BlurRadius="15" Color="#FFA83104"/>
-            </Button.Effect>
-        </Button>
-        <Image Height="28" Margin="0,7,7,0" VerticalAlignment="Top" HorizontalAlignment="Right"
-               Width="28" 
-               MouseDown="Image_MouseDown"/>
-    </Grid>-->
-
 </Window>

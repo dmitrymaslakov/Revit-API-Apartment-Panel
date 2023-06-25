@@ -13,16 +13,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WpfPanel.View
+namespace DockableDialogs.View.Components
 {
     /// <summary>
-    /// Interaction logic for UI.xaml
+    /// Interaction logic for Apartment_elements.xaml
     /// </summary>
-    public partial class UI : Window
+    public partial class Apartment_elements : UserControl
     {
-        public UI(object dataContext)
+        public Apartment_elements()
         {
-            DataContext = dataContext;
             InitializeComponent();
         }
     }
