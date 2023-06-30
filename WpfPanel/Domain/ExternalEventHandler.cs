@@ -8,8 +8,8 @@ namespace WpfPanel.Domain
 {
     internal class ExternalEventHandler
     {
-        public void Execute() => RequestHandler.Execute(RequestId.Insert);
+        /*public void Execute() => RequestHandler.Execute(RequestId.Insert);
 
-        public string GetName() => "InsertTriss";
+        public string GetName() => "InsertTriss";*/
     }
 }

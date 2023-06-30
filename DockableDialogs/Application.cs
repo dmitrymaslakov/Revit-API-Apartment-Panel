@@ -41,13 +41,11 @@ namespace DockableDialogs
         {
             application.ViewActivated += OnViewActivated;
             CreateWindow();
+
             if (!DockablePane.PaneIsRegistered(UI.PaneId))
-            {
-                application.RegisterDockablePane(UI.PaneId,
-                    UI.PaneName,
-                    View);
-            }
-            return Result.Succeeded;
+                application.RegisterDockablePane(UI.PaneId, UI.PaneName, View);
+
+             return Result.Succeeded;
         }
 
         private void OnViewActivated(object sender, ViewActivatedEventArgs e)

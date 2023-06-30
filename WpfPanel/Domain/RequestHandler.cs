@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using WpfPanel.View.Components;
 
 namespace WpfPanel.Domain
 {
-    public static class RequestHandler
+    public class RequestHandler
     {
-        public static void Execute(RequestId reqest)
+        public Request Request { get; } = new Request();
+
+        public void Execute(RequestId reqest)
         {
             switch (reqest)
             {
@@ -22,6 +25,12 @@ namespace WpfPanel.Domain
                         InsertTriss();
                         break;
                     }
+                case RequestId.Configure:
+                    {
+                        ShowEditPanel();
+                        break;
+                    }
+
                 default:
                     {
                         break;
@@ -31,9 +40,14 @@ namespace WpfPanel.Domain
             return;
         }
 
-        private static void InsertTriss()
+        private void InsertTriss()
         {
             MessageBox.Show("The triss is inserted");
+        }
+
+        private void ShowEditPanel()
+        {
+            //new EditPanel().ShowDialog();
         }
     }
 }

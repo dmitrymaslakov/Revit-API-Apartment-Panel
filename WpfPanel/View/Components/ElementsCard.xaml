@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="WpfPanel.View.Components.ElementsCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfPanel.View.Components" 
+             mc:Ignorable="d" 
+             x:Name="root"
+             d:DesignHeight="450" d:DesignWidth="500">
+    <UserControl.Resources>
+        <Style x:Key="ElButton" TargetType="Button">
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="White">
+        <GroupBox Header="{Binding Header, ElementName=root}">
+            <StackPanel>
+                <ListView ItemsSource="{Binding Elements, ElementName=root}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <WrapPanel>
+                    <Button Style="{StaticResource ElButton}" Command="{Binding AddElement, ElementName=root}">
+                        <Image Source="/Resources/icons8-Create-24.png"/>
+                    </Button>
+                    <Button Style="{StaticResource ElButton}" Command="{Binding EditElement, ElementName=root}">
+                        <Image Source="/Resources/icons8-Edit-24.png"/>
+                    </Button>
+                    <Button Style="{StaticResource ElButton}" Command="{Binding RemoveElement, ElementName=root}">
+                        <Image Source="/Resources/icons8-Remove-24.png" />
+                    </Button>
+                </WrapPanel>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+</UserControl>

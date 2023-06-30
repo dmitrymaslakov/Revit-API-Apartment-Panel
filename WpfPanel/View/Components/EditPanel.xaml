@@ -1,0 +1,58 @@
+﻿<Window x:Class="WpfPanel.View.Components.EditPanel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:WpfPanel.View.Components" 
+        xmlns:componentsvm="clr-namespace:WpfPanel.ViewModel.ComponentsVM" 
+        d:DataContext="{d:DesignInstance Type=componentsvm:EditPanelVM}"
+        mc:Ignorable="d" 
+        d:DesignHeight="450" d:DesignWidth="600" Width="600">
+    <Window.Resources>
+        <Style x:Key="ArrowButton" TargetType="Button">
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <local:ElementsCard 
+            Grid.Column="0"
+            Header="Apartment elements"
+            Elements="{Binding ApartmentElements}"
+            AddElement="{Binding AddApartmentElement}"
+            EditElement="{Binding EditApartmentElement}"
+            RemoveElement="{Binding RemoveApartmentElement}"
+            />
+        <StackPanel Grid.Column="1" Margin="0 20 0 0">
+            <Button Style="{StaticResource ArrowButton}">
+                <Image Source="/Resources/icons8-AddArrow-24.png" />
+            </Button>
+            <Button Style="{StaticResource ArrowButton}">
+                <Image Source="/Resources/icons8-RemoveArrow-24.png" />
+            </Button>
+        </StackPanel>
+        <local:ElementsCard 
+            Grid.Column="2"
+            Header="Panel circuits"
+            Elements="{Binding PanelCircuits}"
+            AddElement="{Binding AddPanelCircuit}"
+            EditElement="{Binding EditPanelCircuit}"
+            RemoveElement="{Binding RemovePanelCircuit}"
+            />
+        <GroupBox Grid.Column="3" Header="Circuit elements">
+            <ListView ItemsSource="{Binding CircuitElements}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </GroupBox>
+    </Grid>
+</Window>

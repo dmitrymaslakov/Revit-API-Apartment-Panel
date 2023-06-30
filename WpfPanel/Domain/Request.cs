@@ -10,7 +10,8 @@ namespace WpfPanel.Domain
     public enum RequestId : int
     {
         None = 0,
-        Insert = 1
+        Insert = 1,
+        Configure = 2
     }
     public class Request
     {

@@ -48,27 +48,64 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\BaseCommand.cs" />
+    <Compile Include="Domain\Services\Commands\AddApartmentElementCommand.cs" />
+    <Compile Include="Domain\Services\Commands\EditPanelCircuitCommand.cs" />
+    <Compile Include="Domain\Services\Commands\EditApartmentElementCommand.cs" />
+    <Compile Include="Domain\Services\Commands\RemovePanelCircuitCommand.cs" />
+    <Compile Include="Domain\Services\Commands\RemoveApartmentElementCommand.cs" />
+    <Compile Include="Domain\Services\Commands\BaseCommand.cs" />
     <Compile Include="Domain\ExternalEventHandler.cs" />
     <Compile Include="Domain\Models\Circuit.cs" />
     <Compile Include="Domain\PlacementFixturiesCommand.cs" />
-    <Compile Include="Domain\GreetingCommand.cs" />
+    <Compile Include="Domain\Services\Commands\AddPanelCircuitCommand.cs" />
+    <Compile Include="Domain\Services\Commands\ConfigureCommand.cs" />
     <Compile Include="Domain\Request.cs" />
     <Compile Include="Domain\RequestHandler.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ViewModel\ComponentsVM\EditPanelVM.cs" />
     <Compile Include="ViewModel\UIViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="View\Components\EditPanel.xaml.cs">
+      <DependentUpon>EditPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Components\ElementsCard.xaml.cs">
+      <DependentUpon>ElementsCard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UI.xaml.cs">
       <DependentUpon>UI.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="View\Components\EditPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Components\ElementsCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\UI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\icons8-Create-24.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\icons8-Remove-24.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\icons8-Edit-24.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\icons8-RemoveArrow-24.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\icons8-AddArrow-24.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

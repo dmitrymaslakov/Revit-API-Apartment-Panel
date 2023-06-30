@@ -24,7 +24,7 @@ namespace WpfPanel
         {
             base.OnStartup(args);
 
-            var ui = new UI(new UIViewModel());
+            var ui = new UI(new UIViewModel(new RequestHandler()));
             ui.Show();
         }
     }
