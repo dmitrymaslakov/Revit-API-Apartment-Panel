@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WpfPanel.View.Components
 {
@@ -41,6 +29,10 @@ namespace WpfPanel.View.Components
         public static readonly DependencyProperty RemoveElementProperty =
             DependencyProperty.Register(nameof(RemoveElement), typeof(ICommand),
                 typeof(ElementsCard), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty SelectedElementProperty =
+            DependencyProperty.Register(nameof(SelectedElement), typeof(string),
+                typeof(ElementsCard), new PropertyMetadata(string.Empty));
 
         public string Header
         {
@@ -70,6 +62,12 @@ namespace WpfPanel.View.Components
         {
             get { return (ICommand)GetValue(RemoveElementProperty); }
             set { SetValue(RemoveElementProperty, value); }
+        }
+
+        public string SelectedElement
+        {
+            get { return (string)GetValue(SelectedElementProperty); }
+            set { SetValue(SelectedElementProperty, value); }
         }
 
         public ElementsCard()

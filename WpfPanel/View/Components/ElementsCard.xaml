@@ -16,7 +16,8 @@
     <Grid Background="White">
         <GroupBox Header="{Binding Header, ElementName=root}">
             <StackPanel>
-                <ListView ItemsSource="{Binding Elements, ElementName=root}">
+                <ListView ItemsSource="{Binding Elements, ElementName=root}"
+                          SelectedItem="{Binding SelectedElement, ElementName=root}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}"/>

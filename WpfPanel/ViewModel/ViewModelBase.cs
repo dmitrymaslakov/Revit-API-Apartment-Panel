@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using WpfPanel.Domain;
 
 namespace WpfPanel.ViewModel
 {
@@ -13,13 +14,21 @@ namespace WpfPanel.ViewModel
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         private bool _disposed;
+        protected readonly ExternalEvent _exEvent;
+        protected readonly RequestHandler _handler;
 
+        public ViewModelBase(ExternalEvent exEvent, RequestHandler handler)
+        {
+            _exEvent = exEvent;
+            _handler = handler;
+        }
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        
         protected virtual bool Set<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(field, value))
@@ -30,10 +39,12 @@ namespace WpfPanel.ViewModel
             OnPropertyChanged(propertyName);
             return true;
         }
+        
         public virtual void Dispose()
         {
             Dispose(true);
         }
+        
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing || _disposed)

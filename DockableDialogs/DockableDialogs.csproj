@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Models\Circuit.cs" />
+    <Compile Include="Domain\TestCommand.cs" />
     <Compile Include="Domain\Request.cs" />
     <Compile Include="Domain\RequestHandler.cs" />
     <Compile Include="Application.cs" />

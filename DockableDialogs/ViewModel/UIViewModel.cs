@@ -38,10 +38,8 @@ namespace DockableDialogs.ViewModel
                 new Circuit { Number = 2 }, 
                 new Circuit { Number = 3 },
             };
-            PlacementFixturies = new PlacementFixturiesCommand(o => {
-                _handler.Request.Make(RequestId.Insert);
-                _exEvent.Raise();
-            });
+            PlacementFixturies = new PlacementFixturiesCommand(o => MakeRequest(RequestId.Insert));
+            Test = new TestCommand(o => MakeRequest(RequestId.Test));
         }
         private ObservableCollection<Circuit> _circuits;
 
@@ -51,10 +49,13 @@ namespace DockableDialogs.ViewModel
             set => Set(ref _circuits, value);
         }
 
-        public ICommand PlacementFixturies
+        public ICommand PlacementFixturies { get; set; }
+        public ICommand Test { get; set; }
+
+        private void MakeRequest(RequestId request)
         {
-            get;
-            set;
+            _handler.Request.Make(request);
+            _exEvent.Raise();
         }
     }
 }

@@ -87,20 +87,4 @@ namespace DockableDialogs
             return Result.Succeeded;
         }
     }
-    
-    /*public class Application : WPF.Application
-    {
-        [STAThread]
-        public static void Main()
-        {
-            var app = new Application();
-            app.Run();
-        }
-
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            var ui = new UI(new UIViewModel());
-            ui.Show();
-        }
-    }*/
 }

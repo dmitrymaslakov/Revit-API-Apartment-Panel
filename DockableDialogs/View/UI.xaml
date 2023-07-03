@@ -58,6 +58,8 @@
         <StackPanel Grid.Row="2">
             <Button Content="Трисса" Padding="3" Margin="0 3" HorizontalAlignment="Left"
                     Command="{Binding PlacementFixturies}"/>
+            <Button Content="Test" Padding="3" Margin="0 3" HorizontalAlignment="Left"
+                    Command="{Binding Test}"/>
         </StackPanel>
     </Grid>
 </UserControl>

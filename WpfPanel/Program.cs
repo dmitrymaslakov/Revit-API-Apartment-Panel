@@ -23,8 +23,10 @@ namespace WpfPanel
         protected override void OnStartup(StartupEventArgs args)
         {
             base.OnStartup(args);
-
-            var ui = new UI(new UIViewModel(new RequestHandler()));
+            RequestHandler handler = new RequestHandler();
+            ExternalEvent exEvent = ExternalEvent.Create(handler);
+            var uiVM = new UIViewModel(exEvent, handler);
+            var ui = new UI(uiVM);
             ui.Show();
         }
     }

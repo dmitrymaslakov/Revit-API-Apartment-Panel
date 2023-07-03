@@ -48,13 +48,16 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\ExternalEvent.cs" />
+    <Compile Include="Domain\Models\CategorizedFamilySymbols.cs" />
+    <Compile Include="Domain\Models\RevitMockupModels\Category.cs" />
+    <Compile Include="Domain\Models\RevitMockupModels\FamilySymbol.cs" />
     <Compile Include="Domain\Services\Commands\AddApartmentElementCommand.cs" />
     <Compile Include="Domain\Services\Commands\EditPanelCircuitCommand.cs" />
     <Compile Include="Domain\Services\Commands\EditApartmentElementCommand.cs" />
     <Compile Include="Domain\Services\Commands\RemovePanelCircuitCommand.cs" />
     <Compile Include="Domain\Services\Commands\RemoveApartmentElementCommand.cs" />
     <Compile Include="Domain\Services\Commands\BaseCommand.cs" />
-    <Compile Include="Domain\ExternalEventHandler.cs" />
     <Compile Include="Domain\Models\Circuit.cs" />
     <Compile Include="Domain\PlacementFixturiesCommand.cs" />
     <Compile Include="Domain\Services\Commands\AddPanelCircuitCommand.cs" />
@@ -72,6 +75,9 @@
     <Compile Include="View\Components\ElementsCard.xaml.cs">
       <DependentUpon>ElementsCard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Components\ListElements.xaml.cs">
+      <DependentUpon>ListElements.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UI.xaml.cs">
       <DependentUpon>UI.xaml</DependentUpon>
     </Compile>
@@ -82,6 +88,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Components\ElementsCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Components\ListElements.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

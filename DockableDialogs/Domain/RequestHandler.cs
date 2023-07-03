@@ -4,8 +4,6 @@ using Autodesk.Revit.UI.Selection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DockableDialogs.Domain
 {
@@ -26,6 +24,12 @@ namespace DockableDialogs.Domain
                         InsertTriss(uiapp);
                         break;
                     }
+                case RequestId.Test:
+                    {
+                        Test(uiapp);
+                        break;
+                    }
+
                 default:
                     {
                         break;
@@ -35,9 +39,39 @@ namespace DockableDialogs.Domain
             return;
         }
 
+
         public string GetName()
         {
             return "Placement triss";
+        }
+
+        private void Test(UIApplication uiapp)
+        {
+            UIDocument uiDocument = uiapp.ActiveUIDocument;
+            Document document = uiDocument.Document;
+            Selection selection = uiDocument.Selection;
+
+            List<ElementFilter> categoryFilters = new List<ElementFilter>
+            {
+                new ElementCategoryFilter(BuiltInCategory.OST_CommunicationDevices),
+                new ElementCategoryFilter(BuiltInCategory.OST_ElectricalFixtures),
+            };
+
+            LogicalOrFilter orFilter = new LogicalOrFilter(categoryFilters);
+
+            var collector = new FilteredElementCollector(document);
+            collector.WherePasses(orFilter);
+            //collector.OfClass(typeof(Family));
+            //collector.OfCategory(BuiltInCategory.OST_ElectricalFixtures);
+            var elList = collector.ToElements().OfType<FamilySymbol>();
+            var fs = new FamilySymbol(); ElementId id = fs.Id;
+            /*var f = elList.FirstOrDefault(el => el.Name.CompareTo("Power Switch") == 0) as Family;
+            var ids = f.GetFamilySymbolIds();
+            foreach (var id in ids)
+            {
+                var el = document.GetElement(id) as FamilySymbol;
+                var c = el.Category.Name;
+            }*/
         }
 
         private static void InsertTriss(UIApplication application)

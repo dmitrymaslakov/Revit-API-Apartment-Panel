@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using WpfPanel.Domain;
 using WpfPanel.Domain.Models;
+using WpfPanel.Domain.Models.RevitMockupModels;
 using WpfPanel.Domain.Services.Commands;
 
 namespace WpfPanel.ViewModel.ComponentsVM
@@ -21,13 +22,11 @@ namespace WpfPanel.ViewModel.ComponentsVM
         private const string SINGLE_SOCKET = "Single Socket";
         private const string THROUGH_SWITCH = "Through Switch";
 
-        private readonly RequestHandler _handler;
+        private readonly Action<FamilySymbol> _addElementToApartment;
 
-        //public EditPanelVM(RequestHandler handler)
-        public EditPanelVM()
+        public EditPanelVM(ExternalEvent exEvent, RequestHandler handler)
+            : base(exEvent, handler)
         {
-            //_handler = handler;
-
             ApartmentElements = new ObservableCollection<string>
             {
                 TRISSA_SWITCH, USB, BLOCK1, SINGLE_SOCKET, THROUGH_SWITCH
@@ -40,12 +39,22 @@ namespace WpfPanel.ViewModel.ComponentsVM
             {
                 TRISSA_SWITCH, USB, BLOCK1, SINGLE_SOCKET, THROUGH_SWITCH
             };
-            AddApartmentElement = new AddApartmentElementCommand(o => MessageBox.Show("Add element"));
-            EditApartmentElement = new EditApartmentElementCommand(o => MessageBox.Show("Edit element"));
-            RemoveApartmentElement = new RemoveApartmentElementCommand(o => MessageBox.Show("Remove element"));
-            AddPanelCircuit = new AddPanelCircuitCommand(o => MessageBox.Show("Add circuit"));
-            EditPanelCircuit = new EditPanelCircuitCommand(o => MessageBox.Show("Edit circuit"));
-            RemovePanelCircuit = new RemovePanelCircuitCommand(o => MessageBox.Show("Remove circuit"));
+            AddApartmentElement = new AddApartmentElementCommand(o 
+                => MakeRequest(RequestId.AddElement, _addElementToApartment));
+            EditApartmentElement = new EditApartmentElementCommand(o => MakeRequest(RequestId.EditElement));
+            RemoveApartmentElement = new RemoveApartmentElementCommand(o =>
+            {
+                if (o is string el) ApartmentElements.Remove(el);
+            });
+            AddPanelCircuit = new AddPanelCircuitCommand(o => MakeRequest(RequestId.AddCircuit));
+            EditPanelCircuit = new EditPanelCircuitCommand(o => MakeRequest(RequestId.EditCircuit));
+            RemovePanelCircuit = new RemovePanelCircuitCommand(o => MakeRequest(RequestId.RemoveCircuit));
+
+            _addElementToApartment = newElement =>
+            {
+                if (!ApartmentElements.Contains(newElement.Name))
+                    ApartmentElements.Add(newElement.Name);
+            };
         }
 
         private ObservableCollection<string> _apartmentElements;
@@ -72,11 +81,27 @@ namespace WpfPanel.ViewModel.ComponentsVM
             set => Set(ref _circuitElements, value);
         }
 
+        private string _selectedApartmentElement;
+
+        public string SelectedApartmentElement
+        {
+            get => _selectedApartmentElement;
+            set => Set(ref _selectedApartmentElement, value);
+        }
+
         public ICommand AddApartmentElement { get; set; }
         public ICommand EditApartmentElement { get; set; }
         public ICommand RemoveApartmentElement { get; set; }
         public ICommand AddPanelCircuit { get; set; }
         public ICommand EditPanelCircuit { get; set; }
         public ICommand RemovePanelCircuit { get; set; }
+
+        private void MakeRequest(RequestId request, object props = null)
+        {
+            _handler.Props = props;
+            _handler.Request.Make(request);
+            _exEvent.Raise();
+        }
+
     }
 }

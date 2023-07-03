@@ -9,8 +9,9 @@ namespace DockableDialogs.Domain
 {
     public enum RequestId : int
     {
-        None = 0,
-        Insert = 1
+        None,
+        Insert,
+        Test
     }
     public class Request
     {

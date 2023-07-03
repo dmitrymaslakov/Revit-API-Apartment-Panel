@@ -6,14 +6,8 @@ namespace WpfPanel.Domain.Services.Commands
     {
         private readonly Action<object> _execute;
 
-        public AddApartmentElementCommand(Action<object> execute)
-        {
-            _execute = execute;
-        }
+        public AddApartmentElementCommand(Action<object> execute) => _execute = execute;
 
-        public override void Execute(object parameter)
-        {
-            _execute(parameter);
-        }
+        public override void Execute(object parameter) => _execute(parameter);
     }
 }

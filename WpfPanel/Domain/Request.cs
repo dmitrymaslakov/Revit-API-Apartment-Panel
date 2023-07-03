@@ -9,9 +9,15 @@ namespace WpfPanel.Domain
 {
     public enum RequestId : int
     {
-        None = 0,
-        Insert = 1,
-        Configure = 2
+        None,
+        Insert,
+        Configure,
+        AddElement,
+        EditElement,
+        RemoveElement,
+        AddCircuit,
+        EditCircuit,
+        RemoveCircuit
     }
     public class Request
     {
