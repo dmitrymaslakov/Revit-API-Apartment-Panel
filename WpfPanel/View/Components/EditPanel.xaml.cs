@@ -12,5 +12,13 @@ namespace WpfPanel.View.Components
             DataContext = dataContext;
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var dc = KeysListView2.DataContext;
+            var to = KeysListView2.DataContext.GetType().Name;
+            var isrs2 = KeysListView2.ItemsSource.GetType().Name;
+            var isrs = KeysListView.ItemsSource.GetType().Name;
+        }
     }
 }

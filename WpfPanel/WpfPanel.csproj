@@ -34,6 +34,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -52,6 +55,7 @@
     <Compile Include="Domain\Models\CategorizedFamilySymbols.cs" />
     <Compile Include="Domain\Models\RevitMockupModels\Category.cs" />
     <Compile Include="Domain\Models\RevitMockupModels\FamilySymbol.cs" />
+    <Compile Include="Domain\Services\Commands\RelayCommand.cs" />
     <Compile Include="Domain\Services\Commands\AddApartmentElementCommand.cs" />
     <Compile Include="Domain\Services\Commands\EditPanelCircuitCommand.cs" />
     <Compile Include="Domain\Services\Commands\EditApartmentElementCommand.cs" />
@@ -116,6 +120,9 @@
     <Content Include="Resources\icons8-AddArrow-24.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

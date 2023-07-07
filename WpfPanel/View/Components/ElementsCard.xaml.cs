@@ -14,55 +14,35 @@ namespace WpfPanel.View.Components
             DependencyProperty.Register(nameof(Header), typeof(string), typeof(ElementsCard),
                 new PropertyMetadata(string.Empty));
 
-        public static readonly DependencyProperty ElementsProperty =
-            DependencyProperty.Register(nameof(Elements), typeof(ObservableCollection<string>),
-                typeof(ElementsCard), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty AddElementProperty =
-            DependencyProperty.Register(nameof(AddElement), typeof(ICommand),
-                typeof(ElementsCard), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty EditElementProperty = 
-            DependencyProperty.Register(nameof(EditElement), typeof(ICommand),
-                typeof(ElementsCard), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty RemoveElementProperty =
-            DependencyProperty.Register(nameof(RemoveElement), typeof(ICommand),
-                typeof(ElementsCard), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty SelectedElementProperty =
-            DependencyProperty.Register(nameof(SelectedElement), typeof(string),
-                typeof(ElementsCard), new PropertyMetadata(string.Empty));
-
         public string Header
         {
             get { return (string)GetValue(HeaderProperty); }
             set { SetValue(HeaderProperty, value); }
         }
 
+        /*public static readonly DependencyProperty ElementsProperty =
+            DependencyProperty.Register(nameof(Elements), typeof(ObservableCollection<string>),
+                typeof(ElementsCard), new PropertyMetadata(null));
+
         public ObservableCollection<string> Elements
         {
             get { return (ObservableCollection<string>)GetValue(ElementsProperty); }
             set { SetValue(ElementsProperty, value); }
+        }*/
+
+        public static readonly DependencyProperty ElementsProperty =
+    DependencyProperty.Register(nameof(Elements), typeof(object),
+        typeof(ElementsCard), new PropertyMetadata(null));
+
+        public object Elements
+        {
+            get { return GetValue(ElementsProperty); }
+            set { SetValue(ElementsProperty, value); }
         }
 
-        public ICommand AddElement
-        {
-            get { return (ICommand)GetValue(AddElementProperty); }
-            set { SetValue(AddElementProperty, value); }
-        }
-
-        public ICommand EditElement
-        {
-            get { return (ICommand)GetValue(EditElementProperty); }
-            set { SetValue(EditElementProperty, value); }
-        }
-
-        public ICommand RemoveElement
-        {
-            get { return (ICommand)GetValue(RemoveElementProperty); }
-            set { SetValue(RemoveElementProperty, value); }
-        }
+        public static readonly DependencyProperty SelectedElementProperty =
+            DependencyProperty.Register(nameof(SelectedElement), typeof(string),
+                typeof(ElementsCard), new PropertyMetadata(string.Empty));
 
         public string SelectedElement
         {
@@ -70,9 +50,92 @@ namespace WpfPanel.View.Components
             set { SetValue(SelectedElementProperty, value); }
         }
 
+        public static readonly DependencyProperty AddBtnVisibilityProperty =
+            DependencyProperty.Register(nameof(AddBtnVisibility), typeof(Visibility),
+                typeof(ElementsCard), new PropertyMetadata(Visibility.Visible));
+
+        public string AddBtnVisibility
+        {
+            get { return (string)GetValue(AddBtnVisibilityProperty); }
+            set { SetValue(AddBtnVisibilityProperty, value); }
+        }
+
+        public static readonly DependencyProperty EditBtnVisibilityProperty =
+            DependencyProperty.Register(nameof(EditBtnVisibility), typeof(Visibility),
+                typeof(ElementsCard), new PropertyMetadata(Visibility.Visible));
+
+        public string EditBtnVisibility
+        {
+            get { return (string)GetValue(EditBtnVisibilityProperty); }
+            set { SetValue(EditBtnVisibilityProperty, value); }
+        }
+                
+        public static readonly DependencyProperty RemoveBtnVisibilityProperty =
+            DependencyProperty.Register(nameof(RemoveBtnVisibility), typeof(Visibility),
+                typeof(ElementsCard), new PropertyMetadata(Visibility.Visible));
+
+        public string RemoveBtnVisibility
+        {
+            get { return (string)GetValue(RemoveBtnVisibilityProperty); }
+            set { SetValue(RemoveBtnVisibilityProperty, value); }
+        }
+
+        public static readonly DependencyProperty AddElementPropertyCommand =
+            DependencyProperty.Register(nameof(AddElementCommand), typeof(ICommand),
+                typeof(ElementsCard), new PropertyMetadata(null));
+
+        public ICommand AddElementCommand
+        {
+            get { return (ICommand)GetValue(AddElementPropertyCommand); }
+            set { SetValue(AddElementPropertyCommand, value); }
+        }
+
+        public static readonly DependencyProperty EditElementPropertyCommand = 
+            DependencyProperty.Register(nameof(EditElementCommand), typeof(ICommand),
+                typeof(ElementsCard), new PropertyMetadata(null));
+
+        public ICommand EditElementCommand
+        {
+            get { return (ICommand)GetValue(EditElementPropertyCommand); }
+            set { SetValue(EditElementPropertyCommand, value); }
+        }
+
+        public static readonly DependencyProperty RemoveElementPropertyCommand =
+            DependencyProperty.Register(nameof(RemoveElementCommand), typeof(ICommand),
+                typeof(ElementsCard), new PropertyMetadata(null));
+
+        public ICommand RemoveElementCommand
+        {
+            get { return (ICommand)GetValue(RemoveElementPropertyCommand); }
+            set { SetValue(RemoveElementPropertyCommand, value); }
+        }
+
+        public static readonly DependencyProperty SelectedElementsPropertyCommand =
+            DependencyProperty.Register(nameof(SelectedElementsCommand), typeof(ICommand),
+                typeof(ElementsCard), new PropertyMetadata(null));
+
+        public ICommand SelectedElementsCommand
+        {
+            get { return (ICommand)GetValue(SelectedElementsPropertyCommand); }
+            set { SetValue(SelectedElementsPropertyCommand, value); }
+        }
+
         public ElementsCard()
         {
             InitializeComponent();
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var t = ((TextBox)sender).Text;
+            var si = lv.DisplayMemberPath;
+            /*Header = t;
+            SelectedElement = t;*/
+        }
+
+        private void lv_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SelectedElementsCommand?.Execute(lv.SelectedItems);
         }
     }
 }

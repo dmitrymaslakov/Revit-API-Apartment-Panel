@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System.Collections.Generic;assembly=mscorlib"
              xmlns:local="clr-namespace:WpfPanel.View.Components" 
              mc:Ignorable="d" 
              x:Name="root"
@@ -12,26 +13,56 @@
             <Setter Property="Width" Value="20"/>
             <Setter Property="Height" Value="20"/>
         </Style>
+        <DataTemplate x:Key="DictionaryKeyDataTemplate">
+            <TextBlock Text="{Binding Key}" />
+        </DataTemplate>
+        <DataTemplate x:Key="DictionaryValueDataTemplate">
+            <TextBlock Text="{Binding Value}" />
+        </DataTemplate>
+        <DataTemplate x:Key="CollectionDataTemplate">
+            <TextBlock Text="{Binding}" />
+        </DataTemplate>
     </UserControl.Resources>
     <Grid Background="White">
         <GroupBox Header="{Binding Header, ElementName=root}">
             <StackPanel>
-                <ListView ItemsSource="{Binding Elements, ElementName=root}"
-                          SelectedItem="{Binding SelectedElement, ElementName=root}">
+                <ListView ItemsSource="{Binding Elements, ElementName=root}" 
+                          x:Name="lv"                          
+                          SelectionMode="Extended"
+                          SelectionChanged="lv_SelectionChanged"                          
+                          SelectedItem="{Binding SelectedElement, ElementName=root, UpdateSourceTrigger=PropertyChanged}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding}"/>
+                            <TextBlock>
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{Binding}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding}" Value="{x:Type sys:Dictionary`2}">
+                                                <Setter Property="Text" Value="{Binding Value}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
                 <WrapPanel>
-                    <Button Style="{StaticResource ElButton}" Command="{Binding AddElement, ElementName=root}">
+                    <Button Style="{StaticResource ElButton}" 
+                            Command="{Binding AddElementCommand, ElementName=root}"
+                            Visibility="{Binding AddBtnVisibility, ElementName=root}">
                         <Image Source="/Resources/icons8-Create-24.png"/>
                     </Button>
-                    <Button Style="{StaticResource ElButton}" Command="{Binding EditElement, ElementName=root}">
+                    <Button Style="{StaticResource ElButton}" 
+                            x:Name="ebv"
+                            Command="{Binding EditElementCommand, ElementName=root}" 
+                            Visibility="{Binding EditBtnVisibility, ElementName=root}">
                         <Image Source="/Resources/icons8-Edit-24.png"/>
                     </Button>
-                    <Button Style="{StaticResource ElButton}" Command="{Binding RemoveElement, ElementName=root}">
+                    <Button Style="{StaticResource ElButton}" 
+                            Command="{Binding RemoveElementCommand, ElementName=root}"
+                            Visibility="{Binding RemoveBtnVisibility, ElementName=root}">
                         <Image Source="/Resources/icons8-Remove-24.png" />
                     </Button>
                 </WrapPanel>

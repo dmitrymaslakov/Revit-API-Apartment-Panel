@@ -20,17 +20,19 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <local:ElementsCard 
             Grid.Column="0"
             Header="Apartment elements"
             Elements="{Binding ApartmentElements}"
-            AddElement="{Binding AddApartmentElement}"
-            EditElement="{Binding EditApartmentElement}"
-            RemoveElement="{Binding RemoveApartmentElement}"
-            SelectedElement="{Binding SelectedApartmentElement}"
-            />
+            AddElementCommand="{Binding AddApartmentElement}"
+            RemoveElementCommand="{Binding RemoveApartmentElement}"
+            SelectedElement="{Binding SelectedApartmentElement, Mode=TwoWay}"
+            EditBtnVisibility="{x:Static Visibility.Collapsed}"
+            ></local:ElementsCard>
         <StackPanel Grid.Column="1" Margin="0 20 0 0">
+            <Button Content="Test" Width="30" Click="Button_Click"/>
             <Button Style="{StaticResource ArrowButton}">
                 <Image Source="/Resources/icons8-AddArrow-24.png" />
             </Button>
@@ -38,22 +40,52 @@
                 <Image Source="/Resources/icons8-RemoveArrow-24.png" />
             </Button>
         </StackPanel>
-        <local:ElementsCard 
-            Grid.Column="2"
-            Header="Panel circuits"
-            Elements="{Binding PanelCircuits}"
-            AddElement="{Binding AddPanelCircuit}"
-            EditElement="{Binding EditPanelCircuit}"
-            RemoveElement="{Binding RemovePanelCircuit}"
+        <StackPanel Grid.Column="2">
+            <local:ElementsCard             
+                Header="Panel circuits"                
+                Elements="{Binding CircuitElementsDictionary}"
+                AddElementCommand="{Binding AddPanelCircuit}"
+                EditElementCommand="{Binding EditPanelCircuit}"
+                RemoveElementCommand="{Binding RemovePanelCircuit}"
+                SelectedElementsCommand="{Binding SelectedCircuitsCommand}"
             />
-        <GroupBox Grid.Column="3" Header="Circuit elements">
-            <ListView ItemsSource="{Binding CircuitElements}">
+            <TextBox Text="{Binding NewCircuit}" Width="30" Margin="0 0 100 0"/>
+        </StackPanel>
+        <!--<local:ElementsCard 
+                Grid.Column="3"
+                Header="Circuit elements"
+                Elements="{Binding CircuitElements}"
+                AddBtnVisibility="{x:Static Visibility.Collapsed}"
+                EditBtnVisibility="{x:Static Visibility.Collapsed}"
+                RemoveBtnVisibility="{x:Static Visibility.Collapsed}"
+                SelectedElement="{Binding SelectedCircuitElement}"
+                SelectedElementsCommand="{Binding SelectedCircuitsCommand}"
+            />-->
+
+        <GroupBox Grid.Column="3" Header="Key">
+            <ListView ItemsSource="{Binding CircuitElementsDictionary}"
+                x:Name="KeysListView">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}"/>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Key}"/>
+                        </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
         </GroupBox>
+        <GroupBox Grid.Column="4" Header="Value">
+            <ListView DataContext="{Binding SelectedItem, ElementName=KeysListView}"                      
+                      ItemsSource="{Binding Value}" x:Name="KeysListView2">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </GroupBox>
+
     </Grid>
 </Window>

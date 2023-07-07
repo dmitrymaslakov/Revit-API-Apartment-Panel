@@ -29,7 +29,7 @@ namespace WpfPanel.ViewModel.ComponentsVM
         {
             ApartmentElements = new ObservableCollection<string>
             {
-                TRISSA_SWITCH, USB, BLOCK1, SINGLE_SOCKET, THROUGH_SWITCH
+                TRISSA_SWITCH, USB
             };
             PanelCircuits = new ObservableCollection<string>
             {
@@ -39,16 +39,25 @@ namespace WpfPanel.ViewModel.ComponentsVM
             {
                 TRISSA_SWITCH, USB, BLOCK1, SINGLE_SOCKET, THROUGH_SWITCH
             };
-            AddApartmentElement = new AddApartmentElementCommand(o 
-                => MakeRequest(RequestId.AddElement, _addElementToApartment));
-            EditApartmentElement = new EditApartmentElementCommand(o => MakeRequest(RequestId.EditElement));
-            RemoveApartmentElement = new RemoveApartmentElementCommand(o =>
+            CircuitElementsDictionary = new Dictionary<string, ObservableCollection<string>>
             {
-                if (o is string el) ApartmentElements.Remove(el);
+                {"1",  CircuitElements}
+            };
+            AddApartmentElement = new RelayCommand(o
+                => MakeRequest(RequestId.AddElement, _addElementToApartment));
+
+            RemoveApartmentElement = new RelayCommand(o =>
+            {
+                if (SelectedApartmentElement is string)
+                    ApartmentElements.Remove(SelectedApartmentElement);
             });
-            AddPanelCircuit = new AddPanelCircuitCommand(o => MakeRequest(RequestId.AddCircuit));
-            EditPanelCircuit = new EditPanelCircuitCommand(o => MakeRequest(RequestId.EditCircuit));
-            RemovePanelCircuit = new RemovePanelCircuitCommand(o => MakeRequest(RequestId.RemoveCircuit));
+            AddPanelCircuit = new RelayCommand(o =>
+            {
+                if (!PanelCircuits.Contains(NewCircuit))
+                    PanelCircuits.Add(NewCircuit);
+            });
+            EditPanelCircuit = new RelayCommand(o => MakeRequest(RequestId.EditCircuit));
+            RemovePanelCircuit = new RelayCommand(o => MakeRequest(RequestId.RemoveCircuit));
 
             _addElementToApartment = newElement =>
             {
@@ -80,6 +89,14 @@ namespace WpfPanel.ViewModel.ComponentsVM
             get => _circuitElements;
             set => Set(ref _circuitElements, value);
         }
+        
+        private Dictionary<string, ObservableCollection<string>> _circuitElementsDictionary;
+
+        public Dictionary<string, ObservableCollection<string>> CircuitElementsDictionary
+        {
+            get => _circuitElementsDictionary; 
+            set => Set(ref _circuitElementsDictionary, value);
+        }
 
         private string _selectedApartmentElement;
 
@@ -89,12 +106,27 @@ namespace WpfPanel.ViewModel.ComponentsVM
             set => Set(ref _selectedApartmentElement, value);
         }
 
+        private string _newCircuit;
+
+        public string NewCircuit { get => _newCircuit; set => Set(ref _newCircuit, value); }
+
         public ICommand AddApartmentElement { get; set; }
-        public ICommand EditApartmentElement { get; set; }
         public ICommand RemoveApartmentElement { get; set; }
         public ICommand AddPanelCircuit { get; set; }
         public ICommand EditPanelCircuit { get; set; }
         public ICommand RemovePanelCircuit { get; set; }
+        public ICommand SelectedCircuitsCommand
+        {
+            get
+            {
+                if (selectedCircuitsCommand == null)
+                {
+                    selectedCircuitsCommand = new RelayCommand(SelectedCircuits);
+                }
+
+                return selectedCircuitsCommand;
+            }
+        }
 
         private void MakeRequest(RequestId request, object props = null)
         {
@@ -103,5 +135,12 @@ namespace WpfPanel.ViewModel.ComponentsVM
             _exEvent.Raise();
         }
 
+        private RelayCommand selectedCircuitsCommand;
+
+
+        private void SelectedCircuits(object commandParameter)
+        {
+            //CircuitElementsDictionary;
+        }
     }
 }
