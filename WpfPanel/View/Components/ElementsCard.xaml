@@ -29,8 +29,8 @@
                 <ListView ItemsSource="{Binding Elements, ElementName=root}" 
                           x:Name="lv"                          
                           SelectionMode="Extended"
-                          SelectionChanged="lv_SelectionChanged"                          
-                          SelectedItem="{Binding SelectedElement, ElementName=root, UpdateSourceTrigger=PropertyChanged}">
+                          SelectionChanged="Lv_SelectionChanged">
+                    <!--SelectedItem="{Binding SelectedElement, ElementName=root, UpdateSourceTrigger=PropertyChanged}">-->
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextBlock>
@@ -38,8 +38,8 @@
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Text" Value="{Binding}" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding}" Value="{x:Type sys:Dictionary`2}">
-                                                <Setter Property="Text" Value="{Binding Value}" />
+                                            <DataTrigger Binding="{Binding IsDictionaryKeys, ElementName=root}" Value="True">
+                                                <Setter Property="Text" Value="{Binding Key}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>

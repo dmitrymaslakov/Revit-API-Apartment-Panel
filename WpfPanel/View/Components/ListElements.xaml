@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
         <TreeView ItemsSource="{Binding AllElements, ElementName=ListItems}" 
                   Grid.Row="0"
-                  x:Name="elementsTree"
+                  x:Name="elementsTree"                  
                   SelectedItemChanged="TreeView_SelectedItemChanged">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding CategorizedElements}">

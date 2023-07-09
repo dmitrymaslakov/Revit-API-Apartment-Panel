@@ -69,6 +69,7 @@
     <Compile Include="Domain\Request.cs" />
     <Compile Include="Domain\RequestHandler.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Utilities\ObservableDictionary.cs" />
     <Compile Include="ViewModel\ComponentsVM\EditPanelVM.cs" />
     <Compile Include="ViewModel\UIViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

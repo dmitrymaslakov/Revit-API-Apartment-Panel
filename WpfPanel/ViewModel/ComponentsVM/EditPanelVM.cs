@@ -6,11 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using WpfPanel.Domain;
 using WpfPanel.Domain.Models;
 using WpfPanel.Domain.Models.RevitMockupModels;
 using WpfPanel.Domain.Services.Commands;
+using WpfPanel.Utilities;
 
 namespace WpfPanel.ViewModel.ComponentsVM
 {
@@ -31,39 +33,146 @@ namespace WpfPanel.ViewModel.ComponentsVM
             {
                 TRISSA_SWITCH, USB
             };
-            PanelCircuits = new ObservableCollection<string>
+            /*PanelCircuits = new ObservableCollection<string>
             {
                 "1", "2", "3"
             };
             CircuitElements = new ObservableCollection<string>
             {
                 TRISSA_SWITCH, USB, BLOCK1, SINGLE_SOCKET, THROUGH_SWITCH
-            };
-            CircuitElementsDictionary = new Dictionary<string, ObservableCollection<string>>
+            };*/
+            PanelCircuits = new ObservableDictionary<string, ObservableCollection<string>>
             {
-                {"1",  CircuitElements}
+                {"1", new ObservableCollection<string>{ TRISSA_SWITCH, USB, BLOCK1 }},
+                {"2", new ObservableCollection<string>{ SINGLE_SOCKET, THROUGH_SWITCH }},
             };
-            AddApartmentElement = new RelayCommand(o
+            CircuitElements = new ObservableCollection<string>();
+            SelectedApartmentElements = new ObservableCollection<string>();
+            SelectedPanelCircuits = new ObservableCollection<KeyValuePair<string, ObservableCollection<string>>>();
+            SelectedCircuitElements = new ObservableCollection<string>();
+            AddApartmentElementCommand = new RelayCommand(o
                 => MakeRequest(RequestId.AddElement, _addElementToApartment));
 
-            RemoveApartmentElement = new RelayCommand(o =>
+            RemoveApartmentElementsCommand = new RelayCommand(o =>
             {
-                if (SelectedApartmentElement is string)
-                    ApartmentElements.Remove(SelectedApartmentElement);
+                if (SelectedApartmentElements.Count != 0)
+                    foreach (var element in SelectedApartmentElements)
+                        ApartmentElements.Remove(element);
             });
-            AddPanelCircuit = new RelayCommand(o =>
+            AddPanelCircuitCommand = new RelayCommand(o =>
             {
-                if (!PanelCircuits.Contains(NewCircuit))
-                    PanelCircuits.Add(NewCircuit);
+                if (!string.IsNullOrEmpty(NewCircuit) && !PanelCircuits.ContainsKey(NewCircuit))
+                    PanelCircuits.Add(NewCircuit, new ObservableCollection<string>());
             });
-            EditPanelCircuit = new RelayCommand(o => MakeRequest(RequestId.EditCircuit));
-            RemovePanelCircuit = new RelayCommand(o => MakeRequest(RequestId.RemoveCircuit));
+            RemovePanelCircuitsCommand = new RelayCommand(o =>
+            {
+                CircuitElements.Clear();
+                SelectedCircuitElements.Clear();
+                foreach (var circuit in SelectedPanelCircuits)
+                    PanelCircuits.Remove(circuit.Key);
+            });
+            AddElementToCircuitCommand = new RelayCommand(o =>
+            {
+                if (SelectedPanelCircuits.Count > 1)
+                    return;
+
+                var selectedPanelCircuit = SelectedPanelCircuits.SingleOrDefault();
+                //var selectedApartmentElement = SelectedApartmentElements.SingleOrDefault();
+                foreach (var selectedApartmentElement in SelectedApartmentElements)
+                {
+                    if (string.IsNullOrEmpty(selectedApartmentElement)
+                        || string.IsNullOrEmpty(selectedPanelCircuit.Key))
+                        return;
+
+                    var IsElementExist = PanelCircuits
+                    .Where(e => e.Key == selectedPanelCircuit.Key)
+                    .First()
+                    .Value.Contains(selectedApartmentElement);
+
+                    if (!IsElementExist)
+                        PanelCircuits[selectedPanelCircuit.Key].Add(selectedApartmentElement);
+
+                    AddCurrentCircuitElements(PanelCircuits[selectedPanelCircuit.Key]);
+                }
+            });
+            RemoveElementsFromCircuitCommand = new RelayCommand(o =>
+            {
+                if (SelectedPanelCircuits.Count > 1) return;
+
+                var selectedPanelCircuit = SelectedPanelCircuits.SingleOrDefault();
+
+                if (string.IsNullOrEmpty(selectedPanelCircuit.Key)
+                    || SelectedCircuitElements.Count == 0)
+                    return;
+
+                foreach (var selectedCircuitElement in SelectedCircuitElements)
+                {
+                    selectedPanelCircuit.Value.Remove(selectedCircuitElement);
+                }
+                    AddCurrentCircuitElements(selectedPanelCircuit.Value);
+            });
+
+            SelectedApartmentElementsCommand = new RelayCommand(o =>
+            {
+                var apartmentElements = (o as IList<object>)?.OfType<string>();
+                if (SelectedApartmentElements.Count != 0)
+                    SelectedApartmentElements.Clear();
+
+                if (apartmentElements.Count() != 0)
+                    foreach (var apartmentElement in apartmentElements)
+                        SelectedApartmentElements.Add(apartmentElement);
+            });
+
+            SelectedPanelCircuitCommand = new RelayCommand(o =>
+            {
+                SelectedCircuitElements.Clear();
+                var currentCircuitElements = (o as IList<object>)
+                ?.OfType<KeyValuePair<string, ObservableCollection<string>>>()
+                /*?.FirstOrDefault()
+                .Value*/
+                ;
+
+                if (currentCircuitElements.Count() != 0)
+                {
+                    SelectedPanelCircuits.Clear();
+                    foreach (var currentCircuitElement in currentCircuitElements)
+                    {
+                        SelectedPanelCircuits.Add(currentCircuitElement);
+                        if (currentCircuitElements.Count() == 1)
+                            AddCurrentCircuitElements(currentCircuitElement.Value);
+                        else
+                            CircuitElements.Clear();
+                    }
+                }
+            });
+
+            SelectedCircuitElementCommand = new RelayCommand(o =>
+            {
+                var circuitElements = (o as IList<object>)?.OfType<string>();
+                if (SelectedCircuitElements.Count != 0)
+                    SelectedCircuitElements.Clear();
+
+                if (circuitElements.Count() != 0)
+                    foreach (var circuitElement in circuitElements)
+                        SelectedCircuitElements.Add(circuitElement);
+            });
 
             _addElementToApartment = newElement =>
             {
                 if (!ApartmentElements.Contains(newElement.Name))
                     ApartmentElements.Add(newElement.Name);
             };
+        }
+
+        private void AddCurrentCircuitElements(ObservableCollection<string> currentCircuitElements)
+        {
+            if (CircuitElements.Count != 0)
+                CircuitElements.Clear();
+
+            foreach (var item in currentCircuitElements)
+            {
+                CircuitElements.Add(item);
+            }
         }
 
         private ObservableCollection<string> _apartmentElements;
@@ -74,7 +183,7 @@ namespace WpfPanel.ViewModel.ComponentsVM
             set => Set(ref _apartmentElements, value);
         }
 
-        private ObservableCollection<string> _panelCircuits;
+        /*private ObservableCollection<string> _panelCircuits;
 
         public ObservableCollection<string> PanelCircuits
         {
@@ -88,45 +197,64 @@ namespace WpfPanel.ViewModel.ComponentsVM
         {
             get => _circuitElements;
             set => Set(ref _circuitElements, value);
-        }
-        
-        private Dictionary<string, ObservableCollection<string>> _circuitElementsDictionary;
+        }*/
 
-        public Dictionary<string, ObservableCollection<string>> CircuitElementsDictionary
+        private ObservableDictionary<string, ObservableCollection<string>> _panelCircuits;
+
+        public ObservableDictionary<string, ObservableCollection<string>> PanelCircuits
         {
-            get => _circuitElementsDictionary; 
-            set => Set(ref _circuitElementsDictionary, value);
+            get => _panelCircuits;
+            set => Set(ref _panelCircuits, value);
         }
 
-        private string _selectedApartmentElement;
+        private ObservableCollection<string> _selectedApartmentElements;
 
-        public string SelectedApartmentElement
+        public ObservableCollection<string> SelectedApartmentElements
         {
-            get => _selectedApartmentElement;
-            set => Set(ref _selectedApartmentElement, value);
+            get => _selectedApartmentElements;
+            set => Set(ref _selectedApartmentElements, value);
+        }
+
+        private ObservableCollection
+            <KeyValuePair<string, ObservableCollection<string>>> _selectedPanelCircuits;
+
+        public ObservableCollection
+            <KeyValuePair<string, ObservableCollection<string>>> SelectedPanelCircuits
+        {
+            get => _selectedPanelCircuits;
+            set => Set(ref _selectedPanelCircuits, value);
+        }
+
+        private ObservableCollection<string> _selectedCircuitElements;
+
+        public ObservableCollection<string> SelectedCircuitElements
+        {
+            get => _selectedCircuitElements;
+            set => Set(ref _selectedCircuitElements, value);
+        }
+
+        private ObservableCollection<string> _circuitElements;
+
+        public ObservableCollection<string> CircuitElements
+        {
+            get => _circuitElements;
+            set => Set(ref _circuitElements, value);
         }
 
         private string _newCircuit;
 
         public string NewCircuit { get => _newCircuit; set => Set(ref _newCircuit, value); }
 
-        public ICommand AddApartmentElement { get; set; }
-        public ICommand RemoveApartmentElement { get; set; }
-        public ICommand AddPanelCircuit { get; set; }
+        public ICommand AddApartmentElementCommand { get; set; }
+        public ICommand RemoveApartmentElementsCommand { get; set; }
+        public ICommand AddPanelCircuitCommand { get; set; }
         public ICommand EditPanelCircuit { get; set; }
-        public ICommand RemovePanelCircuit { get; set; }
-        public ICommand SelectedCircuitsCommand
-        {
-            get
-            {
-                if (selectedCircuitsCommand == null)
-                {
-                    selectedCircuitsCommand = new RelayCommand(SelectedCircuits);
-                }
-
-                return selectedCircuitsCommand;
-            }
-        }
+        public ICommand RemovePanelCircuitsCommand { get; set; }
+        public ICommand AddElementToCircuitCommand { get; set; }
+        public ICommand RemoveElementsFromCircuitCommand { get; set; }
+        public ICommand SelectedApartmentElementsCommand { get; set; }
+        public ICommand SelectedPanelCircuitCommand { get; set; }
+        public ICommand SelectedCircuitElementCommand { get; set; }
 
         private void MakeRequest(RequestId request, object props = null)
         {
@@ -138,9 +266,9 @@ namespace WpfPanel.ViewModel.ComponentsVM
         private RelayCommand selectedCircuitsCommand;
 
 
-        private void SelectedCircuits(object commandParameter)
+        /*private void SelectedCircuits(object commandParameter)
         {
-            //CircuitElementsDictionary;
-        }
+            CircuitElementsDictionary;
+        }*/
     }
 }

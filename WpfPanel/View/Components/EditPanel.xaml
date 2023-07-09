@@ -7,7 +7,9 @@
         xmlns:componentsvm="clr-namespace:WpfPanel.ViewModel.ComponentsVM" 
         d:DataContext="{d:DesignInstance Type=componentsvm:EditPanelVM}"
         mc:Ignorable="d" 
-        d:DesignHeight="450" d:DesignWidth="600" Width="600">
+        d:DesignHeight="450" d:DesignWidth="600" Width="600"
+        x:Name="Confige">
+
     <Window.Resources>
         <Style x:Key="ArrowButton" TargetType="Button">
             <Setter Property="Width" Value="20"/>
@@ -20,72 +22,51 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <local:ElementsCard 
             Grid.Column="0"
             Header="Apartment elements"
             Elements="{Binding ApartmentElements}"
-            AddElementCommand="{Binding AddApartmentElement}"
-            RemoveElementCommand="{Binding RemoveApartmentElement}"
-            SelectedElement="{Binding SelectedApartmentElement, Mode=TwoWay}"
+            AddElementCommand="{Binding AddApartmentElementCommand}"
+            RemoveElementCommand="{Binding RemoveApartmentElementsCommand}"
             EditBtnVisibility="{x:Static Visibility.Collapsed}"
-            ></local:ElementsCard>
+            SelectedElementsCommand="{Binding SelectedApartmentElementsCommand}"
+            />
+            <!--SelectedElements="{Binding SelectedApartmentElements, Mode=TwoWay}"-->
         <StackPanel Grid.Column="1" Margin="0 20 0 0">
             <Button Content="Test" Width="30" Click="Button_Click"/>
-            <Button Style="{StaticResource ArrowButton}">
+            <Button Style="{StaticResource ArrowButton}"
+                    Command="{Binding AddElementToCircuitCommand}">
                 <Image Source="/Resources/icons8-AddArrow-24.png" />
             </Button>
-            <Button Style="{StaticResource ArrowButton}">
+            <Button Style="{StaticResource ArrowButton}"
+                    Command="{Binding RemoveElementsFromCircuitCommand}">
                 <Image Source="/Resources/icons8-RemoveArrow-24.png" />
             </Button>
         </StackPanel>
         <StackPanel Grid.Column="2">
-            <local:ElementsCard             
-                Header="Panel circuits"                
-                Elements="{Binding CircuitElementsDictionary}"
-                AddElementCommand="{Binding AddPanelCircuit}"
+            <local:ElementsCard       
+                x:Name="PanelCircuitsCard"
+                Header="Panel circuits"     
+                IsDictionaryKeys="True"
+                Elements="{Binding PanelCircuits}"
+                AddElementCommand="{Binding AddPanelCircuitCommand}"
                 EditElementCommand="{Binding EditPanelCircuit}"
-                RemoveElementCommand="{Binding RemovePanelCircuit}"
-                SelectedElementsCommand="{Binding SelectedCircuitsCommand}"
+                RemoveElementCommand="{Binding RemovePanelCircuitsCommand}"
+                SelectedElementsCommand ="{Binding SelectedPanelCircuitCommand}"
             />
+                <!--SelectedElements="{Binding SelectedPanelCircuits, Mode=TwoWay}"-->
             <TextBox Text="{Binding NewCircuit}" Width="30" Margin="0 0 100 0"/>
         </StackPanel>
-        <!--<local:ElementsCard 
+        <local:ElementsCard 
                 Grid.Column="3"
                 Header="Circuit elements"
                 Elements="{Binding CircuitElements}"
                 AddBtnVisibility="{x:Static Visibility.Collapsed}"
                 EditBtnVisibility="{x:Static Visibility.Collapsed}"
                 RemoveBtnVisibility="{x:Static Visibility.Collapsed}"
-                SelectedElement="{Binding SelectedCircuitElement}"
-                SelectedElementsCommand="{Binding SelectedCircuitsCommand}"
-            />-->
-
-        <GroupBox Grid.Column="3" Header="Key">
-            <ListView ItemsSource="{Binding CircuitElementsDictionary}"
-                x:Name="KeysListView">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="{Binding Key}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </GroupBox>
-        <GroupBox Grid.Column="4" Header="Value">
-            <ListView DataContext="{Binding SelectedItem, ElementName=KeysListView}"                      
-                      ItemsSource="{Binding Value}" x:Name="KeysListView2">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="{Binding}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </GroupBox>
-
+                SelectedElementsCommand="{Binding SelectedCircuitElementCommand}"
+            />
+                <!--SelectedElements="{Binding SelectedCircuitElements, Mode=TwoWay}"-->
     </Grid>
 </Window>
