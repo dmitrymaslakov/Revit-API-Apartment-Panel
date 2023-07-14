@@ -25,9 +25,11 @@ namespace WpfPanel.ViewModel.ComponentsVM
         private const string THROUGH_SWITCH = "Through Switch";
 
         private readonly Action<FamilySymbol> _addElementToApartment;
+        private readonly Action<object, OkApplyCancel> _okApplyCancelActions;
 
-        public EditPanelVM(ExternalEvent exEvent, RequestHandler handler)
-            : base(exEvent, handler)
+
+        public EditPanelVM(ExternalEvent exEvent, RequestHandler handler, 
+            Action<object, OkApplyCancel> okApplyCancelActions) : base(exEvent, handler)
         {
             ApartmentElements = new ObservableCollection<string>
             {
@@ -46,38 +48,50 @@ namespace WpfPanel.ViewModel.ComponentsVM
                 {"1", new ObservableCollection<string>{ TRISSA_SWITCH, USB, BLOCK1 }},
                 {"2", new ObservableCollection<string>{ SINGLE_SOCKET, THROUGH_SWITCH }},
             };
+            
             CircuitElements = new ObservableCollection<string>();
+            
             SelectedApartmentElements = new ObservableCollection<string>();
+            
             SelectedPanelCircuits = new ObservableCollection<KeyValuePair<string, ObservableCollection<string>>>();
+            
             SelectedCircuitElements = new ObservableCollection<string>();
+            
             AddApartmentElementCommand = new RelayCommand(o
                 => MakeRequest(RequestId.AddElement, _addElementToApartment));
 
             RemoveApartmentElementsCommand = new RelayCommand(o =>
             {
                 if (SelectedApartmentElements.Count != 0)
-                    foreach (var element in SelectedApartmentElements)
+                    foreach (var element in SelectedApartmentElements.ToArray())
                         ApartmentElements.Remove(element);
             });
+            
             AddPanelCircuitCommand = new RelayCommand(o =>
             {
                 if (!string.IsNullOrEmpty(NewCircuit) && !PanelCircuits.ContainsKey(NewCircuit))
                     PanelCircuits.Add(NewCircuit, new ObservableCollection<string>());
+                NewCircuit = string.Empty;
             });
+            
             RemovePanelCircuitsCommand = new RelayCommand(o =>
             {
                 CircuitElements.Clear();
                 SelectedCircuitElements.Clear();
-                foreach (var circuit in SelectedPanelCircuits)
+                foreach (var circuit in SelectedPanelCircuits.ToArray())
                     PanelCircuits.Remove(circuit.Key);
+                SelectedPanelCircuits.Clear();
             });
+            
             AddElementToCircuitCommand = new RelayCommand(o =>
             {
-                if (SelectedPanelCircuits.Count > 1)
+                if (SelectedPanelCircuits.Count > 1 
+                    || SelectedPanelCircuits.Count == 0 
+                    || SelectedApartmentElements.Count == 0)
                     return;
 
                 var selectedPanelCircuit = SelectedPanelCircuits.SingleOrDefault();
-                //var selectedApartmentElement = SelectedApartmentElements.SingleOrDefault();
+
                 foreach (var selectedApartmentElement in SelectedApartmentElements)
                 {
                     if (string.IsNullOrEmpty(selectedApartmentElement)
@@ -95,20 +109,22 @@ namespace WpfPanel.ViewModel.ComponentsVM
                     AddCurrentCircuitElements(PanelCircuits[selectedPanelCircuit.Key]);
                 }
             });
+            
             RemoveElementsFromCircuitCommand = new RelayCommand(o =>
             {
-                if (SelectedPanelCircuits.Count > 1) return;
+                if (SelectedPanelCircuits.Count > 1 
+                    || SelectedPanelCircuits.Count == 0
+                    || SelectedCircuitElements.Count == 0) 
+                    return;
 
                 var selectedPanelCircuit = SelectedPanelCircuits.SingleOrDefault();
 
-                if (string.IsNullOrEmpty(selectedPanelCircuit.Key)
-                    || SelectedCircuitElements.Count == 0)
+                if (string.IsNullOrEmpty(selectedPanelCircuit.Key))
                     return;
 
                 foreach (var selectedCircuitElement in SelectedCircuitElements)
-                {
                     selectedPanelCircuit.Value.Remove(selectedCircuitElement);
-                }
+
                     AddCurrentCircuitElements(selectedPanelCircuit.Value);
             });
 
@@ -157,11 +173,20 @@ namespace WpfPanel.ViewModel.ComponentsVM
                         SelectedCircuitElements.Add(circuitElement);
             });
 
+            OkCommand = new RelayCommand(o =>
+            {
+                var close = (Action)o;
+                _okApplyCancelActions(PanelCircuits, OkApplyCancel.Ok);
+                close();
+            });
+
             _addElementToApartment = newElement =>
             {
                 if (!ApartmentElements.Contains(newElement.Name))
                     ApartmentElements.Add(newElement.Name);
             };
+
+            _okApplyCancelActions = okApplyCancelActions;
         }
 
         private void AddCurrentCircuitElements(ObservableCollection<string> currentCircuitElements)
@@ -245,6 +270,11 @@ namespace WpfPanel.ViewModel.ComponentsVM
 
         public string NewCircuit { get => _newCircuit; set => Set(ref _newCircuit, value); }
 
+        private string _testProp;
+
+        public string TestProp { get => _testProp; set => Set(ref _testProp, value); }
+
+
         public ICommand AddApartmentElementCommand { get; set; }
         public ICommand RemoveApartmentElementsCommand { get; set; }
         public ICommand AddPanelCircuitCommand { get; set; }
@@ -255,6 +285,7 @@ namespace WpfPanel.ViewModel.ComponentsVM
         public ICommand SelectedApartmentElementsCommand { get; set; }
         public ICommand SelectedPanelCircuitCommand { get; set; }
         public ICommand SelectedCircuitElementCommand { get; set; }
+        public ICommand OkCommand { get; set; }
 
         private void MakeRequest(RequestId request, object props = null)
         {

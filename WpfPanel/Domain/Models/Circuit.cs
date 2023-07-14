@@ -15,11 +15,12 @@ namespace WpfPanel.Domain.Models
         private const string SINGLE_SOCKET = "Single Socket";
         private const string THROUGH_SWITCH = "Through Switch";
 
-        public int Number { get; set; }
-        public ObservableCollection<string> ApartmentElements { get; } = new ObservableCollection<string>
+        public string Number { get; set; }
+        public ObservableCollection<string> ApartmentElements { get; set; }
+        /*public ObservableCollection<string> ApartmentElements { get; } = new ObservableCollection<string>
         {
             TRISSA_SWITCH, USB, BLOCK1, SINGLE_SOCKET, THROUGH_SWITCH
-        };
+        };*/
     }
 
     class ApartmentElement

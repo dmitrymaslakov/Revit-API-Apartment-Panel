@@ -27,12 +27,7 @@ namespace WpfPanel.Domain
 
         public static ExternalEvent Create(RequestHandler handler)
         {
-            var externalEvent = new ExternalEvent
-            {
-                Handler = handler
-            };
-
-            return externalEvent;
+            return new ExternalEvent { Handler = handler };
         }
     }
 }

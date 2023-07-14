@@ -15,15 +15,24 @@
             <Setter Property="Width" Value="20"/>
             <Setter Property="Height" Value="20"/>
         </Style>
+        <Style x:Key="FinishedButton" TargetType="Button">
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Margin" Value="5 0 5 0"/>
+        </Style>
     </Window.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <local:ElementsCard 
+    <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <local:ElementsCard 
             Grid.Column="0"
             Header="Apartment elements"
             Elements="{Binding ApartmentElements}"
@@ -32,20 +41,19 @@
             EditBtnVisibility="{x:Static Visibility.Collapsed}"
             SelectedElementsCommand="{Binding SelectedApartmentElementsCommand}"
             />
-            <!--SelectedElements="{Binding SelectedApartmentElements, Mode=TwoWay}"-->
-        <StackPanel Grid.Column="1" Margin="0 20 0 0">
-            <Button Content="Test" Width="30" Click="Button_Click"/>
-            <Button Style="{StaticResource ArrowButton}"
+            <StackPanel Grid.Column="1" Margin="0 20 0 0">
+                <Button Content="Test" Width="30" Click="Button_Click"/>
+                <Button Style="{StaticResource ArrowButton}"
                     Command="{Binding AddElementToCircuitCommand}">
-                <Image Source="/Resources/icons8-AddArrow-24.png" />
-            </Button>
-            <Button Style="{StaticResource ArrowButton}"
+                    <Image Source="/Resources/icons8-AddArrow-24.png" />
+                </Button>
+                <Button Style="{StaticResource ArrowButton}"
                     Command="{Binding RemoveElementsFromCircuitCommand}">
-                <Image Source="/Resources/icons8-RemoveArrow-24.png" />
-            </Button>
-        </StackPanel>
-        <StackPanel Grid.Column="2">
-            <local:ElementsCard       
+                    <Image Source="/Resources/icons8-RemoveArrow-24.png" />
+                </Button>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <local:ElementsCard       
                 x:Name="PanelCircuitsCard"
                 Header="Panel circuits"     
                 IsDictionaryKeys="True"
@@ -55,10 +63,9 @@
                 RemoveElementCommand="{Binding RemovePanelCircuitsCommand}"
                 SelectedElementsCommand ="{Binding SelectedPanelCircuitCommand}"
             />
-                <!--SelectedElements="{Binding SelectedPanelCircuits, Mode=TwoWay}"-->
-            <TextBox Text="{Binding NewCircuit}" Width="30" Margin="0 0 100 0"/>
-        </StackPanel>
-        <local:ElementsCard 
+                <TextBox Text="{Binding NewCircuit}" Width="30" Margin="0 0 100 0"/>
+            </StackPanel>
+            <local:ElementsCard 
                 Grid.Column="3"
                 Header="Circuit elements"
                 Elements="{Binding CircuitElements}"
@@ -67,6 +74,20 @@
                 RemoveBtnVisibility="{x:Static Visibility.Collapsed}"
                 SelectedElementsCommand="{Binding SelectedCircuitElementCommand}"
             />
-                <!--SelectedElements="{Binding SelectedCircuitElements, Mode=TwoWay}"-->
-    </Grid>
+        </Grid>
+            <WrapPanel HorizontalAlignment="Right" Grid.Row="1" Grid.Column="2" Margin="0 0 50 0">
+                <Button Style="{StaticResource FinishedButton}"
+                        x:Name="OkBtn"
+                        Command="{Binding OkCommand}"
+                        Content="Ok"/>
+                <Button Style="{StaticResource FinishedButton}" 
+                        x:Name="ApplyBtn"                        
+                        Command="{Binding ApplyCommand}"
+                        Content="Apply"/>
+                <Button Style="{StaticResource FinishedButton}" 
+                        x:Name="CancelBtn"                        
+                        Command="{Binding CancelCommand}"
+                        Content="Cancel"/>
+            </WrapPanel>
+    </StackPanel>
 </Window>

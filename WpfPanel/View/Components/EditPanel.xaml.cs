@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace WpfPanel.View.Components
 {
@@ -11,6 +12,9 @@ namespace WpfPanel.View.Components
         {
             DataContext = dataContext;
             InitializeComponent();
+            OkBtn.CommandParameter = new Action(Confige.Close);
+            /*ApplyBtn.CommandParameter = new Action(Confige.Close);
+            CancelBtn.CommandParameter = new Action(Confige.Close);*/
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
