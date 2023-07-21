@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using Autodesk.Revit.DB.Visual;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +51,7 @@ namespace DockableDialogs.Domain
             UIDocument uiDocument = uiapp.ActiveUIDocument;
             Document document = uiDocument.Document;
             Selection selection = uiDocument.Selection;
+
 
             List<ElementFilter> categoryFilters = new List<ElementFilter>
             {

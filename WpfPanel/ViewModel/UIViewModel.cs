@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 using WpfPanel.Domain;
 using WpfPanel.Domain.Models;
@@ -47,6 +48,12 @@ namespace WpfPanel.ViewModel
                 _exEvent.Raise();
             });
 
+            InsertElementCommand = new RelayCommand(o =>
+            {
+                var t = o as Button;
+                var b = t.Tag;
+                var e = t.Content;
+            });
             //_okApplyCancelActions = ExecuteOkApplyCancelActions;
         }
 
@@ -55,12 +62,11 @@ namespace WpfPanel.ViewModel
             switch (okApplyCancel)
             {
                 case OkApplyCancel.Ok:
+                case OkApplyCancel.Apply:
                     Circuits.Clear();
                     var panelCircuits =
                         (ObservableDictionary<string, ObservableCollection<string>>)obj;
                     Circuits = GetCircuits(panelCircuits);
-                    break;
-                case OkApplyCancel.Apply:
                     break;
                 case OkApplyCancel.Cancel:
                     break;
@@ -77,13 +83,20 @@ namespace WpfPanel.ViewModel
 
         public ICommand Configure { get; set; }
 
+        public ICommand InsertElementCommand { get; set; }
+
         private ObservableCollection<Circuit> GetCircuits(
             ObservableDictionary<string, ObservableCollection<string>> panelCircuits)
         {
             var result = new ObservableCollection<Circuit>();
             foreach (var circuit in panelCircuits)
             {
-                result.Add(new Circuit { Number = circuit.Key, ApartmentElements = circuit.Value });
+                result.Add(new Circuit
+                {
+                    Number = circuit.Key,
+                    //ApartmentElements = new ObservableCollection<string>(circuit.Value.Select(e => e).ToList())
+                    ApartmentElements = new ObservableCollection<string>(circuit.Value.ToList())
+                }) ;
             }
             return result;
         }

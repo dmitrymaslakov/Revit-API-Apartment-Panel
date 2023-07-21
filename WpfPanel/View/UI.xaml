@@ -26,7 +26,9 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Number}" Style="{StaticResource circuitTextBlock}"/>
+                        <TextBlock Text="{Binding Number}" 
+                                   x:Name="circuitNumber"
+                                   Style="{StaticResource circuitTextBlock}"/>
                         <ListView ItemsSource="{Binding ApartmentElements}" Name="ApartmentElements" >
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -35,7 +37,13 @@
                             </ListView.ItemsPanel>
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Button Content="{Binding}" Style="{StaticResource circuitButton}"/>
+                                    <Button 
+                                        Content="{Binding}" 
+                                        Tag="{Binding Text, ElementName=circuitNumber}"
+                                        Command="{Binding DataContext.InsertElementCommand,
+                                         RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                        Style="{StaticResource circuitButton}"/>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>

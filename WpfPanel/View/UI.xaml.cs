@@ -25,5 +25,12 @@ namespace WpfPanel.View
             DataContext = dataContext;
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var b = e.Source as Button;
+            var c = b.Content;
+            var lv = ApartmentCircuits.DataContext;
+        }
     }
 }

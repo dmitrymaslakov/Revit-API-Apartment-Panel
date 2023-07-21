@@ -27,7 +27,6 @@ namespace WpfPanel.ViewModel.ComponentsVM
         private readonly Action<FamilySymbol> _addElementToApartment;
         private readonly Action<object, OkApplyCancel> _okApplyCancelActions;
 
-
         public EditPanelVM(ExternalEvent exEvent, RequestHandler handler, 
             Action<object, OkApplyCancel> okApplyCancelActions) : base(exEvent, handler)
         {
@@ -180,6 +179,9 @@ namespace WpfPanel.ViewModel.ComponentsVM
                 close();
             });
 
+            ApplyCommand = new RelayCommand(o => 
+                _okApplyCancelActions(PanelCircuits, OkApplyCancel.Apply));
+
             _addElementToApartment = newElement =>
             {
                 if (!ApartmentElements.Contains(newElement.Name))
@@ -199,6 +201,8 @@ namespace WpfPanel.ViewModel.ComponentsVM
                 CircuitElements.Add(item);
             }
         }
+
+        public List<object> OldState { get; set; }
 
         private ObservableCollection<string> _apartmentElements;
 
@@ -286,6 +290,7 @@ namespace WpfPanel.ViewModel.ComponentsVM
         public ICommand SelectedPanelCircuitCommand { get; set; }
         public ICommand SelectedCircuitElementCommand { get; set; }
         public ICommand OkCommand { get; set; }
+        public ICommand ApplyCommand { get; set; }
 
         private void MakeRequest(RequestId request, object props = null)
         {

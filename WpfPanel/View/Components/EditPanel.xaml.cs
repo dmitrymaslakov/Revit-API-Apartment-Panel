@@ -19,7 +19,9 @@ namespace WpfPanel.View.Components
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var dc = PanelCircuitsCard.SelectedElements;
+            var d = "Dima";
+            var t = d;
+            t = "qwe";
         }
     }
 }
