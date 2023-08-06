@@ -41,6 +41,8 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -52,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\ExternalEvent.cs" />
+    <Compile Include="Domain\Models\ApartmentElement.cs" />
     <Compile Include="Domain\Models\CategorizedFamilySymbols.cs" />
     <Compile Include="Domain\Models\RevitMockupModels\Category.cs" />
     <Compile Include="Domain\Models\RevitMockupModels\FamilySymbol.cs" />
@@ -69,7 +72,14 @@
     <Compile Include="Domain\Request.cs" />
     <Compile Include="Domain\RequestHandler.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Utilities\Converters\ElementDataConverter.cs" />
     <Compile Include="Utilities\ObservableDictionary.cs" />
+    <Compile Include="Utilities\Screenshoter.xaml.cs">
+      <DependentUpon>Screenshoter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\Viewfinder.xaml.cs">
+      <DependentUpon>Viewfinder.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\ComponentsVM\EditPanelVM.cs" />
     <Compile Include="ViewModel\UIViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,6 +98,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Utilities\Screenshoter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Utilities\Viewfinder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Components\EditPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -125,5 +143,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

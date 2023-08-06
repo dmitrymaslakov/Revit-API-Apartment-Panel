@@ -36,7 +36,7 @@
                             <TextBlock>
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="{Binding}" />
+                                        <Setter Property="Text" Value="{Binding Name}" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsDictionaryKeys, ElementName=root}" Value="True">
                                                 <Setter Property="Text" Value="{Binding Key}" />

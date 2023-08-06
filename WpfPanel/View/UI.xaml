@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:local="clr-namespace:WpfPanel" 
         xmlns:viewmodel="clr-namespace:WpfPanel.ViewModel" 
+        xmlns:converters="clr-namespace:WpfPanel.Utilities.Converters"         
         mc:Ignorable="d" 
         d:DesignHeight="350" d:DesignWidth="300" Height="750" Width="300">
     <Window.Resources>
@@ -15,21 +16,24 @@
             <Setter Property="Margin" Value="0 0 100 0"/>
         </Style>
     </Window.Resources>
-    <Grid Background="White">
+    <Grid Background="White" x:Name="grid">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <ListView Grid.Row="0" ItemsSource="{Binding Circuits}" Name="ApartmentCircuits">
+        <ListView Grid.Row="0" ItemsSource="{Binding Circuits}" x:Name="apartmentCircuits">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Number}" 
                                    x:Name="circuitNumber"
                                    Style="{StaticResource circuitTextBlock}"/>
-                        <ListView ItemsSource="{Binding ApartmentElements}" Name="ApartmentElements" >
+                        <ListView ItemsSource="{Binding ApartmentElements}">
+                            <ListView.Resources>
+                                <converters:ElementDataConverter x:Key="ElementDataConverter"/>
+                            </ListView.Resources>
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel/>
@@ -38,12 +42,22 @@
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Button 
-                                        Content="{Binding}" 
-                                        Tag="{Binding Text, ElementName=circuitNumber}"
+                                        Content="{Binding Name}" 
+                                        Tag="{Binding Category}"
+                                        KeyDown="Button_KeyDown"
+                                        MouseEnter="Button_MouseEnter"
+                                        MouseLeave="Button_MouseLeave"
+                                        Style="{StaticResource circuitButton}"
                                         Command="{Binding DataContext.InsertElementCommand,
-                                         RelativeSource={RelativeSource AncestorType=Window}}"
-                                        CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
-                                        Style="{StaticResource circuitButton}"/>
+                                            RelativeSource={RelativeSource AncestorType=Window}}">
+                                        <Button.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource ElementDataConverter}">
+                                                <Binding Path="Text" ElementName="circuitNumber"/>
+                                                <Binding Path="Name"/>
+                                                <Binding Path="Category"/>
+                                            </MultiBinding>
+                                        </Button.CommandParameter>
+                                    </Button>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
@@ -51,11 +65,36 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button Grid.Row="3" 
-                Command="{Binding Configure}"
+        <Button Grid.Row="1" 
+                Command="{Binding ConfigureCommand}"
                 Content="Config" 
                 Width="50" 
                 HorizontalAlignment="Right" 
                 Margin="0 0 40 0" />
+        <WrapPanel Grid.Row="2">
+            <TextBlock Text="Current suffix of circuit: "/>
+            <TextBlock                                 
+                Text="{Binding CurrentSuffix}">
+                <TextBlock.InputBindings>
+                    <MouseBinding 
+                        x:Name="currentSuffix" 
+                        Command="{Binding SetCurrentSuffixCommand}"/>
+                </TextBlock.InputBindings>
+            </TextBlock>
+        </WrapPanel>
+        <StatusBar Grid.Row="3">
+            <StatusBarItem x:Name="statusBarItem" Content="{Binding Status}">
+                <StatusBarItem.Style>
+                    <Style TargetType="StatusBarItem">
+                        <Setter Property="Background" Value="Orange"></Setter>
+                        <Style.Triggers>
+                            <Trigger Property="Content" Value="{x:Null}">
+                                <Setter Property="Background" Value="Azure" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </StatusBarItem.Style>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

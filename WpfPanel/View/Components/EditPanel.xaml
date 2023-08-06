@@ -32,14 +32,14 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <local:ElementsCard 
-            Grid.Column="0"
-            Header="Apartment elements"
-            Elements="{Binding ApartmentElements}"
-            AddElementCommand="{Binding AddApartmentElementCommand}"
-            RemoveElementCommand="{Binding RemoveApartmentElementsCommand}"
-            EditBtnVisibility="{x:Static Visibility.Collapsed}"
-            SelectedElementsCommand="{Binding SelectedApartmentElementsCommand}"
+            <local:ElementsCard
+                Grid.Column="0"
+                Header="Apartment elements"
+                Elements="{Binding ApartmentElements}"
+                AddElementCommand="{Binding AddApartmentElementCommand}"
+                RemoveElementCommand="{Binding RemoveApartmentElementsCommand}"
+                EditBtnVisibility="{x:Static Visibility.Collapsed}"
+                SelectedElementsCommand="{Binding SelectedApartmentElementsCommand}"
             />
             <StackPanel Grid.Column="1" Margin="0 20 0 0">
                 <Button Content="Test" Width="30" Click="Button_Click"/>
@@ -53,16 +53,16 @@
                 </Button>
             </StackPanel>
             <StackPanel Grid.Column="2">
-                <local:ElementsCard       
-                x:Name="PanelCircuitsCard"
-                Header="Panel circuits"     
-                IsDictionaryKeys="True"
-                Elements="{Binding PanelCircuits}"
-                AddElementCommand="{Binding AddPanelCircuitCommand}"
-                EditElementCommand="{Binding EditPanelCircuit}"
-                RemoveElementCommand="{Binding RemovePanelCircuitsCommand}"
-                SelectedElementsCommand ="{Binding SelectedPanelCircuitCommand}"
-            />
+                <local:ElementsCard
+                    x:Name="PanelCircuitsCard"
+                    Header="Panel circuits"     
+                    IsDictionaryKeys="True"
+                    Elements="{Binding PanelCircuits}"
+                    AddElementCommand="{Binding AddPanelCircuitCommand}"
+                    EditElementCommand="{Binding EditPanelCircuit}"
+                    RemoveElementCommand="{Binding RemovePanelCircuitsCommand}"
+                    SelectedElementsCommand ="{Binding SelectedPanelCircuitCommand}"
+                    />
                 <TextBox Text="{Binding NewCircuit}" Width="30" Margin="0 0 100 0"/>
             </StackPanel>
             <local:ElementsCard 
@@ -75,19 +75,19 @@
                 SelectedElementsCommand="{Binding SelectedCircuitElementCommand}"
             />
         </Grid>
-            <WrapPanel HorizontalAlignment="Right" Grid.Row="1" Grid.Column="2" Margin="0 0 50 0">
-                <Button Style="{StaticResource FinishedButton}"
+        <WrapPanel HorizontalAlignment="Right" Grid.Row="1" Grid.Column="2" Margin="0 0 50 0">
+            <Button Style="{StaticResource FinishedButton}"
                         x:Name="OkBtn"
                         Command="{Binding OkCommand}"
                         Content="Ok"/>
-                <Button Style="{StaticResource FinishedButton}" 
+            <Button Style="{StaticResource FinishedButton}" 
                         x:Name="ApplyBtn"                        
                         Command="{Binding ApplyCommand}"
                         Content="Apply"/>
-                <Button Style="{StaticResource FinishedButton}" 
+            <Button Style="{StaticResource FinishedButton}" 
                         x:Name="CancelBtn"                        
                         Command="{Binding CancelCommand}"
                         Content="Cancel"/>
-            </WrapPanel>
+        </WrapPanel>
     </StackPanel>
 </Window>

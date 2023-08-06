@@ -16,15 +16,10 @@ namespace WpfPanel.Domain.Models
         private const string THROUGH_SWITCH = "Through Switch";
 
         public string Number { get; set; }
-        public ObservableCollection<string> ApartmentElements { get; set; }
+        public ObservableCollection<ApartmentElement> ApartmentElements { get; set; }
         /*public ObservableCollection<string> ApartmentElements { get; } = new ObservableCollection<string>
         {
             TRISSA_SWITCH, USB, BLOCK1, SINGLE_SOCKET, THROUGH_SWITCH
         };*/
-    }
-
-    class ApartmentElement
-    {
-        public string Name { get; set; }
     }
 }

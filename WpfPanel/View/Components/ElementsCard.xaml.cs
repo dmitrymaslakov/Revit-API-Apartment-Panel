@@ -90,44 +90,44 @@ namespace WpfPanel.View.Components
             set { SetValue(IsDictionaryKeysProperty, value); }
         }
 
-        public static readonly DependencyProperty AddElementPropertyCommand =
+        public static readonly DependencyProperty AddElementCommandProperty =
             DependencyProperty.Register(nameof(AddElementCommand), typeof(ICommand),
                 typeof(ElementsCard), new PropertyMetadata(null));
 
         public ICommand AddElementCommand
         {
-            get { return (ICommand)GetValue(AddElementPropertyCommand); }
-            set { SetValue(AddElementPropertyCommand, value); }
+            get { return (ICommand)GetValue(AddElementCommandProperty); }
+            set { SetValue(AddElementCommandProperty, value); }
         }
 
-        public static readonly DependencyProperty EditElementPropertyCommand =
+        public static readonly DependencyProperty EditElementCommandProperty =
             DependencyProperty.Register(nameof(EditElementCommand), typeof(ICommand),
                 typeof(ElementsCard), new PropertyMetadata(null));
 
         public ICommand EditElementCommand
         {
-            get { return (ICommand)GetValue(EditElementPropertyCommand); }
-            set { SetValue(EditElementPropertyCommand, value); }
+            get { return (ICommand)GetValue(EditElementCommandProperty); }
+            set { SetValue(EditElementCommandProperty, value); }
         }
 
-        public static readonly DependencyProperty RemoveElementPropertyCommand =
+        public static readonly DependencyProperty RemoveElementCommandProperty =
             DependencyProperty.Register(nameof(RemoveElementCommand), typeof(ICommand),
                 typeof(ElementsCard), new PropertyMetadata(null));
 
         public ICommand RemoveElementCommand
         {
-            get { return (ICommand)GetValue(RemoveElementPropertyCommand); }
-            set { SetValue(RemoveElementPropertyCommand, value); }
+            get { return (ICommand)GetValue(RemoveElementCommandProperty); }
+            set { SetValue(RemoveElementCommandProperty, value); }
         }
 
-        public static readonly DependencyProperty SelectedElementsPropertyCommand =
+        public static readonly DependencyProperty SelectedElementsCommandProperty =
             DependencyProperty.Register(nameof(SelectedElementsCommand), typeof(ICommand),
                 typeof(ElementsCard), new PropertyMetadata(null));
 
         public ICommand SelectedElementsCommand
         {
-            get { return (ICommand)GetValue(SelectedElementsPropertyCommand); }
-            set { SetValue(SelectedElementsPropertyCommand, value); }
+            get { return (ICommand)GetValue(SelectedElementsCommandProperty); }
+            set { SetValue(SelectedElementsCommandProperty, value); }
         }
 
         public ElementsCard()
