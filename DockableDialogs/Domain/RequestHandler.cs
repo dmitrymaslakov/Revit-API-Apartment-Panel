@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using Autodesk.Revit.DB.Structure;
 using Autodesk.Revit.DB.Visual;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,10 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Security.Cryptography;
+using Autodesk.Revit.UI.Events;
+using System.Windows.Controls;
+using WindowsInput;
+//using Autodesk.Revit.Creation;
 
 namespace DockableDialogs.Domain
 {
@@ -85,10 +90,37 @@ namespace DockableDialogs.Domain
                 }
                 var symbol = new FilteredElementCollector(document)
                     .OfClass(typeof(FamilySymbol))
-                    .Where(fs => fs.Name == LAMP)
+                    //.Where(fs => fs.Name == LAMP)
+                    .Where(fs => fs.Name == SINGLE_SOCKET)
                     .FirstOrDefault() as FamilySymbol;
 
-                Parameter parameter = symbol.LookupParameter("RBX-CIRCUIT");
+                ElectricalFixturesCreate(uiDocument, symbol);
+                //uiDocument.PromptForFamilyInstancePlacement(symbol);
+
+                /*FamilyInstance newLamp = document.Create
+                    .NewFamilyInstance(point, symbol, StructuralType.NonStructural);
+
+                Parameter parameter = newLamp.LookupParameter("RBX-CIRCUIT");
+                if (parameter != null && parameter.StorageType == StorageType.String)
+                {
+                    // Start a transaction to modify the parameter value
+                    using (var transaction = new Transaction(document, "Write Parameter Value"))
+                    {
+                        transaction.Start();
+
+                        // Set the parameter value
+                        parameter.Set(circuit);
+
+                        // Commit the transaction
+                        transaction.Commit();
+                    }
+                }*/
+                /*uiapp.Idling += OnIdling;
+
+                uiDocument.PostRequestForElementTypePlacement(symbol);
+                uiDocument.RefreshActiveView();*/
+
+                /*Parameter parameter = symbol.LookupParameter("RBX-CIRCUIT");
                 Parameter parameter2 = symbol.LookupParameter("UK-HEIGHT");
 
                 List<string> p = new List<string>();
@@ -104,13 +136,67 @@ namespace DockableDialogs.Domain
                 if (parameter != null && parameter.StorageType == StorageType.String)
                 {
                     parameter.Set(circuit + "/" + lampSuffix);
-                }
-                uiDocument.PostRequestForElementTypePlacement(symbol);
+                }*/
             }
             catch (Exception exception)
             {
                 TaskDialogCreater.ShowNotification(exception.Message);
             }
+        }
+
+        private void OnIdling(object sender, IdlingEventArgs e)
+        {
+            var uiapp = sender as UIApplication;
+            UIDocument uiDocument = uiapp.ActiveUIDocument;
+            Document document = uiDocument.Document;
+            Selection selection = uiDocument.Selection;
+
+            /*ICollection<ElementId> selectedElementIds = selection.GetElementIds();
+            string parameterName = "RBX-CIRCUIT";
+            if (selectedElementIds.Count == 1)
+            {
+                ElementId instanceId = selectedElementIds.First();
+                Element instanceElement = uiDocument.Document.GetElement(instanceId);
+
+                if (instanceElement is FamilyInstance familyInstance)
+                {
+                    // Set the parameter value for the specific FamilyInstance
+                    Parameter parameter = familyInstance.LookupParameter(parameterName);
+                    if (parameter != null && !parameter.IsReadOnly)
+                    {
+                        using (Transaction transaction = new Transaction(uiDocument.Document, "Modify Parameter"))
+                        {
+                            if (transaction.Start() == TransactionStatus.Started)
+                            {
+                                parameter.Set("parameterValue");
+                                transaction.Commit();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        TaskDialog.Show("Parameter Not Found or Read-Only", $"Parameter '{parameterName}' not found or is read-only.");
+                    }
+                }
+            }*/
+            uiapp.Idling -= OnIdling;
+        }
+
+        private void ElectricalFixturesCreate(UIDocument uiDocument, FamilySymbol symbol)
+        {
+            XYZ point = uiDocument.Selection.PickPoint("Pick a point in the model");
+            XYZ dir = new XYZ(0, 0, 0);
+            var elementId = uiDocument
+                .Selection
+                .PickObject(ObjectType.Element, "Pick an element in the model")
+                .ElementId;
+
+            Element element = uiDocument.Document.GetElement(elementId);
+
+            FamilyInstance newLamp = uiDocument
+                .Document
+                .Create
+                .NewFamilyInstance(point, symbol, dir, element, StructuralType.NonStructural);
         }
 
         private string GetSuffixesFromLamps(Document document, Selection selection)
