@@ -11,7 +11,7 @@ using System.Windows;
 using System.Security.Cryptography;
 using Autodesk.Revit.UI.Events;
 using System.Windows.Controls;
-using WindowsInput;
+//using WindowsInput;
 //using Autodesk.Revit.Creation;
 
 namespace DockableDialogs.Domain
@@ -184,19 +184,55 @@ namespace DockableDialogs.Domain
 
         private void ElectricalFixturesCreate(UIDocument uiDocument, FamilySymbol symbol)
         {
-            XYZ point = uiDocument.Selection.PickPoint("Pick a point in the model");
-            XYZ dir = new XYZ(0, 0, 0);
-            var elementId = uiDocument
-                .Selection
-                .PickObject(ObjectType.Element, "Pick an element in the model")
-                .ElementId;
+            Document document = uiDocument.Document;
+            Reference reference = uiDocument.Selection
+                .PickObject(ObjectType.PointOnElement, "Pick a host in the model");
+            var levelId = ViewLevel(uiDocument);
 
-            Element element = uiDocument.Document.GetElement(elementId);
+            using (var tr = new Transaction(document, "New ElectricalFixture"))
+            {
+                tr.Start();
+                XYZ dir = new XYZ(0, 0, 0);
+                FamilyInstance newElectricalFixture = uiDocument
+                    .Document.Create
+                    .NewFamilyInstance(reference, reference.GlobalPoint, dir, symbol);
+                newElectricalFixture
+                    .get_Parameter(BuiltInParameter.INSTANCE_SCHEDULE_ONLY_LEVEL_PARAM)
+                    .Set(levelId);
+                document.GetUnits().GetFormatOptions(SpecTypeId.Length);
 
-            FamilyInstance newLamp = uiDocument
-                .Document
-                .Create
-                .NewFamilyInstance(point, symbol, dir, element, StructuralType.NonStructural);
+                double newElevationFeets = UnitUtils.ConvertToInternalUnits(40.0, 
+                    document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+
+                double newElevationMeters = UnitUtils.ConvertFromInternalUnits(40.0,
+                    document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+
+                newElectricalFixture
+                    .get_Parameter(BuiltInParameter.INSTANCE_ELEVATION_PARAM)
+                    .Set(newElevationFeets);
+
+                newElectricalFixture.LookupParameter("RBX-CIRCUIT").Set("circuit");
+                tr.Commit();
+            }
+        }
+
+        private ElementId ViewLevel(UIDocument uiDocument)
+        {
+            Document doc = uiDocument.Document;
+            var active = doc.ActiveView;
+            ElementId levelId = null;
+            Parameter level = active.LookupParameter("Associated Level");
+            FilteredElementCollector lvlCollector = new FilteredElementCollector(doc);
+            ICollection<Element> lvlCollection = lvlCollector.OfClass(typeof(Level)).ToElements();
+            foreach (Element l in lvlCollection)
+            {
+                Level lvl = l as Level;
+                if (lvl.Name == level.AsString())
+                {
+                    levelId = lvl.Id;
+                }
+            }
+            return levelId;
         }
 
         private string GetSuffixesFromLamps(Document document, Selection selection)
