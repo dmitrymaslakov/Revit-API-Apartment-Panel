@@ -70,12 +70,15 @@ namespace WpfPanel.ViewModel
                     { nameof(elementName), elementName },
                     { nameof(elementCategory), elementCategory },
                     { "lampSuffix", CurrentSuffix },
+                    { "height", Height.ToString() },
                 };
                 _handler.Request.Make(RequestId.Insert);
                 _exEvent.Raise();
             });
 
             SetCurrentSuffixCommand = new RelayCommand(o => CurrentSuffix = o as string);
+
+            Height = 40.0;
         }
 
         private void ExecuteOkApplyCancelActions(object obj, OkApplyCancel okApplyCancel)
@@ -108,6 +111,14 @@ namespace WpfPanel.ViewModel
         {
             get => _currentSuffix;
             set => Set(ref _currentSuffix, value);
+        }
+        
+        private double _height;
+
+        public double Height
+        {
+            get => _height;
+            set => Set(ref _height, value);
         }
 
         private string _status;

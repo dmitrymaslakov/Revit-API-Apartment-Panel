@@ -22,6 +22,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <ListView Grid.Row="0" ItemsSource="{Binding Circuits}" x:Name="apartmentCircuits">
             <ListView.ItemTemplate>
@@ -72,17 +73,21 @@
                 HorizontalAlignment="Right" 
                 Margin="0 0 40 0" />
         <WrapPanel Grid.Row="2">
-            <TextBlock Text="Current suffix of circuit: "/>
-            <TextBlock                                 
-                Text="{Binding CurrentSuffix}">
-                <TextBlock.InputBindings>
-                    <MouseBinding 
+                <TextBlock Text="Current suffix of circuit: "/>
+                <TextBlock
+                    Text="{Binding CurrentSuffix}">
+                    <TextBlock.InputBindings>
+                        <MouseBinding 
                         x:Name="currentSuffix" 
                         Command="{Binding SetCurrentSuffixCommand}"/>
-                </TextBlock.InputBindings>
-            </TextBlock>
+                    </TextBlock.InputBindings>
+                </TextBlock>
         </WrapPanel>
-        <StatusBar Grid.Row="3">
+        <WrapPanel Grid.Row="3">
+            <TextBlock Text="Height"/>
+            <TextBox Text="{Binding Height}" Margin="5 0 0 0" Width="30"/>
+        </WrapPanel>
+        <StatusBar Grid.Row="4">
             <StatusBarItem x:Name="statusBarItem" Content="{Binding Status}">
                 <StatusBarItem.Style>
                     <Style TargetType="StatusBarItem">

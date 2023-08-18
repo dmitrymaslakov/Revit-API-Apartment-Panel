@@ -31,6 +31,21 @@ namespace DockableDialogs
 
         public Result OnShutdown(UIControlledApplication application)
         {
+            var updater = new ElectricalFixtureUpdater(application.ActiveAddInId);
+            UpdaterRegistry.RegisterUpdater(updater);
+
+            //ElementClassFilter instanceFilter = new ElementClassFilter(typeof(FamilyInstance));
+
+            var filters = new ElementFilter[]
+                {
+                        new ElementIsElementTypeFilter(true),
+                        new ElementCategoryFilter(BuiltInCategory.OST_CableTrayFitting),
+                        new ElementParameterFilter(new [] {familyNameRule, symbolNameRule})
+                };
+            var instanceFilter = new LogicalAndFilter(filters);
+
+            UpdaterRegistry.AddTrigger(updater.GetUpdaterId(), instanceFilter,
+                                    Element.GetChangeTypeElementAddition());
             return Result.Succeeded;
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DockableDialogs.Domain.Services.Commands;
+using System;
 
 namespace DockableDialogs.Domain
 {

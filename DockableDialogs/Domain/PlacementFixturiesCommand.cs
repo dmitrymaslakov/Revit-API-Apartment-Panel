@@ -1,14 +1,5 @@
-﻿using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Events;
-using Autodesk.Revit.UI.Selection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using DockableDialogs.ViewModel;
+﻿using System;
+using DockableDialogs.Domain.Services.Commands;
 
 namespace DockableDialogs.Domain
 {

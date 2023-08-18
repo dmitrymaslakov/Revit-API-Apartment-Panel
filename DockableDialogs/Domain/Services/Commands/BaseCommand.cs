@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace DockableDialogs.Domain
+namespace DockableDialogs.Domain.Services.Commands
 {
     public abstract class BaseCommand : ICommand
     {

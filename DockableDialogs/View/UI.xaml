@@ -56,10 +56,12 @@
             </StackPanel>
         </StackPanel>-->
         <StackPanel Grid.Row="2">
-            <Button Content="Трисса" Padding="3" Margin="0 3" HorizontalAlignment="Left"
-                    Command="{Binding PlacementFixturies}"/>
-            <Button Content="Test" Padding="3" Margin="0 3" HorizontalAlignment="Left"
-                    Command="{Binding Test}"/>
+            <Button Content="Lamp" Padding="3" Margin="0 3" HorizontalAlignment="Left"
+                    Command="{Binding InsertLamp}"/>
+            <Button Content="Switch" Padding="3" Margin="0 3" HorizontalAlignment="Left"
+                    Command="{Binding InsertSwitch}"/>
+            <Button Content="Socket" Padding="3" Margin="0 3" HorizontalAlignment="Left"
+                    Command="{Binding InsertSocket}"/>
         </StackPanel>
     </Grid>
 </UserControl>

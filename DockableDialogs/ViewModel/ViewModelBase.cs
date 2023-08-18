@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Autodesk.Revit.UI;
+using DockableDialogs.Domain;
 
 namespace DockableDialogs.ViewModel
 {
@@ -13,6 +15,14 @@ namespace DockableDialogs.ViewModel
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         private bool _disposed;
+        protected readonly ExternalEvent _exEvent;
+        protected readonly RequestHandler _handler;
+
+        public ViewModelBase(ExternalEvent exEvent, RequestHandler handler)
+        {
+            _exEvent = exEvent;
+            _handler = handler;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

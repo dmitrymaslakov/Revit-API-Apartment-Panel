@@ -18,22 +18,6 @@ namespace WpfPanel.ViewModel.ComponentsVM
 {
     public class EditPanelVM : ViewModelBase
     {
-        #region Mock Data
-        private const string TRISSA_SWITCH = "Trissa Switch";
-        private const string USB = "USB";
-        private const string BLOCK1 = "BLOCK1";
-        private const string SINGLE_SOCKET = "Single Socket";
-        private const string THROUGH_SWITCH = "Through Switch";
-        private const string LAMP = "Lamp";
-
-        private const string TELEPHONE_DEVICES = "Telephone Devices";
-        private const string COMMUNICATION_DEVICES = "Communication Devices";
-        private const string FIRE_ALARM_DEVICES = "Fire Alarm Devices";
-        private const string LIGHTING_DEVICES = "Lighting Devices";
-        private const string LIGHTING_FIXTURES = "Lighting Fixtures";
-        private const string ELECTRICAL_FIXTURES = "Electrical Fixtures";
-        #endregion
-
         private readonly Action<FamilySymbol> _addElementToApartment;
         private readonly Action<object, OkApplyCancel> _okApplyCancelActions;
 
@@ -42,8 +26,8 @@ namespace WpfPanel.ViewModel.ComponentsVM
         {
             ApartmentElements = new ObservableCollection<ApartmentElement>
             {
-                new ApartmentElement {Name = TRISSA_SWITCH, Category = ELECTRICAL_FIXTURES},
-                new ApartmentElement {Name = USB, Category = COMMUNICATION_DEVICES}   
+                new ApartmentElement {Name = StaticData.TRISSA_SWITCH, Category = StaticData.ELECTRICAL_FIXTURES},
+                new ApartmentElement {Name = StaticData.USB, Category = StaticData.COMMUNICATION_DEVICES}   
             };
             /*PanelCircuits = new ObservableCollection<string>
             {
@@ -57,16 +41,16 @@ namespace WpfPanel.ViewModel.ComponentsVM
             {
                 {"1", new ObservableCollection<ApartmentElement>
                     { 
-                        new ApartmentElement {Name = TRISSA_SWITCH, Category = ELECTRICAL_FIXTURES},
-                        new ApartmentElement {Name = USB, Category = COMMUNICATION_DEVICES},
-                        new ApartmentElement {Name = BLOCK1, Category = COMMUNICATION_DEVICES},
+                        new ApartmentElement {Name = StaticData.TRISSA_SWITCH, Category = StaticData.ELECTRICAL_FIXTURES},
+                        new ApartmentElement {Name = StaticData.USB, Category = StaticData.COMMUNICATION_DEVICES},
+                        new ApartmentElement {Name = StaticData.BLOCK1, Category = StaticData.COMMUNICATION_DEVICES},
                     }
                 },
                 {"2", new ObservableCollection<ApartmentElement>
                     {
-                        new ApartmentElement {Name = SINGLE_SOCKET, Category = ELECTRICAL_FIXTURES},
-                        new ApartmentElement {Name = THROUGH_SWITCH, Category = LIGHTING_DEVICES},
-                        new ApartmentElement {Name = LAMP, Category = LIGHTING_FIXTURES},                     
+                        new ApartmentElement {Name = StaticData.SINGLE_SOCKET, Category = StaticData.ELECTRICAL_FIXTURES},
+                        new ApartmentElement {Name = StaticData.THROUGH_SWITCH, Category = StaticData.LIGHTING_DEVICES},
+                        new ApartmentElement {Name = StaticData.LAMP, Category = StaticData.LIGHTING_FIXTURES},                     
                     }
                 },
             };
