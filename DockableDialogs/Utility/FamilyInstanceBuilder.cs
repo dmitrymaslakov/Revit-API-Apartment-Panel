@@ -76,7 +76,7 @@ namespace DockableDialogs.Utility
         }
         public FamilyInstanceBuilder WithSwitchSuffixes()
         {
-            _switchSuffixes = _elementData["switchSuffixes"];
+            _switchSuffixes = GetSuffixesFromLamps();
             return this;
         }
         #endregion
@@ -229,6 +229,64 @@ namespace DockableDialogs.Utility
                     break;
             }
         }
+        private string GetSuffixesFromLamps()
+        {
+            //try
+            {
+                var collection = _selection.GetElementIds()
+                    .Select(id => _document.GetElement(id))
+                    .OfType<FamilyInstance>()
+                    .Where(fs => fs.Category.Name.Contains("Lighting Fixtures"))
+                    ;
+                if (collection.Count() < 1)
+                {
+                    string message =
+                        "Please select the lamp(s) of Lighting Fixtures category before inserting the switch.";
+                    throw new Exception(message);
+                }
+
+                var circuitParameters = new List<Parameter>();
+
+                string targetCircuitParam = "RBX-CIRCUIT";
+
+                foreach (var lamp in collection)
+                {
+                    var lampParameter = lamp.Parameters
+                        .OfType<Parameter>()
+                        .Where(p => p.Definition.Name.Contains(targetCircuitParam))
+                        .FirstOrDefault();
+
+                    if (lampParameter == null)
+                    {
+                        string message =
+                            "Some of the Lighting Fixtures do not have RBX-CIRCUIT parameter.";
+                        throw new Exception(message);
+                    }
+
+                    circuitParameters.Add(lampParameter);
+                }
+
+                var lampCircuits = new List<string>();
+
+                foreach (Parameter parameter in circuitParameters)
+                    if (parameter.Definition.Name.Contains(targetCircuitParam))
+                        if (parameter.StorageType == StorageType.String)
+                            lampCircuits.Add(parameter.AsString());
+
+                var suffixes = lampCircuits
+                    .Select(c => c.Substring(c.IndexOf("/") + 1))
+                    .ToList();
+
+                return string.Join(",", suffixes);
+
+            }
+            /*catch (Exception ex)
+            {
+                TaskDialog.Show("Exception", ex.Message);
+                return null;
+            }*/
+        }
+
         #endregion
     }
 }

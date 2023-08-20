@@ -31,21 +31,6 @@ namespace DockableDialogs
 
         public Result OnShutdown(UIControlledApplication application)
         {
-            var updater = new ElectricalFixtureUpdater(application.ActiveAddInId);
-            UpdaterRegistry.RegisterUpdater(updater);
-
-            //ElementClassFilter instanceFilter = new ElementClassFilter(typeof(FamilyInstance));
-
-            var filters = new ElementFilter[]
-                {
-                        new ElementIsElementTypeFilter(true),
-                        new ElementCategoryFilter(BuiltInCategory.OST_CableTrayFitting),
-                        new ElementParameterFilter(new [] {familyNameRule, symbolNameRule})
-                };
-            var instanceFilter = new LogicalAndFilter(filters);
-
-            UpdaterRegistry.AddTrigger(updater.GetUpdaterId(), instanceFilter,
-                                    Element.GetChangeTypeElementAddition());
             return Result.Succeeded;
         }
 
@@ -60,7 +45,9 @@ namespace DockableDialogs
             if (!DockablePane.PaneIsRegistered(UI.PaneId))
                 application.RegisterDockablePane(UI.PaneId, UI.PaneName, View);
 
-             return Result.Succeeded;
+            
+
+            return Result.Succeeded;
         }
 
         private void OnViewActivated(object sender, ViewActivatedEventArgs e)
@@ -84,7 +71,7 @@ namespace DockableDialogs
     [Regeneration(RegenerationOption.Manual)]
     public class Command : IExternalCommand
     {
-        public virtual Result Execute(ExternalCommandData commandData, 
+        public virtual Result Execute(ExternalCommandData commandData,
             ref string message, ElementSet elements)
         {
             UIApplication uiapp = commandData.Application;
@@ -99,6 +86,30 @@ namespace DockableDialogs
             {
                 return Result.Failed;
             }
+
+            var heightUpdater = new HeightUpdater(uiapp.ActiveAddInId);
+            UpdaterRegistry.RegisterUpdater(heightUpdater);
+
+            Document _document = uiapp.ActiveUIDocument.Document;
+
+            double newElevationFeets = UnitUtils.ConvertToInternalUnits(40.0,
+                _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+
+            FilterRule elevationFromLevelRule = ParameterFilterRuleFactory
+                .CreateEqualsRule(new ElementId(BuiltInParameter.INSTANCE_ELEVATION_PARAM), 
+                newElevationFeets, 0.01);
+
+            var elementFilter = new LogicalAndFilter(new ElementFilter[]
+                {
+                    new ElementIsElementTypeFilter(true),
+                    new ElementParameterFilter(elevationFromLevelRule)
+                });
+
+            UpdaterRegistry.AddTrigger(
+                heightUpdater.GetUpdaterId(), elementFilter,
+                Element.GetChangeTypeParameter(
+                    new ElementId(BuiltInParameter.INSTANCE_ELEVATION_PARAM)));
+
             return Result.Succeeded;
         }
     }

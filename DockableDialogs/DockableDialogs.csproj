@@ -76,7 +76,7 @@
     <Compile Include="Domain\ExternalEventHandler.cs" />
     <Compile Include="Domain\PlacementFixturiesCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utility\ElectricalFixtureUpdater.cs" />
+    <Compile Include="Utility\HeightUpdater.cs" />
     <Compile Include="Utility\FamilyInstanceBuilder.cs" />
     <Compile Include="Utility\FileUtility.cs" />
     <Compile Include="Utility\Globals.cs" />
