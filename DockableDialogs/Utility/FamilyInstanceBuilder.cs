@@ -18,26 +18,22 @@ namespace DockableDialogs.Utility
         private Document _document;
         private Selection _selection;
         private double _elevationFromLevel;
-        private Dictionary<string, string> _elementData;
         private ElementId _currentLevelId;
         private string _circuit;
         private string _lampSuffix;
         private string _switchSuffixes;
-        private double _defaulElevationFromLevel;
 
         #endregion
 
-        public FamilyInstanceBuilder(UIApplication uiapp, Dictionary<string, string> elementData)
+        public FamilyInstanceBuilder(UIApplication uiapp)
         {
             _uiapp = uiapp;
             _uiDocument = _uiapp.ActiveUIDocument;
             _document = _uiDocument.Document;
             _selection = _uiDocument.Selection;
-            _elementData = elementData;
         }
-        public ElementId Build()
+        public ElementId Build(string elementName)
         {
-            string elementName = _elementData[nameof(elementName)];
             var familySymbol = new FilteredElementCollector(_document)
                 .OfClass(typeof(FamilySymbol))
                 .Where(fs => fs.Name == elementName)
@@ -48,14 +44,9 @@ namespace DockableDialogs.Utility
         }
 
         #region Configuration methods
-        public FamilyInstanceBuilder WithDefaulElevetionFromLevel(double defaulElevetionFromLevel)
+        public FamilyInstanceBuilder WithElevationFromLevel(string elevationFromLevel)
         {
-            _defaulElevationFromLevel = defaulElevetionFromLevel;
-            return this;
-        }
-        public FamilyInstanceBuilder WithElevationFromLevel()
-        {
-            bool isElevationParsed = double.TryParse(_elementData["elevationFromLevel"],
+            bool isElevationParsed = double.TryParse(elevationFromLevel,
                 out _elevationFromLevel);
             return this;
         }
@@ -64,14 +55,14 @@ namespace DockableDialogs.Utility
             _currentLevelId = GetViewLevel();
             return this;
         }
-        public FamilyInstanceBuilder WithCircuit()
+        public FamilyInstanceBuilder WithCircuit(string circuit)
         {
-            _circuit = _elementData["circuit"];
+            _circuit = circuit;
             return this;
         }
-        public FamilyInstanceBuilder WithLampSuffix()
+        public FamilyInstanceBuilder WithLampSuffix(string lampSuffix)
         {
-            _lampSuffix = _elementData["lampSuffix"];
+            _lampSuffix = lampSuffix;
             return this;
         }
         public FamilyInstanceBuilder WithSwitchSuffixes()

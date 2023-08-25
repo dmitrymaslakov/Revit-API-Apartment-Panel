@@ -63,7 +63,8 @@ namespace DockableDialogs.ViewModel
                     { "elementName", LAMP},
                     { "elementCategory", LIGHTING_FIXTURES},
                     { "lampSuffix", "1"},
-                    { "elevationFromLevel", "40"},
+                    { "switchHeight", "110"},
+                    { "socketHeight", "80"},
                 };
                 _handler.Request.Make(RequestId.Insert);
                 _exEvent.Raise();
@@ -76,7 +77,8 @@ namespace DockableDialogs.ViewModel
                     { "elementName", THROUGH_SWITCH},
                     { "elementCategory", LIGHTING_DEVICES},
                     { "lampSuffix", "1"},
-                    { "elevationFromLevel", "40"},
+                    { "switchHeight", "110"},
+                    { "socketHeight", "80"},
                 };
                 _handler.Request.Make(RequestId.Insert);
                 _exEvent.Raise();
@@ -89,7 +91,8 @@ namespace DockableDialogs.ViewModel
                     { "elementName", SINGLE_SOCKET},
                     { "elementCategory", ELECTRICAL_FIXTURES},
                     { "lampSuffix", "1"},
-                    { "elevationFromLevel", "40"},
+                    { "switchHeight", "110"},
+                    { "socketHeight", "80"},
                 };
                 _handler.Request.Make(RequestId.Insert);
                 _exEvent.Raise();

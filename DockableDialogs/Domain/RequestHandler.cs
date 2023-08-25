@@ -75,34 +75,37 @@ namespace DockableDialogs.Domain
                 var elementData = Props as Dictionary<string, string>;
                 string elementName = elementData[nameof(elementName)];
                 string elementCategory = elementData[nameof(elementCategory)];
+                string circuit = elementData[nameof(circuit)];
+                string switchHeight = elementData[nameof(switchHeight)];
+                string socketHeight = elementData[nameof(socketHeight)];
+                string lampSuffix = elementData[nameof(lampSuffix)];
+
                 switch (elementCategory)
                 {
                     case StaticData.LIGHTING_FIXTURES:
-                        new FamilyInstanceBuilder(uiapp, elementData)
-                            .WithCircuit()
+                        new FamilyInstanceBuilder(uiapp)
+                            .WithCircuit(circuit)
                             .WithCurrentLevel()
-                            .WithLampSuffix()
-                            .Build();
+                            .WithLampSuffix(lampSuffix)
+                            .Build(elementName);
                         break;
                     case StaticData.LIGHTING_DEVICES:
-                        new FamilyInstanceBuilder(uiapp, elementData)
-                            .WithDefaulElevetionFromLevel(40.0)
-                            .WithElevationFromLevel()
-                            .WithCircuit()
+                        new FamilyInstanceBuilder(uiapp)
+                            .WithElevationFromLevel(switchHeight)
+                            .WithCircuit(circuit)
                             .WithSwitchSuffixes()
                             .WithCurrentLevel()
-                            .Build();
+                            .Build(elementName);
                         break;
                     case StaticData.ELECTRICAL_FIXTURES:
                     case StaticData.TELEPHONE_DEVICES:
                     case StaticData.FIRE_ALARM_DEVICES:
                     case StaticData.COMMUNICATION_DEVICES:
-                        new FamilyInstanceBuilder(uiapp, elementData)
-                            .WithDefaulElevetionFromLevel(40.0)
-                            .WithElevationFromLevel()
-                            .WithCircuit()
+                        new FamilyInstanceBuilder(uiapp)
+                            .WithElevationFromLevel(socketHeight)
+                            .WithCircuit(circuit)
                             .WithCurrentLevel()
-                            .Build();
+                            .Build(elementName);
                         break;
                     default:
                         break;

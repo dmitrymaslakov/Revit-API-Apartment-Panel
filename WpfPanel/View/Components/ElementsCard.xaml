@@ -33,18 +33,32 @@
                     <!--SelectedItem="{Binding SelectedElement, ElementName=root, UpdateSourceTrigger=PropertyChanged}">-->
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock>
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="{Binding Name}" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsDictionaryKeys, ElementName=root}" Value="True">
-                                                <Setter Property="Text" Value="{Binding Key}" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
+                            <WrapPanel>
+                                <TextBlock Width="75">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="{Binding Name}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDictionaryKeys, ElementName=root}" Value="True">
+                                                    <Setter Property="Text" Value="{Binding Key}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <Image Width="20" Margin="20 0 0 0">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Source" Value="{Binding Annotation}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDictionaryKeys, ElementName=root}" Value="True">
+                                                    <Setter Property="Source" Value="{x:Null}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </WrapPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

@@ -23,6 +23,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <ListView Grid.Row="0" ItemsSource="{Binding Circuits}" x:Name="apartmentCircuits">
             <ListView.ItemTemplate>
@@ -101,5 +102,10 @@
                 </StatusBarItem.Style>
             </StatusBarItem>
         </StatusBar>
+        <WrapPanel Grid.Row="5">
+            <Image x:Name="TestImage" Height="60" Width="60"/>
+            <Button Content="Apply Clipboard" Click="Button_Click" />
+            <Button Content="Apply File" Click="Button_Click1" />
+        </WrapPanel>
     </Grid>
 </Window>

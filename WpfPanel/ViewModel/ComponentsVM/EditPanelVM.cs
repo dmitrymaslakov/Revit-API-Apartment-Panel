@@ -8,9 +8,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using WpfPanel.Domain;
 using WpfPanel.Domain.Models;
 using WpfPanel.Domain.Models.RevitMockupModels;
+using WpfPanel.Domain.Services.AnnotationService;
 using WpfPanel.Domain.Services.Commands;
 using WpfPanel.Utilities;
 
@@ -21,13 +24,13 @@ namespace WpfPanel.ViewModel.ComponentsVM
         private readonly Action<FamilySymbol> _addElementToApartment;
         private readonly Action<object, OkApplyCancel> _okApplyCancelActions;
 
-        public EditPanelVM(ExternalEvent exEvent, RequestHandler handler, 
+        public EditPanelVM(ExternalEvent exEvent, RequestHandler handler,
             Action<object, OkApplyCancel> okApplyCancelActions) : base(exEvent, handler)
         {
             ApartmentElements = new ObservableCollection<ApartmentElement>
             {
                 new ApartmentElement {Name = StaticData.TRISSA_SWITCH, Category = StaticData.ELECTRICAL_FIXTURES},
-                new ApartmentElement {Name = StaticData.USB, Category = StaticData.COMMUNICATION_DEVICES}   
+                new ApartmentElement {Name = StaticData.USB, Category = StaticData.COMMUNICATION_DEVICES}
             };
             /*PanelCircuits = new ObservableCollection<string>
             {
@@ -40,7 +43,7 @@ namespace WpfPanel.ViewModel.ComponentsVM
             PanelCircuits = new ObservableDictionary<string, ObservableCollection<ApartmentElement>>
             {
                 {"1", new ObservableCollection<ApartmentElement>
-                    { 
+                    {
                         new ApartmentElement {Name = StaticData.TRISSA_SWITCH, Category = StaticData.ELECTRICAL_FIXTURES},
                         new ApartmentElement {Name = StaticData.USB, Category = StaticData.COMMUNICATION_DEVICES},
                         new ApartmentElement {Name = StaticData.BLOCK1, Category = StaticData.COMMUNICATION_DEVICES},
@@ -50,20 +53,24 @@ namespace WpfPanel.ViewModel.ComponentsVM
                     {
                         new ApartmentElement {Name = StaticData.SINGLE_SOCKET, Category = StaticData.ELECTRICAL_FIXTURES},
                         new ApartmentElement {Name = StaticData.THROUGH_SWITCH, Category = StaticData.LIGHTING_DEVICES},
-                        new ApartmentElement {Name = StaticData.LAMP, Category = StaticData.LIGHTING_FIXTURES},                     
+                        new ApartmentElement {Name = StaticData.LAMP, Category = StaticData.LIGHTING_FIXTURES},
                     }
                 },
             };
-            
+
             CircuitElements = new ObservableCollection<ApartmentElement>();
-            
+
             SelectedApartmentElements = new ObservableCollection<ApartmentElement>();
-            
-            SelectedPanelCircuits = 
+
+            SelectedPanelCircuits =
                 new ObservableCollection<KeyValuePair<string, ObservableCollection<ApartmentElement>>>();
-            
+
             SelectedCircuitElements = new ObservableCollection<ApartmentElement>();
-            
+
+            SocketHeight = 40.0;
+
+            SwitchHeight = 40.0;
+
             AddApartmentElementCommand = new RelayCommand(o
                 => MakeRequest(RequestId.AddElement, _addElementToApartment));
 
@@ -73,14 +80,14 @@ namespace WpfPanel.ViewModel.ComponentsVM
                     foreach (var element in SelectedApartmentElements.ToArray())
                         ApartmentElements.Remove(element);
             });
-            
+
             AddPanelCircuitCommand = new RelayCommand(o =>
             {
                 if (!string.IsNullOrEmpty(NewCircuit) && !PanelCircuits.ContainsKey(NewCircuit))
                     PanelCircuits.Add(NewCircuit, new ObservableCollection<ApartmentElement>());
                 NewCircuit = string.Empty;
             });
-            
+
             RemovePanelCircuitsCommand = new RelayCommand(o =>
             {
                 CircuitElements.Clear();
@@ -89,11 +96,11 @@ namespace WpfPanel.ViewModel.ComponentsVM
                     PanelCircuits.Remove(circuit.Key);
                 SelectedPanelCircuits.Clear();
             });
-            
+
             AddElementToCircuitCommand = new RelayCommand(o =>
             {
-                if (SelectedPanelCircuits.Count > 1 
-                    || SelectedPanelCircuits.Count == 0 
+                if (SelectedPanelCircuits.Count > 1
+                    || SelectedPanelCircuits.Count == 0
                     || SelectedApartmentElements.Count == 0)
                     return;
 
@@ -101,7 +108,7 @@ namespace WpfPanel.ViewModel.ComponentsVM
 
                 foreach (var selectedApartmentElement in SelectedApartmentElements)
                 {
-                    if (selectedApartmentElement == null 
+                    if (selectedApartmentElement == null
                     || string.IsNullOrEmpty(selectedPanelCircuit.Key))
                         return;
 
@@ -118,12 +125,12 @@ namespace WpfPanel.ViewModel.ComponentsVM
                     AddCurrentCircuitElements(PanelCircuits[selectedPanelCircuit.Key]);
                 }
             });
-            
+
             RemoveElementsFromCircuitCommand = new RelayCommand(o =>
             {
-                if (SelectedPanelCircuits.Count > 1 
+                if (SelectedPanelCircuits.Count > 1
                     || SelectedPanelCircuits.Count == 0
-                    || SelectedCircuitElements.Count == 0) 
+                    || SelectedCircuitElements.Count == 0)
                     return;
 
                 var selectedPanelCircuit = SelectedPanelCircuits.SingleOrDefault();
@@ -134,7 +141,7 @@ namespace WpfPanel.ViewModel.ComponentsVM
                 foreach (var selectedCircuitElement in SelectedCircuitElements)
                     selectedPanelCircuit.Value.Remove(selectedCircuitElement);
 
-                    AddCurrentCircuitElements(selectedPanelCircuit.Value);
+                AddCurrentCircuitElements(selectedPanelCircuit.Value);
             });
 
             SelectedApartmentElementsCommand = new RelayCommand(o =>
@@ -189,13 +196,45 @@ namespace WpfPanel.ViewModel.ComponentsVM
                 close();
             });
 
-            ApplyCommand = new RelayCommand(o => 
+            ApplyCommand = new RelayCommand(o =>
                 _okApplyCancelActions(PanelCircuits, OkApplyCancel.Apply));
+
+            SetAnnotationToElementCommand = new RelayCommand(o =>
+            {
+                if (SelectedApartmentElements.Count == 1)
+                {
+                    ApartmentElement apartmentElement = SelectedApartmentElements.FirstOrDefault();
+                    var annotationService = new AnnotationService(
+                        new FileAnnotationCommunicatorFactory(apartmentElement.Name));
+
+                    apartmentElement.Annotation = annotationService.Save(AnnotationPreview);
+                }
+            });
+
+            SetAnnotationPreviewCommand = new RelayCommand(o =>
+            {
+                var bitmapSource = o as BitmapSource;
+                AnnotationPreview = bitmapSource;
+            });
 
             _addElementToApartment = newElement =>
             {
                 if (!ApartmentElements.Select(ae => ae.Name).Contains(newElement.Name))
-                    ApartmentElements.Add(new ApartmentElement { Name= newElement.Name , Category= newElement.Category.Name});
+                {
+                    var annotationService = new AnnotationService(
+                        new FileAnnotationCommunicatorFactory(newElement.Name));
+
+                    ImageSource annotation = annotationService.IsAnnotationExists()
+                        ? annotationService.Get() : null;
+
+                    ApartmentElements.Add(
+                        new ApartmentElement
+                        {
+                            Name = newElement.Name,
+                            Category = newElement.Category.Name,
+                            Annotation = annotation
+                        });
+                }
             };
 
             _okApplyCancelActions = okApplyCancelActions;
@@ -278,14 +317,21 @@ namespace WpfPanel.ViewModel.ComponentsVM
             set => Set(ref _circuitElements, value);
         }
 
+        private BitmapSource _annotationPreview;
+
+        public BitmapSource AnnotationPreview { get => _annotationPreview; set => Set(ref _annotationPreview, value); }
+
         private string _newCircuit;
 
         public string NewCircuit { get => _newCircuit; set => Set(ref _newCircuit, value); }
 
-        private string _testProp;
+        private double _socketHeight;
 
-        public string TestProp { get => _testProp; set => Set(ref _testProp, value); }
+        public double SocketHeight { get => _socketHeight; set => Set(ref _socketHeight, value); }
 
+        private double _switchHeight;
+
+        public double SwitchHeight { get => _switchHeight; set => Set(ref _switchHeight, value); }
 
         public ICommand AddApartmentElementCommand { get; set; }
         public ICommand RemoveApartmentElementsCommand { get; set; }
@@ -299,6 +345,8 @@ namespace WpfPanel.ViewModel.ComponentsVM
         public ICommand SelectedCircuitElementCommand { get; set; }
         public ICommand OkCommand { get; set; }
         public ICommand ApplyCommand { get; set; }
+        public ICommand SetAnnotationToElementCommand { get; set; }
+        public ICommand SetAnnotationPreviewCommand { get; set; }
 
         private void MakeRequest(RequestId request, object props = null)
         {

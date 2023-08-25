@@ -44,7 +44,7 @@ namespace WpfPanel.ViewModel
             _exEvent = exEvent;*/
 
             _editPanelVM = new EditPanelVM(exEvent, handler, ExecuteOkApplyCancelActions);
-            _editPanelVM.TestProp = "TestProp";
+
             Circuits = GetCircuits(_editPanelVM.PanelCircuits);
             /*Circuits = new ObservableCollection<Circuit>
             {
@@ -71,6 +71,7 @@ namespace WpfPanel.ViewModel
                     { nameof(elementCategory), elementCategory },
                     { "lampSuffix", CurrentSuffix },
                     { "height", Height.ToString() },
+                    { "defaultHeight", _editPanelVM.SocketHeight.ToString() }
                 };
                 _handler.Request.Make(RequestId.Insert);
                 _exEvent.Raise();
@@ -128,6 +129,10 @@ namespace WpfPanel.ViewModel
             get => _status;
             set => Set(ref _status, value);
         }
+
+        private BitmapSource _testImage;
+
+        public BitmapSource TestImage { get => _testImage; set => Set(ref _testImage, value); }
 
         public ICommand ConfigureCommand { get; set; }
 

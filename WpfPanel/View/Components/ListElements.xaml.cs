@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using WpfPanel.Domain.Models;
 using WpfPanel.Domain.Models.RevitMockupModels;
+using WpfPanel.Utilities;
 
 namespace WpfPanel.View.Components
 {
@@ -15,7 +16,7 @@ namespace WpfPanel.View.Components
     /// </summary>
     public partial class ListElements : Window
     {
-        private const string TRISSA_SWITCH = "Trissa Switch";
+        /*private const string TRISSA_SWITCH = "Trissa Switch";
         private const string USB = "USB";
         private const string BLOCK1 = "BLOCK1";
         private const string SINGLE_SOCKET = "Single Socket";
@@ -23,7 +24,7 @@ namespace WpfPanel.View.Components
 
         private const string ELECTRICAL_FIXTURIES = "Electrical Fixturies";
         private const string LIGHTING_FIXTURIES = "Lighting Fixturies";
-        private const string COMMUNICATION_DEVICES = "Communication Devices";
+        private const string COMMUNICATION_DEVICES = "Communication Devices";*/
 
         private readonly Action<FamilySymbol> _addElementToApartment;
 
@@ -48,11 +49,11 @@ namespace WpfPanel.View.Components
         {
             var e = new List<FamilySymbol>
             {
-                new FamilySymbol{ Category = new Category { Name = ELECTRICAL_FIXTURIES}, Name = TRISSA_SWITCH},
-                new FamilySymbol{ Category = new Category { Name = COMMUNICATION_DEVICES}, Name = USB},
-                new FamilySymbol{ Category = new Category { Name = COMMUNICATION_DEVICES}, Name = BLOCK1},
-                new FamilySymbol{ Category = new Category { Name = ELECTRICAL_FIXTURIES}, Name = SINGLE_SOCKET},
-                new FamilySymbol{ Category = new Category { Name = LIGHTING_FIXTURIES}, Name = THROUGH_SWITCH},
+                new FamilySymbol{ Category = new Category { Name = StaticData.ELECTRICAL_FIXTURES}, Name = StaticData.TRISSA_SWITCH},
+                new FamilySymbol{ Category = new Category { Name = StaticData.COMMUNICATION_DEVICES}, Name = StaticData.USB},
+                new FamilySymbol{ Category = new Category { Name = StaticData.COMMUNICATION_DEVICES}, Name = StaticData.BLOCK1},
+                new FamilySymbol{ Category = new Category { Name = StaticData.ELECTRICAL_FIXTURES}, Name = StaticData.SINGLE_SOCKET},
+                new FamilySymbol{ Category = new Category { Name = StaticData.LIGHTING_FIXTURES}, Name = StaticData.THROUGH_SWITCH},
             }
             .GroupBy(fs => fs.Category.Name)
             .Select(gfs => new CategorizedFamilySymbols

@@ -44,9 +44,7 @@ namespace DockableDialogs
 
             if (!DockablePane.PaneIsRegistered(UI.PaneId))
                 application.RegisterDockablePane(UI.PaneId, UI.PaneName, View);
-
             
-
             return Result.Succeeded;
         }
 
