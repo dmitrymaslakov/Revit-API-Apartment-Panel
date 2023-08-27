@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,7 +23,6 @@ namespace WpfPanel.ViewModel.ComponentsVM
     public class EditPanelVM : ViewModelBase
     {
         private readonly Action<FamilySymbol> _addElementToApartment;
-        private readonly Action<object, OkApplyCancel> _okApplyCancelActions;
 
         public EditPanelVM(ExternalEvent exEvent, RequestHandler handler,
             Action<object, OkApplyCancel> okApplyCancelActions) : base(exEvent, handler)
@@ -32,14 +32,7 @@ namespace WpfPanel.ViewModel.ComponentsVM
                 new ApartmentElement {Name = StaticData.TRISSA_SWITCH, Category = StaticData.ELECTRICAL_FIXTURES},
                 new ApartmentElement {Name = StaticData.USB, Category = StaticData.COMMUNICATION_DEVICES}
             };
-            /*PanelCircuits = new ObservableCollection<string>
-            {
-                "1", "2", "3"
-            };
-            CircuitElements = new ObservableCollection<string>
-            {
-                TRISSA_SWITCH, USB, BLOCK1, SINGLE_SOCKET, THROUGH_SWITCH
-            };*/
+
             PanelCircuits = new ObservableDictionary<string, ObservableCollection<ApartmentElement>>
             {
                 {"1", new ObservableCollection<ApartmentElement>
@@ -66,10 +59,6 @@ namespace WpfPanel.ViewModel.ComponentsVM
                 new ObservableCollection<KeyValuePair<string, ObservableCollection<ApartmentElement>>>();
 
             SelectedCircuitElements = new ObservableCollection<ApartmentElement>();
-
-            SocketHeight = 40.0;
-
-            SwitchHeight = 40.0;
 
             AddApartmentElementCommand = new RelayCommand(o
                 => MakeRequest(RequestId.AddElement, _addElementToApartment));
@@ -192,12 +181,12 @@ namespace WpfPanel.ViewModel.ComponentsVM
             OkCommand = new RelayCommand(o =>
             {
                 var close = (Action)o;
-                _okApplyCancelActions(PanelCircuits, OkApplyCancel.Ok);
+                this.OkApplyCancelActions(PanelCircuits, OkApplyCancel.Ok);
                 close();
             });
 
             ApplyCommand = new RelayCommand(o =>
-                _okApplyCancelActions(PanelCircuits, OkApplyCancel.Apply));
+                this.OkApplyCancelActions(PanelCircuits, OkApplyCancel.Apply));
 
             SetAnnotationToElementCommand = new RelayCommand(o =>
             {
@@ -237,7 +226,7 @@ namespace WpfPanel.ViewModel.ComponentsVM
                 }
             };
 
-            _okApplyCancelActions = okApplyCancelActions;
+            OkApplyCancelActions = okApplyCancelActions;
         }
 
         private void AddCurrentCircuitElements(ObservableCollection<ApartmentElement> currentCircuitElements)
@@ -249,8 +238,6 @@ namespace WpfPanel.ViewModel.ComponentsVM
                 CircuitElements.Add(item);
         }
 
-        public List<object> OldState { get; set; }
-
         private ObservableCollection<ApartmentElement> _apartmentElements;
 
         public ObservableCollection<ApartmentElement> ApartmentElements
@@ -258,22 +245,6 @@ namespace WpfPanel.ViewModel.ComponentsVM
             get => _apartmentElements;
             set => Set(ref _apartmentElements, value);
         }
-
-        /*private ObservableCollection<string> _panelCircuits;
-
-        public ObservableCollection<string> PanelCircuits
-        {
-            get => _panelCircuits;
-            set => Set(ref _panelCircuits, value);
-        }
-
-        private ObservableCollection<string> _circuitElements;
-
-        public ObservableCollection<string> CircuitElements
-        {
-            get => _circuitElements;
-            set => Set(ref _circuitElements, value);
-        }*/
 
         private ObservableDictionary<string, ObservableCollection<ApartmentElement>> _panelCircuits;
 
@@ -285,6 +256,7 @@ namespace WpfPanel.ViewModel.ComponentsVM
 
         private ObservableCollection<ApartmentElement> _selectedApartmentElements;
 
+        [JsonIgnore]
         public ObservableCollection<ApartmentElement> SelectedApartmentElements
         {
             get => _selectedApartmentElements;
@@ -294,6 +266,7 @@ namespace WpfPanel.ViewModel.ComponentsVM
         private ObservableCollection
             <KeyValuePair<string, ObservableCollection<ApartmentElement>>> _selectedPanelCircuits;
 
+        [JsonIgnore]
         public ObservableCollection
             <KeyValuePair<string, ObservableCollection<ApartmentElement>>> SelectedPanelCircuits
         {
@@ -302,7 +275,7 @@ namespace WpfPanel.ViewModel.ComponentsVM
         }
 
         private ObservableCollection<ApartmentElement> _selectedCircuitElements;
-
+        [JsonIgnore]
         public ObservableCollection<ApartmentElement> SelectedCircuitElements
         {
             get => _selectedCircuitElements;
@@ -311,6 +284,7 @@ namespace WpfPanel.ViewModel.ComponentsVM
 
         private ObservableCollection<ApartmentElement> _circuitElements;
 
+        [JsonIgnore]
         public ObservableCollection<ApartmentElement> CircuitElements
         {
             get => _circuitElements;
@@ -319,40 +293,85 @@ namespace WpfPanel.ViewModel.ComponentsVM
 
         private BitmapSource _annotationPreview;
 
+        [JsonIgnore]
         public BitmapSource AnnotationPreview { get => _annotationPreview; set => Set(ref _annotationPreview, value); }
 
         private string _newCircuit;
-
+        [JsonIgnore]
         public string NewCircuit { get => _newCircuit; set => Set(ref _newCircuit, value); }
-
-        private double _socketHeight;
-
-        public double SocketHeight { get => _socketHeight; set => Set(ref _socketHeight, value); }
-
-        private double _switchHeight;
-
-        public double SwitchHeight { get => _switchHeight; set => Set(ref _switchHeight, value); }
-
+        [JsonIgnore]
         public ICommand AddApartmentElementCommand { get; set; }
+        [JsonIgnore]
         public ICommand RemoveApartmentElementsCommand { get; set; }
+        [JsonIgnore]
         public ICommand AddPanelCircuitCommand { get; set; }
-        public ICommand EditPanelCircuit { get; set; }
+        [JsonIgnore]
         public ICommand RemovePanelCircuitsCommand { get; set; }
+        [JsonIgnore]
         public ICommand AddElementToCircuitCommand { get; set; }
+        [JsonIgnore]
         public ICommand RemoveElementsFromCircuitCommand { get; set; }
+        [JsonIgnore]
         public ICommand SelectedApartmentElementsCommand { get; set; }
+        [JsonIgnore]
         public ICommand SelectedPanelCircuitCommand { get; set; }
+        [JsonIgnore]
         public ICommand SelectedCircuitElementCommand { get; set; }
+        [JsonIgnore]
         public ICommand OkCommand { get; set; }
+        [JsonIgnore]
         public ICommand ApplyCommand { get; set; }
+        [JsonIgnore]
         public ICommand SetAnnotationToElementCommand { get; set; }
+        [JsonIgnore]
         public ICommand SetAnnotationPreviewCommand { get; set; }
+
+        [JsonIgnore]
+        public Action<object, OkApplyCancel> OkApplyCancelActions { get; }
+
+        public EditPanelVM ApplyLatestConfiguration(EditPanelVM latestConfiguration)
+        {
+            ApartmentElements = latestConfiguration.ApartmentElements;
+            PanelCircuits = latestConfiguration.PanelCircuits;
+
+            foreach (var apartmentElement in ApartmentElements)
+            {
+                var annService = new AnnotationService(
+                    new FileAnnotationCommunicatorFactory(apartmentElement.Name));
+
+                apartmentElement.Annotation = annService.IsAnnotationExists()
+                    ? annService.Get() : null;
+            };
+
+            for (int i = 0; i < PanelCircuits.Count; i++)
+            {
+                var newCircuitElements = new ObservableCollection<ApartmentElement>();
+                var circuitElements = PanelCircuits[i].Value;
+
+                foreach (var apartmentElement in ApartmentElements)
+                {
+                    var matchingCircuitElement = circuitElements
+                        .FirstOrDefault(c => c.Name == apartmentElement.Name);
+
+                    if (matchingCircuitElement != null)
+                    {
+                        int index = circuitElements.IndexOf(matchingCircuitElement);
+                        circuitElements[index] = apartmentElement;
+                    }
+                }
+                PanelCircuits[i] =
+                    new KeyValuePair<string, ObservableCollection<ApartmentElement>>(
+                        PanelCircuits[i].Key, circuitElements);
+            }
+            return this;
+        }
 
         private void MakeRequest(RequestId request, object props = null)
         {
-            _handler.Props = props;
-            _handler.Request.Make(request);
-            _exEvent.Raise();
+            Handler.Props = props;
+            Handler.Request.Make(request);
+            ExEvent.Raise();
         }
+
     }
 }

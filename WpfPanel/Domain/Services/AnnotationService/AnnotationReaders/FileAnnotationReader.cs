@@ -17,8 +17,7 @@ namespace WpfPanel.Domain.Services.AnnotationService.AnnotationReaders
         {
             try
             {
-                var uriSource = new Uri(fullPath);
-                _annotation = new BitmapImage(uriSource); 
+                _annotation = BitmapFromUri(new Uri(fullPath));
             }
             catch (FileNotFoundException)
             {
@@ -38,6 +37,16 @@ namespace WpfPanel.Domain.Services.AnnotationService.AnnotationReaders
         {
             _disposed = true;
             _annotation = null;
+        }
+
+        private ImageSource BitmapFromUri(Uri source)
+        {
+            var bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.UriSource = source;
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.EndInit();
+            return bitmap;
         }
     }
 }

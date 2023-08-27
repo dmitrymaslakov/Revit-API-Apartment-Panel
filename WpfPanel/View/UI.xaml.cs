@@ -61,55 +61,5 @@ namespace WpfPanel.View
         {
             statusBarItem.Content = null;
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            TestImage.Source = Clipboard.GetImage();
-        }
-        private void Button_Click1(object sender, RoutedEventArgs e)
-        {
-            var fileName = Path.Combine(Environment.CurrentDirectory, "Resources", "Annotations", "Single Socket.png");
-
-            var bs = BitmapFromUri(new Uri(fileName));
-
-            IsFileInUse(fileName);
-
-            TestImage.Source = bs;
-            bs = null;
-            TestImage.Source = null;
-            using (var fileStream = new FileStream(fileName, FileMode.Create))
-            {
-                BitmapEncoder encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(Clipboard.GetImage()));
-                encoder.Save(fileStream);
-            }
-        }
-
-        public static ImageSource BitmapFromUri(Uri source)
-        {
-            var bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            bitmap.UriSource = source;
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            bitmap.EndInit();
-            return bitmap;
-        }
-
-        static bool IsFileInUse(string filePath)
-        {
-            try
-            {
-                using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
-                {
-                    // The file is not in use by another process
-                    return false;
-                }
-            }
-            catch (IOException)
-            {
-                // The file is in use by another process
-                return true;
-            }
-        }
     }
 }

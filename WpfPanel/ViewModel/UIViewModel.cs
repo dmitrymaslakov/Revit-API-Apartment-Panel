@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,29 +35,21 @@ namespace WpfPanel.ViewModel
 
     public class UIViewModel : ViewModelBase
     {
-        private readonly EditPanelVM _editPanelVM;
+        private EditPanelVM _editPanelVM;
         private readonly Action<object, OkApplyCancel> _okApplyCancelActions;
 
         public UIViewModel(ExternalEvent exEvent, RequestHandler handler)
             : base(exEvent, handler)
         {
-            /*_handler = handler;
-            _exEvent = exEvent;*/
-
             _editPanelVM = new EditPanelVM(exEvent, handler, ExecuteOkApplyCancelActions);
 
             Circuits = GetCircuits(_editPanelVM.PanelCircuits);
-            /*Circuits = new ObservableCollection<Circuit>
-            {
-                new Circuit { Number = 1 },
-                new Circuit { Number = 2 },
-                new Circuit { Number = 3 },
-            };*/
+
             ConfigureCommand = new ConfigureCommand(o =>
             {
-                _handler.Props = _editPanelVM;
-                _handler.Request.Make(RequestId.Configure);
-                _exEvent.Raise();
+                Handler.Props = _editPanelVM;
+                Handler.Request.Make(RequestId.Configure);
+                ExEvent.Raise();
             });
 
             InsertElementCommand = new RelayCommand(o =>
@@ -64,20 +57,51 @@ namespace WpfPanel.ViewModel
                 (string circuit, string elementName, string elementCategory) =
                     (ValueTuple<string, string, string>)o;
 
-                _handler.Props = new Dictionary<string, string>
+                Handler.Props = new Dictionary<string, string>
                 {
                     { nameof(circuit), circuit },
                     { nameof(elementName), elementName },
                     { nameof(elementCategory), elementCategory },
                     { "lampSuffix", CurrentSuffix },
                     { "height", Height.ToString() },
-                    { "defaultHeight", _editPanelVM.SocketHeight.ToString() }
                 };
-                _handler.Request.Make(RequestId.Insert);
-                _exEvent.Raise();
+                Handler.Request.Make(RequestId.Insert);
+                ExEvent.Raise();
             });
 
             SetCurrentSuffixCommand = new RelayCommand(o => CurrentSuffix = o as string);
+
+            SerializationCommand = new RelayCommand(o =>
+            {
+                try
+                {
+                    string json = JsonSerializer.Serialize(_editPanelVM);
+                    string fileName =
+                        Path.Combine(Environment.CurrentDirectory, "LatestConfiguration.json");
+                    File.WriteAllText(fileName, json);
+
+
+                    /*var t = new Forecast(10, "Summary");
+                    string json = JsonSerializer.Serialize(t);
+                    var dest = JsonSerializer.Deserialize<Forecast>(json);*/
+                }
+                catch (NotSupportedException)
+                {
+
+                }
+            });
+            DeserializationCommand = new RelayCommand(o =>
+            {
+                string fileName =
+                    Path.Combine(Environment.CurrentDirectory, "LatestConfiguration.json");
+
+                if (File.Exists(fileName))
+                {                    
+                    string json = File.ReadAllText(fileName);
+                    EditPanelVM deso = JsonSerializer.Deserialize<EditPanelVM>(json);
+                    _editPanelVM.ApplyLatestConfiguration(deso);
+                }
+            });
 
             Height = 40.0;
         }
@@ -98,6 +122,8 @@ namespace WpfPanel.ViewModel
             }
         }
 
+        public int MyProperty { get; }
+
         private ObservableCollection<Circuit> _circuits;
 
         public ObservableCollection<Circuit> Circuits
@@ -113,7 +139,7 @@ namespace WpfPanel.ViewModel
             get => _currentSuffix;
             set => Set(ref _currentSuffix, value);
         }
-        
+
         private double _height;
 
         public double Height
@@ -130,15 +156,16 @@ namespace WpfPanel.ViewModel
             set => Set(ref _status, value);
         }
 
-        private BitmapSource _testImage;
-
-        public BitmapSource TestImage { get => _testImage; set => Set(ref _testImage, value); }
-
         public ICommand ConfigureCommand { get; set; }
 
         public ICommand InsertElementCommand { get; set; }
 
+
         public ICommand SetCurrentSuffixCommand { get; set; }
+
+        public ICommand SerializationCommand { get; set; }
+
+        public ICommand DeserializationCommand { get; set; }
 
         private ObservableCollection<Circuit> GetCircuits(
             ObservableDictionary<string, ObservableCollection<ApartmentElement>> panelCircuits)
@@ -146,12 +173,19 @@ namespace WpfPanel.ViewModel
             var result = new ObservableCollection<Circuit>();
             foreach (var circuit in panelCircuits)
             {
+
+                var a = circuit.Value.Select(ap => ap.Clone()).ToList();
+
+                foreach (var item in a)
+                {
+                    var ann = item.Annotation;
+                }
+
                 result.Add(new Circuit
                 {
                     Number = circuit.Key,
-                    //ApartmentElements = new ObservableCollection<string>(circuit.Value.Select(e => e).ToList())
-                    ApartmentElements =
-                        new ObservableCollection<ApartmentElement>(circuit.Value.ToList())
+                    ApartmentElements = new ObservableCollection<ApartmentElement>(
+                            circuit.Value.Select(ap => ap.Clone()).ToList())
                 });
             }
             return result;

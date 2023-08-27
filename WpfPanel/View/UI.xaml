@@ -10,7 +10,18 @@
         d:DesignHeight="350" d:DesignWidth="300" Height="750" Width="300">
     <Window.Resources>
         <Style x:Key="circuitButton" TargetType="Button">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Annotation}" Value="{x:Null}">
+                    <Setter Property="Content" Value="{Binding Name}"/>
+                </DataTrigger>
+            </Style.Triggers>
             <Setter Property="Width" Value="20"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <!--<Setter Property="Content">                
+                <Setter.Value>
+                    <Image Source="{Binding Annotation}" Width="30" Height="30"/>
+                </Setter.Value>                
+            </Setter>-->
         </Style>
         <Style x:Key="circuitTextBlock" TargetType="TextBlock">
             <Setter Property="Margin" Value="0 0 100 0"/>
@@ -44,7 +55,6 @@
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Button 
-                                        Content="{Binding Name}" 
                                         Tag="{Binding Category}"
                                         KeyDown="Button_KeyDown"
                                         MouseEnter="Button_MouseEnter"
@@ -59,6 +69,7 @@
                                                 <Binding Path="Category"/>
                                             </MultiBinding>
                                         </Button.CommandParameter>
+                                        <Image Source="{Binding Annotation}"/>
                                     </Button>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -103,9 +114,8 @@
             </StatusBarItem>
         </StatusBar>
         <WrapPanel Grid.Row="5">
-            <Image x:Name="TestImage" Height="60" Width="60"/>
-            <Button Content="Apply Clipboard" Click="Button_Click" />
-            <Button Content="Apply File" Click="Button_Click1" />
+            <Button Content="Serialization" Command="{Binding SerializationCommand}"/>
+            <Button Content="Deserialization" Command="{Binding DeserializationCommand}"/>
         </WrapPanel>
     </Grid>
 </Window>

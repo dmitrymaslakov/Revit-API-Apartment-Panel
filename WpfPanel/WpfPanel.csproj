@@ -118,6 +118,8 @@
       <DependentUpon>Viewfinder.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\ComponentsVM\EditPanelVM.cs" />
+    <Compile Include="ViewModel\ForecastBase.cs" />
+    <Compile Include="ViewModel\Forecast.cs" />
     <Compile Include="ViewModel\UIViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />

@@ -14,13 +14,15 @@ namespace WpfPanel.ViewModel
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         private bool _disposed;
-        protected readonly ExternalEvent _exEvent;
-        protected readonly RequestHandler _handler;
+
+        public ExternalEvent ExEvent { get; }
+
+        public RequestHandler Handler { get; }
 
         public ViewModelBase(ExternalEvent exEvent, RequestHandler handler)
         {
-            _exEvent = exEvent;
-            _handler = handler;
+            ExEvent = exEvent;
+            Handler = handler;
         }
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -19,6 +19,12 @@ namespace WpfPanel.Domain.Services.AnnotationService.AnnotationWriters
             if (_disposed)
                 throw new Exception("Object is disposed.");
 
+            var folderPath = Path.Combine(Environment.CurrentDirectory,
+                "Resources", "Annotations");
+
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
             using (var fileStream = new FileStream(_fileName, FileMode.Create))
             {
                 BitmapEncoder encoder = new PngBitmapEncoder();
