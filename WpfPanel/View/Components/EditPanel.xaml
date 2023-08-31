@@ -4,11 +4,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:local="clr-namespace:WpfPanel.View.Components" 
-        xmlns:componentsvm="clr-namespace:WpfPanel.ViewModel.ComponentsVM" 
-        d:DataContext="{d:DesignInstance Type=componentsvm:EditPanelVM}"
         mc:Ignorable="d" 
         d:DesignHeight="450" d:DesignWidth="600" Width="600"
         x:Name="Confige">
+    <!--xmlns:componentsvm="clr-namespace:WpfPanel.ViewModel.ComponentsVM" 
+        d:DataContext="{d:DesignInstance Type=componentsvm:EditPanelVM}"-->
 
     <Window.Resources>
         <Style x:Key="ArrowButton" TargetType="Button">
@@ -104,17 +104,18 @@
 
         <WrapPanel HorizontalAlignment="Right" Grid.Row="3" Grid.Column="2" Margin="0 0 50 0">
             <Button Style="{StaticResource FinishedButton}"
-                        x:Name="OkBtn"
-                        Command="{Binding OkCommand}"
-                        Content="Ok"/>
+                    x:Name="OkBtn"
+                    Command="{Binding OkCommand}"
+                    Content="Ok"/>
             <Button Style="{StaticResource FinishedButton}" 
-                        x:Name="ApplyBtn"                        
-                        Command="{Binding ApplyCommand}"
-                        Content="Apply"/>
+                    x:Name="ApplyBtn"                        
+                    Command="{Binding ApplyCommand}"
+                    Content="Apply"/>
             <Button Style="{StaticResource FinishedButton}" 
-                        x:Name="CancelBtn"                        
-                        Command="{Binding CancelCommand}"
-                        Content="Cancel"/>
+                    x:Name="CancelBtn"                        
+                    Command="{Binding CancelCommand}"
+                    Content="Cancel"
+                    IsEnabled="False"/>
         </WrapPanel>
     </StackPanel>
 </Window>

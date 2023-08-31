@@ -67,6 +67,7 @@ namespace DockableDialogs.Domain
 
         private void InsertElement(UIApplication uiapp)
         {
+            
             UIDocument uiDocument = uiapp.ActiveUIDocument;
             Document document = uiDocument.Document;
             Selection selection = uiDocument.Selection;

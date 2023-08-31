@@ -92,17 +92,10 @@
     <Compile Include="Domain\Services\AnnotationService\IAnnotationCommunicatorFactory.cs" />
     <Compile Include="Domain\Services\AnnotationService\AnnotationReaders\IAnnotationReader.cs" />
     <Compile Include="Domain\Services\AnnotationService\AnnotationWriters\IAnnotationWriter.cs" />
+    <Compile Include="Domain\Services\Commands\CommandCreater.cs" />
     <Compile Include="Domain\Services\Commands\RelayCommand.cs" />
-    <Compile Include="Domain\Services\Commands\AddApartmentElementCommand.cs" />
-    <Compile Include="Domain\Services\Commands\EditPanelCircuitCommand.cs" />
-    <Compile Include="Domain\Services\Commands\EditApartmentElementCommand.cs" />
-    <Compile Include="Domain\Services\Commands\RemovePanelCircuitCommand.cs" />
-    <Compile Include="Domain\Services\Commands\RemoveApartmentElementCommand.cs" />
     <Compile Include="Domain\Services\Commands\BaseCommand.cs" />
     <Compile Include="Domain\Models\Circuit.cs" />
-    <Compile Include="Domain\PlacementFixturiesCommand.cs" />
-    <Compile Include="Domain\Services\Commands\AddPanelCircuitCommand.cs" />
-    <Compile Include="Domain\Services\Commands\ConfigureCommand.cs" />
     <Compile Include="Domain\Request.cs" />
     <Compile Include="Domain\RequestHandler.cs" />
     <Compile Include="Program.cs" />
@@ -183,8 +176,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\Annotations\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

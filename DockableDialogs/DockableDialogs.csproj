@@ -84,18 +84,11 @@
     <Compile Include="Utility\StaticData.cs" />
     <Compile Include="ViewModel\UIViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
-    <Compile Include="View\Components\Apartment elements.xaml.cs">
-      <DependentUpon>Apartment elements.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\UI.xaml.cs">
       <DependentUpon>UI.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="View\Components\Apartment elements.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\UI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -103,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="TopLevelCommands\" />
+    <Folder Include="View\Components\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Hide.png" />

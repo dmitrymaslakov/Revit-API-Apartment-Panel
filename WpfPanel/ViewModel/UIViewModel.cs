@@ -37,15 +37,30 @@ namespace WpfPanel.ViewModel
     {
         private EditPanelVM _editPanelVM;
         private readonly Action<object, OkApplyCancel> _okApplyCancelActions;
+        private readonly string _latestConfig;
 
         public UIViewModel(ExternalEvent exEvent, RequestHandler handler)
             : base(exEvent, handler)
         {
             _editPanelVM = new EditPanelVM(exEvent, handler, ExecuteOkApplyCancelActions);
 
+            _latestConfig = Path.Combine(Environment.CurrentDirectory, "LatestConfiguration.json");
+            
+            LoadLatestConfigCommand = new RelayCommand(o =>
+            {
+                if (File.Exists(_latestConfig))
+                {                    
+                    string json = File.ReadAllText(_latestConfig);
+                    EditPanelVM deso = JsonSerializer.Deserialize<EditPanelVM>(json);
+                    _editPanelVM.ApplyLatestConfiguration(deso);
+                }
+            });
+
+            LoadLatestConfigCommand.Execute(null);
+
             Circuits = GetCircuits(_editPanelVM.PanelCircuits);
 
-            ConfigureCommand = new ConfigureCommand(o =>
+            ConfigureCommand = new RelayCommand(o =>
             {
                 Handler.Props = _editPanelVM;
                 Handler.Request.Make(RequestId.Configure);
@@ -71,7 +86,7 @@ namespace WpfPanel.ViewModel
 
             SetCurrentSuffixCommand = new RelayCommand(o => CurrentSuffix = o as string);
 
-            SerializationCommand = new RelayCommand(o =>
+            SaveLatestConfigCommand = new RelayCommand(o =>
             {
                 try
                 {
@@ -79,8 +94,6 @@ namespace WpfPanel.ViewModel
                     string fileName =
                         Path.Combine(Environment.CurrentDirectory, "LatestConfiguration.json");
                     File.WriteAllText(fileName, json);
-
-
                     /*var t = new Forecast(10, "Summary");
                     string json = JsonSerializer.Serialize(t);
                     var dest = JsonSerializer.Deserialize<Forecast>(json);*/
@@ -88,18 +101,6 @@ namespace WpfPanel.ViewModel
                 catch (NotSupportedException)
                 {
 
-                }
-            });
-            DeserializationCommand = new RelayCommand(o =>
-            {
-                string fileName =
-                    Path.Combine(Environment.CurrentDirectory, "LatestConfiguration.json");
-
-                if (File.Exists(fileName))
-                {                    
-                    string json = File.ReadAllText(fileName);
-                    EditPanelVM deso = JsonSerializer.Deserialize<EditPanelVM>(json);
-                    _editPanelVM.ApplyLatestConfiguration(deso);
                 }
             });
 
@@ -160,12 +161,11 @@ namespace WpfPanel.ViewModel
 
         public ICommand InsertElementCommand { get; set; }
 
-
         public ICommand SetCurrentSuffixCommand { get; set; }
 
-        public ICommand SerializationCommand { get; set; }
+        public ICommand SaveLatestConfigCommand { get; set; }
 
-        public ICommand DeserializationCommand { get; set; }
+        public ICommand LoadLatestConfigCommand { get; set; }
 
         private ObservableCollection<Circuit> GetCircuits(
             ObservableDictionary<string, ObservableCollection<ApartmentElement>> panelCircuits)

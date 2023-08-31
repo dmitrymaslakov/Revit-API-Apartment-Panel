@@ -15,10 +15,8 @@ namespace WpfPanel.Domain.Services.AnnotationService
     {
         private readonly IAnnotationCommunicatorFactory _annotationCommunicatorFactory;
 
-        public AnnotationService(IAnnotationCommunicatorFactory annotationCommunicatorFactory)
-        {
-            _annotationCommunicatorFactory = annotationCommunicatorFactory;
-        }
+        public AnnotationService(IAnnotationCommunicatorFactory annotationCommunicatorFactory) 
+            => _annotationCommunicatorFactory = annotationCommunicatorFactory;
 
         public ImageSource Get()
         {
@@ -34,9 +32,6 @@ namespace WpfPanel.Domain.Services.AnnotationService
                 return writer.Save(annotation);
             }
         }
-        public bool IsAnnotationExists()
-        {
-            return _annotationCommunicatorFactory.IsFileExists();
-        }
+        public bool IsAnnotationExists() => _annotationCommunicatorFactory.IsFileExists();
     }
 }

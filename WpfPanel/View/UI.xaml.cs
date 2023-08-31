@@ -24,6 +24,12 @@ namespace WpfPanel.View
         {
             DataContext = dataContext;
             InitializeComponent();
+            Closing += UI_Closing;
+        }
+
+        private void UI_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            latestConfig.Command?.Execute(null);
         }
 
         private void Button_KeyDown(object sender, KeyEventArgs e)
