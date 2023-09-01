@@ -92,7 +92,8 @@
     <Compile Include="Domain\Services\AnnotationService\IAnnotationCommunicatorFactory.cs" />
     <Compile Include="Domain\Services\AnnotationService\AnnotationReaders\IAnnotationReader.cs" />
     <Compile Include="Domain\Services\AnnotationService\AnnotationWriters\IAnnotationWriter.cs" />
-    <Compile Include="Domain\Services\Commands\CommandCreater.cs" />
+    <Compile Include="Domain\Services\Commands\EditPanelCommandsCreater.cs" />
+    <Compile Include="Domain\Services\Commands\UICommandsCreater.cs" />
     <Compile Include="Domain\Services\Commands\RelayCommand.cs" />
     <Compile Include="Domain\Services\Commands\BaseCommand.cs" />
     <Compile Include="Domain\Models\Circuit.cs" />
@@ -103,16 +104,10 @@
     <Compile Include="Utilities\ClipboardManager.cs" />
     <Compile Include="Utilities\Converters\ElementDataConverter.cs" />
     <Compile Include="Utilities\ObservableDictionary.cs" />
-    <Compile Include="Utilities\Screenshoter.xaml.cs">
-      <DependentUpon>Screenshoter.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Utilities\StaticData.cs" />
-    <Compile Include="Utilities\Viewfinder.xaml.cs">
-      <DependentUpon>Viewfinder.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ViewModel\ComponentsVM\EditPanelVM.cs" />
-    <Compile Include="ViewModel\ForecastBase.cs" />
-    <Compile Include="ViewModel\Forecast.cs" />
+    <Compile Include="ViewModel\ComponentsVM\IEditPanelToCommandsCreater.cs" />
+    <Compile Include="ViewModel\IUIToCommandsCreater.cs" />
     <Compile Include="ViewModel\UIViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
@@ -130,14 +125,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Utilities\Screenshoter.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Utilities\Viewfinder.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\Components\EditPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

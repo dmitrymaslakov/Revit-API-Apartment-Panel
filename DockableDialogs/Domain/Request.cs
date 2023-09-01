@@ -11,7 +11,13 @@ namespace DockableDialogs.Domain
     {
         None,
         Insert,
-        Test
+        Configure,
+        AddElement,
+        EditElement,
+        RemoveElement,
+        AddCircuit,
+        EditCircuit,
+        RemoveCircuit
     }
     public class Request
     {

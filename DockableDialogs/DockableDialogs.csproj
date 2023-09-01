@@ -34,6 +34,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RevitAddInUtility, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -52,7 +55,32 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.7.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=7.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.7.0.3\lib\net462\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -66,44 +94,89 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Models\ApartmentElement.cs" />
+    <Compile Include="Domain\Models\CategorizedFamilySymbols.cs" />
     <Compile Include="Domain\Models\Circuit.cs" />
+    <Compile Include="Domain\Services\AnnotationService\AnnotationReaders\FileAnnotationReader.cs" />
+    <Compile Include="Domain\Services\AnnotationService\AnnotationReaders\IAnnotationReader.cs" />
+    <Compile Include="Domain\Services\AnnotationService\AnnotationService.cs" />
+    <Compile Include="Domain\Services\AnnotationService\AnnotationWriters\FileAnnotationWriter.cs" />
+    <Compile Include="Domain\Services\AnnotationService\AnnotationWriters\IAnnotationWriter.cs" />
+    <Compile Include="Domain\Services\AnnotationService\FileAnnotationCommunicatorFactory.cs" />
+    <Compile Include="Domain\Services\AnnotationService\IAnnotationCommunicatorFactory.cs" />
+    <Compile Include="Domain\Services\Commands\EditPanelCommandsCreater.cs" />
     <Compile Include="Domain\Services\Commands\RelayCommand.cs" />
-    <Compile Include="Domain\TestCommand.cs" />
+    <Compile Include="Domain\Services\Commands\UICommandsCreater.cs" />
     <Compile Include="Domain\Request.cs" />
     <Compile Include="Domain\RequestHandler.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Domain\Services\Commands\BaseCommand.cs" />
     <Compile Include="Domain\ExternalEventHandler.cs" />
-    <Compile Include="Domain\PlacementFixturiesCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\ClipboardManager.cs" />
+    <Compile Include="Utility\Converters\ElementDataConverter.cs" />
     <Compile Include="Utility\HeightUpdater.cs" />
     <Compile Include="Utility\FamilyInstanceBuilder.cs" />
     <Compile Include="Utility\FileUtility.cs" />
     <Compile Include="Utility\Globals.cs" />
     <Compile Include="Utility\Log.cs" />
+    <Compile Include="Utility\ObservableDictionary.cs" />
     <Compile Include="Utility\StaticData.cs" />
+    <Compile Include="ViewModel\ComponentsVM\EditPanelVM.cs" />
+    <Compile Include="ViewModel\ComponentsVM\IEditPanelToCommandsCreater.cs" />
+    <Compile Include="ViewModel\IUIToCommandsCreater.cs" />
     <Compile Include="ViewModel\UIViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="View\Components\EditPanel.xaml.cs">
+      <DependentUpon>EditPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Components\ElementsCard.xaml.cs">
+      <DependentUpon>ElementsCard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Components\ListElements.xaml.cs">
+      <DependentUpon>ListElements.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UI.xaml.cs">
       <DependentUpon>UI.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="View\Components\EditPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Components\ElementsCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Components\ListElements.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\UI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="TopLevelCommands\" />
-    <Folder Include="View\Components\" />
+    <Content Include="Resources\icons8-AddArrow-24.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\icons8-Create-24.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\icons8-Edit-24.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\icons8-Remove-24.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\icons8-RemoveArrow-24.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Hide.png" />
-    <Content Include="Resources\Register.png" />
-    <Content Include="Resources\Show.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -15,21 +15,23 @@ namespace DockableDialogs.ViewModel
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         private bool _disposed;
-        protected readonly ExternalEvent _exEvent;
-        protected readonly RequestHandler _handler;
+
+        public ExternalEvent ExEvent { get; }
+
+        public RequestHandler Handler { get; }
 
         public ViewModelBase(ExternalEvent exEvent, RequestHandler handler)
         {
-            _exEvent = exEvent;
-            _handler = handler;
+            ExEvent = exEvent;
+            Handler = handler;
         }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         protected virtual bool Set<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(field, value))
@@ -40,10 +42,12 @@ namespace DockableDialogs.ViewModel
             OnPropertyChanged(propertyName);
             return true;
         }
+
         public virtual void Dispose()
         {
             Dispose(true);
         }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing || _disposed)

@@ -33,97 +33,39 @@ namespace WpfPanel.ViewModel
         Ok, Apply, Cancel
     }
 
-    public class UIViewModel : ViewModelBase
+    public class UIViewModel : ViewModelBase, IUIToCommandsCreater
     {
-        private EditPanelVM _editPanelVM;
-        private readonly Action<object, OkApplyCancel> _okApplyCancelActions;
-        private readonly string _latestConfig;
+        private readonly UICommandsCreater _uICommandsCreater;
 
         public UIViewModel(ExternalEvent exEvent, RequestHandler handler)
             : base(exEvent, handler)
         {
-            _editPanelVM = new EditPanelVM(exEvent, handler, ExecuteOkApplyCancelActions);
+            _uICommandsCreater = new UICommandsCreater(this);
 
-            _latestConfig = Path.Combine(Environment.CurrentDirectory, "LatestConfiguration.json");
-            
-            LoadLatestConfigCommand = new RelayCommand(o =>
-            {
-                if (File.Exists(_latestConfig))
-                {                    
-                    string json = File.ReadAllText(_latestConfig);
-                    EditPanelVM deso = JsonSerializer.Deserialize<EditPanelVM>(json);
-                    _editPanelVM.ApplyLatestConfiguration(deso);
-                }
-            });
+            EditPanelVM = new EditPanelVM(exEvent, handler, ExecuteOkApplyCancelActions);
+
+            LatestConfigPath = Path.Combine(Environment.CurrentDirectory, "LatestConfig.json");
+
+            LoadLatestConfigCommand = _uICommandsCreater.CreateLoadLatestConfigCommand();
 
             LoadLatestConfigCommand.Execute(null);
 
-            Circuits = GetCircuits(_editPanelVM.PanelCircuits);
+            Circuits = GetCircuits(EditPanelVM.PanelCircuits);
 
-            ConfigureCommand = new RelayCommand(o =>
-            {
-                Handler.Props = _editPanelVM;
-                Handler.Request.Make(RequestId.Configure);
-                ExEvent.Raise();
-            });
+            ConfigureCommand = _uICommandsCreater.CreateConfigureCommand();
 
-            InsertElementCommand = new RelayCommand(o =>
-            {
-                (string circuit, string elementName, string elementCategory) =
-                    (ValueTuple<string, string, string>)o;
+            InsertElementCommand = _uICommandsCreater.CreateInsertElementCommand();
 
-                Handler.Props = new Dictionary<string, string>
-                {
-                    { nameof(circuit), circuit },
-                    { nameof(elementName), elementName },
-                    { nameof(elementCategory), elementCategory },
-                    { "lampSuffix", CurrentSuffix },
-                    { "height", Height.ToString() },
-                };
-                Handler.Request.Make(RequestId.Insert);
-                ExEvent.Raise();
-            });
+            SetCurrentSuffixCommand = _uICommandsCreater.CreateSetCurrentSuffixCommand();
 
-            SetCurrentSuffixCommand = new RelayCommand(o => CurrentSuffix = o as string);
-
-            SaveLatestConfigCommand = new RelayCommand(o =>
-            {
-                try
-                {
-                    string json = JsonSerializer.Serialize(_editPanelVM);
-                    string fileName =
-                        Path.Combine(Environment.CurrentDirectory, "LatestConfiguration.json");
-                    File.WriteAllText(fileName, json);
-                    /*var t = new Forecast(10, "Summary");
-                    string json = JsonSerializer.Serialize(t);
-                    var dest = JsonSerializer.Deserialize<Forecast>(json);*/
-                }
-                catch (NotSupportedException)
-                {
-
-                }
-            });
+            SaveLatestConfigCommand = _uICommandsCreater.CreateSaveLatestConfigCommand();
 
             Height = 40.0;
         }
 
-        private void ExecuteOkApplyCancelActions(object obj, OkApplyCancel okApplyCancel)
-        {
-            switch (okApplyCancel)
-            {
-                case OkApplyCancel.Ok:
-                case OkApplyCancel.Apply:
-                    Circuits.Clear();
-                    var panelCircuits =
-                        (ObservableDictionary<string, ObservableCollection<ApartmentElement>>)obj;
-                    Circuits = GetCircuits(panelCircuits);
-                    break;
-                case OkApplyCancel.Cancel:
-                    break;
-            }
-        }
+        public string LatestConfigPath { get; }
 
-        public int MyProperty { get; }
+        public EditPanelVM EditPanelVM { get; }
 
         private ObservableCollection<Circuit> _circuits;
 
@@ -166,6 +108,22 @@ namespace WpfPanel.ViewModel
         public ICommand SaveLatestConfigCommand { get; set; }
 
         public ICommand LoadLatestConfigCommand { get; set; }
+
+        private void ExecuteOkApplyCancelActions(object obj, OkApplyCancel okApplyCancel)
+        {
+            switch (okApplyCancel)
+            {
+                case OkApplyCancel.Ok:
+                case OkApplyCancel.Apply:
+                    Circuits.Clear();
+                    var panelCircuits =
+                        (ObservableDictionary<string, ObservableCollection<ApartmentElement>>)obj;
+                    Circuits = GetCircuits(panelCircuits);
+                    break;
+                case OkApplyCancel.Cancel:
+                    break;
+            }
+        }
 
         private ObservableCollection<Circuit> GetCircuits(
             ObservableDictionary<string, ObservableCollection<ApartmentElement>> panelCircuits)

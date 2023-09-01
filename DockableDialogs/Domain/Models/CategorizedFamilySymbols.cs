@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DockableDialogs.Domain.Models
 {
-    public class Circuit
+    public class CategorizedFamilySymbols
     {
-        public string Number { get; set; }
-        public ObservableCollection<ApartmentElement> ApartmentElements { get; set; }
+        public string Category { get; set; }
+        public ObservableCollection<FamilySymbol> CategorizedElements { get; set; }
     }
 }

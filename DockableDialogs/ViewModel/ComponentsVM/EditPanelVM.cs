@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Autodesk.Revit.UI;
+using DockableDialogs.Domain;
+using DockableDialogs.Domain.Models;
+using DockableDialogs.Domain.Services.AnnotationService;
+using DockableDialogs.Domain.Services.Commands;
+using DockableDialogs.Utility;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using WpfPanel.Domain;
-using WpfPanel.Domain.Models;
-using WpfPanel.Domain.Services.AnnotationService;
-using WpfPanel.Domain.Services.Commands;
-using WpfPanel.Utilities;
 
-namespace WpfPanel.ViewModel.ComponentsVM
+namespace DockableDialogs.ViewModel.ComponentsVM
 {
     public class EditPanelVM : ViewModelBase, IEditPanelToCommandsCreater
     {
