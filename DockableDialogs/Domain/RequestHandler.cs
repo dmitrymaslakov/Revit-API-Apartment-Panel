@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using DockableDialogs.Utility;
 using DockableDialogs.ViewModel.ComponentsVM;
 using DockableDialogs.View.Components;
+using System.Linq;
+using System.Windows.Controls;
 
 namespace DockableDialogs.Domain
 {
@@ -14,8 +16,18 @@ namespace DockableDialogs.Domain
         public Request Request { get; } = new Request();
         public object Props { get; set; }
 
+        public UIApplication Uiapp { get; set; }
+        public UIDocument UiDocument { get; set; }
+        public Document Document { get; set; }
+        public Selection Selection { get; set; }
+
         public void Execute(UIApplication uiapp)
         {
+            Uiapp = uiapp;
+            UiDocument = Uiapp.ActiveUIDocument;
+            Document = UiDocument.Document;
+            Selection = UiDocument.Selection;
+
             switch (Request.Take())
             {
                 case RequestId.None:
@@ -29,12 +41,12 @@ namespace DockableDialogs.Domain
                     }
                 case RequestId.Insert:
                     {
-                        InsertElement(uiapp);
+                        InsertElement();
                         break;
                     }
                 case RequestId.AddElement:
                     {
-                        AddElement(uiapp);
+                        AddElement();
                         break;
                     }
                 case RequestId.EditElement:
@@ -61,26 +73,65 @@ namespace DockableDialogs.Domain
 
             return;
         }
+
+        public string GetName()
+        {
+            return "Placement Apartment elements";
+        }
+        
         private void ShowEditPanel()
         {
             var editPanelVM = Props as EditPanelVM;
-            new EditPanel(editPanelVM).ShowDialog();
+            new EditPanel(editPanelVM).Show();
             Props = null;
         }
 
-        private void AddElement(UIApplication uiapp)
+        private void AddElement()
         {
             var addElement = Props as Action<FamilySymbol>;
-            new ListElements(addElement).ShowDialog();
+            List<FamilySymbol> categorizedElements = CategorizeElements();
+            new ListElements(addElement, categorizedElements).ShowDialog();
             Props = null;
         }
 
-        private void InsertElement(UIApplication uiapp)
+        private List<FamilySymbol> CategorizeElements()
         {
-            
-            UIDocument uiDocument = uiapp.ActiveUIDocument;
-            Document document = uiDocument.Document;
-            Selection selection = uiDocument.Selection;
+            // Create a new FilteredElementCollector and filter by FamilySymbol class
+            var collector = new FilteredElementCollector(Document).OfClass(typeof(FamilySymbol));
+
+            // Create a list of BuiltInCategory enums for the categories you want to filter by
+            List<BuiltInCategory> categories = new List<BuiltInCategory> 
+            { 
+                BuiltInCategory.OST_TelephoneDevices, 
+                BuiltInCategory.OST_CommunicationDevices,
+                BuiltInCategory.OST_FireAlarmDevices,
+                BuiltInCategory.OST_LightingDevices,
+                BuiltInCategory.OST_LightingFixtures,
+                BuiltInCategory.OST_ElectricalFixtures
+            };
+
+            // Create a list of CategoryFilters, one for each category
+            List<ElementFilter> categoryFilters = categories
+                .Select(c => new ElementCategoryFilter(c))
+                .Cast<ElementFilter>()
+                .ToList();
+
+            // Combine the category filters using a LogicalOrFilter
+            LogicalOrFilter orFilter = new LogicalOrFilter(categoryFilters);
+            // Apply the filter to the collector
+            collector.WherePasses(orFilter);
+
+            // Get the filtered FamilySymbols
+            List<FamilySymbol> familySymbols = collector
+                .ToElements()
+                .Cast<FamilySymbol>()
+                .ToList();
+
+            return familySymbols;
+        }
+
+        private void InsertElement()
+        {            
             try
             {
                 var elementData = Props as Dictionary<string, string>;
@@ -94,14 +145,14 @@ namespace DockableDialogs.Domain
                 switch (elementCategory)
                 {
                     case StaticData.LIGHTING_FIXTURES:
-                        new FamilyInstanceBuilder(uiapp)
+                        new FamilyInstanceBuilder(Uiapp)
                             .WithCircuit(circuit)
                             .WithCurrentLevel()
                             .WithLampSuffix(lampSuffix)
                             .Build(elementName);
                         break;
                     case StaticData.LIGHTING_DEVICES:
-                        new FamilyInstanceBuilder(uiapp)
+                        new FamilyInstanceBuilder(Uiapp)
                             .WithElevationFromLevel(switchHeight)
                             .WithCircuit(circuit)
                             .WithSwitchSuffixes()
@@ -112,7 +163,7 @@ namespace DockableDialogs.Domain
                     case StaticData.TELEPHONE_DEVICES:
                     case StaticData.FIRE_ALARM_DEVICES:
                     case StaticData.COMMUNICATION_DEVICES:
-                        new FamilyInstanceBuilder(uiapp)
+                        new FamilyInstanceBuilder(Uiapp)
                             .WithElevationFromLevel(socketHeight)
                             .WithCircuit(circuit)
                             .WithCurrentLevel()
@@ -127,11 +178,6 @@ namespace DockableDialogs.Domain
             {
                 TaskDialog.Show("Exception", ex.Message);
             }
-        }
-
-        public string GetName()
-        {
-            return "Placement triss";
         }
     }
 }

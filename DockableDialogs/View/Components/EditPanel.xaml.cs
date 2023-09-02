@@ -26,5 +26,11 @@ namespace DockableDialogs.View.Components
 
         private void ClipboardChanged(object sender, EventArgs e)
             => annotationPreview.Command?.Execute(Clipboard.GetImage());
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var a = applyToEl.Command;
+            a?.Execute(null);
+        }
     }
 }

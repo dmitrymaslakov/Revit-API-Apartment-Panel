@@ -25,23 +25,17 @@ namespace DockableDialogs.View.Components
             set { SetValue(AllElementsProperty, value); }
         }
 
-        public ListElements(Action<FamilySymbol> addElementToApartment)
+        public ListElements(Action<FamilySymbol> addElementToApartment, List<FamilySymbol> allElements)
         {
             _addElementToApartment = addElementToApartment;
-            AllElements = new ObservableCollection<CategorizedFamilySymbols>(GetCategorizedElements());
+            AllElements = 
+                new ObservableCollection<CategorizedFamilySymbols>(GetCategorizedElements(allElements));
             InitializeComponent();
         }
 
-        private IEnumerable<CategorizedFamilySymbols> GetCategorizedElements()
+        private IEnumerable<CategorizedFamilySymbols> GetCategorizedElements(List<FamilySymbol> allElements)
         {
-            var e = new List<FamilySymbol>
-            {
-                /*new FamilySymbol{ Category = new Category { Name = StaticData.ELECTRICAL_FIXTURES}, Name = StaticData.TRISSA_SWITCH},
-                new FamilySymbol{ Category = new Category { Name = StaticData.COMMUNICATION_DEVICES}, Name = StaticData.USB},
-                new FamilySymbol{ Category = new Category { Name = StaticData.COMMUNICATION_DEVICES}, Name = StaticData.BLOCK1},
-                new FamilySymbol{ Category = new Category { Name = StaticData.ELECTRICAL_FIXTURES}, Name = StaticData.SINGLE_SOCKET},
-                new FamilySymbol{ Category = new Category { Name = StaticData.LIGHTING_FIXTURES}, Name = StaticData.THROUGH_SWITCH},*/
-            }
+            return allElements
             .GroupBy(fs => fs.Category.Name)
             .Select(gfs => new CategorizedFamilySymbols
             {
@@ -49,8 +43,7 @@ namespace DockableDialogs.View.Components
                 CategorizedElements =
                 new ObservableCollection<FamilySymbol>(gfs.Select(fs => fs))
             }).ToList();
-            return e;
-        }
+       }
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {

@@ -159,21 +159,21 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\icons8-AddArrow-24.png">
+    <Resource Include="Resources\icons8-AddArrow-24.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\icons8-Create-24.png">
+    </Resource>
+    <Resource Include="Resources\icons8-Create-24.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\icons8-Edit-24.png">
+    </Resource>
+    <Resource Include="Resources\icons8-Edit-24.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\icons8-Remove-24.png">
+    </Resource>
+    <Resource Include="Resources\icons8-Remove-24.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\icons8-RemoveArrow-24.png">
+    </Resource>
+    <Resource Include="Resources\icons8-RemoveArrow-24.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
