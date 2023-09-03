@@ -105,6 +105,7 @@
     <Compile Include="Domain\Services\AnnotationService\FileAnnotationCommunicatorFactory.cs" />
     <Compile Include="Domain\Services\AnnotationService\IAnnotationCommunicatorFactory.cs" />
     <Compile Include="Domain\Services\Commands\EditPanelCommandsCreater.cs" />
+    <Compile Include="Domain\Services\Commands\HighLowTemps.cs" />
     <Compile Include="Domain\Services\Commands\RelayCommand.cs" />
     <Compile Include="Domain\Services\Commands\UICommandsCreater.cs" />
     <Compile Include="Domain\Request.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Application.cs" />
     <Compile Include="Domain\Services\Commands\BaseCommand.cs" />
     <Compile Include="Domain\ExternalEventHandler.cs" />
+    <Compile Include="Domain\Services\Commands\WeatherForecast.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ClipboardManager.cs" />
     <Compile Include="Utility\Converters\ElementDataConverter.cs" />

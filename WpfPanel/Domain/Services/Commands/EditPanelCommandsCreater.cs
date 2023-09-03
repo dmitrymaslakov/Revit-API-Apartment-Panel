@@ -18,7 +18,19 @@ namespace WpfPanel.Domain.Services.Commands
         private readonly IEditPanelToCommandsCreater _editPanelProperties;
         private readonly Action<FamilySymbol> _addElementToApartment;
 
-        public EditPanelCommandsCreater(IEditPanelToCommandsCreater editPanelProperties) => _editPanelProperties = editPanelProperties;
+        public EditPanelCommandsCreater(IEditPanelToCommandsCreater editPanelProperties)
+        {
+            _editPanelProperties = editPanelProperties;
+            _addElementToApartment = newElement =>
+            {
+                if (!_editPanelProperties.ApartmentElements.Select(ae => ae.Name).Contains(newElement.Name))
+                    _editPanelProperties.ApartmentElements.Add(new ApartmentElement
+                    {
+                        Name = newElement.Name,
+                        Category = newElement.Category.Name
+                    });
+            };
+        }
 
         public ICommand CreateAddApartmentElementCommand() => new RelayCommand(o
                 => MakeRequest(RequestId.AddElement, _addElementToApartment));
@@ -179,5 +191,8 @@ namespace WpfPanel.Domain.Services.Commands
             _editPanelProperties.Handler.Request.Make(request);
             _editPanelProperties.ExEvent.Raise();
         }
+
+
+
     }
 }

@@ -43,7 +43,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <Image Width="20" Margin="20 0 0 0">
+                                <Image Width="20" Margin="45 0 0 0">
                                     <Image.Style>
                                         <Style TargetType="Image">
                                             <Setter Property="Source" Value="{Binding Annotation}"/>

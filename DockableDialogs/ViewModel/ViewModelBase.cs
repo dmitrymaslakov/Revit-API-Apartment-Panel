@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 using Autodesk.Revit.UI;
 using DockableDialogs.Domain;
 
@@ -15,9 +11,9 @@ namespace DockableDialogs.ViewModel
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         private bool _disposed;
-
+        [JsonIgnore]
         public ExternalEvent ExEvent { get; }
-
+        [JsonIgnore]
         public RequestHandler Handler { get; }
 
         public ViewModelBase(ExternalEvent exEvent, RequestHandler handler)

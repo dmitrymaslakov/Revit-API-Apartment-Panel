@@ -27,7 +27,7 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <Button Content="Add" Grid.Row="1" Click="Button_Click"
+        <Button Content="Add" Grid.Row="1" Click="AddElementToApartment_Click"
                 Width="30" Margin="100 0 0 0"/>
     </Grid>
 </Window>

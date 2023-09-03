@@ -111,8 +111,8 @@
                 </StatusBarItem.Style>
             </StatusBarItem>
         </StatusBar>
-        <WrapPanel Grid.Row="5" Visibility="Collapsed">
-            <Button x:Name="latestConfig" Command="{Binding SaveLatestConfigCommand}"/>
+        <WrapPanel Grid.Row="5" Visibility="Visible">
+            <Button Content="savingConfig" x:Name="latestConfig" Command="{Binding SaveLatestConfigCommand}"/>
             <Button Content="loadingConfig" Command="{Binding LoadLatestConfigCommand}"/>
         </WrapPanel>
     </Grid>

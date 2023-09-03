@@ -7,14 +7,7 @@ using DockableDialogs.Utility;
 using DockableDialogs.View;
 using DockableDialogs.ViewModel;
 using System;
-using WPF = System.Windows;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using System.Windows;
+using Autodesk.Revit.DB.Events;
 
 namespace DockableDialogs
 {
@@ -23,6 +16,7 @@ namespace DockableDialogs
     public class Application : IExternalApplication
     {
         public static UI View;
+        public static UIViewModel _uiVM;
         internal static Application _thisApp = null;
 
         public Application()
@@ -31,6 +25,19 @@ namespace DockableDialogs
 
         public Result OnShutdown(UIControlledApplication application)
         {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("Application_ShutDown_Exception", ex.Message);
+            }
+            finally
+            {
+                application.ControlledApplication.DocumentClosing -=
+                Handler_DocumentClosing;
+            }
             return Result.Succeeded;
         }
 
@@ -44,8 +51,27 @@ namespace DockableDialogs
 
             if (!DockablePane.PaneIsRegistered(UI.PaneId))
                 application.RegisterDockablePane(UI.PaneId, UI.PaneName, View);
-            
+
+            application.ControlledApplication.DocumentClosing +=
+                Handler_DocumentClosing;
+
             return Result.Succeeded;
+        }
+
+        private void Handler_DocumentClosing(object sender, DocumentClosingEventArgs e)
+        {
+            try
+            {
+                TaskDialog.Show("Handler_DocumentClosing", "Document is closing");
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("Handler_DocumentClosing_Exception", ex.Message);
+            }
+            finally
+            {
+                _uiVM?.SaveLatestConfigCommand?.Execute(null);
+            }
         }
 
         private void OnViewActivated(object sender, ViewActivatedEventArgs e)
@@ -60,8 +86,8 @@ namespace DockableDialogs
         {
             RequestHandler handler = new RequestHandler();
             ExternalEvent exEvent = ExternalEvent.Create(handler);
-            var uiVM = new UIViewModel(exEvent, handler);
-            View = new UI(uiVM);
+            _uiVM = new UIViewModel(exEvent, handler);
+            View = new UI(_uiVM);
         }
     }
 
@@ -94,7 +120,7 @@ namespace DockableDialogs
                 _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
 
             FilterRule elevationFromLevelRule = ParameterFilterRuleFactory
-                .CreateEqualsRule(new ElementId(BuiltInParameter.INSTANCE_ELEVATION_PARAM), 
+                .CreateEqualsRule(new ElementId(BuiltInParameter.INSTANCE_ELEVATION_PARAM),
                 newElevationFeets, 0.01);
 
             var elementFilter = new LogicalAndFilter(new ElementFilter[]

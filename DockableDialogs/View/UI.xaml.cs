@@ -21,7 +21,6 @@ namespace DockableDialogs.View
     /// <summary>
     /// Interaction logic for UI.xaml
     /// </summary>
-    //public partial class UI : Window, IDockablePaneProvider
     public partial class UI : UserControl, IDockablePaneProvider
     {
         private Guid m_targetGuid;
@@ -61,6 +60,7 @@ namespace DockableDialogs.View
                 data.InitialState.SetFloatingRectangle(new Autodesk.Revit.DB.Rectangle(m_left, m_top, m_right, m_bottom));
             }*/
         }
+        
         public static DockablePaneId PaneId => new DockablePaneId(new Guid("E6EF9DE9-F5F2-454B-8968-4BA2622E5CE5"));
 
         public static string PaneName => "Apartment panel";
@@ -91,14 +91,12 @@ namespace DockableDialogs.View
         private void Button_MouseEnter(object sender, MouseEventArgs e)
         {
             Button button = sender as Button;
-            if (button.Tag.ToString() == "Lighting Fixtures")
+            if (button.Tag.ToString() == "Lighting Devices")
                 statusBarItem.Content = "You should select the lamp(s) before inserting the switch";
             button.Focus();
         }
 
-        private void Button_MouseLeave(object sender, MouseEventArgs e)
-        {
-            statusBarItem.Content = null;
-        }
+        private void Button_MouseLeave(object sender, MouseEventArgs e) 
+            => statusBarItem.Content = null;        
     }
 }

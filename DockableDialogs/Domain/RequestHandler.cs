@@ -8,6 +8,8 @@ using DockableDialogs.ViewModel.ComponentsVM;
 using DockableDialogs.View.Components;
 using System.Linq;
 using System.Windows.Controls;
+using DockableDialogs.Domain.Models;
+using System.Collections.ObjectModel;
 
 namespace DockableDialogs.Domain
 {
@@ -88,13 +90,13 @@ namespace DockableDialogs.Domain
 
         private void AddElement()
         {
-            var addElement = Props as Action<FamilySymbol>;
-            List<FamilySymbol> categorizedElements = CategorizeElements();
+            var addElement = Props as Action<ApartmentElement>;
+            IEnumerable<CategorizedFamilySymbols> categorizedElements = CategorizeElements();
             new ListElements(addElement, categorizedElements).ShowDialog();
             Props = null;
         }
 
-        private List<FamilySymbol> CategorizeElements()
+        private IEnumerable<CategorizedFamilySymbols> CategorizeElements()
         {
             // Create a new FilteredElementCollector and filter by FamilySymbol class
             var collector = new FilteredElementCollector(Document).OfClass(typeof(FamilySymbol));
@@ -127,7 +129,19 @@ namespace DockableDialogs.Domain
                 .Cast<FamilySymbol>()
                 .ToList();
 
-            return familySymbols;
+            return GetCategorizedElements(familySymbols);
+        }
+
+        private IEnumerable<CategorizedFamilySymbols> GetCategorizedElements(List<FamilySymbol> allElements)
+        {
+            return allElements
+            .GroupBy(fs => fs.Category.Name)
+            .Select(gfs => new CategorizedFamilySymbols
+            {
+                Category = gfs.Key,
+                CategorizedElements =
+                new ObservableCollection<ApartmentElement>(gfs.Select(fs => new ApartmentElement { Name = fs.Name, Category = fs.Category.Name }))
+            }).ToList();
         }
 
         private void InsertElement()
@@ -138,8 +152,7 @@ namespace DockableDialogs.Domain
                 string elementName = elementData[nameof(elementName)];
                 string elementCategory = elementData[nameof(elementCategory)];
                 string circuit = elementData[nameof(circuit)];
-                string switchHeight = elementData[nameof(switchHeight)];
-                string socketHeight = elementData[nameof(socketHeight)];
+                string height = elementData[nameof(height)];
                 string lampSuffix = elementData[nameof(lampSuffix)];
 
                 switch (elementCategory)
@@ -153,7 +166,7 @@ namespace DockableDialogs.Domain
                         break;
                     case StaticData.LIGHTING_DEVICES:
                         new FamilyInstanceBuilder(Uiapp)
-                            .WithElevationFromLevel(switchHeight)
+                            .WithElevationFromLevel(height)
                             .WithCircuit(circuit)
                             .WithSwitchSuffixes()
                             .WithCurrentLevel()
@@ -164,7 +177,7 @@ namespace DockableDialogs.Domain
                     case StaticData.FIRE_ALARM_DEVICES:
                     case StaticData.COMMUNICATION_DEVICES:
                         new FamilyInstanceBuilder(Uiapp)
-                            .WithElevationFromLevel(socketHeight)
+                            .WithElevationFromLevel(height)
                             .WithCircuit(circuit)
                             .WithCurrentLevel()
                             .Build(elementName);

@@ -171,8 +171,8 @@ namespace WpfPanel.ViewModel.ComponentsVM
         public ICommand SetAnnotationToElementCommand { get; set; }
         [JsonIgnore]
         public ICommand SetAnnotationPreviewCommand { get; set; }
-        [JsonIgnore]
-        public Action<object, OkApplyCancel> OkApplyCancelActions { get; }
+        //[JsonIgnore]
+        public Action<object, OkApplyCancel> OkApplyCancelActions { get; set; }
 
         public EditPanelVM ApplyLatestConfiguration(EditPanelVM latestConfiguration)
         {

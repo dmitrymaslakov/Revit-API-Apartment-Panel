@@ -1,5 +1,4 @@
-﻿using Autodesk.Revit.DB;
-using DockableDialogs.Domain.Models;
+﻿using DockableDialogs.Domain.Models;
 using DockableDialogs.Domain.Services.AnnotationService;
 using DockableDialogs.ViewModel;
 using DockableDialogs.ViewModel.ComponentsVM;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace DockableDialogs.Domain.Services.Commands
@@ -15,9 +15,25 @@ namespace DockableDialogs.Domain.Services.Commands
     public class EditPanelCommandsCreater
     {
         private readonly IEditPanelToCommandsCreater _editPanelProperties;
-        private readonly Action<FamilySymbol> _addElementToApartment;
+        private readonly Action<ApartmentElement> _addElementToApartment;
 
-        public EditPanelCommandsCreater(IEditPanelToCommandsCreater editPanelProperties) => _editPanelProperties = editPanelProperties;
+        public EditPanelCommandsCreater(IEditPanelToCommandsCreater editPanelProperties)
+        {
+            _editPanelProperties = editPanelProperties;
+            _addElementToApartment = newElement =>
+            {
+                if (!_editPanelProperties.ApartmentElements.Select(ae => ae.Name).Contains(newElement.Name))
+                {
+                    var annotationService = new AnnotationService.AnnotationService(
+                        new FileAnnotationCommunicatorFactory(newElement.Name));
+
+                    ImageSource annotation = annotationService.Get();
+                    ApartmentElement newApartmentElement = newElement.Clone();
+                    newApartmentElement.Annotation = annotation;
+                    _editPanelProperties.ApartmentElements.Add(newApartmentElement);
+                }
+            };
+        }
 
         public ICommand CreateAddApartmentElementCommand() => new RelayCommand(o
                 => MakeRequest(RequestId.AddElement, _addElementToApartment));
@@ -149,11 +165,14 @@ namespace DockableDialogs.Domain.Services.Commands
         {
             if (_editPanelProperties.SelectedApartmentElements.Count == 1)
             {
-                ApartmentElement apartmentElement = _editPanelProperties.SelectedApartmentElements.FirstOrDefault();
+                ApartmentElement apartmentElement = 
+                    _editPanelProperties.SelectedApartmentElements.FirstOrDefault();
+
                 var annotationService = new AnnotationService.AnnotationService(
                     new FileAnnotationCommunicatorFactory(apartmentElement.Name));
 
-                apartmentElement.Annotation = annotationService.Save(_editPanelProperties.AnnotationPreview);
+                apartmentElement.Annotation = 
+                    annotationService.Save(_editPanelProperties.AnnotationPreview);
             }
         });
 

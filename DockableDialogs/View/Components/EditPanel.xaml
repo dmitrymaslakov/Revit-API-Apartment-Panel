@@ -26,10 +26,10 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="190"/>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="190"/>
             </Grid.ColumnDefinitions>
             <local:ElementsCard
                 Grid.Column="0"
@@ -68,7 +68,6 @@
                             <Image x:Name="addingCircuit" 
                                    Source="pack://application:,,,/DockableDialogs;component/Resources/icons8-Create-24.png"/>
                         </Button>
-                        <Button Content="test" Click="Button_Click"/>
                     </WrapPanel>
                 </GroupBox>
             </StackPanel>

@@ -18,8 +18,7 @@ namespace DockableDialogs.ViewModel.ComponentsVM
     {
         private readonly EditPanelCommandsCreater _commandCreater;
 
-        public EditPanelVM(ExternalEvent exEvent, RequestHandler handler,
-            Action<object, OkApplyCancel> okApplyCancelActions) : base(exEvent, handler)
+        public EditPanelVM(ExternalEvent exEvent, RequestHandler handler) : base(exEvent, handler)
         {
             _commandCreater = new EditPanelCommandsCreater(this);
 
@@ -55,8 +54,6 @@ namespace DockableDialogs.ViewModel.ComponentsVM
                 new ObservableCollection<KeyValuePair<string, ObservableCollection<ApartmentElement>>>();
 
             SelectedCircuitElements = new ObservableCollection<ApartmentElement>();
-
-            OkApplyCancelActions = okApplyCancelActions;
 
             AddApartmentElementCommand = _commandCreater.CreateAddApartmentElementCommand();
 
@@ -173,7 +170,7 @@ namespace DockableDialogs.ViewModel.ComponentsVM
         [JsonIgnore]
         public ICommand SetAnnotationPreviewCommand { get; set; }
         [JsonIgnore]
-        public Action<object, OkApplyCancel> OkApplyCancelActions { get; }
+        public Action<object, OkApplyCancel> OkApplyCancelActions { get; set; }
 
         public EditPanelVM ApplyLatestConfiguration(EditPanelVM latestConfiguration)
         {

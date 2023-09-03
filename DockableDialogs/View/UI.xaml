@@ -59,7 +59,7 @@
                                         MouseLeave="Button_MouseLeave"
                                         Style="{StaticResource circuitButton}"
                                         Command="{Binding DataContext.InsertElementCommand,
-                                            RelativeSource={RelativeSource AncestorType=Window}}">
+                                            RelativeSource={RelativeSource AncestorType=UserControl}}">
                                         <Button.CommandParameter>
                                             <MultiBinding Converter="{StaticResource ElementDataConverter}">
                                                 <Binding Path="Text" ElementName="circuitNumber"/>
@@ -112,7 +112,7 @@
             </StatusBarItem>
         </StatusBar>
         <WrapPanel Grid.Row="5" Visibility="Collapsed">
-            <Button x:Name="latestConfig" Command="{Binding SaveLatestConfigCommand}"/>
+            <Button Content="savingConfig" Command="{Binding SaveLatestConfigCommand}"/>
             <Button Content="loadingConfig" Command="{Binding LoadLatestConfigCommand}"/>
         </WrapPanel>
     </Grid>

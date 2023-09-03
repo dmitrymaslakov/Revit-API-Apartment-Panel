@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
-using WpfPanel.Domain.Models;
-using WpfPanel.Domain.Models.RevitMockupModels;
-using WpfPanel.Domain.Services.AnnotationService;
 using WpfPanel.ViewModel;
 using WpfPanel.ViewModel.ComponentsVM;
 

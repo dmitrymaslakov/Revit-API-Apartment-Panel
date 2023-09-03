@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 using DockableDialogs.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace DockableDialogs.View.Components
     /// </summary>
     public partial class ListElements : Window
     {
-        private readonly Action<FamilySymbol> _addElementToApartment;
+        private readonly Action<ApartmentElement> _addElementToApartment;
 
         public static readonly DependencyProperty AllElementsProperty =
             DependencyProperty.Register(nameof(AllElements), typeof(ObservableCollection<CategorizedFamilySymbols>),
@@ -25,35 +26,30 @@ namespace DockableDialogs.View.Components
             set { SetValue(AllElementsProperty, value); }
         }
 
-        public ListElements(Action<FamilySymbol> addElementToApartment, List<FamilySymbol> allElements)
+        public ListElements(Action<ApartmentElement> addElementToApartment, IEnumerable<CategorizedFamilySymbols> categorizedElements)
         {
             _addElementToApartment = addElementToApartment;
-            AllElements = 
-                new ObservableCollection<CategorizedFamilySymbols>(GetCategorizedElements(allElements));
+            AllElements =
+                new ObservableCollection<CategorizedFamilySymbols>(categorizedElements);
             InitializeComponent();
         }
-
-        private IEnumerable<CategorizedFamilySymbols> GetCategorizedElements(List<FamilySymbol> allElements)
-        {
-            return allElements
-            .GroupBy(fs => fs.Category.Name)
-            .Select(gfs => new CategorizedFamilySymbols
-            {
-                Category = gfs.Key,
-                CategorizedElements =
-                new ObservableCollection<FamilySymbol>(gfs.Select(fs => fs))
-            }).ToList();
-       }
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             var nv = e.NewValue;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void AddElementToApartment_Click(object sender, RoutedEventArgs e)
         {
-            if (elementsTree.SelectedItem is FamilySymbol selectedElement)
-                _addElementToApartment(selectedElement);
+            try
+            {
+                if (elementsTree.SelectedItem is ApartmentElement selectedElement)
+                    _addElementToApartment(selectedElement);
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("exeption", ex.Message);
+            }
         }
     }
 }

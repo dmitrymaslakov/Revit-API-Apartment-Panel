@@ -9,6 +9,7 @@ using DockableDialogs.Domain.Services.Commands;
 using DockableDialogs.ViewModel.ComponentsVM;
 using System.IO;
 using DockableDialogs.Utility;
+using System.Text;
 
 namespace DockableDialogs.ViewModel
 {
@@ -26,9 +27,12 @@ namespace DockableDialogs.ViewModel
         {
             _uICommandsCreater = new UICommandsCreater(this);
 
-            EditPanelVM = new EditPanelVM(exEvent, handler, ExecuteOkApplyCancelActions);
+            EditPanelVM = new EditPanelVM(exEvent, handler)
+            {
+                OkApplyCancelActions = ExecuteOkApplyCancelActions
+            };
 
-            LatestConfigPath = Path.Combine(Environment.CurrentDirectory, "LatestConfig.json");
+            LatestConfigPath = FileUtility.GetAssemblyPath() + "\\LatestConfig.json";
 
             LoadLatestConfigCommand = _uICommandsCreater.CreateLoadLatestConfigCommand();
 
@@ -49,7 +53,7 @@ namespace DockableDialogs.ViewModel
 
         public string LatestConfigPath { get; }
 
-        public EditPanelVM EditPanelVM { get; }
+        public EditPanelVM EditPanelVM { get; set; }
 
         private ObservableCollection<Circuit> _circuits;
 
@@ -115,14 +119,6 @@ namespace DockableDialogs.ViewModel
             var result = new ObservableCollection<Circuit>();
             foreach (var circuit in panelCircuits)
             {
-
-                var a = circuit.Value.Select(ap => ap.Clone()).ToList();
-
-                foreach (var item in a)
-                {
-                    var ann = item.Annotation;
-                }
-
                 result.Add(new Circuit
                 {
                     Number = circuit.Key,

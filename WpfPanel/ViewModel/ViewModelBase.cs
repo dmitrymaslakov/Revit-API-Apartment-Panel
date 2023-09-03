@@ -41,18 +41,14 @@ namespace WpfPanel.ViewModel
             OnPropertyChanged(propertyName);
             return true;
         }
-        
-        public virtual void Dispose()
-        {
-            Dispose(true);
-        }
-        
+
+        public virtual void Dispose() => Dispose(true);
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing || _disposed)
-            {
                 return;
-            }
+
             _disposed = true;
         }
     }

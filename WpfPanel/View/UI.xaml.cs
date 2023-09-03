@@ -27,10 +27,8 @@ namespace WpfPanel.View
             Closing += UI_Closing;
         }
 
-        private void UI_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            latestConfig.Command?.Execute(null);
-        }
+        private void UI_Closing(object sender, System.ComponentModel.CancelEventArgs e) 
+            => latestConfig.Command?.Execute(null);
 
         private void Button_KeyDown(object sender, KeyEventArgs e)
         {
@@ -58,14 +56,13 @@ namespace WpfPanel.View
         private void Button_MouseEnter(object sender, MouseEventArgs e)
         {
             Button button = sender as Button;
-            if (button.Tag.ToString() == "Lighting Fixtures")
+            if (button.Tag.ToString() == "Lighting Devices")
                 statusBarItem.Content = "You should select the lamp(s) before inserting the switch";
             button.Focus();
         }
 
-        private void Button_MouseLeave(object sender, MouseEventArgs e)
-        {
-            statusBarItem.Content = null;
-        }
+        private void Button_MouseLeave(object sender, MouseEventArgs e) 
+            => statusBarItem.Content = null;
+
     }
 }

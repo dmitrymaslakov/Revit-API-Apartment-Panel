@@ -14,6 +14,9 @@
 *.sln.docstates
 Shared_Parameters.txt
 
+# User-specific folders
+HOTEL_2_backup/
+Revit_temp/
 # Build results
 [Dd]ebug/
 [Rr]elease/

@@ -1,7 +1,8 @@
 ﻿using DockableDialogs.Domain.Services.AnnotationService.AnnotationReaders;
 using DockableDialogs.Domain.Services.AnnotationService.AnnotationWriters;
-using System;
+using DockableDialogs.Utility;
 using System.IO;
+using System.Text;
 
 namespace DockableDialogs.Domain.Services.AnnotationService
 {
@@ -11,8 +12,11 @@ namespace DockableDialogs.Domain.Services.AnnotationService
 
         public FileAnnotationCommunicatorFactory(string fileName)
         {
-            _fullPath = Path.Combine(Environment.CurrentDirectory,
-                "Resources", "Annotations", fileName + ".png");
+            _fullPath = new StringBuilder(FileUtility.GetApplicationAnnotationsPath())
+                .Append("\\")
+                .Append(fileName)
+                .Append(".png")
+                .ToString();
         }
 
         public bool IsFileExists() => File.Exists(_fullPath);
