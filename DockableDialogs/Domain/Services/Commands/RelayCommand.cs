@@ -7,7 +7,8 @@ namespace DockableDialogs.Domain.Services.Commands
     {
         private readonly Action<object> _execute;
 
-        public RelayCommand(Action<object> execute) => _execute = execute;
+        public RelayCommand(Action<object> execute) => 
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
 
         public override void Execute(object parameter)
         {

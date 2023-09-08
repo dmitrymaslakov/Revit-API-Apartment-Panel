@@ -43,7 +43,8 @@ namespace WpfPanel.View.Components
                 new FamilySymbol{ Category = new Category { Name = StaticData.COMMUNICATION_DEVICES}, Name = StaticData.USB},
                 new FamilySymbol{ Category = new Category { Name = StaticData.COMMUNICATION_DEVICES}, Name = StaticData.BLOCK1},
                 new FamilySymbol{ Category = new Category { Name = StaticData.ELECTRICAL_FIXTURES}, Name = StaticData.SINGLE_SOCKET},
-                new FamilySymbol{ Category = new Category { Name = StaticData.LIGHTING_FIXTURES}, Name = StaticData.THROUGH_SWITCH},
+                new FamilySymbol{ Category = new Category { Name = StaticData.LIGHTING_DEVICES}, Name = StaticData.THROUGH_SWITCH},
+                new FamilySymbol{ Category = new Category { Name = StaticData.LIGHTING_FIXTURES}, Name = StaticData.LAMP},
             }
             .GroupBy(fs => fs.Category.Name)
             .Select(gfs => new CategorizedFamilySymbols

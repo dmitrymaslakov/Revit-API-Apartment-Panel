@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DockableDialogs.Utility;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,8 +21,7 @@ namespace DockableDialogs.Domain.Services.AnnotationService.AnnotationWriters
             if (_disposed)
                 throw new Exception("Object is disposed.");
 
-            var folderPath = Path.Combine(Environment.CurrentDirectory,
-                "Resources", "Annotations");
+            var folderPath = FileUtility.GetApplicationAnnotationsPath();
 
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);

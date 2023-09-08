@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Media3D;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Electrical;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using DockableDialogs.Utility.Exceptions;
 
 namespace DockableDialogs.Utility
 {
@@ -65,9 +67,9 @@ namespace DockableDialogs.Utility
             _lampSuffix = lampSuffix;
             return this;
         }
-        public FamilyInstanceBuilder WithSwitchSuffixes()
+        public FamilyInstanceBuilder WithSwitchSuffixes(List<FamilyInstance> lamps)
         {
-            _switchSuffixes = GetSuffixesFromLamps();
+            _switchSuffixes = GetSuffixesFromLamp(lamps);
             return this;
         }
         #endregion
@@ -75,7 +77,7 @@ namespace DockableDialogs.Utility
         #region Private methods
         private ElementId FamilyInstanceCreate(FamilySymbol symbol)
         {
-            Reference reference = 
+            Reference reference =
                 _selection.PickObject(ObjectType.PointOnElement, "Pick a host in the model");
 
             FamilyInstance newFamilyInstance = null;
@@ -93,17 +95,6 @@ namespace DockableDialogs.Utility
         private void FamilyInstanceConfigure(ElementId familyInstanceId)
         {
             FamilyInstance familyInstance = _document.GetElement(familyInstanceId) as FamilyInstance;
-            //ElementId levelId = GetViewLevel();
-
-            //string circuit = _elementData[nameof(circuit)];
-            //string elementName = elementData[nameof(elementName)];
-            //string elementCategory = elementData[nameof(elementCategory)];
-            //string lampSuffix = _elementData[nameof(lampSuffix)];
-            //string switchSuffixes = "";
-            /*bool isElevationParsed = double.TryParse(elementData["elevationFromLevel"],
-                out double elevationFromLevel);*/
-            /*if (familyInstance.Category.Name.Contains(LIGHTING_DEVICES))
-                switchSuffixes = elementData[nameof(switchSuffixes)];*/
 
             using (var tr = new Transaction(_document, "Config FamilyInstance"))
             {
@@ -113,37 +104,14 @@ namespace DockableDialogs.Utility
                 if (_currentLevelId != null)
                 {
                     SetCurrentLevel(familyInstance);
-                    /*familyInstance
-                        .get_Parameter(BuiltInParameter.INSTANCE_SCHEDULE_ONLY_LEVEL_PARAM)
-                        .Set(_currentLevelId);*/
                     if (!category.Contains(StaticData.LIGHTING_FIXTURES))
                     {
                         SetElevationFromLevel(familyInstance);
-                        /*double newElevationFeets = UnitUtils.ConvertToInternalUnits(_elevationFromLevel,
-                            _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
-
-                        familyInstance
-                            .get_Parameter(BuiltInParameter.INSTANCE_ELEVATION_PARAM)
-                            .Set(newElevationFeets);*/
+                        SetHeight(familyInstance);
                     }
                 }
                 SetCircuit(familyInstance);
-                /*Parameter circuitParam = familyInstance.LookupParameter("RBX-CIRCUIT");
-                switch (category)
-                {
-                    case LIGHTING_FIXTURES:
-                        circuitParam.Set(circuit + "/" + lampSuffix);
-                        break;
-                    case LIGHTING_DEVICES:
-                        circuitParam.Set(circuit + "/" + switchSuffixes);
-                        break;
-                    case ELECTRICAL_FIXTURES:
-                    case TELEPHONE_DEVICES:
-                    case FIRE_ALARM_DEVICES:
-                    case COMMUNICATION_DEVICES:
-                        circuitParam.Set(circuit);
-                        break;
-                }*/
+
                 tr.Commit();
             }
         }
@@ -182,7 +150,11 @@ namespace DockableDialogs.Utility
         }
         private void SetCircuit(FamilyInstance familyInstance)
         {
-            Parameter circuitParam = familyInstance.LookupParameter("RBX-CIRCUIT");
+            string customParameter = "RBX-CIRCUIT";
+            Parameter circuitParam = familyInstance.LookupParameter(customParameter);
+            if (circuitParam == null)
+                throw new CustomParameterException(customParameter, familyInstance.Name);
+
             string category = familyInstance.Category.Name;
             switch (category)
             {
@@ -202,82 +174,56 @@ namespace DockableDialogs.Utility
         }
         private void SetHeight(FamilyInstance familyInstance)
         {
-            Parameter circuitParam = familyInstance.LookupParameter("UK-HEIGHT");
+            string customParameter = "H-UK";//"UK-HEIGHT"
+            Parameter circuitParam = familyInstance.LookupParameter(customParameter);
+            if (circuitParam == null)
+                throw new CustomParameterException(customParameter, familyInstance.Name);
+
             string category = familyInstance.Category.Name;
             switch (category)
             {
-                case StaticData.LIGHTING_FIXTURES:
-                    circuitParam.Set(_circuit + "/" + _lampSuffix);
-                    break;
                 case StaticData.LIGHTING_DEVICES:
-                    circuitParam.Set(_circuit + "/" + _switchSuffixes);
-                    break;
                 case StaticData.ELECTRICAL_FIXTURES:
                 case StaticData.TELEPHONE_DEVICES:
                 case StaticData.FIRE_ALARM_DEVICES:
                 case StaticData.COMMUNICATION_DEVICES:
-                    circuitParam.Set(_circuit);
+                    circuitParam.Set($"H={_elevationFromLevel}");
                     break;
             }
         }
-        private string GetSuffixesFromLamps()
+        private string GetSuffixesFromLamp(List<FamilyInstance> lamps)
         {
-            //try
+            var circuitParameters = new List<Parameter>();
+
+            string targetCircuitParam = "RBX-CIRCUIT";
+
+            foreach (var lamp in lamps)
             {
-                var collection = _selection.GetElementIds()
-                    .Select(id => _document.GetElement(id))
-                    .OfType<FamilyInstance>()
-                    .Where(fs => fs.Category.Name.Contains("Lighting Fixtures"))
-                    ;
-                if (collection.Count() < 1)
-                {
-                    string message =
-                        "Please select the lamp(s) of Lighting Fixtures category before inserting the switch.";
-                    throw new Exception(message);
-                }
+                var lampParameter = lamp.Parameters
+                    .OfType<Parameter>()
+                    .Where(p => p.Definition.Name.Contains(targetCircuitParam))
+                    .FirstOrDefault();
 
-                var circuitParameters = new List<Parameter>();
+                if (lampParameter == null)
+                    throw new CustomParameterException(targetCircuitParam, lamp.Name);
 
-                string targetCircuitParam = "RBX-CIRCUIT";
-
-                foreach (var lamp in collection)
-                {
-                    var lampParameter = lamp.Parameters
-                        .OfType<Parameter>()
-                        .Where(p => p.Definition.Name.Contains(targetCircuitParam))
-                        .FirstOrDefault();
-
-                    if (lampParameter == null)
-                    {
-                        string message =
-                            "Some of the Lighting Fixtures do not have RBX-CIRCUIT parameter.";
-                        throw new Exception(message);
-                    }
-
-                    circuitParameters.Add(lampParameter);
-                }
-
-                var lampCircuits = new List<string>();
-
-                foreach (Parameter parameter in circuitParameters)
-                    if (parameter.Definition.Name.Contains(targetCircuitParam))
-                        if (parameter.StorageType == StorageType.String)
-                            lampCircuits.Add(parameter.AsString());
-
-                var suffixes = lampCircuits
-                    .Select(c => c.Substring(c.IndexOf("/") + 1))
-                    .ToList();
-
-                return string.Join(",", suffixes);
-
+                circuitParameters.Add(lampParameter);
             }
-            /*catch (Exception ex)
-            {
-                TaskDialog.Show("Exception", ex.Message);
-                return null;
-            }*/
-        }
 
+            var lampCircuits = new List<string>();
+
+            foreach (Parameter parameter in circuitParameters)
+                if (parameter.Definition.Name.Contains(targetCircuitParam))
+                    if (parameter.StorageType == StorageType.String)
+                        lampCircuits.Add(parameter.AsString());
+
+            var suffixes = lampCircuits
+                .Select(c => c.Substring(c.IndexOf("/") + 1))
+                .OrderBy(c => c)
+                .ToList();
+
+            return string.Join(",", suffixes);
+        }
         #endregion
     }
 }

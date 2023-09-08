@@ -27,7 +27,9 @@ namespace DockableDialogs.Domain.Services.Commands
                     var annotationService = new AnnotationService.AnnotationService(
                         new FileAnnotationCommunicatorFactory(newElement.Name));
 
-                    ImageSource annotation = annotationService.Get();
+                    ImageSource annotation = annotationService.IsAnnotationExists() 
+                        ? annotationService.Get() : null;
+
                     ApartmentElement newApartmentElement = newElement.Clone();
                     newApartmentElement.Annotation = annotation;
                     _editPanelProperties.ApartmentElements.Add(newApartmentElement);

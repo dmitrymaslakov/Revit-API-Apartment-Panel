@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DockableDialogs.View.Components"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
              x:Name="root"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -64,18 +65,18 @@
                     <Button Style="{StaticResource ElButton}" 
                             Command="{Binding AddElementCommand, ElementName=root}"
                             Visibility="{Binding AddBtnVisibility, ElementName=root}">
-                        <Image Source="pack://application:,,,/DockableDialogs;component/Resources/icons8-Create-24.png"/>
+                        <fa:ImageAwesome Icon="Plus" Foreground="Green"/>
                     </Button>
                     <Button Style="{StaticResource ElButton}" 
                             x:Name="ebv"
                             Command="{Binding EditElementCommand, ElementName=root}" 
                             Visibility="{Binding EditBtnVisibility, ElementName=root}">
-                        <Image Source="pack://application:,,,/DockableDialogs;component/Resources/icons8-Edit-24.png"/>
+                        <fa:ImageAwesome Icon="Edit" Foreground="Blue"/>
                     </Button>
                     <Button Style="{StaticResource ElButton}" 
                             Command="{Binding RemoveElementCommand, ElementName=root}"
                             Visibility="{Binding RemoveBtnVisibility, ElementName=root}">
-                        <Image Source="pack://application:,,,/DockableDialogs;component/Resources/icons8-Remove-24.png" />
+                        <fa:ImageAwesome Icon="Trash" Foreground="Red"/>
                     </Button>
                 </WrapPanel>
             </StackPanel>

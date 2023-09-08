@@ -39,6 +39,11 @@ namespace DockableDialogs.Domain.Services.Commands
             (string circuit, string elementName, string elementCategory) =
                 (ValueTuple<string, string, string>)o;
 
+            string insertingMode = "single";
+
+            if (Keyboard.Modifiers == ModifierKeys.Control)
+                insertingMode = "multiple";
+
             _uiProperties.Handler.Props = new Dictionary<string, string>
                 {
                     { nameof(circuit), circuit },
@@ -46,6 +51,7 @@ namespace DockableDialogs.Domain.Services.Commands
                     { nameof(elementCategory), elementCategory },
                     { "lampSuffix", _uiProperties.CurrentSuffix },
                     { "height", _uiProperties.Height.ToString() },
+                    { nameof(insertingMode), insertingMode },
                 };
             _uiProperties.Handler.Request.Make(RequestId.Insert);
             _uiProperties.ExEvent.Raise();

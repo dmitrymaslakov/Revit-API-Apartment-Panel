@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.UI;
-using System;
 using System.Linq;
 using System.Windows.Input;
 using DockableDialogs.Domain;
@@ -7,9 +6,7 @@ using System.Collections.ObjectModel;
 using DockableDialogs.Domain.Models;
 using DockableDialogs.Domain.Services.Commands;
 using DockableDialogs.ViewModel.ComponentsVM;
-using System.IO;
 using DockableDialogs.Utility;
-using System.Text;
 
 namespace DockableDialogs.ViewModel
 {

@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:local="clr-namespace:DockableDialogs.View.Components"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d" 
         d:DesignHeight="450" d:DesignWidth="600" Width="600"
         x:Name="Confige">
@@ -43,11 +44,13 @@
             <StackPanel Grid.Column="1" Margin="0 20 0 0">
                 <Button Style="{StaticResource ArrowButton}"
                     Command="{Binding AddElementToCircuitCommand}">
-                    <Image Source="pack://application:,,,/DockableDialogs;component/Resources/icons8-AddArrow-24.png" />
+                    <fa:ImageAwesome Icon="ArrowRight" Foreground="Green"/>
+                    <!--<Image Source="pack://application:,,,/DockableDialogs;component/Resources/icons8-AddArrow-24.png" />-->
                 </Button>
                 <Button Style="{StaticResource ArrowButton}"
                     Command="{Binding RemoveElementsFromCircuitCommand}">
-                    <Image Source="pack://application:,,,/DockableDialogs;component/Resources/icons8-RemoveArrow-24.png" />
+                    <fa:ImageAwesome Icon="ArrowLeft" Foreground="Blue"/>
+                    <!--<Image Source="pack://application:,,,/DockableDialogs;component/Resources/icons8-RemoveArrow-24.png" />-->
                 </Button>
             </StackPanel>
             <StackPanel Grid.Column="2">
@@ -65,8 +68,9 @@
                     <WrapPanel>
                         <TextBox Text="{Binding NewCircuit}" Width="30" Margin="0 0 10 0"/>
                         <Button Height="20" Command="{Binding AddPanelCircuitCommand}">
-                            <Image x:Name="addingCircuit" 
-                                   Source="pack://application:,,,/DockableDialogs;component/Resources/icons8-Create-24.png"/>
+                            <fa:ImageAwesome Icon="Plus" Foreground="Green"/>
+                            <!--<Image x:Name="addingCircuit" 
+                                   Source="pack://application:,,,/DockableDialogs;component/Resources/icons8-Create-24.png"/>-->
                         </Button>
                     </WrapPanel>
                 </GroupBox>

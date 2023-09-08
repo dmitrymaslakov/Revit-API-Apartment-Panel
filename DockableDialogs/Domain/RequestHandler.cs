@@ -25,62 +25,67 @@ namespace DockableDialogs.Domain
 
         public void Execute(UIApplication uiapp)
         {
-            Uiapp = uiapp;
-            UiDocument = Uiapp.ActiveUIDocument;
-            Document = UiDocument.Document;
-            Selection = UiDocument.Selection;
-
-            switch (Request.Take())
+            try
             {
-                case RequestId.None:
-                    {
-                        return;
-                    }
-                case RequestId.Configure:
-                    {
-                        ShowEditPanel();
-                        break;
-                    }
-                case RequestId.Insert:
-                    {
-                        InsertElement();
-                        break;
-                    }
-                case RequestId.AddElement:
-                    {
-                        AddElement();
-                        break;
-                    }
-                case RequestId.EditElement:
-                    {
-                        break;
-                    }
-                case RequestId.RemoveElement:
-                    {
-                        break;
-                    }
-                case RequestId.AddCircuit:
-                    {
-                        break;
-                    }
-                case RequestId.EditCircuit:
-                    {
-                        break;
-                    }
-                case RequestId.RemoveCircuit:
-                    {
-                        break;
-                    }
-            }
+                Uiapp = uiapp;
+                UiDocument = Uiapp.ActiveUIDocument;
+                Document = UiDocument.Document;
+                Selection = UiDocument.Selection;
 
-            return;
+                switch (Request.Take())
+                {
+                    case RequestId.None:
+                        {
+                            return;
+                        }
+                    case RequestId.Configure:
+                        {
+                            ShowEditPanel();
+                            break;
+                        }
+                    case RequestId.Insert:
+                        {
+                            InsertElement();
+                            break;
+                        }
+                    case RequestId.AddElement:
+                        {
+                            AddElement();
+                            break;
+                        }
+                    case RequestId.EditElement:
+                        {
+                            break;
+                        }
+                    case RequestId.RemoveElement:
+                        {
+                            break;
+                        }
+                    case RequestId.AddCircuit:
+                        {
+                            break;
+                        }
+                    case RequestId.EditCircuit:
+                        {
+                            break;
+                        }
+                    case RequestId.RemoveCircuit:
+                        {
+                            break;
+                        }
+                }
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show($"Exception", ex.Message);
+            }
         }
 
         public string GetName()
         {
             return "Placement Apartment elements";
         }
-        
+
         private void ShowEditPanel()
         {
             var editPanelVM = Props as EditPanelVM;
@@ -102,9 +107,9 @@ namespace DockableDialogs.Domain
             var collector = new FilteredElementCollector(Document).OfClass(typeof(FamilySymbol));
 
             // Create a list of BuiltInCategory enums for the categories you want to filter by
-            List<BuiltInCategory> categories = new List<BuiltInCategory> 
-            { 
-                BuiltInCategory.OST_TelephoneDevices, 
+            List<BuiltInCategory> categories = new List<BuiltInCategory>
+            {
+                BuiltInCategory.OST_TelephoneDevices,
                 BuiltInCategory.OST_CommunicationDevices,
                 BuiltInCategory.OST_FireAlarmDevices,
                 BuiltInCategory.OST_LightingDevices,
@@ -145,52 +150,95 @@ namespace DockableDialogs.Domain
         }
 
         private void InsertElement()
-        {            
-            try
-            {
-                var elementData = Props as Dictionary<string, string>;
-                string elementName = elementData[nameof(elementName)];
-                string elementCategory = elementData[nameof(elementCategory)];
-                string circuit = elementData[nameof(circuit)];
-                string height = elementData[nameof(height)];
-                string lampSuffix = elementData[nameof(lampSuffix)];
+        {
+            var elementData = Props as Dictionary<string, string>;
+            string elementName = elementData[nameof(elementName)];
+            string elementCategory = elementData[nameof(elementCategory)];
+            string circuit = elementData[nameof(circuit)];
+            string height = elementData[nameof(height)];
+            string lampSuffix = elementData[nameof(lampSuffix)];
+            string insertingMode = elementData[nameof(insertingMode)];
+            bool isMultiple = true;
+            List<FamilyInstance> lamps = null;
 
-                switch (elementCategory)
-                {
-                    case StaticData.LIGHTING_FIXTURES:
-                        new FamilyInstanceBuilder(Uiapp)
-                            .WithCircuit(circuit)
-                            .WithCurrentLevel()
-                            .WithLampSuffix(lampSuffix)
-                            .Build(elementName);
-                        break;
-                    case StaticData.LIGHTING_DEVICES:
-                        new FamilyInstanceBuilder(Uiapp)
-                            .WithElevationFromLevel(height)
-                            .WithCircuit(circuit)
-                            .WithSwitchSuffixes()
-                            .WithCurrentLevel()
-                            .Build(elementName);
-                        break;
-                    case StaticData.ELECTRICAL_FIXTURES:
-                    case StaticData.TELEPHONE_DEVICES:
-                    case StaticData.FIRE_ALARM_DEVICES:
-                    case StaticData.COMMUNICATION_DEVICES:
-                        new FamilyInstanceBuilder(Uiapp)
-                            .WithElevationFromLevel(height)
-                            .WithCircuit(circuit)
-                            .WithCurrentLevel()
-                            .Build(elementName);
-                        break;
-                    default:
-                        break;
-                }
-                Props = null;
-            }
-            catch (Exception ex)
+            if (elementCategory.Contains(StaticData.LIGHTING_DEVICES))
+                lamps = PickLamp();
+
+            while (isMultiple)
             {
-                TaskDialog.Show("Exception", ex.Message);
+                try
+                {
+                    switch (elementCategory)
+                    {
+                        case StaticData.LIGHTING_FIXTURES:
+                            new FamilyInstanceBuilder(Uiapp)
+                                .WithCircuit(circuit)
+                                .WithCurrentLevel()
+                                .WithLampSuffix(lampSuffix)
+                                .Build(elementName);
+                            break;
+                        case StaticData.LIGHTING_DEVICES:
+                            new FamilyInstanceBuilder(Uiapp)
+                                .WithSwitchSuffixes(lamps)
+                                .WithElevationFromLevel(height)
+                                .WithCircuit(circuit)
+                                .WithCurrentLevel()
+                                .Build(elementName);
+                            break;
+                        case StaticData.ELECTRICAL_FIXTURES:
+                        case StaticData.TELEPHONE_DEVICES:
+                        case StaticData.FIRE_ALARM_DEVICES:
+                        case StaticData.COMMUNICATION_DEVICES:
+                            new FamilyInstanceBuilder(Uiapp)
+                                .WithElevationFromLevel(height)
+                                .WithCircuit(circuit)
+                                .WithCurrentLevel()
+                                .Build(elementName);
+                            break;
+                        default:
+                            break;
+                    }
+                    if (!insertingMode.Contains("multiple")) isMultiple = false;
+                }
+                catch (Autodesk.Revit.Exceptions.OperationCanceledException)
+                {
+                    isMultiple = false;
+                }
             }
+            Props = null;
+        }
+
+        private List<FamilyInstance> PickLamp()
+        {
+            var collection = Selection.GetElementIds()
+                            .Select(id => Document.GetElement(id))
+                            .OfType<FamilyInstance>()
+                            .Where(fs => fs.Category.Name.Contains("Lighting Fixtures"))
+                            .ToList()
+                            ;
+            if (collection.Count() < 1)
+            {
+                string message =
+                    "Please select the lamp(s) of Lighting Fixtures category before inserting the switch.";
+                throw new Exception(message);
+            }
+            return collection;
         }
     }
+
+    class LightingDeviceSelectionFilter : ISelectionFilter
+    {
+        public bool AllowElement(Element elem)
+        {
+            // Only allow elements in the Lighting Devices category
+            return elem.Category.Id.IntegerValue == (int)BuiltInCategory.OST_LightingDevices;
+        }
+
+        public bool AllowReference(Reference reference, XYZ position)
+        {
+            // Not used in this example
+            return false;
+        }
+    }
+
 }

@@ -71,7 +71,9 @@ namespace DockableDialogs.View
             string currentCategory = button.Tag as string;
             string targetCategory = "Lighting Fixtures";
 
-            if (!currentCategory.Contains(targetCategory))
+            if (!currentCategory.Contains(targetCategory)
+                || e.Key == Key.LeftCtrl
+                || e.Key == Key.RightCtrl)
                 return;
 
             string characterValue = "";

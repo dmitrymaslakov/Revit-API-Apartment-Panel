@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -36,7 +37,9 @@ namespace WpfPanel.View
             string currentCategory = button.Tag as string;
             string targetCategory = "Lighting Fixtures";
 
-            if (!currentCategory.Contains(targetCategory))
+            if (!currentCategory.Contains(targetCategory) 
+                || e.Key == Key.LeftCtrl
+                || e.Key == Key.RightCtrl)
                 return;
 
             string characterValue = "";
@@ -63,6 +66,5 @@ namespace WpfPanel.View
 
         private void Button_MouseLeave(object sender, MouseEventArgs e) 
             => statusBarItem.Content = null;
-
     }
 }

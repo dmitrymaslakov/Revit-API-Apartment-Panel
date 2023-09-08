@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:converters="clr-namespace:WpfPanel.Utilities.Converters"         
+        xmlns:converters="clr-namespace:WpfPanel.Utilities.Converters"    
+        xmlns:vm="clr-namespace:WpfPanel.ViewModel"        
         mc:Ignorable="d" 
         d:DesignHeight="350" d:DesignWidth="300" Height="750" Width="300">
     <Window.Resources>
@@ -15,11 +16,11 @@
             </Style.Triggers>
             <Setter Property="Width" Value="20"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <!--<Setter Property="Content">                
+            <Setter Property="Content">                
                 <Setter.Value>
                     <Image Source="{Binding Annotation}" Width="30" Height="30"/>
                 </Setter.Value>                
-            </Setter>-->
+            </Setter>
         </Style>
         <Style x:Key="circuitTextBlock" TargetType="TextBlock">
             <Setter Property="Margin" Value="0 0 100 0"/>
@@ -67,7 +68,7 @@
                                                 <Binding Path="Category"/>
                                             </MultiBinding>
                                         </Button.CommandParameter>
-                                        <Image Source="{Binding Annotation}"/>
+                                        <!--<Image Source="{Binding Annotation}"/>-->
                                     </Button>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

@@ -17,6 +17,7 @@ namespace DockableDialogs.Utility
             _appId = id;
             _updaterId = new UpdaterId(_appId, new Guid("FBFBF6B2-4C06-42d4-97C1-D1B4EB593EFF"));
         }
+        
         public void Execute(UpdaterData data)
         {
             Document doc = data.GetDocument();
@@ -28,7 +29,7 @@ namespace DockableDialogs.Utility
             foreach (var familyInstance in familyInstances)
             {
                 string value = familyInstance.LookupParameter("Elevation from Level").AsValueString();
-                familyInstance.LookupParameter("UK-HEIGHT").Set(value);
+                familyInstance.LookupParameter("H-UK").Set(value); //UK-HEIGHT
             }
         }
 

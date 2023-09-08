@@ -23,6 +23,23 @@ namespace DockableDialogs
         {
         }
 
+        /// <summary>
+        /// Add UI for registering, showing, and hiding dockable panes.
+        /// </summary>
+        public Result OnStartup(UIControlledApplication application)
+        {
+            application.ViewActivated += OnViewActivated;
+            CreateWindow();
+
+            if (!DockablePane.PaneIsRegistered(UI.PaneId))
+                application.RegisterDockablePane(UI.PaneId, UI.PaneName, View);
+
+            application.ControlledApplication.DocumentClosing +=
+                Handler_DocumentClosing;
+
+            return Result.Succeeded;
+        }
+
         public Result OnShutdown(UIControlledApplication application)
         {
             try
@@ -41,28 +58,27 @@ namespace DockableDialogs
             return Result.Succeeded;
         }
 
-        /// <summary>
-        /// Add UI for registering, showing, and hiding dockable panes.
-        /// </summary>
-        public Result OnStartup(UIControlledApplication application)
+        private void OnViewActivated(object sender, ViewActivatedEventArgs e)
         {
-            application.ViewActivated += OnViewActivated;
-            CreateWindow();
-
-            if (!DockablePane.PaneIsRegistered(UI.PaneId))
-                application.RegisterDockablePane(UI.PaneId, UI.PaneName, View);
-
-            application.ControlledApplication.DocumentClosing +=
-                Handler_DocumentClosing;
-
-            return Result.Succeeded;
+            if (e.Document == null)
+                return;
+        }
+        /// <summary>
+        /// Create the new WPF Page that Revit will dock.
+        /// </summary>
+        private void CreateWindow()
+        {
+            RequestHandler handler = new RequestHandler();
+            ExternalEvent exEvent = ExternalEvent.Create(handler);
+            _uiVM = new UIViewModel(exEvent, handler);
+            View = new UI(_uiVM);
         }
 
         private void Handler_DocumentClosing(object sender, DocumentClosingEventArgs e)
         {
             try
             {
-                TaskDialog.Show("Handler_DocumentClosing", "Document is closing");
+
             }
             catch (Exception ex)
             {
@@ -72,22 +88,6 @@ namespace DockableDialogs
             {
                 _uiVM?.SaveLatestConfigCommand?.Execute(null);
             }
-        }
-
-        private void OnViewActivated(object sender, ViewActivatedEventArgs e)
-        {
-            if (e.Document == null)
-                return;
-        }
-        /// <summary>
-        /// Create the new WPF Page that Revit will dock.
-        /// </summary>
-        public void CreateWindow()
-        {
-            RequestHandler handler = new RequestHandler();
-            ExternalEvent exEvent = ExternalEvent.Create(handler);
-            _uiVM = new UIViewModel(exEvent, handler);
-            View = new UI(_uiVM);
         }
     }
 

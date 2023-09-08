@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Windows.Controls;
 using System.Windows.Input;
 using WpfPanel.ViewModel;
 using WpfPanel.ViewModel.ComponentsVM;
