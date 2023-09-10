@@ -99,6 +99,6 @@ namespace DockableDialogs.View
         }
 
         private void Button_MouseLeave(object sender, MouseEventArgs e) 
-            => statusBarItem.Content = null;        
+            => statusBarItem.Content = null;
     }
 }

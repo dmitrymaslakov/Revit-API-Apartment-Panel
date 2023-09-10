@@ -81,10 +81,7 @@ namespace DockableDialogs.Domain
             }
         }
 
-        public string GetName()
-        {
-            return "Placement Apartment elements";
-        }
+        public string GetName() => "Placement Apartment elements";
 
         private void ShowEditPanel()
         {

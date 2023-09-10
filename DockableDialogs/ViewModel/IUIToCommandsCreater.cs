@@ -11,7 +11,6 @@ namespace DockableDialogs.ViewModel
         ObservableCollection<Circuit> Circuits { get; set; }
         string CurrentSuffix { get; set; }
         double Height { get; set; }
-        string LatestConfigPath { get; }
         string Status { get; set; }
         EditPanelVM EditPanelVM { get; }
         ExternalEvent ExEvent { get; }

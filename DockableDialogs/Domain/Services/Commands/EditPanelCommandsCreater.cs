@@ -5,7 +5,10 @@ using DockableDialogs.ViewModel.ComponentsVM;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text.Json;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -27,7 +30,7 @@ namespace DockableDialogs.Domain.Services.Commands
                     var annotationService = new AnnotationService.AnnotationService(
                         new FileAnnotationCommunicatorFactory(newElement.Name));
 
-                    ImageSource annotation = annotationService.IsAnnotationExists() 
+                    ImageSource annotation = annotationService.IsAnnotationExists()
                         ? annotationService.Get() : null;
 
                     ApartmentElement newApartmentElement = newElement.Clone();
@@ -37,14 +40,23 @@ namespace DockableDialogs.Domain.Services.Commands
             };
         }
 
-        public ICommand CreateAddApartmentElementCommand() => new RelayCommand(o
-                => MakeRequest(RequestId.AddElement, _addElementToApartment));
+        public ICommand CreateAddApartmentElementCommand() => new RelayCommand(o =>
+        {
+            MakeRequest(RequestId.AddElement, _addElementToApartment);
+            if (!_editPanelProperties.IsCancelEnabled)
+                _editPanelProperties.IsCancelEnabled = true;
+        });
 
         public ICommand CreateRemoveApartmentElementsCommand() => new RelayCommand(o =>
         {
             if (_editPanelProperties.SelectedApartmentElements.Count != 0)
+            {
                 foreach (var element in _editPanelProperties.SelectedApartmentElements.ToArray())
                     _editPanelProperties.ApartmentElements.Remove(element);
+
+                if (!_editPanelProperties.IsCancelEnabled)
+                    _editPanelProperties.IsCancelEnabled = true;
+            }
         });
 
         public ICommand CreateAddPanelCircuitCommand() => new RelayCommand(o =>
@@ -54,6 +66,9 @@ namespace DockableDialogs.Domain.Services.Commands
             {
                 _editPanelProperties.PanelCircuits.Add(_editPanelProperties.NewCircuit,
                     new ObservableCollection<ApartmentElement>());
+
+                if (!_editPanelProperties.IsCancelEnabled)
+                    _editPanelProperties.IsCancelEnabled = true;
             }
 
             _editPanelProperties.NewCircuit = string.Empty;
@@ -67,6 +82,9 @@ namespace DockableDialogs.Domain.Services.Commands
                 _editPanelProperties.PanelCircuits.Remove(circuit.Key);
 
             _editPanelProperties.SelectedPanelCircuits.Clear();
+
+            if (!_editPanelProperties.IsCancelEnabled)
+                _editPanelProperties.IsCancelEnabled = true;
         });
 
         public ICommand CreateAddElementToCircuitCommand() => new RelayCommand(o =>
@@ -95,6 +113,9 @@ namespace DockableDialogs.Domain.Services.Commands
                     _editPanelProperties.PanelCircuits[selectedPanelCircuit.Key].Add(selectedApartmentElement);
 
                 AddCurrentCircuitElements(_editPanelProperties.PanelCircuits[selectedPanelCircuit.Key]);
+
+                if (!_editPanelProperties.IsCancelEnabled)
+                    _editPanelProperties.IsCancelEnabled = true;
             }
         });
 
@@ -110,6 +131,8 @@ namespace DockableDialogs.Domain.Services.Commands
                 selectedPanelCircuit.Value.Remove(selectedCircuitElement);
 
             AddCurrentCircuitElements(selectedPanelCircuit.Value);
+            if (!_editPanelProperties.IsCancelEnabled)
+                _editPanelProperties.IsCancelEnabled = true;
         });
 
         public ICommand CreateSelectedApartmentElementsCommand() => new RelayCommand(o =>
@@ -157,23 +180,39 @@ namespace DockableDialogs.Domain.Services.Commands
         {
             var close = (Action)o;
             _editPanelProperties.OkApplyCancelActions(_editPanelProperties.PanelCircuits, OkApplyCancel.Ok);
+
+            if (_editPanelProperties.IsCancelEnabled)
+                _editPanelProperties.IsCancelEnabled = false;
+
             close();
         });
 
         public ICommand CreateApplyCommand() => new RelayCommand(o =>
-                _editPanelProperties.OkApplyCancelActions(_editPanelProperties.PanelCircuits, OkApplyCancel.Apply));
+        {
+            _editPanelProperties.OkApplyCancelActions(_editPanelProperties.PanelCircuits, OkApplyCancel.Apply);
+            
+            if (_editPanelProperties.IsCancelEnabled)
+                _editPanelProperties.IsCancelEnabled = false;
+        });
+        
+        public ICommand CreateCancelCommand() => new RelayCommand(o =>
+        {
+            _editPanelProperties.OkApplyCancelActions(_editPanelProperties.PanelCircuits, OkApplyCancel.Cancel);
+            if (_editPanelProperties.IsCancelEnabled)
+                _editPanelProperties.IsCancelEnabled = false;
+        });
 
         public ICommand CreateSetAnnotationToElementCommand() => new RelayCommand(o =>
         {
             if (_editPanelProperties.SelectedApartmentElements.Count == 1)
             {
-                ApartmentElement apartmentElement = 
+                ApartmentElement apartmentElement =
                     _editPanelProperties.SelectedApartmentElements.FirstOrDefault();
 
                 var annotationService = new AnnotationService.AnnotationService(
                     new FileAnnotationCommunicatorFactory(apartmentElement.Name));
 
-                apartmentElement.Annotation = 
+                apartmentElement.Annotation =
                     annotationService.Save(_editPanelProperties.AnnotationPreview);
             }
         });
@@ -182,6 +221,29 @@ namespace DockableDialogs.Domain.Services.Commands
         {
             var bitmapSource = o as BitmapSource;
             _editPanelProperties.AnnotationPreview = bitmapSource;
+        });
+
+        public ICommand CreateLoadLatestConfigCommand() => new RelayCommand(o =>
+        {
+            if (File.Exists(_editPanelProperties.LatestConfigPath))
+            {
+                string json = File.ReadAllText(_editPanelProperties.LatestConfigPath);
+                EditPanelVM deso = JsonSerializer.Deserialize<EditPanelVM>(json);
+                _editPanelProperties.ApplyLatestConfiguration(deso);
+            }
+            else
+            {
+                _editPanelProperties.ApplyLatestConfiguration(
+                    new EditPanelVM(_editPanelProperties.ExEvent, _editPanelProperties.Handler));
+            }
+        });
+
+        public ICommand CreateSaveLatestConfigCommand() => new RelayCommand(o =>
+        {
+            var editPanel = o as EditPanelVM;
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string json = JsonSerializer.Serialize(editPanel, options);
+            File.WriteAllText(_editPanelProperties.LatestConfigPath, json);
         });
 
         private void AddCurrentCircuitElements(ObservableCollection<ApartmentElement> currentCircuitElements)

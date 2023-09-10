@@ -11,15 +11,19 @@
         <Style x:Key="circuitButton" TargetType="Button">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Annotation}" Value="{x:Null}">
-                    <Setter Property="Content" Value="{Binding Name}"/>
+                    <!--<Setter Property="Content" Value="{Binding Name}"/>-->
+                    <Setter Property="Content" Value="N"/>
                 </DataTrigger>
             </Style.Triggers>
             <Setter Property="Width" Value="20"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Content">                
+            <!--<Setter Property="Content" Value="qwerty"/>-->
+            <Setter Property="Content">
                 <Setter.Value>
-                    <Image Source="{Binding Annotation}" Width="30" Height="30"/>
-                </Setter.Value>                
+                    qwerty
+                    <!--<Image Source="{Binding Annotation}"/>
+                    <Image Source="/Resources/icons8-Create-24.png"/>-->
+                </Setter.Value>
             </Setter>
         </Style>
         <Style x:Key="circuitTextBlock" TargetType="TextBlock">
@@ -34,6 +38,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <ListView Grid.Row="0" ItemsSource="{Binding Circuits}" x:Name="apartmentCircuits">
             <ListView.ItemTemplate>
@@ -42,7 +47,7 @@
                         <TextBlock Text="{Binding Number}" 
                                    x:Name="circuitNumber"
                                    Style="{StaticResource circuitTextBlock}"/>
-                        <ListView ItemsSource="{Binding ApartmentElements}">
+                        <ListView ItemsSource="{Binding ApartmentElements}" x:Name="el">
                             <ListView.Resources>
                                 <converters:ElementDataConverter x:Key="ElementDataConverter"/>
                             </ListView.Resources>
@@ -53,12 +58,12 @@
                             </ListView.ItemsPanel>
                             <ListView.ItemTemplate>
                                 <DataTemplate>
+                                    <!--Style="{StaticResource circuitButton}"-->
                                     <Button 
                                         Tag="{Binding Category}"
                                         KeyDown="Button_KeyDown"
                                         MouseEnter="Button_MouseEnter"
                                         MouseLeave="Button_MouseLeave"
-                                        Style="{StaticResource circuitButton}"
                                         Command="{Binding DataContext.InsertElementCommand,
                                             RelativeSource={RelativeSource AncestorType=Window}}">
                                         <Button.CommandParameter>
@@ -68,6 +73,16 @@
                                                 <Binding Path="Category"/>
                                             </MultiBinding>
                                         </Button.CommandParameter>
+                                        <!--<Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Content">
+                                                    <Setter.Value>
+                                                        <Image Source="{Binding Annotation}"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Style>-->
+                                        <Image Source="/Resources/icons8-Create-24.png"/>
                                         <!--<Image Source="{Binding Annotation}"/>-->
                                     </Button>
                                 </DataTemplate>
@@ -115,6 +130,42 @@
         <WrapPanel Grid.Row="5" Visibility="Visible">
             <Button Content="savingConfig" x:Name="latestConfig" Command="{Binding SaveLatestConfigCommand}"/>
             <Button Content="loadingConfig" Command="{Binding LoadLatestConfigCommand}"/>
+            <Button Content="test" Click="Button_Click"/>
         </WrapPanel>
+        <ListView Grid.Row="6" ItemsSource="{Binding Circuits}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ListView ItemsSource="{Binding ApartmentElements}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <WrapPanel>
+                                    <!--<TextBlock Text="{Binding Name}"/>-->
+                                    <Button>
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <WrapPanel>
+                                                    <TextBlock Text="{Binding Name}"/>
+                                                    <ContentPresenter Content="{TemplateBinding Content}"/>
+                                                </WrapPanel>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Content">
+                                                    <Setter.Value>
+                                                        <Image Source="{Binding Annotation}" Height="20"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                    <!--<Image Source="/Resources/icons8-Create-24.png"/>-->
+                                </WrapPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Window>

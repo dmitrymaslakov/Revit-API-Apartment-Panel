@@ -86,7 +86,7 @@ namespace DockableDialogs
             }
             finally
             {
-                _uiVM?.SaveLatestConfigCommand?.Execute(null);
+                _uiVM.EditPanelVM?.SaveLatestConfigCommand?.Execute(_uiVM.EditPanelVM);
             }
         }
     }

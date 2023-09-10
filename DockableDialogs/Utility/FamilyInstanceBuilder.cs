@@ -107,10 +107,24 @@ namespace DockableDialogs.Utility
                     if (!category.Contains(StaticData.LIGHTING_FIXTURES))
                     {
                         SetElevationFromLevel(familyInstance);
-                        SetHeight(familyInstance);
+                        try
+                        {
+                            SetHeight(familyInstance);
+                        }
+                        catch (CustomParameterException ex)
+                        {
+                            TaskDialog.Show($"Exception", ex.Message);
+                        }
                     }
                 }
-                SetCircuit(familyInstance);
+                try
+                {
+                    SetCircuit(familyInstance);
+                }
+                catch (CustomParameterException ex)
+                {
+                    TaskDialog.Show($"Exception", ex.Message);
+                }
 
                 tr.Commit();
             }
@@ -219,6 +233,7 @@ namespace DockableDialogs.Utility
 
             var suffixes = lampCircuits
                 .Select(c => c.Substring(c.IndexOf("/") + 1))
+                .Distinct()
                 .OrderBy(c => c)
                 .ToList();
 

@@ -22,29 +22,9 @@ namespace DockableDialogs.ViewModel.ComponentsVM
         {
             _commandCreater = new EditPanelCommandsCreater(this);
 
-            ApartmentElements = new ObservableCollection<ApartmentElement>
-            {
-                new ApartmentElement {Name = StaticData.TRISSA_SWITCH, Category = StaticData.ELECTRICAL_FIXTURES},
-                new ApartmentElement {Name = StaticData.USB, Category = StaticData.COMMUNICATION_DEVICES}
-            };
+            ApartmentElements = new ObservableCollection<ApartmentElement>();
 
-            PanelCircuits = new ObservableDictionary<string, ObservableCollection<ApartmentElement>>
-            {
-                {"1", new ObservableCollection<ApartmentElement>
-                    {
-                        new ApartmentElement {Name = StaticData.TRISSA_SWITCH, Category = StaticData.ELECTRICAL_FIXTURES},
-                        new ApartmentElement {Name = StaticData.USB, Category = StaticData.COMMUNICATION_DEVICES},
-                        new ApartmentElement {Name = StaticData.BLOCK1, Category = StaticData.COMMUNICATION_DEVICES},
-                    }
-                },
-                {"2", new ObservableCollection<ApartmentElement>
-                    {
-                        new ApartmentElement {Name = StaticData.SINGLE_SOCKET, Category = StaticData.ELECTRICAL_FIXTURES},
-                        new ApartmentElement {Name = StaticData.THROUGH_SWITCH, Category = StaticData.LIGHTING_DEVICES},
-                        new ApartmentElement {Name = StaticData.LAMP, Category = StaticData.LIGHTING_FIXTURES},
-                    }
-                },
-            };
+            PanelCircuits = new ObservableDictionary<string, ObservableCollection<ApartmentElement>>();
 
             CircuitElements = new ObservableCollection<ApartmentElement>();
 
@@ -54,6 +34,10 @@ namespace DockableDialogs.ViewModel.ComponentsVM
                 new ObservableCollection<KeyValuePair<string, ObservableCollection<ApartmentElement>>>();
 
             SelectedCircuitElements = new ObservableCollection<ApartmentElement>();
+
+            LatestConfigPath = FileUtility.GetAssemblyPath() + "\\LatestConfig.json";
+
+            IsCancelEnabled = false;
 
             AddApartmentElementCommand = _commandCreater.CreateAddApartmentElementCommand();
 
@@ -77,10 +61,18 @@ namespace DockableDialogs.ViewModel.ComponentsVM
 
             ApplyCommand = _commandCreater.CreateApplyCommand();
 
+            CancelCommand = _commandCreater.CreateCancelCommand();
+
             SetAnnotationToElementCommand = _commandCreater.CreateSetAnnotationToElementCommand();
 
             SetAnnotationPreviewCommand = _commandCreater.CreateSetAnnotationPreviewCommand();
+
+            LoadLatestConfigCommand = _commandCreater.CreateLoadLatestConfigCommand();
+
+            SaveLatestConfigCommand = _commandCreater.CreateSaveLatestConfigCommand();
         }
+
+        public string LatestConfigPath { get; }
 
         private ObservableCollection<ApartmentElement> _apartmentElements;
 
@@ -143,6 +135,11 @@ namespace DockableDialogs.ViewModel.ComponentsVM
         private string _newCircuit;
         [JsonIgnore]
         public string NewCircuit { get => _newCircuit; set => Set(ref _newCircuit, value); }
+        
+        private bool _isCancelEnabled;
+        [JsonIgnore]
+        public bool IsCancelEnabled { get => _isCancelEnabled; set => Set(ref _isCancelEnabled, value); }
+
         [JsonIgnore]
         public ICommand AddApartmentElementCommand { get; set; }
         [JsonIgnore]
@@ -166,9 +163,15 @@ namespace DockableDialogs.ViewModel.ComponentsVM
         [JsonIgnore]
         public ICommand ApplyCommand { get; set; }
         [JsonIgnore]
+        public ICommand CancelCommand { get; set; }        
+        [JsonIgnore]
         public ICommand SetAnnotationToElementCommand { get; set; }
         [JsonIgnore]
         public ICommand SetAnnotationPreviewCommand { get; set; }
+        [JsonIgnore]
+        public ICommand SaveLatestConfigCommand { get; set; }
+        [JsonIgnore]
+        public ICommand LoadLatestConfigCommand { get; set; }
         [JsonIgnore]
         public Action<object, OkApplyCancel> OkApplyCancelActions { get; set; }
 

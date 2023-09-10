@@ -66,5 +66,13 @@ namespace WpfPanel.View
 
         private void Button_MouseLeave(object sender, MouseEventArgs e) 
             => statusBarItem.Content = null;
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in apartmentCircuits.Items)
+            {
+                
+            }
+        }
     }
 }

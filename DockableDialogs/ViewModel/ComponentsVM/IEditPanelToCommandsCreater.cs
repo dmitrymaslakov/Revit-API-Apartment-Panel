@@ -14,6 +14,7 @@ namespace DockableDialogs.ViewModel.ComponentsVM
         ExternalEvent ExEvent { get; }
         RequestHandler Handler { get; }
         BitmapSource AnnotationPreview { get; set; }
+        string LatestConfigPath { get; }
         ObservableCollection<ApartmentElement> ApartmentElements { get; set; }
         ObservableCollection<ApartmentElement> CircuitElements { get; set; }
         string NewCircuit { get; set; }
@@ -22,6 +23,7 @@ namespace DockableDialogs.ViewModel.ComponentsVM
         ObservableCollection<ApartmentElement> SelectedApartmentElements { get; set; }
         ObservableCollection<ApartmentElement> SelectedCircuitElements { get; set; }
         ObservableCollection<KeyValuePair<string, ObservableCollection<ApartmentElement>>> SelectedPanelCircuits { get; set; }
+        bool IsCancelEnabled { get; set; }
         EditPanelVM ApplyLatestConfiguration(EditPanelVM latestConfiguration);
     }
 }

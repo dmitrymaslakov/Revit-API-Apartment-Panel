@@ -29,11 +29,7 @@ namespace DockableDialogs.ViewModel
                 OkApplyCancelActions = ExecuteOkApplyCancelActions
             };
 
-            LatestConfigPath = FileUtility.GetAssemblyPath() + "\\LatestConfig.json";
-
-            LoadLatestConfigCommand = _uICommandsCreater.CreateLoadLatestConfigCommand();
-
-            LoadLatestConfigCommand.Execute(null);
+            EditPanelVM.LoadLatestConfigCommand?.Execute(null);
 
             Circuits = GetCircuits(EditPanelVM.PanelCircuits);
 
@@ -43,12 +39,8 @@ namespace DockableDialogs.ViewModel
 
             SetCurrentSuffixCommand = _uICommandsCreater.CreateSetCurrentSuffixCommand();
 
-            SaveLatestConfigCommand = _uICommandsCreater.CreateSaveLatestConfigCommand();
-
             Height = 40.0;
         }
-
-        public string LatestConfigPath { get; }
 
         public EditPanelVM EditPanelVM { get; set; }
 
@@ -90,9 +82,9 @@ namespace DockableDialogs.ViewModel
 
         public ICommand SetCurrentSuffixCommand { get; set; }
 
-        public ICommand SaveLatestConfigCommand { get; set; }
+        /*public ICommand SaveLatestConfigCommand { get; set; }
 
-        public ICommand LoadLatestConfigCommand { get; set; }
+        public ICommand LoadLatestConfigCommand { get; set; }*/
 
         private void ExecuteOkApplyCancelActions(object obj, OkApplyCancel okApplyCancel)
         {
@@ -104,8 +96,10 @@ namespace DockableDialogs.ViewModel
                     var panelCircuits =
                         (ObservableDictionary<string, ObservableCollection<ApartmentElement>>)obj;
                     Circuits = GetCircuits(panelCircuits);
+                    EditPanelVM.SaveLatestConfigCommand?.Execute(EditPanelVM);
                     break;
                 case OkApplyCancel.Cancel:
+                    EditPanelVM.LoadLatestConfigCommand?.Execute(null);
                     break;
             }
         }
