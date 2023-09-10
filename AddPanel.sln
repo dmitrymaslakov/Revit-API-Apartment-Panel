@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfPanel", "WpfPanel\WpfPanel.csproj", "{3A4394B0-E544-4AF5-8CE4-36F0201657F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockableDialogs", "DockableDialogs\DockableDialogs.csproj", "{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApartmentPanel", "ApartmentPanel\ApartmentPanel.csproj", "{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
