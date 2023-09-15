@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfPanel", "WpfPanel\WpfPan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApartmentPanel", "ApartmentPanel\ApartmentPanel.csproj", "{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ApartmentPanelInstaller", "ApartmentPanelInstaller\ApartmentPanelInstaller.vdproj", "{F6A567BD-798D-4C33-A53E-D2243EBDC1F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Release|x64.ActiveCfg = Release|Any CPU
 		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Release|x64.Build.0 = Release|Any CPU
+		{F6A567BD-798D-4C33-A53E-D2243EBDC1F2}.Debug|Any CPU.ActiveCfg = Debug
+		{F6A567BD-798D-4C33-A53E-D2243EBDC1F2}.Debug|x64.ActiveCfg = Debug
+		{F6A567BD-798D-4C33-A53E-D2243EBDC1F2}.Release|Any CPU.ActiveCfg = Release
+		{F6A567BD-798D-4C33-A53E-D2243EBDC1F2}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
