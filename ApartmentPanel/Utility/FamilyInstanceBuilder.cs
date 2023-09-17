@@ -164,7 +164,7 @@ namespace ApartmentPanel.Utility
         }
         private void SetCircuit(FamilyInstance familyInstance)
         {
-            string customParameter = "RBX-CIRCUIT";
+            string customParameter = StaticData.ELEMENT_CIRCUIT_PARAM_NAME;
             Parameter circuitParam = familyInstance.LookupParameter(customParameter);
             if (circuitParam == null)
                 throw new CustomParameterException(customParameter, familyInstance.Name);
@@ -188,7 +188,7 @@ namespace ApartmentPanel.Utility
         }
         private void SetHeight(FamilyInstance familyInstance)
         {
-            string customParameter = "H-UK";//"UK-HEIGHT"
+            string customParameter = StaticData.ELEMENT_HEIGHT_PARAM_NAME;
             Parameter circuitParam = familyInstance.LookupParameter(customParameter);
             if (circuitParam == null)
                 throw new CustomParameterException(customParameter, familyInstance.Name);
@@ -209,7 +209,7 @@ namespace ApartmentPanel.Utility
         {
             var circuitParameters = new List<Parameter>();
 
-            string targetCircuitParam = "RBX-CIRCUIT";
+            string targetCircuitParam = StaticData.ELEMENT_CIRCUIT_PARAM_NAME;
 
             foreach (var lamp in lamps)
             {

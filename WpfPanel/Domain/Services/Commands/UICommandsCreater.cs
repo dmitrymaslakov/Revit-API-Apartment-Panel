@@ -49,7 +49,7 @@ namespace WpfPanel.Domain.Services.Commands
             _uiProperties.ExEvent.Raise();
         });
 
-        public ICommand CreateSetCurrentSuffixCommand() 
+        public ICommand CreateSetCurrentSuffixCommand()
             => new RelayCommand(o => _uiProperties.CurrentSuffix = o as string);
 
         public ICommand CreateSaveLatestConfigCommand() => new RelayCommand(o =>

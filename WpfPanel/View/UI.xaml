@@ -135,25 +135,25 @@
         <ListView Grid.Row="6" ItemsSource="{Binding Circuits}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <ListView ItemsSource="{Binding ApartmentElements}">
+                    <ListView ItemsSource="{Binding ApartmentElements}" x:Name="testLV">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <WrapPanel>
                                     <!--<TextBlock Text="{Binding Name}"/>-->
                                     <Button>
-                                        <Button.Template>
+                                        <!--<Button.Template>
                                             <ControlTemplate TargetType="Button">
                                                 <WrapPanel>
                                                     <TextBlock Text="{Binding Name}"/>
                                                     <ContentPresenter Content="{TemplateBinding Content}"/>
                                                 </WrapPanel>
                                             </ControlTemplate>
-                                        </Button.Template>
+                                        </Button.Template>-->
                                         <Button.Style>
                                             <Style TargetType="Button">
                                                 <Setter Property="Content">
                                                     <Setter.Value>
-                                                        <Image Source="{Binding Annotation}" Height="20"/>
+                                                        <Image Source="{Binding Annotation, ElementName=testLV}" Height="20"/>
                                                     </Setter.Value>
                                                 </Setter>
                                             </Style>

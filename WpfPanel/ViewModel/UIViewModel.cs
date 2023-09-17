@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WpfPanel.Domain;
 using WpfPanel.Domain.Models;
+using WpfPanel.Domain.Services.AnnotationService;
 using WpfPanel.Domain.Services.Commands;
 using WpfPanel.Utilities;
 using WpfPanel.View.Components;
@@ -129,7 +130,7 @@ namespace WpfPanel.ViewModel
             ObservableDictionary<string, ObservableCollection<ApartmentElement>> panelCircuits)
         {
             var result = new ObservableCollection<Circuit>();
-            foreach (var circuit in panelCircuits)
+            /*foreach (var circuit in panelCircuits)
             {
 
                 var a = circuit.Value.Select(ap => ap.Clone()).ToList();
@@ -145,7 +146,25 @@ namespace WpfPanel.ViewModel
                     ApartmentElements = new ObservableCollection<ApartmentElement>(
                             circuit.Value.Select(ap => ap.Clone()).ToList())
                 });
-            }
+            }*/
+            var lampFactory = new FileAnnotationCommunicatorFactory("Lamp");
+            var lampAnn = new AnnotationService(lampFactory).Get();
+            var throughSwitchFactory = new FileAnnotationCommunicatorFactory("Through Switch");
+            var throughSwitchAnn = new AnnotationService(throughSwitchFactory).Get();
+            var singleSocketFactory = new FileAnnotationCommunicatorFactory("Single Socket");
+            var singleSocketAnn = new AnnotationService(singleSocketFactory).Get();
+
+
+            result.Add(new Circuit
+            {
+                Number = "1",
+                ApartmentElements = new ObservableCollection<ApartmentElement>
+                {
+                    new ApartmentElement { Name="Lamp", Category=StaticData.LIGHTING_FIXTURES, Annotation=lampAnn},
+                    new ApartmentElement { Name="Through Switch", Category=StaticData.LIGHTING_DEVICES, Annotation=throughSwitchAnn},
+                    new ApartmentElement { Name="Single Socket", Category=StaticData.ELECTRICAL_FIXTURES, Annotation=singleSocketAnn},
+                }
+            });
             return result;
         }
     }
