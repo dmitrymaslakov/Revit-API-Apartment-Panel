@@ -132,10 +132,10 @@
             <Button Content="loadingConfig" Command="{Binding LoadLatestConfigCommand}"/>
             <Button Content="test" Click="Button_Click"/>
         </WrapPanel>
-        <ListView Grid.Row="6" ItemsSource="{Binding Circuits}">
+        <ListView Grid.Row="6" ItemsSource="{Binding Circuits}" x:Name="testLVOuter">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <ListView ItemsSource="{Binding ApartmentElements}" x:Name="testLV">
+                    <ListView ItemsSource="{Binding ApartmentElements}" x:Name="testLVInner">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <WrapPanel>
@@ -153,7 +153,7 @@
                                             <Style TargetType="Button">
                                                 <Setter Property="Content">
                                                     <Setter.Value>
-                                                        <Image Source="{Binding Annotation, ElementName=testLV}" Height="20"/>
+                                                        <Image Source="{Binding Annotation, ElementName=testLVInner}" Height="20"/>
                                                     </Setter.Value>
                                                 </Setter>
                                             </Style>

@@ -16,7 +16,7 @@
         public const string LIGHTING_FIXTURES = "Lighting Fixtures";
         public const string ELECTRICAL_FIXTURES = "Electrical Fixtures";
 
-        public const string ELEMENT_HEIGHT_PARAM_NAME = "UK-HEIGHT";//"H-UK";
+        public const string ELEMENT_HEIGHT_PARAM_NAME = "H-UK";//"UK-HEIGHT";
         public const string ELEMENT_CIRCUIT_PARAM_NAME = "RBX-CIRCUIT";
     }
 }

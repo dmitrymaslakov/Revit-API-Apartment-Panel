@@ -69,7 +69,7 @@ namespace WpfPanel.View
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in apartmentCircuits.Items)
+            foreach (var item in testLVOuter.Items)
             {
                 
             }

@@ -237,5 +237,4 @@ namespace ApartmentPanel.Domain
             return false;
         }
     }
-
 }
