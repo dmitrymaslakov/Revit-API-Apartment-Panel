@@ -97,23 +97,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Models\ApartmentElement.cs" />
-    <Compile Include="Domain\Models\CategorizedFamilySymbols.cs" />
-    <Compile Include="Domain\Models\Circuit.cs" />
-    <Compile Include="Domain\Services\AnnotationService\AnnotationReaders\FileAnnotationReader.cs" />
-    <Compile Include="Domain\Services\AnnotationService\AnnotationReaders\IAnnotationReader.cs" />
-    <Compile Include="Domain\Services\AnnotationService\AnnotationService.cs" />
-    <Compile Include="Domain\Services\AnnotationService\AnnotationWriters\FileAnnotationWriter.cs" />
-    <Compile Include="Domain\Services\AnnotationService\AnnotationWriters\IAnnotationWriter.cs" />
-    <Compile Include="Domain\Services\AnnotationService\FileAnnotationCommunicatorFactory.cs" />
-    <Compile Include="Domain\Services\AnnotationService\IAnnotationCommunicatorFactory.cs" />
-    <Compile Include="Domain\Services\Commands\EditPanelCommandsCreater.cs" />
-    <Compile Include="Domain\Services\Commands\RelayCommand.cs" />
-    <Compile Include="Domain\Services\Commands\UICommandsCreater.cs" />
-    <Compile Include="Domain\Request.cs" />
-    <Compile Include="Domain\RequestHandler.cs" />
+    <Compile Include="Core\Models\ApartmentElement.cs" />
+    <Compile Include="Core\Models\CategorizedFamilySymbols.cs" />
+    <Compile Include="Core\Models\Circuit.cs" />
+    <Compile Include="Core\Services\AnnotationService\AnnotationReaders\FileAnnotationReader.cs" />
+    <Compile Include="Core\Services\AnnotationService\AnnotationReaders\IAnnotationReader.cs" />
+    <Compile Include="Core\Services\AnnotationService\AnnotationService.cs" />
+    <Compile Include="Core\Services\AnnotationService\AnnotationWriters\FileAnnotationWriter.cs" />
+    <Compile Include="Core\Services\AnnotationService\AnnotationWriters\IAnnotationWriter.cs" />
+    <Compile Include="Core\Services\AnnotationService\FileAnnotationCommunicatorFactory.cs" />
+    <Compile Include="Core\Services\AnnotationService\IAnnotationCommunicatorFactory.cs" />
+    <Compile Include="Core\Services\ApartmentElementService.cs" />
+    <Compile Include="Presentation\Commands\ConfigPanelCommandsCreater.cs" />
+    <Compile Include="Presentation\Commands\RelayCommand.cs" />
+    <Compile Include="Presentation\Commands\ViewCommandsCreater.cs" />
+    <Compile Include="Core\Services\Interfaces\IApartmentElementService.cs" />
+    <Compile Include="Infrastructure\Request.cs" />
+    <Compile Include="Infrastructure\RequestHandler.cs" />
     <Compile Include="Application.cs" />
-    <Compile Include="Domain\Services\Commands\BaseCommand.cs" />
+    <Compile Include="Presentation\Commands\BaseCommand.cs" />
+    <Compile Include="Infrastructure\Repositories\ApartmentElementRepository.cs" />
+    <Compile Include="Core\Infrastructure.Interfaces\IApartmentElementRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ClipboardManager.cs" />
     <Compile Include="Utility\Converters\ElementDataConverter.cs" />
@@ -125,38 +129,38 @@
     <Compile Include="Utility\Log.cs" />
     <Compile Include="Utility\ObservableDictionary.cs" />
     <Compile Include="Utility\StaticData.cs" />
-    <Compile Include="ViewModel\ComponentsVM\EditPanelVM.cs" />
-    <Compile Include="ViewModel\ComponentsVM\IEditPanelToCommandsCreater.cs" />
-    <Compile Include="ViewModel\IUIToCommandsCreater.cs" />
-    <Compile Include="ViewModel\UIViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelBase.cs" />
-    <Compile Include="View\Components\EditPanel.xaml.cs">
-      <DependentUpon>EditPanel.xaml</DependentUpon>
+    <Compile Include="Presentation\ViewModel\ComponentsVM\ConfigPanelVM.cs" />
+    <Compile Include="Presentation\ViewModel\ComponentsVM\IConfigPanelForCommandsCreater.cs" />
+    <Compile Include="Presentation\ViewModel\IViewForCommandsCreater.cs" />
+    <Compile Include="Presentation\ViewModel\ViewModel.cs" />
+    <Compile Include="Presentation\ViewModel\ViewModelBase.cs" />
+    <Compile Include="Presentation\View\Components\ConfigPanel.xaml.cs">
+      <DependentUpon>ConfigPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Components\ElementsCard.xaml.cs">
+    <Compile Include="Presentation\View\Components\ElementsCard.xaml.cs">
       <DependentUpon>ElementsCard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Components\ListElements.xaml.cs">
+    <Compile Include="Presentation\View\Components\ListElements.xaml.cs">
       <DependentUpon>ListElements.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UI.xaml.cs">
-      <DependentUpon>UI.xaml</DependentUpon>
+    <Compile Include="Presentation\View\View.xaml.cs">
+      <DependentUpon>View.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="View\Components\EditPanel.xaml">
+    <Page Include="Presentation\View\Components\ConfigPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Components\ElementsCard.xaml">
+    <Page Include="Presentation\View\Components\ElementsCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Components\ListElements.xaml">
+    <Page Include="Presentation\View\Components\ListElements.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UI.xaml">
+    <Page Include="Presentation\View\View.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -165,5 +169,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

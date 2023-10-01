@@ -2,12 +2,12 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Events;
-using ApartmentPanel.Domain;
 using ApartmentPanel.Utility;
-using ApartmentPanel.View;
-using ApartmentPanel.ViewModel;
+using APView = ApartmentPanel.Presentation.View;
 using System;
 using Autodesk.Revit.DB.Events;
+using ApartmentPanel.Presentation.ViewModel;
+using ApartmentPanel.Infrastructure;
 
 namespace ApartmentPanel
 {
@@ -15,8 +15,8 @@ namespace ApartmentPanel
     [Regeneration(RegenerationOption.Manual)]
     public class Application : IExternalApplication
     {
-        public static UI View;
-        public static UIViewModel _uiVM;
+        public static APView.View View;
+        public static Presentation.ViewModel.ViewModel _uiVM;
         internal static Application _thisApp = null;
 
         public Application()
@@ -31,8 +31,8 @@ namespace ApartmentPanel
             application.ViewActivated += OnViewActivated;
             CreateWindow();
 
-            if (!DockablePane.PaneIsRegistered(UI.PaneId))
-                application.RegisterDockablePane(UI.PaneId, UI.PaneName, View);
+            if (!DockablePane.PaneIsRegistered(APView.View.PaneId))
+                application.RegisterDockablePane(APView.View.PaneId, APView.View.PaneName, View);
 
             application.ControlledApplication.DocumentClosing +=
                 Handler_DocumentClosing;
@@ -70,8 +70,8 @@ namespace ApartmentPanel
         {
             RequestHandler handler = new RequestHandler();
             ExternalEvent exEvent = ExternalEvent.Create(handler);
-            _uiVM = new UIViewModel(exEvent, handler);
-            View = new UI(_uiVM);
+            _uiVM = new ViewModel(exEvent, handler);
+            View = new APView.View(_uiVM);
         }
 
         private void Handler_DocumentClosing(object sender, DocumentClosingEventArgs e)
@@ -100,10 +100,10 @@ namespace ApartmentPanel
         {
             UIApplication uiapp = commandData.Application;
 
-            if (DockablePane.PaneIsRegistered(UI.PaneId))
+            if (DockablePane.PaneIsRegistered(APView.View.PaneId))
             {
                 DockablePane myCustomPane =
-                    uiapp.GetDockablePane(UI.PaneId);
+                    uiapp.GetDockablePane(APView.View.PaneId);
                 myCustomPane.Show();
             }
             else
