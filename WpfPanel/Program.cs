@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using WpfPanel.ViewModel;
 using WpfPanel.View;
 using WpfPanel.Domain;
 using System.Windows;
+using Microsoft.Extensions.Hosting;
 
 namespace WpfPanel
 {
     public class Program : Application
     {
+        private static IHost _host;
         [STAThread]
         public static void Main()
         {
+            _host = CreateHostBuilder().Build();
             var app = new Program();
             app.Run();
         }
@@ -29,5 +27,11 @@ namespace WpfPanel
             var ui = new UI(uiVM);
             ui.Show();
         }
+
+        private static IHostBuilder CreateHostBuilder(string[] args = null)
+        {
+            return Host.CreateDefaultBuilder(args);
+        }
+
     }
 }

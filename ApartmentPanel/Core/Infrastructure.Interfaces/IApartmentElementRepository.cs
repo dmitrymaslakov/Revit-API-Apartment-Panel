@@ -1,9 +1,10 @@
 ﻿using Autodesk.Revit.UI;
+using System.Collections.Generic;
 
 namespace ApartmentPanel.Core.Infrastructure.Interfaces
 {
     public interface IApartmentElementRepository
     {
-        void InsertElement(UIApplication Uiapp, object Props);
+        void InsertElement(Dictionary<string, string> apartmentElementDto);
     }
 }

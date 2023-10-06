@@ -12,23 +12,22 @@ using System.Windows.Media.Imaging;
 using ApartmentPanel.Presentation.ViewModel;
 using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
 using ApartmentPanel.Infrastructure;
-using ApartmentPanel.Core.Services.Commands;
 
 namespace ApartmentPanel.Presentation.Commands
 {
     public class ConfigPanelCommandsCreater
     {
-        private readonly IConfigPanelForCommandsCreater _editPanelProperties;
+        private readonly IConfigPanelPropsForCommandsCreater _editPanelProperties;
         private readonly Action<ApartmentElement> _addElementToApartment;
 
-        public ConfigPanelCommandsCreater(IConfigPanelForCommandsCreater editPanelProperties)
+        public ConfigPanelCommandsCreater(IConfigPanelPropsForCommandsCreater editPanelProperties)
         {
             _editPanelProperties = editPanelProperties;
             _addElementToApartment = newElement =>
             {
                 if (!_editPanelProperties.ApartmentElements.Select(ae => ae.Name).Contains(newElement.Name))
                 {
-                    var annotationService = new AnnotationService.AnnotationService(
+                    var annotationService = new AnnotationService(
                         new FileAnnotationCommunicatorFactory(newElement.Name));
 
                     ImageSource annotation = annotationService.IsAnnotationExists()
@@ -210,7 +209,7 @@ namespace ApartmentPanel.Presentation.Commands
                 ApartmentElement apartmentElement =
                     _editPanelProperties.SelectedApartmentElements.FirstOrDefault();
 
-                var annotationService = new AnnotationService.AnnotationService(
+                var annotationService = new AnnotationService(
                     new FileAnnotationCommunicatorFactory(apartmentElement.Name));
 
                 apartmentElement.Annotation =
@@ -235,8 +234,9 @@ namespace ApartmentPanel.Presentation.Commands
             else
             {
                 _editPanelProperties.ApplyLatestConfiguration(
-                    new ConfigPanelVM(_editPanelProperties.ExEvent, _editPanelProperties.Handler));
-            }
+                    new ConfigPanelVM());
+                    //new ConfigPanelVM(_editPanelProperties.ExEvent, _editPanelProperties.Handler));
+    }
         });
 
         public ICommand CreateSaveLatestConfigCommand() => new RelayCommand(o =>

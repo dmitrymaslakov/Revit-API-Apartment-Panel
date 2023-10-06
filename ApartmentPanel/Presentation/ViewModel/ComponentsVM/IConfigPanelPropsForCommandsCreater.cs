@@ -9,7 +9,7 @@ using ApartmentPanel.Infrastructure;
 
 namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 {
-    public interface IConfigPanelForCommandsCreater
+    public interface IConfigPanelPropsForCommandsCreater
     {
         ExternalEvent ExEvent { get; }
         RequestHandler Handler { get; }

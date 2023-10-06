@@ -1,7 +1,9 @@
-﻿namespace ApartmentPanel.Core.Services.Interfaces
+﻿using System.Collections.Generic;
+
+namespace ApartmentPanel.Core.Services.Interfaces
 {
     public interface IApartmentElementService
     {
-        void Insert();
+        void Insert(Dictionary<string, string> apartmentElementDto);
     }
 }

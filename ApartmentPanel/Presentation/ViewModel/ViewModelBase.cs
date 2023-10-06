@@ -16,12 +16,12 @@ namespace ApartmentPanel.Presentation.ViewModel
         [JsonIgnore]
         public RequestHandler Handler { get; }
 
-        public ViewModelBase() { }
+        public ViewModelBase()
 
-        public ViewModelBase(ExternalEvent exEvent, RequestHandler handler)
+        //public ViewModelBase(ExternalEvent exEvent, RequestHandler handler)
         {
-            ExEvent = exEvent;
-            Handler = handler;
+            /*ExEvent = exEvent;
+            Handler = handler;*/
         }
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -3,10 +3,15 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Events;
 using ApartmentPanel.Utility;
-using APView = ApartmentPanel.Presentation.View;
+using ApartmentPanel.Presentation.View;
 using System;
 using Autodesk.Revit.DB.Events;
 using ApartmentPanel.Presentation.ViewModel;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.InteropServices;
+using ApartmentPanel.Core.Services;
+using ApartmentPanel.Infrastructure.Repositories;
 using ApartmentPanel.Infrastructure;
 
 namespace ApartmentPanel
@@ -15,12 +20,20 @@ namespace ApartmentPanel
     [Regeneration(RegenerationOption.Manual)]
     public class Application : IExternalApplication
     {
-        public static APView.View View;
-        public static Presentation.ViewModel.ViewModel _uiVM;
+        public static MainView View;
+        public static MainViewModel _uiVM;
         internal static Application _thisApp = null;
+        private static IHost _host;
 
         public Application()
         {
+            try
+            {
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("host_Exception", ex.Message);
+            }
         }
 
         /// <summary>
@@ -28,15 +41,26 @@ namespace ApartmentPanel
         /// </summary>
         public Result OnStartup(UIControlledApplication application)
         {
-            application.ViewActivated += OnViewActivated;
-            CreateWindow();
+            try
+            {
+                /*_host = CreateHostBuilder().Build();
 
-            if (!DockablePane.PaneIsRegistered(APView.View.PaneId))
-                application.RegisterDockablePane(APView.View.PaneId, APView.View.PaneName, View);
+                _host.Start();*/
 
-            application.ControlledApplication.DocumentClosing +=
-                Handler_DocumentClosing;
+                application.ViewActivated += OnViewActivated;
+                //CreateEventHandler();
+                CreateWindow();
 
+                if (!DockablePane.PaneIsRegistered(MainView.PaneId))
+                    application.RegisterDockablePane(MainView.PaneId, MainView.PaneName, View);
+
+                application.ControlledApplication.DocumentClosing +=
+                    Handler_DocumentClosing;
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("host_Exception", ex.Message);
+            }
             return Result.Succeeded;
         }
 
@@ -68,11 +92,21 @@ namespace ApartmentPanel
         /// </summary>
         private void CreateWindow()
         {
-            RequestHandler handler = new RequestHandler();
-            ExternalEvent exEvent = ExternalEvent.Create(handler);
-            _uiVM = new ViewModel(exEvent, handler);
-            View = new APView.View(_uiVM);
+            var handler = new RequestHandler();
+            var exEvent = ExternalEvent.Create(handler);
+
+            /*_uiVM = new ViewModel(exEvent, handler);
+            View = new APView.MainView(_uiVM);*/
+            _uiVM = new MainViewModel(new ApartmentElementService(new ApartmentElementRepository(exEvent, handler)));
+            View = new MainView(_uiVM);
+            //View = _host.Services.GetRequiredService<MainView>();
         }
+
+        /*private void CreateEventHandler()
+        {
+            var handler = new RequestHandler();
+            var exEvent = ExternalEvent.Create(handler);
+        }*/
 
         private void Handler_DocumentClosing(object sender, DocumentClosingEventArgs e)
         {
@@ -86,8 +120,17 @@ namespace ApartmentPanel
             }
             finally
             {
-                _uiVM.EditPanelVM?.SaveLatestConfigCommand?.Execute(_uiVM.EditPanelVM);
+                _uiVM.ConfigPanelVM?.SaveLatestConfigCommand?.Execute(_uiVM.ConfigPanelVM);
             }
+        }
+
+        private static IHostBuilder CreateHostBuilder(string[] args = null)
+        {
+            return Host.CreateDefaultBuilder(args)
+                /*.AddRepositoriesService()
+                .AddApartmentElementService()
+                .AddViewService()
+                .AddExternalEventHandlerService()*/;
         }
     }
 
@@ -100,10 +143,10 @@ namespace ApartmentPanel
         {
             UIApplication uiapp = commandData.Application;
 
-            if (DockablePane.PaneIsRegistered(APView.View.PaneId))
+            if (DockablePane.PaneIsRegistered(MainView.PaneId))
             {
                 DockablePane myCustomPane =
-                    uiapp.GetDockablePane(APView.View.PaneId);
+                    uiapp.GetDockablePane(MainView.PaneId);
                 myCustomPane.Show();
             }
             else

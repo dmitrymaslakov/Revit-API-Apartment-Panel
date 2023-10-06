@@ -14,8 +14,6 @@ namespace ApartmentPanel.Infrastructure
 {
     public class RequestHandler : IExternalEventHandler
     {
-        public Action Handle { get; set; }
-
         public Request Request { get; } = new Request();
         public object Props { get; set; }
 
@@ -46,8 +44,7 @@ namespace ApartmentPanel.Infrastructure
                         }
                     case RequestId.Insert:
                         {
-                            //InsertElement();
-                            Handle();
+                            InsertElement();
                             break;
                         }
                     case RequestId.AddElement:

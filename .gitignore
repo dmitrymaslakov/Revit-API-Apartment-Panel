@@ -15,6 +15,7 @@
 Shared_Parameters.txt
 
 # User-specific folders
+MigrationBackup/
 HOTEL_2_backup/
 Revit_temp/
 # Build results

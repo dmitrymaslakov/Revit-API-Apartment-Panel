@@ -11,20 +11,20 @@ namespace ApartmentPanel.Presentation.Commands
 {
     public class ViewCommandsCreater
     {
-        private readonly IViewForCommandsCreater _uiProperties;
+        private readonly IViewPropsForCommandsCreater _viewProperties;
         private readonly IApartmentElementService _apartmentElementService;
 
-        public ViewCommandsCreater(IViewForCommandsCreater uiProperties)
+        public ViewCommandsCreater(IViewPropsForCommandsCreater viewProperties, IApartmentElementService apartmentElementService)
         {
-            _uiProperties = uiProperties;
-            _apartmentElementService = new ApartmentElementService(new ApartmentElementRepository());
+            _viewProperties = viewProperties;
+            _apartmentElementService = apartmentElementService;
         }
 
         public ICommand CreateConfigureCommand() => new RelayCommand(o =>
         {
-            _uiProperties.Handler.Props = _uiProperties.EditPanelVM;
-            _uiProperties.Handler.Request.Make(RequestId.Configure);
-            _uiProperties.ExEvent.Raise();
+            _viewProperties.Handler.Props = _viewProperties.ConfigPanelVM;
+            _viewProperties.Handler.Request.Make(RequestId.Configure);
+            _viewProperties.ExEvent.Raise();
         });
 
         public ICommand CreateInsertElementCommand() => new RelayCommand(o =>
@@ -37,21 +37,31 @@ namespace ApartmentPanel.Presentation.Commands
             if (Keyboard.Modifiers == ModifierKeys.Control)
                 insertingMode = "multiple";
 
-            _uiProperties.Handler.Props = new Dictionary<string, string>
+            var props = new Dictionary<string, string>
                 {
                     { nameof(circuit), circuit },
                     { nameof(elementName), elementName },
                     { nameof(elementCategory), elementCategory },
-                    { "lampSuffix", _uiProperties.CurrentSuffix },
-                    { "height", _uiProperties.Height.ToString() },
+                    { "lampSuffix", _viewProperties.CurrentSuffix },
+                    { "height", _viewProperties.Height.ToString() },
                     { nameof(insertingMode), insertingMode },
                 };
-            _uiProperties.Handler.Request.Make(RequestId.Insert);
-            _uiProperties.Handler.Handle = _apartmentElementService.Insert;
-            _uiProperties.ExEvent.Raise();
+            _apartmentElementService.Insert(props);
+
+            /*_viewProperties.Handler.Props = new Dictionary<string, string>
+                {
+                    { nameof(circuit), circuit },
+                    { nameof(elementName), elementName },
+                    { nameof(elementCategory), elementCategory },
+                    { "lampSuffix", _viewProperties.CurrentSuffix },
+                    { "height", _viewProperties.Height.ToString() },
+                    { nameof(insertingMode), insertingMode },
+                };
+            _viewProperties.Handler.Request.Make(RequestId.Insert);
+            _viewProperties.ExEvent.Raise();*/
         });
 
         public ICommand CreateSetCurrentSuffixCommand()
-            => new RelayCommand(o => _uiProperties.CurrentSuffix = o as string);
+            => new RelayCommand(o => _viewProperties.CurrentSuffix = o as string);
     }
 }

@@ -6,13 +6,13 @@ using ApartmentPanel.Infrastructure;
 
 namespace ApartmentPanel.Presentation.ViewModel
 {
-    public interface IViewForCommandsCreater
+    public interface IViewPropsForCommandsCreater
     {
         ObservableCollection<Circuit> Circuits { get; set; }
         string CurrentSuffix { get; set; }
         double Height { get; set; }
         string Status { get; set; }
-        ConfigPanelVM EditPanelVM { get; }
+        ConfigPanelVM ConfigPanelVM { get; }
         ExternalEvent ExEvent { get; }
         RequestHandler Handler { get; }
     }

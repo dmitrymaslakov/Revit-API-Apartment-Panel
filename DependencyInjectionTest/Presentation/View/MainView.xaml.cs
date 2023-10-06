@@ -1,14 +1,15 @@
 ﻿using Autodesk.Revit.UI;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace ApartmentPanel.Presentation.View
+namespace DependencyInjectionTest.Presentation.View
 {
     /// <summary>
     /// Interaction logic for UI.xaml
     /// </summary>
-    public partial class View : UserControl, IDockablePaneProvider
+    public partial class MainView : UserControl, IDockablePaneProvider
     {
         private Guid m_targetGuid;
         private DockPosition m_position = DockPosition.Bottom;
@@ -17,7 +18,7 @@ namespace ApartmentPanel.Presentation.View
         private int m_top = 1;
         private int m_bottom = 1;
 
-        public View(object dataContext)
+        public MainView(object dataContext)
         {
             InitializeComponent();
             DataContext = dataContext;

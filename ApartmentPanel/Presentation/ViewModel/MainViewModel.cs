@@ -7,6 +7,7 @@ using ApartmentPanel.Utility;
 using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
 using ApartmentPanel.Infrastructure;
 using ApartmentPanel.Presentation.Commands;
+using ApartmentPanel.Core.Services.Interfaces;
 
 namespace ApartmentPanel.Presentation.ViewModel
 {
@@ -15,36 +16,39 @@ namespace ApartmentPanel.Presentation.ViewModel
         Ok, Apply, Cancel
     }
 
-    public class ViewModel : ViewModelBase, IViewForCommandsCreater
+    public class MainViewModel : ViewModelBase, IViewPropsForCommandsCreater
     {
-        private readonly ViewCommandsCreater _uICommandsCreater;
+        private readonly ViewCommandsCreater _viewCommandsCreater;
+        private readonly IApartmentElementService _apartmentElementService;
 
-        public ViewModel() { }
+        public MainViewModel(IApartmentElementService apartmentElementService)
 
-        public ViewModel(ExternalEvent exEvent, RequestHandler handler)
-            : base(exEvent, handler)
+        /*public ViewModel(ExternalEvent exEvent, RequestHandler handler)
+            : base(exEvent, handler)*/
         {
-            _uICommandsCreater = new ViewCommandsCreater(this);
+            _viewCommandsCreater = new ViewCommandsCreater(this, _apartmentElementService);
 
-            EditPanelVM = new ConfigPanelVM(exEvent, handler)
+            //ConfigPanelVM = new ConfigPanelVM(exEvent, handler)
+            ConfigPanelVM = new ConfigPanelVM()
             {
                 OkApplyCancelActions = ExecuteOkApplyCancelActions
             };
 
-            EditPanelVM.LoadLatestConfigCommand?.Execute(null);
+            ConfigPanelVM.LoadLatestConfigCommand?.Execute(null);
 
-            Circuits = GetCircuits(EditPanelVM.PanelCircuits);
+            Circuits = GetCircuits(ConfigPanelVM.PanelCircuits);
 
-            ConfigureCommand = _uICommandsCreater.CreateConfigureCommand();
+            ConfigureCommand = _viewCommandsCreater.CreateConfigureCommand();
 
-            InsertElementCommand = _uICommandsCreater.CreateInsertElementCommand();
+            InsertElementCommand = _viewCommandsCreater.CreateInsertElementCommand();
 
-            SetCurrentSuffixCommand = _uICommandsCreater.CreateSetCurrentSuffixCommand();
+            SetCurrentSuffixCommand = _viewCommandsCreater.CreateSetCurrentSuffixCommand();
 
             Height = 40.0;
+            _apartmentElementService = apartmentElementService;
         }
 
-        public ConfigPanelVM EditPanelVM { get; set; }
+        public ConfigPanelVM ConfigPanelVM { get; set; }
 
         private ObservableCollection<Circuit> _circuits;
 
@@ -98,10 +102,10 @@ namespace ApartmentPanel.Presentation.ViewModel
                     var panelCircuits =
                         (ObservableDictionary<string, ObservableCollection<ApartmentElement>>)obj;
                     Circuits = GetCircuits(panelCircuits);
-                    EditPanelVM.SaveLatestConfigCommand?.Execute(EditPanelVM);
+                    ConfigPanelVM.SaveLatestConfigCommand?.Execute(ConfigPanelVM);
                     break;
                 case OkApplyCancel.Cancel:
-                    EditPanelVM.LoadLatestConfigCommand?.Execute(null);
+                    ConfigPanelVM.LoadLatestConfigCommand?.Execute(null);
                     break;
             }
         }

@@ -14,11 +14,12 @@ using ApartmentPanel.Presentation.Commands;
 
 namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 {
-    public class ConfigPanelVM : ViewModelBase, IConfigPanelForCommandsCreater
+    public class ConfigPanelVM : ViewModelBase, IConfigPanelPropsForCommandsCreater
     {
         private readonly ConfigPanelCommandsCreater _commandCreater;
 
-        public ConfigPanelVM(ExternalEvent exEvent, RequestHandler handler) : base(exEvent, handler)
+        //public ConfigPanelVM(ExternalEvent exEvent, RequestHandler handler) : base(exEvent, handler)
+        public ConfigPanelVM()
         {
             _commandCreater = new ConfigPanelCommandsCreater(this);
 

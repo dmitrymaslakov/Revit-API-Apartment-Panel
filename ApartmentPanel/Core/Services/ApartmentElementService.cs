@@ -1,5 +1,6 @@
 ﻿using ApartmentPanel.Core.Infrastructure.Interfaces;
 using ApartmentPanel.Core.Services.Interfaces;
+using System.Collections.Generic;
 
 namespace ApartmentPanel.Core.Services
 {
@@ -11,9 +12,9 @@ namespace ApartmentPanel.Core.Services
             _apartmentElementRepository = apartmentElementRepository;
         }
 
-        public void Insert()
+        public void Insert(Dictionary<string, string> apartmentElementDto)
         {
-            _apartmentElementRepository.InsertElement();
+            _apartmentElementRepository.InsertElement(apartmentElementDto);
         }
     }
 }
