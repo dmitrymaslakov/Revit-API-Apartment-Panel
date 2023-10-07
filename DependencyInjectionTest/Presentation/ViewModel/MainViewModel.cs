@@ -21,11 +21,11 @@ namespace DependencyInjectionTest.Presentation.ViewModel
     public class MainViewModel : ViewModelBase, IMainViewModel//, IViewPropsForCommandsCreater, 
     {
         private readonly ViewCommandsCreater _viewCommandsCreater;
-        private readonly IApartmentElementService _apartmentElementService;
-        private readonly IApartmentPanelService _apartmentPanelService;
+        private readonly IElementService _apartmentElementService;
+        private readonly IPanelService _apartmentPanelService;
 
-        public MainViewModel(IApartmentElementService apartmentElementService,
-            IApartmentPanelService apartmentPanelService,
+        public MainViewModel(IElementService apartmentElementService,
+            IPanelService apartmentPanelService,
             IConfigPanelViewModel configPanelVM)
         /*public ViewModel(ExternalEvent exEvent, RequestHandler handler)
             : base(exEvent, handler)*/
@@ -129,7 +129,7 @@ namespace DependencyInjectionTest.Presentation.ViewModel
                 result.Add(new Circuit
                 {
                     Number = circuit.Key,
-                    ApartmentElements = new ObservableCollection<IApartmentElement>(
+                    Elements = new ObservableCollection<IApartmentElement>(
                             circuit.Value.Select(ap => ap.Clone()).ToList())
                 });
             }

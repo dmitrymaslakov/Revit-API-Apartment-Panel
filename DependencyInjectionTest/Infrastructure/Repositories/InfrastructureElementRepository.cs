@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 namespace DependencyInjectionTest.Infrastructure.Repositories
 {
-    public class InfrastructureApartmentElementRepository : 
-        BaseRepository, IInfrastructureApartmentElementRepository
+    public class InfrastructureElementRepository : 
+        BaseRepository, IInfrastructureElementRepository
     {
-        public InfrastructureApartmentElementRepository(ExternalEvent exEvent, RequestHandler handler) 
+        public InfrastructureElementRepository(ExternalEvent exEvent, RequestHandler handler) 
             : base(exEvent, handler) { }
 
         public void AddToApartment(Action<IApartmentElement> addElementToApartment)
@@ -19,7 +19,7 @@ namespace DependencyInjectionTest.Infrastructure.Repositories
             _exEvent.Raise();
         }
 
-        public void InsertElement(Dictionary<string, string> apartmentElementDto)
+        public void InsertToModel(Dictionary<string, string> apartmentElementDto)
         {
             _handler.Request.Make(RequestId.Insert);
             _handler.Props = apartmentElementDto;

@@ -16,17 +16,16 @@ namespace DependencyInjectionTest.Presentation.ViewModel.ComponentsVM
 {
     public class ConfigPanelViewModel : ViewModelBase, IConfigPanelViewModel//, IConfigPanelPropsForCommandsCreater
     {
-        private readonly IApartmentElementService _apartmentElementService;
-        private readonly IApartmentPanelService _apartmentPanelService;
+        private readonly IElementService _elementService;
+        private readonly IPanelService _panelService;
         private readonly ConfigPanelCommandsCreater _commandCreater;
 
         //public ConfigPanelVM(ExternalEvent exEvent, RequestHandler handler) : base(exEvent, handler)
-        public ConfigPanelViewModel(IApartmentElementService apartmentElementService, 
-            IApartmentPanelService apartmentPanelService)
+        public ConfigPanelViewModel(IElementService elementService, IPanelService panelService)
         {
-            _apartmentElementService = apartmentElementService;
-            _apartmentPanelService = apartmentPanelService;
-            _commandCreater = new ConfigPanelCommandsCreater(this, _apartmentElementService, _apartmentPanelService);
+            _elementService = elementService;
+            _panelService = panelService;
+            _commandCreater = new ConfigPanelCommandsCreater(this, _elementService, _panelService);
             ApartmentElements = new ObservableCollection<IApartmentElement>();
             PanelCircuits = new ObservableDictionary<string, ObservableCollection<IApartmentElement>>();
             CircuitElements = new ObservableCollection<IApartmentElement>();
@@ -36,15 +35,15 @@ namespace DependencyInjectionTest.Presentation.ViewModel.ComponentsVM
             SelectedCircuitElements = new ObservableCollection<IApartmentElement>();
             LatestConfigPath = FileUtility.GetAssemblyPath() + "\\LatestConfig.json";
             IsCancelEnabled = false;
-            AddApartmentElementCommand = _commandCreater.CreateAddApartmentElementCommand();
-            RemoveApartmentElementsCommand = _commandCreater.CreateRemoveApartmentElementsCommand();
-            AddPanelCircuitCommand = _commandCreater.CreateAddPanelCircuitCommand();
-            RemovePanelCircuitsCommand = _commandCreater.CreateRemovePanelCircuitsCommand();
-            AddElementToCircuitCommand = _commandCreater.CreateAddElementToCircuitCommand();
+            AddApartmentElementCommand = _commandCreater.CreateAddElementToApartmentCommand();
+            RemoveApartmentElementsCommand = _commandCreater.CreateRemoveElementsFromApartmentCommand();
+            AddPanelCircuitCommand = _commandCreater.CreateAddCircuitToPanelCommand();
+            RemovePanelCircuitsCommand = _commandCreater.CreateRemoveCircuitsFromPanelCommand();
+            AddElementToCircuitCommand = _commandCreater.CreateAddElementsToCircuitCommand();
             RemoveElementsFromCircuitCommand = _commandCreater.CreateRemoveElementsFromCircuitCommand();
-            SelectedApartmentElementsCommand = _commandCreater.CreateSelectedApartmentElementsCommand();
-            SelectedPanelCircuitCommand = _commandCreater.CreateSelectedPanelCircuitCommand();
-            SelectedCircuitElementCommand = _commandCreater.CreateSelectedCircuitElementCommand();
+            SelectedApartmentElementsCommand = _commandCreater.CreateCollectSelectedApartmentElementsCommand();
+            SelectPanelCircuitCommand = _commandCreater.CreateCollectSelectedCircuitsCommand();
+            SelectedCircuitElementCommand = _commandCreater.CreateCollectSelectedCircuitElementsCommand();
             OkCommand = _commandCreater.CreateOkCommand();
             ApplyCommand = _commandCreater.CreateApplyCommand();
             CancelCommand = _commandCreater.CreateCancelCommand();
@@ -137,7 +136,7 @@ namespace DependencyInjectionTest.Presentation.ViewModel.ComponentsVM
         [JsonIgnore]
         public ICommand SelectedApartmentElementsCommand { get; set; }
         [JsonIgnore]
-        public ICommand SelectedPanelCircuitCommand { get; set; }
+        public ICommand SelectPanelCircuitCommand { get; set; }
         [JsonIgnore]
         public ICommand SelectedCircuitElementCommand { get; set; }
         [JsonIgnore]

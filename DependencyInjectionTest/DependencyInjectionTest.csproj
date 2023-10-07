@@ -204,13 +204,13 @@
   <ItemGroup>
     <Compile Include="Application.cs" />
     <Compile Include="Core\DependencyInjection.cs" />
-    <Compile Include="Core\Infrastructure.Interfaces\IInfrastructureApartmentElementRepository.cs" />
+    <Compile Include="Core\Infrastructure.Interfaces\IInfrastructureElementRepository.cs" />
     <Compile Include="Core\Models\ApartmentElement.cs" />
     <Compile Include="Core\Models\CategorizedFamilySymbols.cs" />
     <Compile Include="Core\Models\Circuit.cs" />
     <Compile Include="Core\Models.Interfaces\IApartmentElement.cs" />
-    <Compile Include="Core\Presentation.Interfaces\IPresentationApartmentElementRepository.cs" />
-    <Compile Include="Core\Presentation.Interfaces\IPresentationApartmentPanelRepository.cs" />
+    <Compile Include="Core\Presentation.Interfaces\IPresentationElementRepository.cs" />
+    <Compile Include="Core\Presentation.Interfaces\IPresentationPanelRepository.cs" />
     <Compile Include="Core\Services\AnnotationService\AnnotationReaders\FileAnnotationReader.cs" />
     <Compile Include="Core\Services\AnnotationService\AnnotationReaders\IAnnotationReader.cs" />
     <Compile Include="Core\Services\AnnotationService\AnnotationService.cs" />
@@ -218,15 +218,15 @@
     <Compile Include="Core\Services\AnnotationService\AnnotationWriters\IAnnotationWriter.cs" />
     <Compile Include="Core\Services\AnnotationService\FileAnnotationCommunicatorFactory.cs" />
     <Compile Include="Core\Services\AnnotationService\IAnnotationCommunicatorFactory.cs" />
-    <Compile Include="Core\Services\ApartmentElementService.cs" />
-    <Compile Include="Core\Services\ApartmentPanelService.cs" />
-    <Compile Include="Core\Services\Interfaces\IApartmentPanelService.cs" />
-    <Compile Include="Core\Services\Interfaces\IApartmentElementService.cs" />
+    <Compile Include="Core\Services\ElementService.cs" />
+    <Compile Include="Core\Services\PanelService.cs" />
+    <Compile Include="Core\Services\Interfaces\IPanelService.cs" />
+    <Compile Include="Core\Services\Interfaces\IElementService.cs" />
     <Compile Include="Infrastructure\DependencyInjection.cs" />
     <Compile Include="Infrastructure\Repositories\BaseRepository.cs" />
-    <Compile Include="Presentation\Repositories\PresentationApartmentElementRepository.cs" />
-    <Compile Include="Presentation\Repositories\PresentationApartmentPanelRepository.cs" />
-    <Compile Include="Infrastructure\Repositories\InfrastructureApartmentElementRepository.cs" />
+    <Compile Include="Presentation\Repositories\PresentationElementRepository.cs" />
+    <Compile Include="Presentation\Repositories\PresentationPanelRepository.cs" />
+    <Compile Include="Infrastructure\Repositories\InfrastructureElementRepository.cs" />
     <Compile Include="Infrastructure\Request.cs" />
     <Compile Include="Infrastructure\RequestHandler.cs" />
     <Compile Include="Presentation\Commands\BaseCommand.cs" />
@@ -236,6 +236,7 @@
     <Compile Include="Presentation\Commands\RelayCommand.cs" />
     <Compile Include="Presentation\Commands\ViewCommandsCreater.cs" />
     <Compile Include="Presentation\DependencyInjection.cs" />
+    <Compile Include="Presentation\Services\CircuitService.cs" />
     <Compile Include="Presentation\ViewModel\ComponentsVM\ConfigPanelViewModel.cs" />
     <Compile Include="Presentation\ViewModel\Interfaces\IConfigPanelPropsForCommandsCreater.cs" />
     <Compile Include="Presentation\ViewModel\Interfaces\IConfigPanelViewModel.cs" />

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace DependencyInjectionTest.Core.Infrastructure.Interfaces
 {
-    public interface IInfrastructureApartmentElementRepository
+    public interface IInfrastructureElementRepository
     {
         void AddToApartment(Action<IApartmentElement> addElementToApartment);
-        void InsertElement(Dictionary<string, string> apartmentElementDto);
+        void InsertToModel(Dictionary<string, string> elementDto);
     }
 }

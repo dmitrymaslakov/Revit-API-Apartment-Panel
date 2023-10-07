@@ -4,14 +4,14 @@ namespace DependencyInjectionTest.Presentation.Commands
 {
     public abstract class BaseCommandsCreater
     {
-        protected readonly IApartmentElementService _apartmentElementService;
-        protected readonly IApartmentPanelService _apartmentPanelService;
+        protected readonly IElementService _elementService;
+        protected readonly IPanelService _panelService;
 
-        protected BaseCommandsCreater(IApartmentElementService apartmentElementService, 
-            IApartmentPanelService apartmentPanelService)
+        protected BaseCommandsCreater(IElementService elementService, 
+            IPanelService panelService)
         {
-            _apartmentElementService = apartmentElementService;
-            _apartmentPanelService = apartmentPanelService;
+            _elementService = elementService;
+            _panelService = panelService;
         }
     }
 }

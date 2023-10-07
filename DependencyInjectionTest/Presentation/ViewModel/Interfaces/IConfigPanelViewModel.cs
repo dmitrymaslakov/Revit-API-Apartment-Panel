@@ -35,7 +35,7 @@ namespace DependencyInjectionTest.Presentation.ViewModel.Interfaces
         ICommand SaveLatestConfigCommand { get; set; }
         ICommand SelectedApartmentElementsCommand { get; set; }
         ICommand SelectedCircuitElementCommand { get; set; }
-        ICommand SelectedPanelCircuitCommand { get; set; }
+        ICommand SelectPanelCircuitCommand { get; set; }
         ICommand SetAnnotationPreviewCommand { get; set; }
         ICommand SetAnnotationToElementCommand { get; set; }
 

@@ -18,8 +18,8 @@ namespace DependencyInjectionTest.Presentation
                 services.AddSingleton<IConfigPanelViewModel, ConfigPanelViewModel>();
                 services.AddSingleton<IMainViewModel, MainViewModel>();
                 services.AddSingleton(provider => new MainView(provider.GetService<IMainViewModel>()));
-                services.AddTransient<IPresentationApartmentElementRepository, PresentationApartmentElementRepository>();
-                services.AddTransient<IPresentationApartmentPanelRepository, PresentationApartmentPanelRepository>();
+                services.AddTransient<IPresentationElementRepository, PresentationElementRepository>();
+                services.AddTransient<IPresentationPanelRepository, PresentationPanelRepository>();
             });
             return hostBuilder;
         }

@@ -13,8 +13,8 @@ namespace DependencyInjectionTest.Core
         {
             hostBuilder.ConfigureServices(services =>
             {
-                services.AddTransient<IApartmentElementService, ApartmentElementService>();
-                services.AddTransient<IApartmentPanelService, ApartmentPanelService>();
+                services.AddTransient<IElementService, ElementService>();
+                services.AddTransient<IPanelService, PanelService>();
                 services.AddTransient<IApartmentElement, ApartmentElement>();
             });
             return hostBuilder;

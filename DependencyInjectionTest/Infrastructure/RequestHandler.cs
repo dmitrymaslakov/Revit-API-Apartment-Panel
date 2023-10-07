@@ -9,6 +9,7 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using DependencyInjectionTest.Presentation.ViewModel.ComponentsVM;
 using DependencyInjectionTest.Core.Models;
+using DependencyInjectionTest.Core.Models.Interfaces;
 
 namespace DependencyInjectionTest.Infrastructure
 {
@@ -141,7 +142,7 @@ namespace DependencyInjectionTest.Infrastructure
             {
                 Category = gfs.Key,
                 CategorizedElements =
-                new ObservableCollection<ApartmentElement>(gfs.Select(fs => new ApartmentElement { Name = fs.Name, Category = fs.Category.Name }))
+                new ObservableCollection<IApartmentElement>(gfs.Select(fs => new ApartmentElement { Name = fs.Name, Category = fs.Category.Name }))
             }).ToList();
         }
 

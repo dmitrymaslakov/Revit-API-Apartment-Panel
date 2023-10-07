@@ -16,8 +16,8 @@ namespace DependencyInjectionTest.Presentation.Commands
 
         //public ViewCommandsCreater(IViewPropsForCommandsCreater viewProperties, IApartmentElementService apartmentElementService)
         public ViewCommandsCreater(IMainViewModel viewProperties,
-            IApartmentElementService apartmentElementService,
-            IApartmentPanelService apartmentPanelService) : base(apartmentElementService, apartmentPanelService)
+            IElementService apartmentElementService,
+            IPanelService apartmentPanelService) : base(apartmentElementService, apartmentPanelService)
         {
             _viewProperties = viewProperties;
         }
@@ -27,7 +27,7 @@ namespace DependencyInjectionTest.Presentation.Commands
             /*_viewProperties.Handler.Props = _viewProperties.ConfigPanelVM;
             _viewProperties.Handler.Request.Make(RequestId.Configure);
             _viewProperties.ExEvent.Raise();*/
-            _apartmentPanelService.Configure();
+            _panelService.Configure();
         });
 
         public ICommand CreateInsertElementCommand() => new RelayCommand(o =>
@@ -49,7 +49,7 @@ namespace DependencyInjectionTest.Presentation.Commands
                     { "height", _viewProperties.Height.ToString() },
                     { nameof(insertingMode), insertingMode },
                 };
-            _apartmentElementService.Insert(props);
+            _elementService.InsertToModel(props);
 
             /*_viewProperties.Handler.Props = new Dictionary<string, string>
                 {

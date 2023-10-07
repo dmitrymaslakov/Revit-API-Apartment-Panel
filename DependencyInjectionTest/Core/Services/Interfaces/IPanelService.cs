@@ -1,6 +1,6 @@
 ﻿namespace DependencyInjectionTest.Core.Services.Interfaces
 {
-    public interface IApartmentPanelService
+    public interface IPanelService
     {
         void RemoveCircuits();
         void AddCircuit();
