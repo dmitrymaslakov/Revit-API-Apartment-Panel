@@ -1,6 +1,6 @@
-﻿using ApartmentPanel.Core.Services.AnnotationService.AnnotationReaders;
+﻿using ApartmentPanel.Utility;
+using ApartmentPanel.Core.Services.AnnotationService.AnnotationReaders;
 using ApartmentPanel.Core.Services.AnnotationService.AnnotationWriters;
-using ApartmentPanel.Utility;
 using System.IO;
 using System.Text;
 

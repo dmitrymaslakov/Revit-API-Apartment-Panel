@@ -62,7 +62,7 @@
                     AddBtnVisibility="{x:Static Visibility.Collapsed}"
                     EditBtnVisibility="{x:Static Visibility.Collapsed}"
                     RemoveElementCommand="{Binding RemovePanelCircuitsCommand}"
-                    SelectedElementsCommand ="{Binding SelectedPanelCircuitCommand}"
+                    SelectedElementsCommand ="{Binding SelectPanelCircuitCommand}"
                     />
                 <GroupBox Header="New circuit">
                     <WrapPanel>

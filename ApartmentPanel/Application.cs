@@ -8,11 +8,10 @@ using System;
 using Autodesk.Revit.DB.Events;
 using ApartmentPanel.Presentation.ViewModel;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using System.Runtime.InteropServices;
-using ApartmentPanel.Core.Services;
-using ApartmentPanel.Infrastructure.Repositories;
 using ApartmentPanel.Infrastructure;
+using ApartmentPanel.Core;
+using ApartmentPanel.Presentation;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ApartmentPanel
 {
@@ -29,6 +28,7 @@ namespace ApartmentPanel
         {
             try
             {
+                _host = CreateHostBuilder().Build();
             }
             catch (Exception ex)
             {
@@ -43,9 +43,7 @@ namespace ApartmentPanel
         {
             try
             {
-                /*_host = CreateHostBuilder().Build();
-
-                _host.Start();*/
+                _host.Start();
 
                 application.ViewActivated += OnViewActivated;
                 //CreateEventHandler();
@@ -92,14 +90,14 @@ namespace ApartmentPanel
         /// </summary>
         private void CreateWindow()
         {
-            var handler = new RequestHandler();
-            var exEvent = ExternalEvent.Create(handler);
+            /*var handler = new RequestHandler();
+            var exEvent = ExternalEvent.Create(handler);*/
 
             /*_uiVM = new ViewModel(exEvent, handler);
             View = new APView.MainView(_uiVM);*/
-            _uiVM = new MainViewModel(new ApartmentElementService(new ApartmentElementRepository(exEvent, handler)));
-            View = new MainView(_uiVM);
-            //View = _host.Services.GetRequiredService<MainView>();
+            /*_uiVM = new MainViewModel(new ApartmentElementService(new ApartmentElementRepository(exEvent, handler)));
+            View = new MainView(_uiVM);*/
+            View = _host.Services.GetRequiredService<MainView>();
         }
 
         /*private void CreateEventHandler()
@@ -127,10 +125,9 @@ namespace ApartmentPanel
         private static IHostBuilder CreateHostBuilder(string[] args = null)
         {
             return Host.CreateDefaultBuilder(args)
-                /*.AddRepositoriesService()
-                .AddApartmentElementService()
-                .AddViewService()
-                .AddExternalEventHandlerService()*/;
+                .AddDomainServices()
+                .AddInfrastructureServices()
+                .AddPresentationServices();
         }
     }
 

@@ -1,30 +1,33 @@
 ﻿using ApartmentPanel.Core.Services;
-using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Infrastructure;
 using ApartmentPanel.Infrastructure.Repositories;
-using ApartmentPanel.Presentation.ViewModel;
+using ApartmentPanel.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using ApartmentPanel.Presentation.ViewModel.Interfaces;
 
 namespace ApartmentPanel.Presentation.Commands
 {
-    public class ViewCommandsCreater
+    public class ViewCommandsCreater : BaseCommandsCreater
     {
-        private readonly IViewPropsForCommandsCreater _viewProperties;
-        private readonly IApartmentElementService _apartmentElementService;
+        //private readonly IViewPropsForCommandsCreater _viewProperties;
+        private readonly IMainViewModel _viewProperties;
 
-        public ViewCommandsCreater(IViewPropsForCommandsCreater viewProperties, IApartmentElementService apartmentElementService)
+        //public ViewCommandsCreater(IViewPropsForCommandsCreater viewProperties, IApartmentElementService apartmentElementService)
+        public ViewCommandsCreater(IMainViewModel viewProperties,
+            IElementService apartmentElementService,
+            IPanelService apartmentPanelService) : base(apartmentElementService, apartmentPanelService)
         {
             _viewProperties = viewProperties;
-            _apartmentElementService = apartmentElementService;
         }
 
         public ICommand CreateConfigureCommand() => new RelayCommand(o =>
         {
-            _viewProperties.Handler.Props = _viewProperties.ConfigPanelVM;
+            /*_viewProperties.Handler.Props = _viewProperties.ConfigPanelVM;
             _viewProperties.Handler.Request.Make(RequestId.Configure);
-            _viewProperties.ExEvent.Raise();
+            _viewProperties.ExEvent.Raise();*/
+            _panelService.Configure();
         });
 
         public ICommand CreateInsertElementCommand() => new RelayCommand(o =>
@@ -46,7 +49,7 @@ namespace ApartmentPanel.Presentation.Commands
                     { "height", _viewProperties.Height.ToString() },
                     { nameof(insertingMode), insertingMode },
                 };
-            _apartmentElementService.Insert(props);
+            _elementService.InsertToModel(props);
 
             /*_viewProperties.Handler.Props = new Dictionary<string, string>
                 {

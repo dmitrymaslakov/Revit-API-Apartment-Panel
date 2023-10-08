@@ -2,17 +2,24 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ApartmentPanel.Presentation.View;
+using ApartmentPanel.Presentation.ViewModel.Interfaces;
+using ApartmentPanel.Infrastructure.Repositories;
+using ApartmentPanel.Core.Presentation.Interfaces;
+using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
 
 namespace ApartmentPanel.Presentation
 {
     public static class DependencyInjection
     {
-        public static IHostBuilder AddViewService(this IHostBuilder hostBuilder)
+        public static IHostBuilder AddPresentationServices(this IHostBuilder hostBuilder)
         {
-            hostBuilder.ConfigureServices(services =>
+            hostBuilder.ConfigureServices(services => 
             {
-                services.AddSingleton<MainViewModel>();
-                services.AddSingleton(provider => new MainView(provider.GetService<MainViewModel>()));
+                services.AddSingleton<IConfigPanelViewModel, ConfigPanelViewModel>();
+                services.AddSingleton<IMainViewModel, MainViewModel>();
+                services.AddSingleton(provider => new MainView(provider.GetService<IMainViewModel>()));
+                services.AddTransient<IPresentationElementRepository, PresentationElementRepository>();
+                services.AddTransient<IPresentationPanelRepository, PresentationPanelRepository>();
             });
             return hostBuilder;
         }

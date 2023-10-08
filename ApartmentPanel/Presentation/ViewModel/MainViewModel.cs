@@ -2,12 +2,14 @@
 using System.Linq;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
-using ApartmentPanel.Core.Models;
 using ApartmentPanel.Utility;
 using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
 using ApartmentPanel.Infrastructure;
 using ApartmentPanel.Presentation.Commands;
+using ApartmentPanel.Core.Models;
 using ApartmentPanel.Core.Services.Interfaces;
+using ApartmentPanel.Presentation.ViewModel.Interfaces;
+using ApartmentPanel.Core.Models.Interfaces;
 
 namespace ApartmentPanel.Presentation.ViewModel
 {
@@ -16,23 +18,32 @@ namespace ApartmentPanel.Presentation.ViewModel
         Ok, Apply, Cancel
     }
 
-    public class MainViewModel : ViewModelBase, IViewPropsForCommandsCreater
+    public class MainViewModel : ViewModelBase, IMainViewModel//, IViewPropsForCommandsCreater, 
     {
         private readonly ViewCommandsCreater _viewCommandsCreater;
-        private readonly IApartmentElementService _apartmentElementService;
+        private readonly IElementService _apartmentElementService;
+        private readonly IPanelService _apartmentPanelService;
 
-        public MainViewModel(IApartmentElementService apartmentElementService)
-
+        public MainViewModel(IElementService apartmentElementService,
+            IPanelService apartmentPanelService,
+            IConfigPanelViewModel configPanelVM)
         /*public ViewModel(ExternalEvent exEvent, RequestHandler handler)
             : base(exEvent, handler)*/
         {
-            _viewCommandsCreater = new ViewCommandsCreater(this, _apartmentElementService);
+            _apartmentElementService = apartmentElementService;
 
+            _apartmentPanelService = apartmentPanelService;
+
+            _viewCommandsCreater = new ViewCommandsCreater(this, _apartmentElementService, _apartmentPanelService);
+
+            ConfigPanelVM = configPanelVM;
+
+            ConfigPanelVM.OkApplyCancelActions = ExecuteOkApplyCancelActions;
             //ConfigPanelVM = new ConfigPanelVM(exEvent, handler)
-            ConfigPanelVM = new ConfigPanelVM()
+            /*ConfigPanelVM = new ConfigPanelViewModel()
             {
                 OkApplyCancelActions = ExecuteOkApplyCancelActions
-            };
+            };*/
 
             ConfigPanelVM.LoadLatestConfigCommand?.Execute(null);
 
@@ -45,10 +56,9 @@ namespace ApartmentPanel.Presentation.ViewModel
             SetCurrentSuffixCommand = _viewCommandsCreater.CreateSetCurrentSuffixCommand();
 
             Height = 40.0;
-            _apartmentElementService = apartmentElementService;
         }
 
-        public ConfigPanelVM ConfigPanelVM { get; set; }
+        public IConfigPanelViewModel ConfigPanelVM { get; set; }
 
         private ObservableCollection<Circuit> _circuits;
 
@@ -100,7 +110,7 @@ namespace ApartmentPanel.Presentation.ViewModel
                 case OkApplyCancel.Apply:
                     Circuits.Clear();
                     var panelCircuits =
-                        (ObservableDictionary<string, ObservableCollection<ApartmentElement>>)obj;
+                        (ObservableDictionary<string, ObservableCollection<IApartmentElement>>)obj;
                     Circuits = GetCircuits(panelCircuits);
                     ConfigPanelVM.SaveLatestConfigCommand?.Execute(ConfigPanelVM);
                     break;
@@ -111,7 +121,7 @@ namespace ApartmentPanel.Presentation.ViewModel
         }
 
         private ObservableCollection<Circuit> GetCircuits(
-            ObservableDictionary<string, ObservableCollection<ApartmentElement>> panelCircuits)
+            ObservableDictionary<string, ObservableCollection<IApartmentElement>> panelCircuits)
         {
             var result = new ObservableCollection<Circuit>();
             foreach (var circuit in panelCircuits)
@@ -119,7 +129,7 @@ namespace ApartmentPanel.Presentation.ViewModel
                 result.Add(new Circuit
                 {
                     Number = circuit.Key,
-                    ApartmentElements = new ObservableCollection<ApartmentElement>(
+                    Elements = new ObservableCollection<IApartmentElement>(
                             circuit.Value.Select(ap => ap.Clone()).ToList())
                 });
             }

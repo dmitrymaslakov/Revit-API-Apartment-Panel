@@ -11,10 +11,10 @@ namespace ApartmentPanel.Presentation.ViewModel
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         private bool _disposed;
-        [JsonIgnore]
+        /*[JsonIgnore]
         public ExternalEvent ExEvent { get; }
         [JsonIgnore]
-        public RequestHandler Handler { get; }
+        public RequestHandler Handler { get; }*/
 
         public ViewModelBase()
 

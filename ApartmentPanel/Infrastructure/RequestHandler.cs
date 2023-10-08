@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using ApartmentPanel.Utility;
 using ApartmentPanel.Presentation.View.Components;
 using System.Linq;
-using ApartmentPanel.Core.Models;
 using System.Collections.ObjectModel;
 using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
+using ApartmentPanel.Core.Models;
+using ApartmentPanel.Core.Models.Interfaces;
 
 namespace ApartmentPanel.Infrastructure
 {
@@ -84,9 +85,9 @@ namespace ApartmentPanel.Infrastructure
 
         private void ShowConfigPanel()
         {
-            var editPanelVM = Props as ConfigPanelVM;
-            new ConfigPanel(editPanelVM).Show();
-            Props = null;
+            /*var configPanelVM = Props as ConfigPanelViewModel;
+            new ConfigPanel(configPanelVM).Show();
+            Props = null;*/
         }
 
         private void AddElement()
@@ -141,7 +142,7 @@ namespace ApartmentPanel.Infrastructure
             {
                 Category = gfs.Key,
                 CategorizedElements =
-                new ObservableCollection<ApartmentElement>(gfs.Select(fs => new ApartmentElement { Name = fs.Name, Category = fs.Category.Name }))
+                new ObservableCollection<IApartmentElement>(gfs.Select(fs => new ApartmentElement { Name = fs.Name, Category = fs.Category.Name }))
             }).ToList();
         }
 

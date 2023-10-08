@@ -5,7 +5,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}</ProjectGuid>
+    <ProjectGuid>{CCE7A823-8767-40A3-9BC3-78A1EE3AD782}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ApartmentPanel</RootNamespace>
@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,15 +34,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="FontAwesome.WPF, Version=4.7.0.37774, Culture=neutral, PublicKeyToken=0758b07a11a4f466, processorArchitecture=MSIL">
       <HintPath>..\packages\FontAwesome.WPF.4.7.0.9\lib\net40\FontAwesome.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Configuration, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Configuration.6.0.0\lib\net461\Microsoft.Extensions.Configuration.dll</HintPath>
@@ -120,18 +118,15 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="RevitAddInUtility, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="RevitAddInUtility">
       <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAddInUtility.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RevitAPI, Version=20.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="RevitAPI">
       <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RevitAPIUI, Version=20.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="RevitAPIUI">
       <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -142,16 +137,16 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=7.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.7.0.1\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.6.0.0\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -185,11 +180,11 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Text.Encodings.Web, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Encodings.Web.7.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+    <Reference Include="System.Text.Encodings.Web, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.6.0.0\lib\net461\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
-    <Reference Include="System.Text.Json, Version=7.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Json.7.0.3\lib\net462\System.Text.Json.dll</HintPath>
+    <Reference Include="System.Text.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.6.0.0\lib\net461\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
@@ -205,15 +200,17 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
-    <Reference Include="WindowsInput, Version=1.0.4.0, Culture=neutral, PublicKeyToken=9b287f7dc5073cad, processorArchitecture=MSIL">
-      <HintPath>..\packages\InputSimulator.1.0.4.0\lib\net20\WindowsInput.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application.cs" />
     <Compile Include="Core\DependencyInjection.cs" />
+    <Compile Include="Core\Infrastructure.Interfaces\IInfrastructureElementRepository.cs" />
     <Compile Include="Core\Models\ApartmentElement.cs" />
     <Compile Include="Core\Models\CategorizedFamilySymbols.cs" />
     <Compile Include="Core\Models\Circuit.cs" />
+    <Compile Include="Core\Models.Interfaces\IApartmentElement.cs" />
+    <Compile Include="Core\Presentation.Interfaces\IPresentationElementRepository.cs" />
+    <Compile Include="Core\Presentation.Interfaces\IPresentationPanelRepository.cs" />
     <Compile Include="Core\Services\AnnotationService\AnnotationReaders\FileAnnotationReader.cs" />
     <Compile Include="Core\Services\AnnotationService\AnnotationReaders\IAnnotationReader.cs" />
     <Compile Include="Core\Services\AnnotationService\AnnotationService.cs" />
@@ -221,34 +218,30 @@
     <Compile Include="Core\Services\AnnotationService\AnnotationWriters\IAnnotationWriter.cs" />
     <Compile Include="Core\Services\AnnotationService\FileAnnotationCommunicatorFactory.cs" />
     <Compile Include="Core\Services\AnnotationService\IAnnotationCommunicatorFactory.cs" />
-    <Compile Include="Core\Services\ApartmentElementService.cs" />
+    <Compile Include="Core\Services\ElementService.cs" />
+    <Compile Include="Core\Services\PanelService.cs" />
+    <Compile Include="Core\Services\Interfaces\IPanelService.cs" />
+    <Compile Include="Core\Services\Interfaces\IElementService.cs" />
     <Compile Include="Infrastructure\DependencyInjection.cs" />
+    <Compile Include="Infrastructure\Repositories\BaseRepository.cs" />
+    <Compile Include="Presentation\Repositories\PresentationElementRepository.cs" />
+    <Compile Include="Presentation\Repositories\PresentationPanelRepository.cs" />
+    <Compile Include="Infrastructure\Repositories\InfrastructureElementRepository.cs" />
+    <Compile Include="Infrastructure\Request.cs" />
+    <Compile Include="Infrastructure\RequestHandler.cs" />
+    <Compile Include="Presentation\Commands\BaseCommand.cs" />
+    <Compile Include="Presentation\Commands\BaseCommandsCreater.cs" />
     <Compile Include="Presentation\Commands\ConfigPanelCommandsCreater.cs" />
     <Compile Include="Presentation\Commands\DTO\DTO.cs" />
     <Compile Include="Presentation\Commands\RelayCommand.cs" />
     <Compile Include="Presentation\Commands\ViewCommandsCreater.cs" />
-    <Compile Include="Core\Services\Interfaces\IApartmentElementService.cs" />
-    <Compile Include="Infrastructure\Request.cs" />
-    <Compile Include="Infrastructure\RequestHandler.cs" />
-    <Compile Include="Application.cs" />
-    <Compile Include="Presentation\Commands\BaseCommand.cs" />
-    <Compile Include="Infrastructure\Repositories\ApartmentElementRepository.cs" />
-    <Compile Include="Core\Infrastructure.Interfaces\IApartmentElementRepository.cs" />
     <Compile Include="Presentation\DependencyInjection.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utility\ClipboardManager.cs" />
-    <Compile Include="Utility\Converters\ElementDataConverter.cs" />
-    <Compile Include="Utility\Exceptions\CustomParameterException.cs" />
-    <Compile Include="Utility\HeightUpdater.cs" />
-    <Compile Include="Utility\FamilyInstanceBuilder.cs" />
-    <Compile Include="Utility\FileUtility.cs" />
-    <Compile Include="Utility\Globals.cs" />
-    <Compile Include="Utility\Log.cs" />
-    <Compile Include="Utility\ObservableDictionary.cs" />
-    <Compile Include="Utility\StaticData.cs" />
-    <Compile Include="Presentation\ViewModel\ComponentsVM\ConfigPanelVM.cs" />
-    <Compile Include="Presentation\ViewModel\ComponentsVM\IConfigPanelPropsForCommandsCreater.cs" />
-    <Compile Include="Presentation\ViewModel\IViewPropsForCommandsCreater.cs" />
+    <Compile Include="Presentation\Services\CircuitService.cs" />
+    <Compile Include="Presentation\ViewModel\ComponentsVM\ConfigPanelViewModel.cs" />
+    <Compile Include="Presentation\ViewModel\Interfaces\IConfigPanelPropsForCommandsCreater.cs" />
+    <Compile Include="Presentation\ViewModel\Interfaces\IConfigPanelViewModel.cs" />
+    <Compile Include="Presentation\ViewModel\Interfaces\IMainViewModel.cs" />
+    <Compile Include="Presentation\ViewModel\Interfaces\IViewPropsForCommandsCreater.cs" />
     <Compile Include="Presentation\ViewModel\MainViewModel.cs" />
     <Compile Include="Presentation\ViewModel\ViewModelBase.cs" />
     <Compile Include="Presentation\View\Components\ConfigPanel.xaml.cs">
@@ -263,43 +256,54 @@
     <Compile Include="Presentation\View\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Presentation\View\Components\ConfigPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Presentation\View\Components\ElementsCard.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Presentation\View\Components\ListElements.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Presentation\View\MainView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\ClipboardManager.cs" />
+    <Compile Include="Utility\Converters\ElementDataConverter.cs" />
+    <Compile Include="Utility\Exceptions\CustomParameterException.cs" />
+    <Compile Include="Utility\FamilyInstanceBuilder.cs" />
+    <Compile Include="Utility\FileUtility.cs" />
+    <Compile Include="Utility\Globals.cs" />
+    <Compile Include="Utility\HeightUpdater.cs" />
+    <Compile Include="Utility\Log.cs" />
+    <Compile Include="Utility\ObservableDictionary.cs" />
+    <Compile Include="Utility\StaticData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Presentation\View\Components\ConfigPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\View\Components\ElementsCard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\View\Components\ListElements.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\View\MainView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Core\Infrastructure.Interfaces\DTO\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets" Condition="Exists('..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets'))" />
+    <Error Condition="!Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Extensions.Configuration.UserSecrets.6.0.0\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Extensions.Configuration.UserSecrets.6.0.0\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Extensions.Configuration.UserSecrets.6.0.0\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Extensions.Configuration.UserSecrets.6.0.0\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.targets'))" />
   </Target>
   <Import Project="..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" />
-  <Import Project="..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets" Condition="Exists('..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets')" />
   <Import Project="..\packages\Microsoft.Extensions.Configuration.UserSecrets.6.0.0\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.targets" Condition="Exists('..\packages\Microsoft.Extensions.Configuration.UserSecrets.6.0.0\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.targets')" />
 </Project>

@@ -1,21 +1,21 @@
-﻿using ApartmentPanel.Core.Infrastructure.Interfaces;
-using ApartmentPanel.Core.Services;
+﻿using ApartmentPanel.Core.Services;
 using ApartmentPanel.Core.Services.Interfaces;
-using ApartmentPanel.Infrastructure;
-using ApartmentPanel.Infrastructure.Repositories;
-using Autodesk.Revit.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ApartmentPanel.Core.Models.Interfaces;
+using ApartmentPanel.Core.Models;
 
 namespace ApartmentPanel.Core
 {
     public static class DependencyInjection
     {
-        public static IHostBuilder AddApartmentElementService(this IHostBuilder hostBuilder)
+        public static IHostBuilder AddDomainServices(this IHostBuilder hostBuilder)
         {
             hostBuilder.ConfigureServices(services =>
             {
-                services.AddTransient<IApartmentElementService, ApartmentElementService>();
+                services.AddTransient<IApartmentElement, ApartmentElement>();
+                services.AddTransient<IElementService, ElementService>();
+                services.AddTransient<IPanelService, PanelService>();
             });
             return hostBuilder;
         }

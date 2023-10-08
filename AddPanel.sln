@@ -5,11 +5,9 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfPanel", "WpfPanel\WpfPanel.csproj", "{3A4394B0-E544-4AF5-8CE4-36F0201657F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApartmentPanel", "ApartmentPanel\ApartmentPanel.csproj", "{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}"
-EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ApartmentPanelInstaller", "ApartmentPanelInstaller\ApartmentPanelInstaller.vdproj", "{F6A567BD-798D-4C33-A53E-D2243EBDC1F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyInjectionTest", "DependencyInjectionTest\DependencyInjectionTest.csproj", "{CCE7A823-8767-40A3-9BC3-78A1EE3AD782}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApartmentPanel", "ApartmentPanel\ApartmentPanel.csproj", "{CCE7A823-8767-40A3-9BC3-78A1EE3AD782}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,14 +25,6 @@ Global
 		{3A4394B0-E544-4AF5-8CE4-36F0201657F4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3A4394B0-E544-4AF5-8CE4-36F0201657F4}.Release|x64.ActiveCfg = Release|Any CPU
 		{3A4394B0-E544-4AF5-8CE4-36F0201657F4}.Release|x64.Build.0 = Release|Any CPU
-		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Debug|x64.Build.0 = Debug|Any CPU
-		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Release|x64.ActiveCfg = Release|Any CPU
-		{1DDDFD5F-EADB-4697-8EF8-5F2F3F008912}.Release|x64.Build.0 = Release|Any CPU
 		{F6A567BD-798D-4C33-A53E-D2243EBDC1F2}.Debug|Any CPU.ActiveCfg = Debug
 		{F6A567BD-798D-4C33-A53E-D2243EBDC1F2}.Debug|x64.ActiveCfg = Debug
 		{F6A567BD-798D-4C33-A53E-D2243EBDC1F2}.Release|Any CPU.ActiveCfg = Release

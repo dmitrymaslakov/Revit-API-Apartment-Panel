@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ApartmentPanel")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Rembox")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ApartmentPanel")]
 [assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1dddfd5f-eadb-4697-8ef8-5f2f3f008912")]
+[assembly: Guid("cce7a823-8767-40a3-9bc3-78a1ee3ad782")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.UI;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,18 +19,8 @@ namespace ApartmentPanel.Presentation.View
 
         public MainView(object dataContext)
         {
-            //var _host = CreateHostBuilder().Build();
             InitializeComponent();
             DataContext = dataContext;
-        }
-
-        private static IHostBuilder CreateHostBuilder(string[] args = null)
-        {
-            return Host.CreateDefaultBuilder(args)
-                /*.AddRepositoriesService()
-                .AddApartmentElementService()
-                .AddViewService()
-                .AddExternalEventHandlerService()*/;
         }
 
         public void SetupDockablePane(DockablePaneProviderData data)

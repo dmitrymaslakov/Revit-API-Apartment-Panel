@@ -1,6 +1,4 @@
-﻿using ApartmentPanel.Core.Models;
-using ApartmentPanel.Core.Services.AnnotationService;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -9,23 +7,33 @@ using System.Text.Json;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ApartmentPanel.Core.Services.AnnotationService;
 using ApartmentPanel.Presentation.ViewModel;
 using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
-using ApartmentPanel.Infrastructure;
+using ApartmentPanel.Core.Models;
+using ApartmentPanel.Presentation.ViewModel.Interfaces;
+using ApartmentPanel.Core.Services.Interfaces;
+using ApartmentPanel.Core.Models.Interfaces;
+using ApartmentPanel.Presentation.Services;
 
 namespace ApartmentPanel.Presentation.Commands
 {
-    public class ConfigPanelCommandsCreater
+    public class ConfigPanelCommandsCreater : BaseCommandsCreater
     {
-        private readonly IConfigPanelPropsForCommandsCreater _editPanelProperties;
-        private readonly Action<ApartmentElement> _addElementToApartment;
+        //private readonly IConfigPanelPropsForCommandsCreater _configPanelProperties;
+        private readonly IConfigPanelViewModel _configPanelProperties;
+        private readonly Action<IApartmentElement> _addElementToApartment;
+        private readonly CircuitService _circuitService;
 
-        public ConfigPanelCommandsCreater(IConfigPanelPropsForCommandsCreater editPanelProperties)
+        //public ConfigPanelCommandsCreater(IConfigPanelPropsForCommandsCreater editPanelProperties)
+        public ConfigPanelCommandsCreater(IConfigPanelViewModel configPanelProps,
+            IElementService elementService,
+            IPanelService panelService) : base(elementService, panelService)
         {
-            _editPanelProperties = editPanelProperties;
+            _configPanelProperties = configPanelProps;
             _addElementToApartment = newElement =>
             {
-                if (!_editPanelProperties.ApartmentElements.Select(ae => ae.Name).Contains(newElement.Name))
+                if (!_configPanelProperties.ApartmentElements.Select(ae => ae.Name).Contains(newElement.Name))
                 {
                     var annotationService = new AnnotationService(
                         new FileAnnotationCommunicatorFactory(newElement.Name));
@@ -33,76 +41,80 @@ namespace ApartmentPanel.Presentation.Commands
                     ImageSource annotation = annotationService.IsAnnotationExists()
                         ? annotationService.Get() : null;
 
-                    ApartmentElement newApartmentElement = newElement.Clone();
+                    IApartmentElement newApartmentElement = newElement.Clone();
                     newApartmentElement.Annotation = annotation;
-                    _editPanelProperties.ApartmentElements.Add(newApartmentElement);
+                    _configPanelProperties.ApartmentElements.Add(newApartmentElement);
                 }
             };
+            _circuitService = new CircuitService(_configPanelProperties);
         }
 
-        public ICommand CreateAddApartmentElementCommand() => new RelayCommand(o =>
+        public ICommand CreateAddElementToApartmentCommand() => new RelayCommand(o =>
         {
-            MakeRequest(RequestId.AddElement, _addElementToApartment);
-            if (!_editPanelProperties.IsCancelEnabled)
-                _editPanelProperties.IsCancelEnabled = true;
+            _elementService.AddToApartment(_addElementToApartment);
+            /*MakeRequest(RequestId.AddElement, _addElementToApartment);
+            if (!_configPanelProperties.IsCancelEnabled)
+                _configPanelProperties.IsCancelEnabled = true;*/
         });
 
-        public ICommand CreateRemoveApartmentElementsCommand() => new RelayCommand(o =>
+        public ICommand CreateRemoveElementsFromApartmentCommand() => new RelayCommand(o =>
         {
-            if (_editPanelProperties.SelectedApartmentElements.Count != 0)
+            if (_configPanelProperties.SelectedApartmentElements.Count != 0)
             {
-                foreach (var element in _editPanelProperties.SelectedApartmentElements.ToArray())
-                    _editPanelProperties.ApartmentElements.Remove(element);
-
-                if (!_editPanelProperties.IsCancelEnabled)
-                    _editPanelProperties.IsCancelEnabled = true;
+                _elementService.RemoveFromApartment();
+                /*foreach (var element in _configPanelProperties.SelectedApartmentElements.ToArray())
+                    _configPanelProperties.ApartmentElements.Remove(element);*/
+                if (!_configPanelProperties.IsCancelEnabled)
+                    _configPanelProperties.IsCancelEnabled = true;
             }
         });
 
-        public ICommand CreateAddPanelCircuitCommand() => new RelayCommand(o =>
+        public ICommand CreateAddCircuitToPanelCommand() => new RelayCommand(o =>
         {
-            if (!string.IsNullOrEmpty(_editPanelProperties.NewCircuit)
-                && !_editPanelProperties.PanelCircuits.ContainsKey(_editPanelProperties.NewCircuit))
+            if (!string.IsNullOrEmpty(_configPanelProperties.NewCircuit)
+                && !_configPanelProperties.PanelCircuits.ContainsKey(_configPanelProperties.NewCircuit))
             {
-                _editPanelProperties.PanelCircuits.Add(_editPanelProperties.NewCircuit,
-                    new ObservableCollection<ApartmentElement>());
+                _panelService.AddCircuit();
+                /*_configPanelProperties.PanelCircuits.Add(_configPanelProperties.NewCircuit,
+                    new ObservableCollection<IApartmentElement>());*/
 
-                if (!_editPanelProperties.IsCancelEnabled)
-                    _editPanelProperties.IsCancelEnabled = true;
+                if (!_configPanelProperties.IsCancelEnabled)
+                    _configPanelProperties.IsCancelEnabled = true;
             }
 
-            _editPanelProperties.NewCircuit = string.Empty;
+            _configPanelProperties.NewCircuit = string.Empty;
         });
 
-        public ICommand CreateRemovePanelCircuitsCommand() => new RelayCommand(o =>
+        public ICommand CreateRemoveCircuitsFromPanelCommand() => new RelayCommand(o =>
         {
-            _editPanelProperties.CircuitElements.Clear();
-            _editPanelProperties.SelectedCircuitElements.Clear();
-            foreach (var circuit in _editPanelProperties.SelectedPanelCircuits.ToArray())
-                _editPanelProperties.PanelCircuits.Remove(circuit.Key);
+            _configPanelProperties.CircuitElements.Clear();
+            _configPanelProperties.SelectedCircuitElements.Clear();
+            _panelService.RemoveCircuits();
+            /*foreach (var circuit in _configPanelProperties.SelectedPanelCircuits.ToArray())
+                _configPanelProperties.PanelCircuits.Remove(circuit.Key);*/
 
-            _editPanelProperties.SelectedPanelCircuits.Clear();
+            _configPanelProperties.SelectedPanelCircuits.Clear();
 
-            if (!_editPanelProperties.IsCancelEnabled)
-                _editPanelProperties.IsCancelEnabled = true;
+            if (!_configPanelProperties.IsCancelEnabled)
+                _configPanelProperties.IsCancelEnabled = true;
         });
 
-        public ICommand CreateAddElementToCircuitCommand() => new RelayCommand(o =>
+        public ICommand CreateAddElementsToCircuitCommand() => new RelayCommand(o =>
         {
-            if (_editPanelProperties.SelectedPanelCircuits.Count > 1
-                || _editPanelProperties.SelectedPanelCircuits.Count == 0
-                || _editPanelProperties.SelectedApartmentElements.Count == 0)
+            if (_configPanelProperties.SelectedPanelCircuits.Count > 1
+                || _configPanelProperties.SelectedPanelCircuits.Count == 0
+                || _configPanelProperties.SelectedApartmentElements.Count == 0)
                 return;
+            _elementService.AddToCircuit();
+            /*var selectedPanelCircuit = _configPanelProperties.SelectedPanelCircuits.SingleOrDefault();
 
-            var selectedPanelCircuit = _editPanelProperties.SelectedPanelCircuits.SingleOrDefault();
-
-            foreach (var selectedApartmentElement in _editPanelProperties.SelectedApartmentElements)
+            foreach (var selectedApartmentElement in _configPanelProperties.SelectedApartmentElements)
             {
                 if (selectedApartmentElement == null
                 || string.IsNullOrEmpty(selectedPanelCircuit.Key))
                     return;
 
-                var IsElementExist = _editPanelProperties.PanelCircuits
+                var IsElementExist = _configPanelProperties.PanelCircuits
                 .Where(e => e.Key == selectedPanelCircuit.Key)
                 .First()
                 .Value
@@ -110,157 +122,156 @@ namespace ApartmentPanel.Presentation.Commands
                 .Contains(selectedApartmentElement.Name);
 
                 if (!IsElementExist)
-                    _editPanelProperties.PanelCircuits[selectedPanelCircuit.Key].Add(selectedApartmentElement);
+                    _configPanelProperties.PanelCircuits[selectedPanelCircuit.Key].Add(selectedApartmentElement);
 
-                AddCurrentCircuitElements(_editPanelProperties.PanelCircuits[selectedPanelCircuit.Key]);
-
-                if (!_editPanelProperties.IsCancelEnabled)
-                    _editPanelProperties.IsCancelEnabled = true;
-            }
+                AddCurrentCircuitElements(_configPanelProperties.PanelCircuits[selectedPanelCircuit.Key]);
+            }*/
+            if (!_configPanelProperties.IsCancelEnabled)
+                _configPanelProperties.IsCancelEnabled = true;
         });
 
         public ICommand CreateRemoveElementsFromCircuitCommand() => new RelayCommand(o =>
         {
-            if (_editPanelProperties.SelectedPanelCircuits.Count > 1 || _editPanelProperties.SelectedPanelCircuits.Count == 0
-            || _editPanelProperties.SelectedCircuitElements.Count == 0) return;
+            if (_configPanelProperties.SelectedPanelCircuits.Count > 1 || _configPanelProperties.SelectedPanelCircuits.Count == 0
+            || _configPanelProperties.SelectedCircuitElements.Count == 0) return;
 
-            var selectedPanelCircuit = _editPanelProperties.SelectedPanelCircuits.SingleOrDefault();
+            _elementService.RemoveFromCircuit();
+            /*var selectedPanelCircuit = _configPanelProperties.SelectedPanelCircuits.SingleOrDefault();
             if (string.IsNullOrEmpty(selectedPanelCircuit.Key)) return;
 
-            foreach (var selectedCircuitElement in _editPanelProperties.SelectedCircuitElements)
+            foreach (var selectedCircuitElement in _configPanelProperties.SelectedCircuitElements)
                 selectedPanelCircuit.Value.Remove(selectedCircuitElement);
 
-            AddCurrentCircuitElements(selectedPanelCircuit.Value);
-            if (!_editPanelProperties.IsCancelEnabled)
-                _editPanelProperties.IsCancelEnabled = true;
+            AddCurrentCircuitElements(selectedPanelCircuit.Value);*/
+            if (!_configPanelProperties.IsCancelEnabled)
+                _configPanelProperties.IsCancelEnabled = true;
         });
 
-        public ICommand CreateSelectedApartmentElementsCommand() => new RelayCommand(o =>
+        public ICommand CreateCollectSelectedApartmentElementsCommand() => new RelayCommand(o =>
         {
-            var apartmentElements = (o as IList<object>)?.OfType<ApartmentElement>();
-            if (_editPanelProperties.SelectedApartmentElements.Count != 0)
-                _editPanelProperties.SelectedApartmentElements.Clear();
+            var selectedElements = (o as IList<object>)?.OfType<IApartmentElement>();
+            if (_configPanelProperties.SelectedApartmentElements.Count != 0)
+                _configPanelProperties.SelectedApartmentElements.Clear();
 
-            if (apartmentElements.Count() != 0)
-                foreach (var apartmentElement in apartmentElements)
-                    _editPanelProperties.SelectedApartmentElements.Add(apartmentElement);
+            if (selectedElements.Count() != 0)
+                foreach (var apartmentElement in selectedElements)
+                    _configPanelProperties.SelectedApartmentElements.Add(apartmentElement);
         });
 
-        public ICommand CreateSelectedPanelCircuitCommand() => new RelayCommand(o =>
+        public ICommand CreateCollectSelectedCircuitsCommand() => new RelayCommand(o =>
         {
-            _editPanelProperties.SelectedCircuitElements.Clear();
-            var currentCircuitElements = (o as IList<object>)
-                ?.OfType<KeyValuePair<string, ObservableCollection<ApartmentElement>>>();
-            if (currentCircuitElements.Count() != 0)
+            _configPanelProperties.SelectedCircuitElements.Clear();
+            var currentCircuits = (o as IList<object>)
+                ?.OfType<KeyValuePair<string, ObservableCollection<IApartmentElement>>>();
+            if (currentCircuits.Count() != 0)
             {
-                _editPanelProperties.SelectedPanelCircuits.Clear();
+                _configPanelProperties.SelectedPanelCircuits.Clear();
 
-                foreach (var currentCircuitElement in currentCircuitElements)
+                foreach (var currentCircuit in currentCircuits)
                 {
-                    _editPanelProperties.SelectedPanelCircuits.Add(currentCircuitElement);
-                    if (currentCircuitElements.Count() == 1)
-                        AddCurrentCircuitElements(currentCircuitElement.Value);
-                    else _editPanelProperties.CircuitElements.Clear();
+                    _configPanelProperties.SelectedPanelCircuits.Add(currentCircuit);
+                    if (currentCircuits.Count() == 1)
+                        _circuitService.AddCurrentCircuitElements(currentCircuit.Value);
+                    else _configPanelProperties.CircuitElements.Clear();
                 }
             }
         });
 
-        public ICommand CreateSelectedCircuitElementCommand() => new RelayCommand(o =>
+        public ICommand CreateCollectSelectedCircuitElementsCommand() => new RelayCommand(o =>
         {
             var circuitElements = (o as IList<object>)?.OfType<ApartmentElement>();
-            if (_editPanelProperties.SelectedCircuitElements.Count != 0)
-                _editPanelProperties.SelectedCircuitElements.Clear();
+            if (_configPanelProperties.SelectedCircuitElements.Count != 0)
+                _configPanelProperties.SelectedCircuitElements.Clear();
 
             if (circuitElements.Count() != 0)
                 foreach (var circuitElement in circuitElements)
-                    _editPanelProperties.SelectedCircuitElements.Add(circuitElement);
+                    _configPanelProperties.SelectedCircuitElements.Add(circuitElement);
         });
 
         public ICommand CreateOkCommand() => new RelayCommand(o =>
         {
             var close = (Action)o;
-            _editPanelProperties.OkApplyCancelActions(_editPanelProperties.PanelCircuits, OkApplyCancel.Ok);
+            _configPanelProperties.OkApplyCancelActions(_configPanelProperties.PanelCircuits, OkApplyCancel.Ok);
 
-            if (_editPanelProperties.IsCancelEnabled)
-                _editPanelProperties.IsCancelEnabled = false;
+            if (_configPanelProperties.IsCancelEnabled)
+                _configPanelProperties.IsCancelEnabled = false;
 
             close();
         });
 
         public ICommand CreateApplyCommand() => new RelayCommand(o =>
         {
-            _editPanelProperties.OkApplyCancelActions(_editPanelProperties.PanelCircuits, OkApplyCancel.Apply);
+            _configPanelProperties.OkApplyCancelActions(_configPanelProperties.PanelCircuits, OkApplyCancel.Apply);
 
-            if (_editPanelProperties.IsCancelEnabled)
-                _editPanelProperties.IsCancelEnabled = false;
+            if (_configPanelProperties.IsCancelEnabled)
+                _configPanelProperties.IsCancelEnabled = false;
         });
 
         public ICommand CreateCancelCommand() => new RelayCommand(o =>
         {
-            _editPanelProperties.OkApplyCancelActions(_editPanelProperties.PanelCircuits, OkApplyCancel.Cancel);
-            if (_editPanelProperties.IsCancelEnabled)
-                _editPanelProperties.IsCancelEnabled = false;
+            _configPanelProperties.OkApplyCancelActions(_configPanelProperties.PanelCircuits, OkApplyCancel.Cancel);
+            if (_configPanelProperties.IsCancelEnabled)
+                _configPanelProperties.IsCancelEnabled = false;
         });
 
         public ICommand CreateSetAnnotationToElementCommand() => new RelayCommand(o =>
         {
-            if (_editPanelProperties.SelectedApartmentElements.Count == 1)
+            if (_configPanelProperties.SelectedApartmentElements.Count == 1)
             {
-                ApartmentElement apartmentElement =
-                    _editPanelProperties.SelectedApartmentElements.FirstOrDefault();
+                IApartmentElement apartmentElement =
+                    _configPanelProperties.SelectedApartmentElements.FirstOrDefault();
 
                 var annotationService = new AnnotationService(
                     new FileAnnotationCommunicatorFactory(apartmentElement.Name));
 
                 apartmentElement.Annotation =
-                    annotationService.Save(_editPanelProperties.AnnotationPreview);
+                    annotationService.Save(_configPanelProperties.AnnotationPreview);
             }
         });
 
         public ICommand CreateSetAnnotationPreviewCommand() => new RelayCommand(o =>
         {
             var bitmapSource = o as BitmapSource;
-            _editPanelProperties.AnnotationPreview = bitmapSource;
+            _configPanelProperties.AnnotationPreview = bitmapSource;
         });
 
         public ICommand CreateLoadLatestConfigCommand() => new RelayCommand(o =>
         {
-            if (File.Exists(_editPanelProperties.LatestConfigPath))
+            if (File.Exists(_configPanelProperties.LatestConfigPath))
             {
-                string json = File.ReadAllText(_editPanelProperties.LatestConfigPath);
-                ConfigPanelVM deso = JsonSerializer.Deserialize<ConfigPanelVM>(json);
-                _editPanelProperties.ApplyLatestConfiguration(deso);
+                string json = File.ReadAllText(_configPanelProperties.LatestConfigPath);
+                var deso = JsonSerializer.Deserialize<ConfigPanelViewModel>(json);
+                _configPanelProperties.ApplyLatestConfiguration(deso);
             }
-            else
+            /*else
             {
-                _editPanelProperties.ApplyLatestConfiguration(
-                    new ConfigPanelVM());
-                    //new ConfigPanelVM(_editPanelProperties.ExEvent, _editPanelProperties.Handler));
-    }
+                _configPanelProperties.ApplyLatestConfiguration(
+                    new ConfigPanelViewModel());
+            }*/
         });
 
         public ICommand CreateSaveLatestConfigCommand() => new RelayCommand(o =>
         {
-            var editPanel = o as ConfigPanelVM;
+            var editPanel = o as ConfigPanelViewModel;
             var options = new JsonSerializerOptions { WriteIndented = true };
             string json = JsonSerializer.Serialize(editPanel, options);
-            File.WriteAllText(_editPanelProperties.LatestConfigPath, json);
+            File.WriteAllText(_configPanelProperties.LatestConfigPath, json);
         });
 
-        private void AddCurrentCircuitElements(ObservableCollection<ApartmentElement> currentCircuitElements)
+        /*private void AddCurrentCircuitElements(ObservableCollection<IApartmentElement> currentCircuitElements)
         {
-            if (_editPanelProperties.CircuitElements.Count != 0)
-                _editPanelProperties.CircuitElements.Clear();
+            if (_configPanelProperties.CircuitElements.Count != 0)
+                _configPanelProperties.CircuitElements.Clear();
 
             foreach (var item in currentCircuitElements)
-                _editPanelProperties.CircuitElements.Add(item);
-        }
+                _configPanelProperties.CircuitElements.Add(item);
+        }*/
 
-        private void MakeRequest(RequestId request, object props = null)
+        /*private void MakeRequest(RequestId request, object props = null)
         {
-            _editPanelProperties.Handler.Props = props;
-            _editPanelProperties.Handler.Request.Make(request);
-            _editPanelProperties.ExEvent.Raise();
-        }
+            _configPanelProperties.Handler.Props = props;
+            _configPanelProperties.Handler.Request.Make(request);
+            _configPanelProperties.ExEvent.Raise();
+        }*/
     }
 }

@@ -2,10 +2,11 @@
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using System.Text.Json.Serialization;
+using ApartmentPanel.Core.Models.Interfaces;
 
 namespace ApartmentPanel.Core.Models
 {
-    public class ApartmentElement : INotifyPropertyChanged
+    public class ApartmentElement : IApartmentElement
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -33,7 +34,7 @@ namespace ApartmentPanel.Core.Models
             return true;
         }
 
-        public ApartmentElement Clone()
+        public IApartmentElement Clone()
         {
             return new ApartmentElement
             {
