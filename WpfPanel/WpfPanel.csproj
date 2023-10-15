@@ -73,6 +73,12 @@
     <Compile Include="Domain\Services\AnnotationService\AnnotationService.cs" />
     <Compile Include="Utilities\ClipboardManager.cs" />
     <Compile Include="Utilities\Converters\ElementDataConverter.cs" />
+    <Compile Include="Utilities\NewFolder1\TypeMappingConverter.cs" />
+    <Compile Include="Utilities\NewFolder1\ElementA.cs" />
+    <Compile Include="Utilities\NewFolder1\ElementB.cs" />
+    <Compile Include="Utilities\NewFolder1\IElement.cs" />
+    <Compile Include="Utilities\NewFolder1\MasterClass.cs" />
+    <Compile Include="Utilities\NewFolder1\Ser.cs" />
     <Compile Include="Utilities\ObservableDictionary.cs" />
     <Compile Include="Utilities\StaticData.cs" />
     <Compile Include="ViewModel\ComponentsVM\EditPanelVM.cs" />

@@ -14,18 +14,15 @@ using ApartmentPanel.Core.Models.Interfaces;
 
 namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 {
-    public class ConfigPanelViewModel : ViewModelBase, IConfigPanelViewModel//, IConfigPanelPropsForCommandsCreater
+    public class ConfigPanelViewModel : ViewModelBase, IConfigPanelViewModel
     {
-        private readonly IElementService _elementService;
-        private readonly IPanelService _panelService;
         private readonly ConfigPanelCommandsCreater _commandCreater;
 
-        //public ConfigPanelVM(ExternalEvent exEvent, RequestHandler handler) : base(exEvent, handler)
-        public ConfigPanelViewModel(IElementService elementService, IPanelService panelService)
+        public ConfigPanelViewModel() { }
+
+        public ConfigPanelViewModel(IElementService elementService) : base(elementService)
         {
-            _elementService = elementService;
-            _panelService = panelService;
-            _commandCreater = new ConfigPanelCommandsCreater(this, _elementService, _panelService);
+            _commandCreater = new ConfigPanelCommandsCreater(this, ElementService);
             ApartmentElements = new ObservableCollection<IApartmentElement>();
             PanelCircuits = new ObservableDictionary<string, ObservableCollection<IApartmentElement>>();
             CircuitElements = new ObservableCollection<IApartmentElement>();

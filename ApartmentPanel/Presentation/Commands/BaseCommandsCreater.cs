@@ -5,13 +5,8 @@ namespace ApartmentPanel.Presentation.Commands
     public abstract class BaseCommandsCreater
     {
         protected readonly IElementService _elementService;
-        protected readonly IPanelService _panelService;
 
-        protected BaseCommandsCreater(IElementService elementService, 
-            IPanelService panelService)
-        {
+        protected BaseCommandsCreater(IElementService elementService) => 
             _elementService = elementService;
-            _panelService = panelService;
-        }
     }
 }

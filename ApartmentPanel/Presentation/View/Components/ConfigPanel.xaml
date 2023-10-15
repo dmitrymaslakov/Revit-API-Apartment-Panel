@@ -4,8 +4,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:local="clr-namespace:ApartmentPanel.Presentation.View.Components"
+        xmlns:vm="clr-namespace:ApartmentPanel.Presentation.ViewModel.ComponentsVM"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d" 
+        d:DataContext="{d:DesignInstance vm:ConfigPanelViewModel, IsDesignTimeCreatable=True}"
         d:DesignHeight="450" d:DesignWidth="600" Width="600"
         x:Name="Confige">
     <Window.Resources>
@@ -45,12 +47,10 @@
                 <Button Style="{StaticResource ArrowButton}"
                     Command="{Binding AddElementToCircuitCommand}">
                     <fa:ImageAwesome Icon="ArrowRight" Foreground="Green"/>
-                    <!--<Image Source="pack://application:,,,/DockableDialogs;component/Resources/icons8-AddArrow-24.png" />-->
                 </Button>
                 <Button Style="{StaticResource ArrowButton}"
                     Command="{Binding RemoveElementsFromCircuitCommand}">
                     <fa:ImageAwesome Icon="ArrowLeft" Foreground="Blue"/>
-                    <!--<Image Source="pack://application:,,,/DockableDialogs;component/Resources/icons8-RemoveArrow-24.png" />-->
                 </Button>
             </StackPanel>
             <StackPanel Grid.Column="2">
@@ -69,8 +69,6 @@
                         <TextBox Text="{Binding NewCircuit}" Width="30" Margin="0 0 10 0"/>
                         <Button Height="20" Command="{Binding AddPanelCircuitCommand}">
                             <fa:ImageAwesome Icon="Plus" Foreground="Green"/>
-                            <!--<Image x:Name="addingCircuit" 
-                                   Source="pack://application:,,,/DockableDialogs;component/Resources/icons8-Create-24.png"/>-->
                         </Button>
                     </WrapPanel>
                 </GroupBox>

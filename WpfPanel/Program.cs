@@ -4,6 +4,7 @@ using WpfPanel.View;
 using WpfPanel.Domain;
 using System.Windows;
 using Microsoft.Extensions.Hosting;
+using WpfPanel.Utilities.NewFolder1;
 
 namespace WpfPanel
 {
@@ -21,11 +22,14 @@ namespace WpfPanel
         protected override void OnStartup(StartupEventArgs args)
         {
             base.OnStartup(args);
-            RequestHandler handler = new RequestHandler();
+            var ser = new Ser();
+            ser.ExecuteSer();
+            ser.ExecuteDeser();
+            /*RequestHandler handler = new RequestHandler();
             ExternalEvent exEvent = ExternalEvent.Create(handler);
             var uiVM = new UIViewModel(exEvent, handler);
             var ui = new UI(uiVM);
-            ui.Show();
+            ui.Show();*/
         }
 
         private static IHostBuilder CreateHostBuilder(string[] args = null)

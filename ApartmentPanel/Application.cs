@@ -7,10 +7,10 @@ using ApartmentPanel.Presentation.View;
 using System;
 using Autodesk.Revit.DB.Events;
 using ApartmentPanel.Presentation.ViewModel;
-using Microsoft.Extensions.Hosting;
 using ApartmentPanel.Infrastructure;
 using ApartmentPanel.Core;
 using ApartmentPanel.Presentation;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ApartmentPanel

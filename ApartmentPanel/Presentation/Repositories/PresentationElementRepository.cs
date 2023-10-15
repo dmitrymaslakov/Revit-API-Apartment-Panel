@@ -19,12 +19,12 @@ namespace ApartmentPanel.Infrastructure.Repositories
             _circuitService = new CircuitService(_configPanelViewModel);
         }
 
-        public void RemoveFromApartment()
+        /*public void RemoveFromApartment()
         {
             foreach (var element in _configPanelViewModel.SelectedApartmentElements.ToArray())
                 _configPanelViewModel.ApartmentElements.Remove(element);
-        }
-        public void RemoveFromCircuit()
+        }*/
+        /*public void RemoveFromCircuit()
         {
             var selectedPanelCircuit = _configPanelViewModel.SelectedPanelCircuits.SingleOrDefault();
             if (string.IsNullOrEmpty(selectedPanelCircuit.Key)) return;
@@ -33,8 +33,8 @@ namespace ApartmentPanel.Infrastructure.Repositories
                 selectedPanelCircuit.Value.Remove(selectedCircuitElement);
 
             _circuitService.AddCurrentCircuitElements(selectedPanelCircuit.Value);
-        }
-        public void AddToCircuit()
+        }*/
+        /*public void AddToCircuit()
         {
             var selectedPanelCircuit = _configPanelViewModel.SelectedPanelCircuits.SingleOrDefault();
 
@@ -56,6 +56,6 @@ namespace ApartmentPanel.Infrastructure.Repositories
 
                 _circuitService.AddCurrentCircuitElements(_configPanelViewModel.PanelCircuits[selectedPanelCircuit.Key]);
             }
-        }
+        }*/
     }
 }

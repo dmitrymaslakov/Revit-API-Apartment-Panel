@@ -1,10 +1,7 @@
-﻿using Autodesk.Revit.UI;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
 using ApartmentPanel.Utility;
-using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
-using ApartmentPanel.Infrastructure;
 using ApartmentPanel.Presentation.Commands;
 using ApartmentPanel.Core.Models;
 using ApartmentPanel.Core.Services.Interfaces;
@@ -18,32 +15,22 @@ namespace ApartmentPanel.Presentation.ViewModel
         Ok, Apply, Cancel
     }
 
-    public class MainViewModel : ViewModelBase, IMainViewModel//, IViewPropsForCommandsCreater, 
+    public class MainViewModel : ViewModelBase, IMainViewModel 
     {
         private readonly ViewCommandsCreater _viewCommandsCreater;
-        private readonly IElementService _apartmentElementService;
-        private readonly IPanelService _apartmentPanelService;
 
-        public MainViewModel(IElementService apartmentElementService,
-            IPanelService apartmentPanelService,
-            IConfigPanelViewModel configPanelVM)
-        /*public ViewModel(ExternalEvent exEvent, RequestHandler handler)
-            : base(exEvent, handler)*/
+        public MainViewModel()
         {
-            _apartmentElementService = apartmentElementService;
-
-            _apartmentPanelService = apartmentPanelService;
-
-            _viewCommandsCreater = new ViewCommandsCreater(this, _apartmentElementService, _apartmentPanelService);
+            
+        }
+        public MainViewModel(IElementService elementService,
+            IConfigPanelViewModel configPanelVM) : base(elementService)
+        {
+            _viewCommandsCreater = new ViewCommandsCreater(this, ElementService);
 
             ConfigPanelVM = configPanelVM;
 
             ConfigPanelVM.OkApplyCancelActions = ExecuteOkApplyCancelActions;
-            //ConfigPanelVM = new ConfigPanelVM(exEvent, handler)
-            /*ConfigPanelVM = new ConfigPanelViewModel()
-            {
-                OkApplyCancelActions = ExecuteOkApplyCancelActions
-            };*/
 
             ConfigPanelVM.LoadLatestConfigCommand?.Execute(null);
 

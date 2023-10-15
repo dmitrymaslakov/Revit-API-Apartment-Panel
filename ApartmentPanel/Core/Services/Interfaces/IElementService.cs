@@ -1,6 +1,7 @@
 ﻿using ApartmentPanel.Core.Models.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace ApartmentPanel.Core.Services.Interfaces
 {
@@ -8,8 +9,9 @@ namespace ApartmentPanel.Core.Services.Interfaces
     {
         void InsertToModel(Dictionary<string, string> apartmentElementDto);
         void AddToApartment(Action<IApartmentElement> addElementToApartment);
-        void AddToCircuit();
-        void RemoveFromApartment();
-        void RemoveFromCircuit();
+        JsonSerializerOptions GetSerializationOptions();
+        //void AddToCircuit();
+        //void RemoveFromApartment();
+        //void RemoveFromCircuit();
     }
 }

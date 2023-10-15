@@ -2,8 +2,8 @@
 {
     public interface IPresentationElementRepository
     {
-        void RemoveFromApartment();
-        void RemoveFromCircuit();
-        void AddToCircuit();
+        //void RemoveFromApartment();
+        //void RemoveFromCircuit();
+        //void AddToCircuit();
     }
 }

@@ -2,8 +2,8 @@
 {
     public interface IPanelService
     {
-        void RemoveCircuits();
+        /*void RemoveCircuits();
         void AddCircuit();
-        void Configure();
+        void Configure();*/
     }
 }

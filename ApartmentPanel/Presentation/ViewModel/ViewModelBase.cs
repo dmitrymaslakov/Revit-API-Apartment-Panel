@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using Autodesk.Revit.UI;
 using ApartmentPanel.Infrastructure;
+using ApartmentPanel.Core.Services.Interfaces;
 
 namespace ApartmentPanel.Presentation.ViewModel
 {
@@ -11,17 +12,20 @@ namespace ApartmentPanel.Presentation.ViewModel
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         private bool _disposed;
-        /*[JsonIgnore]
-        public ExternalEvent ExEvent { get; }
         [JsonIgnore]
-        public RequestHandler Handler { get; }*/
+        public IElementService ElementService { get; }
 
         public ViewModelBase()
+        {
+            
+        }
+        public ViewModelBase(IElementService elementService)
 
         //public ViewModelBase(ExternalEvent exEvent, RequestHandler handler)
         {
+            ElementService = elementService;
             /*ExEvent = exEvent;
-            Handler = handler;*/
+Handler = handler;*/
         }
         public event PropertyChangedEventHandler PropertyChanged;
 

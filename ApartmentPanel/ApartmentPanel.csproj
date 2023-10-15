@@ -237,6 +237,7 @@
     <Compile Include="Presentation\Commands\ViewCommandsCreater.cs" />
     <Compile Include="Presentation\DependencyInjection.cs" />
     <Compile Include="Presentation\Services\CircuitService.cs" />
+    <Compile Include="Core\Services\TypeMappingConverter.cs" />
     <Compile Include="Presentation\ViewModel\ComponentsVM\ConfigPanelViewModel.cs" />
     <Compile Include="Presentation\ViewModel\Interfaces\IConfigPanelPropsForCommandsCreater.cs" />
     <Compile Include="Presentation\ViewModel\Interfaces\IConfigPanelViewModel.cs" />

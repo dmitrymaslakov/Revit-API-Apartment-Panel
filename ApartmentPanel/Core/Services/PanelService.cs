@@ -10,7 +10,7 @@ namespace ApartmentPanel.Core.Services
         public PanelService(IPresentationPanelRepository panelRepository) =>
             _panelRepository = panelRepository;
 
-        public void AddCircuit()
+        /*public void AddCircuit()
         {
             _panelRepository.AddCircuitToPanel();
         }
@@ -20,6 +20,6 @@ namespace ApartmentPanel.Core.Services
         public void RemoveCircuits()
         {
             _panelRepository.RemoveCircuitsFromPanel();
-        }
+        }*/
     }
 }

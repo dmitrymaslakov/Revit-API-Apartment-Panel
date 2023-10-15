@@ -14,18 +14,18 @@ namespace ApartmentPanel.Infrastructure.Repositories
         public PresentationPanelRepository(IConfigPanelViewModel configPanelViewModel) 
             => _configPanelViewModel = configPanelViewModel;
 
-        public void AddCircuitToPanel()
+        /*public void AddCircuitToPanel()
         {
             _configPanelViewModel.PanelCircuits.Add(_configPanelViewModel.NewCircuit,
                     new ObservableCollection<IApartmentElement>());
-        }
+        }*/
 
-        public void Configure() => new ConfigPanel(_configPanelViewModel).Show();
+        //public void Configure() => new ConfigPanel(_configPanelViewModel).Show();
 
-        public void RemoveCircuitsFromPanel()
+        /*public void RemoveCircuitsFromPanel()
         {
             foreach (var circuit in _configPanelViewModel.SelectedPanelCircuits.ToArray())
                 _configPanelViewModel.PanelCircuits.Remove(circuit.Key);
-        }
+        }*/
     }
 }

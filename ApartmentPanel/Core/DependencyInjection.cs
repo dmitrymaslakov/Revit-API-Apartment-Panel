@@ -15,7 +15,7 @@ namespace ApartmentPanel.Core
             {
                 services.AddTransient<IApartmentElement, ApartmentElement>();
                 services.AddTransient<IElementService, ElementService>();
-                services.AddTransient<IPanelService, PanelService>();
+                
             });
             return hostBuilder;
         }

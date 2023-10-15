@@ -1,33 +1,23 @@
-﻿using ApartmentPanel.Core.Services;
-using ApartmentPanel.Infrastructure;
-using ApartmentPanel.Infrastructure.Repositories;
-using ApartmentPanel.Core.Services.Interfaces;
+﻿using ApartmentPanel.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
+using ApartmentPanel.Presentation.View.Components;
 
 namespace ApartmentPanel.Presentation.Commands
 {
     public class ViewCommandsCreater : BaseCommandsCreater
     {
-        //private readonly IViewPropsForCommandsCreater _viewProperties;
         private readonly IMainViewModel _viewProperties;
 
-        //public ViewCommandsCreater(IViewPropsForCommandsCreater viewProperties, IApartmentElementService apartmentElementService)
         public ViewCommandsCreater(IMainViewModel viewProperties,
-            IElementService apartmentElementService,
-            IPanelService apartmentPanelService) : base(apartmentElementService, apartmentPanelService)
-        {
+            IElementService apartmentElementService) : base(apartmentElementService) => 
             _viewProperties = viewProperties;
-        }
 
         public ICommand CreateConfigureCommand() => new RelayCommand(o =>
         {
-            /*_viewProperties.Handler.Props = _viewProperties.ConfigPanelVM;
-            _viewProperties.Handler.Request.Make(RequestId.Configure);
-            _viewProperties.ExEvent.Raise();*/
-            _panelService.Configure();
+            new ConfigPanel(_viewProperties.ConfigPanelVM).Show();
         });
 
         public ICommand CreateInsertElementCommand() => new RelayCommand(o =>

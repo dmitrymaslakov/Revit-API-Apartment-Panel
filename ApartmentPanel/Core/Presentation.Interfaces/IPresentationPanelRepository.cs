@@ -2,8 +2,8 @@
 {
     public interface IPresentationPanelRepository
     {
-        void RemoveCircuitsFromPanel();
-        void AddCircuitToPanel();
-        void Configure();
+        //void RemoveCircuitsFromPanel();
+        //void AddCircuitToPanel();
+        //void Configure();
     }
 }
