@@ -15,20 +15,24 @@ using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Presentation.Services;
+using System.Runtime.InteropServices.ComTypes;
+using ApartmentPanel.Utility;
+using System.Configuration;
+using ApartmentPanel.Presentation.View.Components;
 
 namespace ApartmentPanel.Presentation.Commands
 {
     public class ConfigPanelCommandsCreater : BaseCommandsCreater
     {
         private readonly IConfigPanelViewModel _configPanelProperties;
-        private readonly Action<IApartmentElement> _addElementToApartment;
+        private readonly Action<List<(string name, string category)>> _showListElements;
         private readonly CircuitService _circuitService;
 
         public ConfigPanelCommandsCreater(IConfigPanelViewModel configPanelProps,
             IElementService elementService) : base(elementService)
         {
             _configPanelProperties = configPanelProps;
-            _addElementToApartment = newElement =>
+            /*_addElementToApartment = newElement =>
             {
                 if (!_configPanelProperties.ApartmentElements.Select(ae => ae.Name).Contains(newElement.Name))
                 {
@@ -42,13 +46,20 @@ namespace ApartmentPanel.Presentation.Commands
                     newApartmentElement.Annotation = annotation;
                     _configPanelProperties.ApartmentElements.Add(newApartmentElement);
                 }
+            };*/
+            _showListElements = props =>
+            {                
+                var listElementsVM = _configPanelProperties.ListElementsVM;
+                listElementsVM.AllElements = 
+                    new ObservableCollection<IApartmentElement>(_elementService.GetAll(props));
+                new ListElements(listElementsVM).ShowDialog();
             };
             _circuitService = new CircuitService(_configPanelProperties);
         }
 
-        public ICommand CreateAddElementToApartmentCommand() => new RelayCommand(o =>
+        public ICommand CreateShowListElementsCommand() => new RelayCommand(o =>
         {
-            _elementService.AddToApartment(_addElementToApartment);
+            _elementService.AddToApartment(_showListElements);
         });
 
         public ICommand CreateRemoveElementsFromApartmentCommand() => new RelayCommand(o =>
@@ -244,7 +255,7 @@ namespace ApartmentPanel.Presentation.Commands
         public ICommand CreateSaveLatestConfigCommand() => new RelayCommand(o =>
         {
             var editPanel = o as ConfigPanelViewModel;
-            string json = JsonSerializer.Serialize(editPanel, 
+            string json = JsonSerializer.Serialize(editPanel,
                 _elementService.GetSerializationOptions());
 
             File.WriteAllText(_configPanelProperties.LatestConfigPath, json);

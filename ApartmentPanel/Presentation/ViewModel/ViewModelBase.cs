@@ -15,18 +15,11 @@ namespace ApartmentPanel.Presentation.ViewModel
         [JsonIgnore]
         public IElementService ElementService { get; }
 
-        public ViewModelBase()
-        {
-            
-        }
-        public ViewModelBase(IElementService elementService)
+        public ViewModelBase() { }
 
-        //public ViewModelBase(ExternalEvent exEvent, RequestHandler handler)
-        {
+        public ViewModelBase(IElementService elementService) => 
             ElementService = elementService;
-            /*ExEvent = exEvent;
-Handler = handler;*/
-        }
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

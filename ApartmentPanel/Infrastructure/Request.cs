@@ -12,7 +12,8 @@ namespace ApartmentPanel.Infrastructure
         RemoveElement,
         AddCircuit,
         EditCircuit,
-        RemoveCircuit
+        RemoveCircuit,
+        GetProperties
     }
     public class Request
     {

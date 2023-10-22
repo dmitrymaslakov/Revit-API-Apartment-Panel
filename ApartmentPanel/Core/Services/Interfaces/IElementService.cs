@@ -8,10 +8,9 @@ namespace ApartmentPanel.Core.Services.Interfaces
     public interface IElementService
     {
         void InsertToModel(Dictionary<string, string> apartmentElementDto);
-        void AddToApartment(Action<IApartmentElement> addElementToApartment);
         JsonSerializerOptions GetSerializationOptions();
-        //void AddToCircuit();
-        //void RemoveFromApartment();
-        //void RemoveFromCircuit();
+        List<IApartmentElement> GetAll(List<(string name, string category)> props);
+        void AddToApartment(Action<List<(string name, string category)>> addElementToApartment);
+        //void AddToApartment(Action<IApartmentElement> addElementToApartment);
     }
 }

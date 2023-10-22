@@ -20,9 +20,11 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 
         public ConfigPanelViewModel() { }
 
-        public ConfigPanelViewModel(IElementService elementService) : base(elementService)
+        public ConfigPanelViewModel(IElementService elementService, 
+            IListElementsViewModel listElementsVM) : base(elementService)
         {
             _commandCreater = new ConfigPanelCommandsCreater(this, ElementService);
+            ListElementsVM = listElementsVM;
             ApartmentElements = new ObservableCollection<IApartmentElement>();
             PanelCircuits = new ObservableDictionary<string, ObservableCollection<IApartmentElement>>();
             CircuitElements = new ObservableCollection<IApartmentElement>();
@@ -32,7 +34,7 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             SelectedCircuitElements = new ObservableCollection<IApartmentElement>();
             LatestConfigPath = FileUtility.GetAssemblyPath() + "\\LatestConfig.json";
             IsCancelEnabled = false;
-            AddApartmentElementCommand = _commandCreater.CreateAddElementToApartmentCommand();
+            ShowListElementsCommand = _commandCreater.CreateShowListElementsCommand();
             RemoveApartmentElementsCommand = _commandCreater.CreateRemoveElementsFromApartmentCommand();
             AddPanelCircuitCommand = _commandCreater.CreateAddCircuitToPanelCommand();
             RemovePanelCircuitsCommand = _commandCreater.CreateRemoveCircuitsFromPanelCommand();
@@ -49,6 +51,8 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             LoadLatestConfigCommand = _commandCreater.CreateLoadLatestConfigCommand();
             SaveLatestConfigCommand = _commandCreater.CreateSaveLatestConfigCommand();
         }
+
+        public IListElementsViewModel ListElementsVM { get; set; }
 
         public string LatestConfigPath { get; }
 
@@ -119,7 +123,7 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         public bool IsCancelEnabled { get => _isCancelEnabled; set => Set(ref _isCancelEnabled, value); }
 
         [JsonIgnore]
-        public ICommand AddApartmentElementCommand { get; set; }
+        public ICommand ShowListElementsCommand { get; set; }
         [JsonIgnore]
         public ICommand RemoveApartmentElementsCommand { get; set; }
         [JsonIgnore]

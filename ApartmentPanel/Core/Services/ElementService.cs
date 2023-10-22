@@ -4,21 +4,46 @@ using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 
 namespace ApartmentPanel.Core.Services
 {
     public class ElementService : IElementService
     {
-        private readonly IInfrastructureElementRepository _infrApartmentElementRepo;
+        private readonly IInfrastructureElementRepository _elementRepo;
 
-        public ElementService(IInfrastructureElementRepository infrApartmentElementRepo)
+        public ElementService(IInfrastructureElementRepository elementRepo)
         {
-            _infrApartmentElementRepo = infrApartmentElementRepo;
+            _elementRepo = elementRepo;
         }
 
-        public void AddToApartment(Action<IApartmentElement> addElementToApartment) => 
-            _infrApartmentElementRepo.AddToApartment(addElementToApartment);
+        /*public List<IApartmentElement> GetAllByCategory(List<string> categories)
+        {
+            List<(string name, string category)> props = 
+                _elementRepo.GetPropertiesByCategory(categories);
+
+            return props
+                .Select(p => new ApartmentElement { Name = p.name, Category = p.category})
+                .Cast<IApartmentElement>()
+                .ToList();
+        }*/
+
+        public List<IApartmentElement> GetAll(List<(string name, string category)> props)
+        {
+            return props
+                .Select(p => new ApartmentElement { Name = p.name, Category = p.category })
+                .Cast<IApartmentElement>()
+                .ToList();
+        }
+
+
+        public void AddToApartment(Action<List<(string name, string category)>> addElementsToApartment)
+        {
+            _elementRepo.AddToApartment(addElementsToApartment);
+        }
+        /*public void AddToApartment(Action<IApartmentElement> addElementToApartment) => 
+            _elementRepo.AddToApartment(addElementToApartment);*/
 
         public JsonSerializerOptions GetSerializationOptions()
         {
@@ -34,6 +59,6 @@ namespace ApartmentPanel.Core.Services
         }
 
         public void InsertToModel(Dictionary<string, string> apartmentElementDto) => 
-            _infrApartmentElementRepo.InsertToModel(apartmentElementDto);
+            _elementRepo.InsertToModel(apartmentElementDto);
     }
 }

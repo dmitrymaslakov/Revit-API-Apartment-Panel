@@ -4,15 +4,44 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ApartmentPanel.Presentation.View.Components"
+             xmlns:vm="clr-namespace:ApartmentPanel.Presentation.ViewModel.ComponentsVM"
+             d:DataContext="{d:DesignInstance vm:ListElementsViewModel, IsDesignTimeCreatable=True}"
              mc:Ignorable="d" 
              x:Name="ListItems"
              d:DesignHeight="450" d:DesignWidth="300" Width="300">
+    <Window.Resources>
+        <CollectionViewSource x:Key="GroupedItems" Source="{Binding AllElements}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Category" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TreeView ItemsSource="{Binding AllElements, ElementName=ListItems}" 
+        <TreeView ItemsSource="{Binding Source={StaticResource GroupedItems}}" 
+                  Grid.Row="0" 
+                  x:Name="elementsTree"
+                  >
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Items}">
+                    <TextBlock Text="{Binding Name}" />
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+
+            <TreeView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontWeight="Bold" Text="{Binding Name}" />
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </TreeView.GroupStyle>
+        </TreeView>
+        <!--<TreeView ItemsSource="{Binding AllElements, ElementName=ListItems}" 
                   Grid.Row="0"
                   x:Name="elementsTree"                  
                   SelectedItemChanged="TreeView_SelectedItemChanged">
@@ -26,8 +55,10 @@
                     </HierarchicalDataTemplate.ItemTemplate>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
-        </TreeView>
-        <Button Content="Add" Grid.Row="1" Click="AddElementToApartment_Click"
-                Width="30" Margin="100 0 0 0"/>
+        </TreeView>-->
+        <Button Content="Add" Grid.Row="1" 
+                Width="30" Margin="100 0 0 0"
+                Command="{Binding AddElementToApartment}"/>
+                <!--Click="AddElementToApartment_Click"-->
     </Grid>
 </Window>

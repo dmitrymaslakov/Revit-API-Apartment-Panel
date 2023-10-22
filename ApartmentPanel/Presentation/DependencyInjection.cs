@@ -13,6 +13,7 @@ namespace ApartmentPanel.Presentation
         {
             hostBuilder.ConfigureServices(services => 
             {
+                services.AddSingleton<IListElementsViewModel, ListElementsViewModel>();
                 services.AddSingleton<IConfigPanelViewModel, ConfigPanelViewModel>();
                 services.AddSingleton<IMainViewModel, MainViewModel>();
                 services.AddSingleton(provider => new MainView(provider.GetService<IMainViewModel>()));

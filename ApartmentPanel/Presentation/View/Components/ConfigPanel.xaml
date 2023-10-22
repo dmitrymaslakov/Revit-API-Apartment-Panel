@@ -38,7 +38,7 @@
                 Grid.Column="0"
                 Header="Apartment elements"
                 Elements="{Binding ApartmentElements}"
-                AddElementCommand="{Binding AddApartmentElementCommand}"
+                AddElementCommand="{Binding ShowListElementsCommand}"
                 RemoveElementCommand="{Binding RemoveApartmentElementsCommand}"
                 EditBtnVisibility="{x:Static Visibility.Collapsed}"
                 SelectedElementsCommand="{Binding SelectedApartmentElementsCommand}"

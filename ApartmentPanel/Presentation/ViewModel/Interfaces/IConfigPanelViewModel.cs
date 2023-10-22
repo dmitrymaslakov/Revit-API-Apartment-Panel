@@ -22,7 +22,7 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         ObservableCollection<IApartmentElement> SelectedApartmentElements { get; set; }
         ObservableCollection<IApartmentElement> SelectedCircuitElements { get; set; }
         ObservableCollection<KeyValuePair<string, ObservableCollection<IApartmentElement>>> SelectedPanelCircuits { get; set; }
-        ICommand AddApartmentElementCommand { get; set; }
+        ICommand ShowListElementsCommand { get; set; }
         ICommand AddElementToCircuitCommand { get; set; }
         ICommand AddPanelCircuitCommand { get; set; }
         ICommand ApplyCommand { get; set; }
@@ -38,6 +38,7 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         ICommand SelectPanelCircuitCommand { get; set; }
         ICommand SetAnnotationPreviewCommand { get; set; }
         ICommand SetAnnotationToElementCommand { get; set; }
+        IListElementsViewModel ListElementsVM { get; set; }
 
         ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration);
     }

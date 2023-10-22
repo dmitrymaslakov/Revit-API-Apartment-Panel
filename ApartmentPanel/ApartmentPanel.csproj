@@ -239,6 +239,8 @@
     <Compile Include="Presentation\Services\CircuitService.cs" />
     <Compile Include="Core\Services\TypeMappingConverter.cs" />
     <Compile Include="Presentation\ViewModel\ComponentsVM\ConfigPanelViewModel.cs" />
+    <Compile Include="Presentation\ViewModel\Interfaces\IListElementsViewModel.cs" />
+    <Compile Include="Presentation\ViewModel\ComponentsVM\ListElementsViewModel.cs" />
     <Compile Include="Presentation\ViewModel\Interfaces\IConfigPanelPropsForCommandsCreater.cs" />
     <Compile Include="Presentation\ViewModel\Interfaces\IConfigPanelViewModel.cs" />
     <Compile Include="Presentation\ViewModel\Interfaces\IMainViewModel.cs" />
