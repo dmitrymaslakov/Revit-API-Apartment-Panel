@@ -26,13 +26,14 @@ namespace ApartmentPanel.Presentation.Commands
     {
         private readonly IConfigPanelViewModel _configPanelProperties;
         private readonly Action<List<(string name, string category)>> _showListElements;
+        private readonly Action<IApartmentElement> _addElementToApartment;
         private readonly CircuitService _circuitService;
 
         public ConfigPanelCommandsCreater(IConfigPanelViewModel configPanelProps,
             IElementService elementService) : base(elementService)
         {
             _configPanelProperties = configPanelProps;
-            /*_addElementToApartment = newElement =>
+            _addElementToApartment = newElement =>
             {
                 if (!_configPanelProperties.ApartmentElements.Select(ae => ae.Name).Contains(newElement.Name))
                 {
@@ -46,10 +47,11 @@ namespace ApartmentPanel.Presentation.Commands
                     newApartmentElement.Annotation = annotation;
                     _configPanelProperties.ApartmentElements.Add(newApartmentElement);
                 }
-            };*/
+            };
             _showListElements = props =>
             {                
                 var listElementsVM = _configPanelProperties.ListElementsVM;
+                listElementsVM.AddElementToApartment = _addElementToApartment;
                 listElementsVM.AllElements = 
                     new ObservableCollection<IApartmentElement>(_elementService.GetAll(props));
                 new ListElements(listElementsVM).ShowDialog();

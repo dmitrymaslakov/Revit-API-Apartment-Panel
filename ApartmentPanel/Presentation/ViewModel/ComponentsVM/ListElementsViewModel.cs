@@ -1,15 +1,10 @@
 ﻿using ApartmentPanel.Core.Models.Interfaces;
-using ApartmentPanel.Core.Services;
 using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Presentation.Commands;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
-using ApartmentPanel.Utility;
+using Autodesk.Revit.UI;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
@@ -20,8 +15,21 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 
         public ListElementsViewModel(IElementService elementService) : base(elementService)
         {
-            AddElementToApartment = new RelayCommand(selectedElement => )
+            AddToApartmentCommand = new RelayCommand(selectedTreeElement =>
+            {
+                try
+                {
+                    if (selectedTreeElement is IApartmentElement selectedElement)
+                        AddElementToApartment(selectedElement);
+                }
+                catch (Exception ex)
+                {
+                    TaskDialog.Show("exeption", ex.Message);
+                }
+            });
         }
+
+        public Action<IApartmentElement> AddElementToApartment { get; set; }
 
         private ObservableCollection<IApartmentElement> _allElements;
 
@@ -31,15 +39,6 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             set => Set(ref _allElements, value);
         }
 
-        private IApartmentElement _selectedElement;
-
-        public IApartmentElement SelectedElement
-        {
-            get => _selectedElement;
-            set => Set(ref _selectedElement, value);
-        }
-
-        public ICommand AddElementToApartment { get; set; }
-
+        public ICommand AddToApartmentCommand { get; set; }
     }
 }

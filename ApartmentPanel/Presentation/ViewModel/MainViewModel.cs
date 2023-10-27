@@ -7,6 +7,7 @@ using ApartmentPanel.Core.Models;
 using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Core.Models.Interfaces;
+using System.Windows;
 
 namespace ApartmentPanel.Presentation.ViewModel
 {
@@ -122,5 +123,6 @@ namespace ApartmentPanel.Presentation.ViewModel
             }
             return result;
         }
+
     }
 }
