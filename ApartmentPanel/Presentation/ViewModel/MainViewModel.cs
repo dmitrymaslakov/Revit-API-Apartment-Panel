@@ -8,6 +8,7 @@ using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Core.Models.Interfaces;
 using System.Windows;
+using ApartmentPanel.Presentation.Services;
 
 namespace ApartmentPanel.Presentation.ViewModel
 {
@@ -19,17 +20,20 @@ namespace ApartmentPanel.Presentation.ViewModel
     public class MainViewModel : ViewModelBase, IMainViewModel 
     {
         private readonly ViewCommandsCreater _viewCommandsCreater;
+        //private readonly ModelAnalizing _modelAnalizing;
 
         public MainViewModel()
         {
             
         }
         public MainViewModel(IElementService elementService,
-            IConfigPanelViewModel configPanelVM) : base(elementService)
+            IConfigPanelViewModel configPanelVM, ModelAnalizing modelAnalizing) : base(elementService)
         {
             _viewCommandsCreater = new ViewCommandsCreater(this, ElementService);
 
             ConfigPanelVM = configPanelVM;
+
+            //_modelAnalizing = modelAnalizing;
 
             ConfigPanelVM.OkApplyCancelActions = ExecuteOkApplyCancelActions;
 
@@ -43,7 +47,12 @@ namespace ApartmentPanel.Presentation.ViewModel
 
             SetCurrentSuffixCommand = _viewCommandsCreater.CreateSetCurrentSuffixCommand();
 
-            Height = 40.0;
+            HeightTypeOfUK = 40.0;
+
+            AnalizeCommand = new RelayCommand(o =>
+            {
+                modelAnalizing.AnalizeElement();
+            });
         }
 
         public IConfigPanelViewModel ConfigPanelVM { get; set; }
@@ -64,12 +73,54 @@ namespace ApartmentPanel.Presentation.ViewModel
             set => Set(ref _currentSuffix, value);
         }
 
-        private double _height;
+        #region Heights
+        private double _heightTypeOfUK;
 
-        public double Height
+        public double HeightTypeOfUK
         {
-            get => _height;
-            set => Set(ref _height, value);
+            get => _heightTypeOfUK;
+            set => Set(ref _heightTypeOfUK, value);
+        }
+
+        private double _heightTypeOfOK;
+
+        public double HeightTypeOfOK
+        {
+            get => _heightTypeOfOK;
+            set => Set(ref _heightTypeOfOK, value);
+        }
+
+        private double _heightTypeOfCenter;
+
+        public double HeightTypeOfCenter
+        {
+            get => _heightTypeOfCenter;
+            set => Set(ref _heightTypeOfCenter, value);
+        }
+        #endregion
+
+        private ObservableCollection<double> _defaultHeightsTypeOfUK;
+
+        public ObservableCollection<double> DefaultHeightsTypeOfUK
+        {
+            get => _defaultHeightsTypeOfUK;
+            set => Set(ref _defaultHeightsTypeOfUK, value);
+        }
+
+        private ObservableCollection<double> _defaultHeightsTypeOfOK;
+
+        public ObservableCollection<double> DefaultHeightsTypeOfOK
+        {
+            get => _defaultHeightsTypeOfOK;
+            set => Set(ref _defaultHeightsTypeOfOK, value);
+        }
+
+        private ObservableCollection<double> _defaultHeightsTypeOfCenter;
+
+        public ObservableCollection<double> DefaultHeightsTypeOfCenter
+        {
+            get => _defaultHeightsTypeOfCenter;
+            set => Set(ref _defaultHeightsTypeOfCenter, value);
         }
 
         private string _status;
@@ -85,6 +136,8 @@ namespace ApartmentPanel.Presentation.ViewModel
         public ICommand InsertElementCommand { get; set; }
 
         public ICommand SetCurrentSuffixCommand { get; set; }
+
+        public ICommand AnalizeCommand { get; set; }
 
         /*public ICommand SaveLatestConfigCommand { get; set; }
 

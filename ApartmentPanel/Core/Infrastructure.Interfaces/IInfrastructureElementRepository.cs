@@ -7,6 +7,8 @@ namespace ApartmentPanel.Core.Infrastructure.Interfaces
     public interface IInfrastructureElementRepository
     {
         void AddToApartment(Action<List<(string name, string category)>> addElementsToApartment);
+        void Analize();
+
         //List<(string name, string category)> GetPropertiesByCategory(List<string> categories);
         void InsertToModel(Dictionary<string, string> elementDto);
     }

@@ -9,7 +9,7 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         ObservableCollection<Circuit> Circuits { get; set; }
         IConfigPanelViewModel ConfigPanelVM { get; set; }
         string CurrentSuffix { get; set; }
-        double Height { get; set; }
+        double HeightTypeOfUK { get; set; }
         string Status { get; set; }
         ICommand ConfigureCommand { get; set; }
         ICommand InsertElementCommand { get; set; }

@@ -36,7 +36,7 @@ namespace ApartmentPanel.Presentation.Commands
                     { nameof(elementName), elementName },
                     { nameof(elementCategory), elementCategory },
                     { "lampSuffix", _viewProperties.CurrentSuffix },
-                    { "height", _viewProperties.Height.ToString() },
+                    { "height", _viewProperties.HeightTypeOfUK.ToString() },
                     { nameof(insertingMode), insertingMode },
                 };
             _elementService.InsertToModel(props);

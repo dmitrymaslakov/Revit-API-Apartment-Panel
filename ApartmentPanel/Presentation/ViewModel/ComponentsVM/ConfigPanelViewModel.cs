@@ -1,5 +1,4 @@
-﻿using ApartmentPanel.Core.Services.AnnotationService;
-using ApartmentPanel.Utility;
+﻿using ApartmentPanel.Utility;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -52,6 +51,7 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             SaveLatestConfigCommand = _commandCreater.CreateSaveLatestConfigCommand();
         }
 
+        [JsonIgnore]
         public IListElementsViewModel ListElementsVM { get; set; }
 
         public string LatestConfigPath { get; }
@@ -164,11 +164,12 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 
             foreach (var apartmentElement in ApartmentElements)
             {
-                var annService = new AnnotationService(
+                /*var annService = new AnnotationService(
                     new FileAnnotationCommunicatorFactory(apartmentElement.Name));
 
                 apartmentElement.Annotation = annService.IsAnnotationExists()
-                    ? annService.Get() : null;
+                    ? annService.Get() : null;*/
+                apartmentElement.Annotation = ElementService.GetAnnotationFor(apartmentElement.Name);
             };
 
             for (int i = 0; i < PanelCircuits.Count; i++)

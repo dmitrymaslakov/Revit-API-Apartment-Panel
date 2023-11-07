@@ -1,23 +1,14 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
-using ApartmentPanel.Core.Services.Interfaces;
 
-namespace ApartmentPanel.Presentation.ViewModel
+namespace WpfTest.ViewModels
 {
-    public delegate TViewModel CreateViewModel<TViewModel>() where TViewModel : ViewModelBase;
-
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         private bool _disposed;
-        [JsonIgnore]
-        public IElementService ElementService { get; }
 
         public ViewModelBase() { }
 
-        public ViewModelBase(IElementService elementService) => 
-            ElementService = elementService;
-        
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

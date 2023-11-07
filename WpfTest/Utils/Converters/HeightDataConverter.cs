@@ -2,13 +2,14 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace ApartmentPanel.Utility.Converters
+namespace WpfTest.Utils.Converters
 {
-    public class ElementDataConverter : IMultiValueConverter
+    public class HeightDataConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return ((string)values[0], (string)values[1], (string)values[2]);
+            return (values[0], values[1]);
+            //return values[0];
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

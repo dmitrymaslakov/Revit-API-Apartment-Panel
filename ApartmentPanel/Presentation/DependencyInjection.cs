@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using ApartmentPanel.Presentation.View;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
+using ApartmentPanel.Presentation.Services;
 
 namespace ApartmentPanel.Presentation
 {
@@ -17,6 +18,7 @@ namespace ApartmentPanel.Presentation
                 services.AddSingleton<IConfigPanelViewModel, ConfigPanelViewModel>();
                 services.AddSingleton<IMainViewModel, MainViewModel>();
                 services.AddSingleton(provider => new MainView(provider.GetService<IMainViewModel>()));
+                services.AddTransient<ModelAnalizing>();
                 /*services.AddTransient<IPresentationElementRepository, PresentationElementRepository>();
                 services.AddTransient<IPresentationPanelRepository, PresentationPanelRepository>();*/
             });

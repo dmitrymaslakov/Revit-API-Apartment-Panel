@@ -60,11 +60,7 @@
         <Button Content="Add" Grid.Row="1" 
                 Width="30" Margin="100 0 0 0"                
                 Command="{Binding AddToApartmentCommand}"
-                CommandParameter="{Binding SelectedItem, ElementName=elementsTree}"
-                >
-            <i:Interaction.Behaviors>
-                <i:MouseDragElementBehavior/>
-            </i:Interaction.Behaviors>
+                CommandParameter="{Binding SelectedItem, ElementName=elementsTree}">
         </Button>
     </Grid>
 </Window>

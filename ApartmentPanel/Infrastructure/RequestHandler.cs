@@ -4,12 +4,7 @@ using Autodesk.Revit.UI.Selection;
 using System;
 using System.Collections.Generic;
 using ApartmentPanel.Utility;
-using ApartmentPanel.Presentation.View.Components;
 using System.Linq;
-using System.Collections.ObjectModel;
-using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
-using ApartmentPanel.Core.Models;
-using ApartmentPanel.Core.Models.Interfaces;
 
 namespace ApartmentPanel.Infrastructure
 {
@@ -36,6 +31,7 @@ namespace ApartmentPanel.Infrastructure
                 {
                     case RequestId.None:
                         {
+                            AnalizeElement();
                             return;
                         }
                     case RequestId.Configure:
@@ -282,6 +278,30 @@ namespace ApartmentPanel.Infrastructure
                 throw new Exception(message);
             }
             return collection;
+        }
+
+        private void AnalizeElement()
+        {
+            var selectedElementId = Selection.GetElementIds().FirstOrDefault();
+            if (selectedElementId == null)
+            {
+                // No element is selected
+                return;
+            }
+
+            Element selectedElement = Document.GetElement(selectedElementId);
+            FamilyInstance familyInstance = selectedElement as FamilyInstance;
+            var lp = familyInstance.Location as LocationPoint;
+            var pointFeets = lp.Point;
+            var zCm = UnitUtils.ConvertFromInternalUnits(pointFeets.Z,
+                Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+            var bb = familyInstance.get_BoundingBox(null);
+            var pointMax = bb.Max;
+            var pointMin = bb.Min;
+            var zMaxCm = UnitUtils.ConvertFromInternalUnits(pointMax.Z,
+                Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+            var zMinCm = UnitUtils.ConvertFromInternalUnits(pointMin.Z,
+                Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
         }
     }
 

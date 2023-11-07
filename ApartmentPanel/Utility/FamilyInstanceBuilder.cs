@@ -131,7 +131,7 @@ namespace ApartmentPanel.Utility
         }
         private ElementId GetViewLevel()
         {
-            Autodesk.Revit.DB.View active = _document.ActiveView;
+            View active = _document.ActiveView;
             ElementId levelId = null;
             Parameter level = active.LookupParameter("Associated Level");
             if (level == null)

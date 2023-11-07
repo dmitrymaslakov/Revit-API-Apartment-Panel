@@ -5,9 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using ApartmentPanel.Core.Services.AnnotationService;
 using ApartmentPanel.Presentation.ViewModel;
 using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
 using ApartmentPanel.Core.Models;
@@ -15,9 +13,6 @@ using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Presentation.Services;
-using System.Runtime.InteropServices.ComTypes;
-using ApartmentPanel.Utility;
-using System.Configuration;
 using ApartmentPanel.Presentation.View.Components;
 
 namespace ApartmentPanel.Presentation.Commands
@@ -37,14 +32,15 @@ namespace ApartmentPanel.Presentation.Commands
             {
                 if (!_configPanelProperties.ApartmentElements.Select(ae => ae.Name).Contains(newElement.Name))
                 {
-                    var annotationService = new AnnotationService(
+                    /*var annotationService = new AnnotationService(
                         new FileAnnotationCommunicatorFactory(newElement.Name));
 
                     ImageSource annotation = annotationService.IsAnnotationExists()
                         ? annotationService.Get() : null;
 
                     IApartmentElement newApartmentElement = newElement.Clone();
-                    newApartmentElement.Annotation = annotation;
+                    newApartmentElement.Annotation = annotation;*/
+                    IApartmentElement newApartmentElement = elementService.CloneFrom(newElement);
                     _configPanelProperties.ApartmentElements.Add(newApartmentElement);
                 }
             };
@@ -223,11 +219,12 @@ namespace ApartmentPanel.Presentation.Commands
                 IApartmentElement apartmentElement =
                     _configPanelProperties.SelectedApartmentElements.FirstOrDefault();
 
-                var annotationService = new AnnotationService(
+                _elementService.SetAnnotationTo(apartmentElement, _configPanelProperties.AnnotationPreview);
+                /*var annotationService = new AnnotationService(
                     new FileAnnotationCommunicatorFactory(apartmentElement.Name));
 
                 apartmentElement.Annotation =
-                    annotationService.Save(_configPanelProperties.AnnotationPreview);
+                    annotationService.Save(_configPanelProperties.AnnotationPreview);*/
             }
         });
 

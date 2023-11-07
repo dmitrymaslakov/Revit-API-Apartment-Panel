@@ -127,7 +127,8 @@ namespace ApartmentPanel
             return Host.CreateDefaultBuilder(args)
                 .AddDomainServices()
                 .AddInfrastructureServices()
-                .AddPresentationServices();
+                .AddPresentationServices()
+                .AddAnnotationService();
         }
     }
 
