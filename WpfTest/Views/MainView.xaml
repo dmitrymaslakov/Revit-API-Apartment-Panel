@@ -17,54 +17,60 @@
         <GroupBox Grid.Row="3" Header="Height">
             <UniformGrid Columns="3">
                 <RadioButton GroupName="TypeOfHeight"
-                             Command="{Binding SetHeightCommand}"
-                             CommandParameter="{Binding ElementName=listHeightsUK, Path=SelectedItem}">
-                    <!--<RadioButton.CommandParameter>
+                             Command="{Binding SetHeightCommand}">
+                    <RadioButton.CommandParameter>
                         <MultiBinding Converter="{StaticResource heightDataConverter}">
                             <Binding Path="Text" ElementName="heightTypeOfUK"/>
                             <Binding Path="SelectedItem" ElementName="listHeightsUK"/>
                         </MultiBinding>
-                    </RadioButton.CommandParameter>-->
+                    </RadioButton.CommandParameter>
                     <StackPanel>
                         <TextBlock x:Name="heightTypeOfUK" Text="UK"/>
                         <ListView x:Name="listHeightsUK" ItemsSource="{Binding ListHeightsUK}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <RadioButton GroupName="UK" Content="{Binding}"/>
+                                    <TextBlock Text="{Binding}"/>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                        <TextBox/>
                     </StackPanel>
                 </RadioButton>
-                <RadioButton GroupName="TypeOfHeight">
+                <RadioButton GroupName="TypeOfHeight" 
+                             Command="{Binding SetHeightCommand}">
+                    <RadioButton.CommandParameter>
+                        <MultiBinding Converter="{StaticResource heightDataConverter}">
+                            <Binding Path="Text" ElementName="heightTypeOfOK"/>
+                            <Binding Path="SelectedItem" ElementName="listHeightsOK"/>
+                        </MultiBinding>
+                    </RadioButton.CommandParameter>
                     <StackPanel>
-                        <TextBlock Text="OK"/>
-                        <ListView ItemsSource="{Binding ListHeightsOK}">
+                        <TextBlock x:Name="heightTypeOfOK" Text="OK"/>
+                        <ListView x:Name="listHeightsOK" ItemsSource="{Binding ListHeightsOK}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <RadioButton GroupName="OK" Content="{Binding}"/>
+                                    <TextBlock Text="{Binding}"/>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                        <TextBox>
-                            <TextBox.InputBindings>
-                                <KeyBinding Command="{Binding }"/>
-                            </TextBox.InputBindings>
-                        </TextBox>
                     </StackPanel>
                 </RadioButton>
-                <RadioButton GroupName="TypeOfHeight">
+                <RadioButton GroupName="TypeOfHeight"
+                             Command="{Binding SetHeightCommand}">
+                    <RadioButton.CommandParameter>
+                        <MultiBinding Converter="{StaticResource heightDataConverter}">
+                            <Binding Path="Text" ElementName="heightTypeOfCenter"/>
+                            <Binding Path="SelectedItem" ElementName="listHeightsCenter"/>
+                        </MultiBinding>
+                    </RadioButton.CommandParameter>
                     <StackPanel>
-                        <TextBlock Text="Center"/>
-                        <ListView ItemsSource="{Binding ListHeightsCenter}">
+                        <TextBlock x:Name="heightTypeOfCenter" Text="Center"/>
+                        <ListView x:Name="listHeightsCenter" ItemsSource="{Binding ListHeightsCenter}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <RadioButton GroupName="Center" Content="{Binding}"/>
+                                    <TextBlock Text="{Binding}"/>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                        <TextBox/>
                     </StackPanel>
                 </RadioButton>
             </UniformGrid>

@@ -8,7 +8,10 @@ namespace WpfTest.Utils.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return (values[0], values[1]);
+            var typeOfHeight = (string)values[0];
+            var defaultHeight = values[1];
+            //var customHeight = (string)values[2];
+            return (typeOfHeight, defaultHeight);
             //return values[0];
         }
 
