@@ -15,9 +15,16 @@ namespace WpfTest.ViewModels
             ListHeightsOK = new ObservableCollection<double>(HeightsList.HeightsOK);
             ListHeightsUK = new ObservableCollection<double>(HeightsList.HeightsUK);
             ListHeightsCenter = new ObservableCollection<double>(HeightsList.HeightsCenter);
+            //ElementHeight = new Height();
         }
 
-        public Height ElementHeight { get; set; }
+        private Height _elementHeight;
+
+        public Height ElementHeight
+        {
+            get => _elementHeight;
+            set => Set(ref _elementHeight, value);
+        }
 
         #region listHeights
         private ObservableCollection<double> _listHeightsOK;
@@ -50,9 +57,11 @@ namespace WpfTest.ViewModels
 
         private void OnSetHeightCommandExecuted(object o)
         {
-            /*(string typeOfHeight, double defaultHeight, double customHeight) =
-                (ValueTuple<string, double, double>)o;*/
+            (string typeOfHeight, double height) =
+                (ValueTuple<string, double>)o;
+
+            ElementHeight = new Height { TypeOf = typeOfHeight, Value = height };
         }
         #endregion
     }
-    }
+}

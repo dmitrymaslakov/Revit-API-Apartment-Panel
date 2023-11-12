@@ -5,75 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfTest"
         xmlns:vm="clr-namespace:WpfTest.ViewModels"
-        xmlns:converters="clr-namespace:WpfTest.Utils.Converters"
+        xmlns:components="clr-namespace:WpfTest.Views.Components"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainViewModel, IsDesignTimeCreatable=True}"
         Title="Testing WPF" 
         Height="450" Width="800">
-    <Window.Resources>
-        <converters:HeightDataConverter x:Key="heightDataConverter"/>
-    </Window.Resources>
     <Grid>
-        <GroupBox Grid.Row="3" Header="Height">
-            <UniformGrid Columns="3">
-                <RadioButton GroupName="TypeOfHeight"
-                             Command="{Binding SetHeightCommand}">
-                    <RadioButton.CommandParameter>
-                        <MultiBinding Converter="{StaticResource heightDataConverter}">
-                            <Binding Path="Text" ElementName="heightTypeOfUK"/>
-                            <Binding Path="SelectedItem" ElementName="listHeightsUK"/>
-                        </MultiBinding>
-                    </RadioButton.CommandParameter>
-                    <StackPanel>
-                        <TextBlock x:Name="heightTypeOfUK" Text="UK"/>
-                        <ListView x:Name="listHeightsUK" ItemsSource="{Binding ListHeightsUK}">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding}"/>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </StackPanel>
-                </RadioButton>
-                <RadioButton GroupName="TypeOfHeight" 
-                             Command="{Binding SetHeightCommand}">
-                    <RadioButton.CommandParameter>
-                        <MultiBinding Converter="{StaticResource heightDataConverter}">
-                            <Binding Path="Text" ElementName="heightTypeOfOK"/>
-                            <Binding Path="SelectedItem" ElementName="listHeightsOK"/>
-                        </MultiBinding>
-                    </RadioButton.CommandParameter>
-                    <StackPanel>
-                        <TextBlock x:Name="heightTypeOfOK" Text="OK"/>
-                        <ListView x:Name="listHeightsOK" ItemsSource="{Binding ListHeightsOK}">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding}"/>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </StackPanel>
-                </RadioButton>
-                <RadioButton GroupName="TypeOfHeight"
-                             Command="{Binding SetHeightCommand}">
-                    <RadioButton.CommandParameter>
-                        <MultiBinding Converter="{StaticResource heightDataConverter}">
-                            <Binding Path="Text" ElementName="heightTypeOfCenter"/>
-                            <Binding Path="SelectedItem" ElementName="listHeightsCenter"/>
-                        </MultiBinding>
-                    </RadioButton.CommandParameter>
-                    <StackPanel>
-                        <TextBlock x:Name="heightTypeOfCenter" Text="Center"/>
-                        <ListView x:Name="listHeightsCenter" ItemsSource="{Binding ListHeightsCenter}">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding}"/>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </StackPanel>
-                </RadioButton>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="Height">
+            <UniformGrid Columns="4">
+                <components:HeightsList 
+                    TypeOfHeight="UK" 
+                    ListHeights="{Binding ListHeightsUK}"
+                    GetHeightCommand="{Binding SetHeightCommand}"/>
+                <components:HeightsList 
+                    TypeOfHeight="OK" 
+                    ListHeights="{Binding ListHeightsOK}"
+                    GetHeightCommand="{Binding SetHeightCommand}"/>
+                <components:HeightsList 
+                    TypeOfHeight="H" 
+                    ListHeights="{Binding ListHeightsCenter}"
+                    GetHeightCommand="{Binding SetHeightCommand}"/>
             </UniformGrid>
         </GroupBox>
+        <WrapPanel Grid.Row="1">
+            <TextBlock>
+                <Run Text="Current height: " />
+                <Run Text="{Binding ElementHeight.TypeOf}" />
+                <Run Text="=" />
+                <Run Text="{Binding ElementHeight.Value}" />
+            </TextBlock>
+        </WrapPanel>
     </Grid>
 </Window>
