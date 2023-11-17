@@ -189,17 +189,23 @@ namespace ApartmentPanel.Presentation.Commands
         public ICommand CreateOkCommand() => new RelayCommand(o =>
         {
             var close = (Action)o;
-            _configPanelProperties.OkApplyCancelActions(_configPanelProperties.PanelCircuits, OkApplyCancel.Ok);
+            CreateApplyCommand()?.Execute(o);
+            /*_configPanelProperties.OkApplyCancelActions(_configPanelProperties.PanelCircuits, OkApplyCancel.Ok);
 
             if (_configPanelProperties.IsCancelEnabled)
-                _configPanelProperties.IsCancelEnabled = false;
+                _configPanelProperties.IsCancelEnabled = false;*/
 
             close();
         });
 
         public ICommand CreateApplyCommand() => new RelayCommand(o =>
         {
-            _configPanelProperties.OkApplyCancelActions(_configPanelProperties.PanelCircuits, OkApplyCancel.Apply);
+            var circuits = _configPanelProperties.PanelCircuits;
+            var heightsOk = _configPanelProperties.ListHeightsOK;
+            var heightsUk = _configPanelProperties.ListHeightsUK;
+            var heightsCenter = _configPanelProperties.ListHeightsCenter;
+
+            _configPanelProperties.OkApplyCancelActions((circuits, heightsOk, heightsUk, heightsCenter), OkApplyCancel.Apply);
 
             if (_configPanelProperties.IsCancelEnabled)
                 _configPanelProperties.IsCancelEnabled = false;
@@ -253,8 +259,8 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateSaveLatestConfigCommand() => new RelayCommand(o =>
         {
-            var editPanel = o as ConfigPanelViewModel;
-            string json = JsonSerializer.Serialize(editPanel,
+            var configPanel = o as ConfigPanelViewModel;
+            string json = JsonSerializer.Serialize(configPanel,
                 _elementService.GetSerializationOptions());
 
             File.WriteAllText(_configPanelProperties.LatestConfigPath, json);

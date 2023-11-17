@@ -21,20 +21,25 @@
         </Style>
     </Window.Resources>
     <StackPanel>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="190"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="120"/>
-                <ColumnDefinition Width="190"/>
-            </Grid.ColumnDefinitions>
-            <local:ElementsCard
+        <TabControl>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Main"/>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="190"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="190"/>
+                    </Grid.ColumnDefinitions>
+                    <local:ElementsCard
                 Grid.Column="0"
                 Header="Apartment elements"
                 Elements="{Binding ApartmentElements}"
@@ -43,18 +48,18 @@
                 EditBtnVisibility="{x:Static Visibility.Collapsed}"
                 SelectedElementsCommand="{Binding SelectedApartmentElementsCommand}"
             />
-            <StackPanel Grid.Column="1" Margin="0 20 0 0">
-                <Button Style="{StaticResource ArrowButton}"
+                    <StackPanel Grid.Column="1" Margin="0 20 0 0">
+                        <Button Style="{StaticResource ArrowButton}"
                     Command="{Binding AddElementToCircuitCommand}">
-                    <fa:ImageAwesome Icon="ArrowRight" Foreground="Green"/>
-                </Button>
-                <Button Style="{StaticResource ArrowButton}"
+                            <fa:ImageAwesome Icon="ArrowRight" Foreground="Green"/>
+                        </Button>
+                        <Button Style="{StaticResource ArrowButton}"
                     Command="{Binding RemoveElementsFromCircuitCommand}">
-                    <fa:ImageAwesome Icon="ArrowLeft" Foreground="Blue"/>
-                </Button>
-            </StackPanel>
-            <StackPanel Grid.Column="2">
-                <local:ElementsCard
+                            <fa:ImageAwesome Icon="ArrowLeft" Foreground="Blue"/>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <local:ElementsCard
                     x:Name="PanelCircuitsCard"
                     Header="Panel circuits"     
                     IsDictionaryKeys="True"
@@ -62,18 +67,17 @@
                     AddBtnVisibility="{x:Static Visibility.Collapsed}"
                     EditBtnVisibility="{x:Static Visibility.Collapsed}"
                     RemoveElementCommand="{Binding RemovePanelCircuitsCommand}"
-                    SelectedElementsCommand ="{Binding SelectPanelCircuitCommand}"
-                    />
-                <GroupBox Header="New circuit">
-                    <WrapPanel>
-                        <TextBox Text="{Binding NewCircuit}" Width="30" Margin="0 0 10 0"/>
-                        <Button Height="20" Command="{Binding AddPanelCircuitCommand}">
-                            <fa:ImageAwesome Icon="Plus" Foreground="Green"/>
-                        </Button>
-                    </WrapPanel>
-                </GroupBox>
-            </StackPanel>
-            <local:ElementsCard 
+                    SelectedElementsCommand ="{Binding SelectPanelCircuitCommand}"/>
+                        <GroupBox Header="New circuit">
+                            <WrapPanel>
+                                <TextBox Text="{Binding NewCircuit}" Width="30" Margin="0 0 10 0"/>
+                                <Button Height="20" Command="{Binding AddPanelCircuitCommand}">
+                                    <fa:ImageAwesome Icon="Plus" Foreground="Green"/>
+                                </Button>
+                            </WrapPanel>
+                        </GroupBox>
+                    </StackPanel>
+                    <local:ElementsCard 
                 Grid.Column="3"
                 Header="Circuit elements"
                 Elements="{Binding CircuitElements}"
@@ -82,28 +86,67 @@
                 RemoveBtnVisibility="{x:Static Visibility.Collapsed}"
                 SelectedElementsCommand="{Binding SelectedCircuitElementCommand}"
             />
-            <GroupBox Grid.Row="1" Header="Annotation preview">
-                <StackPanel Grid.Row="1" Grid.Column="2" Margin="0 0 35 0">
-                    <Image
+                    <GroupBox Grid.Row="1" Header="Annotation preview">
+                        <StackPanel Grid.Row="1" Grid.Column="2" Margin="0 0 35 0">
+                            <Image
                         Source="{Binding AnnotationPreview}" 
                         Margin="20 0 20 0" Width="30" Height="30">
-                        <Image.InputBindings>
-                            <KeyBinding 
+                                <Image.InputBindings>
+                                    <KeyBinding 
                                 x:Name="annotationPreview" 
                                 Command="{Binding SetAnnotationPreviewCommand}"/>
-                        </Image.InputBindings>
-                    </Image>
-                    <Button
+                                </Image.InputBindings>
+                            </Image>
+                            <Button
                         x:Name="applyToEl"
                         Content="Apply to element"
                         Height="20"
                         Command="{Binding SetAnnotationToElementCommand}"
                 />
-                </StackPanel>
-            </GroupBox>
-        </Grid>
-
-        <WrapPanel HorizontalAlignment="Right" Grid.Row="3" Grid.Column="2" Margin="0 0 50 0">
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3" Header="Height">
+                        <StackPanel>
+                            <UniformGrid Columns="3" Width="300" HorizontalAlignment="Left">
+                                <StackPanel>
+                                    <local:HeightsList
+                            TypeOfHeight="UK" 
+                            ListHeights="{Binding ListHeightsUK}"/>
+                                </StackPanel>
+                                <local:HeightsList 
+                            TypeOfHeight="OK" 
+                            ListHeights="{Binding ListHeightsOK}"/>
+                                <local:HeightsList 
+                            TypeOfHeight="H" 
+                            ListHeights="{Binding ListHeightsCenter}"/>
+                            </UniformGrid>
+                        </StackPanel>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Batch Insert"/>
+                </TabItem.Header>
+                <ListView ItemsSource="{Binding MockPanelCircuits}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Key}" Width="50"/>
+                                <ListView ItemsSource="{Binding Value}" DisplayMemberPath="Name">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                </ListView>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </TabItem>
+        </TabControl>
+        <WrapPanel HorizontalAlignment="Right" Margin="0 0 50 0">
             <Button Style="{StaticResource FinishedButton}"
                     x:Name="OkBtn"
                     Command="{Binding OkCommand}"

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:ApartmentPanel.Presentation.ViewModel"
              xmlns:converters="clr-namespace:ApartmentPanel.Utility.Converters"
+             xmlns:components="clr-namespace:ApartmentPanel.Presentation.View.Components"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:MainViewModel, IsDesignTimeCreatable=True}"
              d:DesignHeight="500" d:DesignWidth="200">
@@ -37,29 +38,9 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <!--<ListView Grid.Row="0" ItemsSource="{Binding Circuits}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Number}"
-                                   Style="{StaticResource circuitTextBlock}"/>
-                        <ListView ItemsSource="{Binding Elements}">
-                            <ListView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel/>
-                                </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Button Content="{Binding Name}"/>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>-->
-        <ListView Grid.Row="0" ItemsSource="{Binding Circuits}" x:Name="apartmentCircuits">
+        <ListView Grid.Row="0" 
+                  ItemsSource="{Binding Circuits}" 
+                  x:Name="apartmentCircuits">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -118,17 +99,34 @@
                 </TextBlock.InputBindings>
             </TextBlock>
         </WrapPanel>
-        <GroupBox Grid.Row="3" Header="Height">
-            <UniformGrid Columns="3">
-                <GroupBox Header="UK">
-                    <WrapPanel>
-                        <RadioButton GroupName="UK" Content="110" />
-                        <RadioButton GroupName="UK" Content="116" />
-                        <TextBox Width="40"/>
-                    </WrapPanel>
-                </GroupBox>
-            </UniformGrid>
-        </GroupBox>
+        <StackPanel Grid.Row="3">
+            <GroupBox Header="Height">
+                <UniformGrid Columns="4" Width="250">
+                    <components:HeightsList 
+                        TypeOfHeight="UK" 
+                        ListHeights="{Binding ListHeightsUK}"
+                        ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
+                        AddHeightBtnVisibility="Collapsed"/>
+                    <components:HeightsList 
+                        TypeOfHeight="OK" 
+                        ListHeights="{Binding ListHeightsOK}"
+                        ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
+                        AddHeightBtnVisibility="Collapsed"/>
+                    <components:HeightsList 
+                        TypeOfHeight="H" 
+                        ListHeights="{Binding ListHeightsCenter}"
+                        ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
+                        AddHeightBtnVisibility="Collapsed"/>
+                </UniformGrid>
+            </GroupBox>
+            <TextBlock>
+                <Run Text="Current height: " />
+                <Run Text="{Binding ElementHeight.TypeOf}" />
+                <Run Text="=" />
+                <Run Text="{Binding ElementHeight.Value}" />
+            </TextBlock>
+
+        </StackPanel>
         <!--<WrapPanel Grid.Row="3">
             <TextBlock Text="Height"/>
             <TextBox Text="{Binding Height}" Margin="5 0 0 0" Width="30"/>

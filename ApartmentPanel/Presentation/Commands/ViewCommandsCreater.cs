@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows.Input;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Presentation.View.Components;
+using ApartmentPanel.Presentation.Models;
 
 namespace ApartmentPanel.Presentation.Commands
 {
@@ -36,25 +37,19 @@ namespace ApartmentPanel.Presentation.Commands
                     { nameof(elementName), elementName },
                     { nameof(elementCategory), elementCategory },
                     { "lampSuffix", _viewProperties.CurrentSuffix },
-                    { "height", _viewProperties.HeightTypeOfUK.ToString() },
+                    //{ "height", _viewProperties.HeightTypeOfUK.ToString() },
                     { nameof(insertingMode), insertingMode },
                 };
             _elementService.InsertToModel(props);
-
-            /*_viewProperties.Handler.Props = new Dictionary<string, string>
-                {
-                    { nameof(circuit), circuit },
-                    { nameof(elementName), elementName },
-                    { nameof(elementCategory), elementCategory },
-                    { "lampSuffix", _viewProperties.CurrentSuffix },
-                    { "height", _viewProperties.Height.ToString() },
-                    { nameof(insertingMode), insertingMode },
-                };
-            _viewProperties.Handler.Request.Make(RequestId.Insert);
-            _viewProperties.ExEvent.Raise();*/
         });
 
         public ICommand CreateSetCurrentSuffixCommand()
             => new RelayCommand(o => _viewProperties.CurrentSuffix = o as string);
+
+        public ICommand CreateSetHeightCommand() => new RelayCommand(o =>
+        {
+            (string typeOfHeight, double height) = (ValueTuple<string, double>)o;
+            _viewProperties.ElementHeight = new Height { TypeOf = typeOfHeight, Value = height };
+        });
     }
 }

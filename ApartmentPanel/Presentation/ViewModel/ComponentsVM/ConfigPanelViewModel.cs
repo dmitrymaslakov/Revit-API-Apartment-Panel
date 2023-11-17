@@ -10,16 +10,32 @@ using ApartmentPanel.Presentation.Commands;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Core.Models.Interfaces;
+using ApartmentPanel.Core.Models;
 
 namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 {
     public class ConfigPanelViewModel : ViewModelBase, IConfigPanelViewModel
     {
+        #region MockFields
+        private static ObservableCollection<IApartmentElement> el1 = new ObservableCollection<IApartmentElement>
+        {
+            new ApartmentElement { Name = "Switch"},
+            new ApartmentElement { Name = "Socket"},
+            new ApartmentElement { Name = "ThroughSwitch"}
+        };
+        private static ObservableCollection<IApartmentElement> el2 = new ObservableCollection<IApartmentElement>
+        {
+            new ApartmentElement { Name = "Smoke Sensor"},
+            new ApartmentElement { Name = "USB"},
+            new ApartmentElement { Name = "ThroughSwitch"}
+        };
+        #endregion
+
         private readonly ConfigPanelCommandsCreater _commandCreater;
 
         public ConfigPanelViewModel() { }
 
-        public ConfigPanelViewModel(IElementService elementService, 
+        public ConfigPanelViewModel(IElementService elementService,
             IListElementsViewModel listElementsVM) : base(elementService)
         {
             _commandCreater = new ConfigPanelCommandsCreater(this, ElementService);
@@ -31,6 +47,9 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             SelectedPanelCircuits =
                 new ObservableCollection<KeyValuePair<string, ObservableCollection<IApartmentElement>>>();
             SelectedCircuitElements = new ObservableCollection<IApartmentElement>();
+            ListHeightsOK = new ObservableCollection<double>();
+            ListHeightsUK = new ObservableCollection<double>();
+            ListHeightsCenter = new ObservableCollection<double>();
             LatestConfigPath = FileUtility.GetAssemblyPath() + "\\LatestConfig.json";
             IsCancelEnabled = false;
             ShowListElementsCommand = _commandCreater.CreateShowListElementsCommand();
@@ -51,6 +70,15 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             SaveLatestConfigCommand = _commandCreater.CreateSaveLatestConfigCommand();
         }
 
+        #region MockProps
+        public ObservableDictionary<string, ObservableCollection<IApartmentElement>> MockPanelCircuits { get; set; } =
+            new ObservableDictionary<string, ObservableCollection<IApartmentElement>>
+            {
+                new KeyValuePair<string, ObservableCollection<IApartmentElement>>("1", el1),
+                new KeyValuePair<string, ObservableCollection<IApartmentElement>>("2", el2)
+            };
+
+        #endregion
         [JsonIgnore]
         public IListElementsViewModel ListElementsVM { get; set; }
 
@@ -122,6 +150,32 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         [JsonIgnore]
         public bool IsCancelEnabled { get => _isCancelEnabled; set => Set(ref _isCancelEnabled, value); }
 
+        #region listHeights
+        private ObservableCollection<double> _listHeightsOK;
+
+        public ObservableCollection<double> ListHeightsOK
+        {
+            get => _listHeightsOK;
+            set => Set(ref _listHeightsOK, value);
+        }
+
+        private ObservableCollection<double> _listHeightsUK;
+
+        public ObservableCollection<double> ListHeightsUK
+        {
+            get => _listHeightsUK;
+            set => Set(ref _listHeightsUK, value);
+        }
+
+        private ObservableCollection<double> _listHeightsCenter;
+
+        public ObservableCollection<double> ListHeightsCenter
+        {
+            get => _listHeightsCenter;
+            set => Set(ref _listHeightsCenter, value);
+        }
+        #endregion
+
         [JsonIgnore]
         public ICommand ShowListElementsCommand { get; set; }
         [JsonIgnore]
@@ -161,6 +215,12 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         {
             ApartmentElements = latestConfiguration.ApartmentElements;
             PanelCircuits = latestConfiguration.PanelCircuits;
+            if (latestConfiguration.ListHeightsOK != null)
+                ListHeightsOK = latestConfiguration.ListHeightsOK;
+            if (latestConfiguration.ListHeightsUK != null)
+                ListHeightsUK = latestConfiguration.ListHeightsUK;
+            if (latestConfiguration.ListHeightsCenter != null)
+                ListHeightsCenter = latestConfiguration.ListHeightsCenter;
 
             foreach (var apartmentElement in ApartmentElements)
             {

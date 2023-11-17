@@ -9,6 +9,9 @@ using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Core.Models.Interfaces;
 using System.Windows;
 using ApartmentPanel.Presentation.Services;
+using System.Windows.Media.Media3D;
+using ApartmentPanel.Presentation.Models;
+using System;
 
 namespace ApartmentPanel.Presentation.ViewModel
 {
@@ -41,13 +44,19 @@ namespace ApartmentPanel.Presentation.ViewModel
 
             Circuits = GetCircuits(ConfigPanelVM.PanelCircuits);
 
+            ListHeightsUK = GetHeights(ConfigPanelVM.ListHeightsUK);
+
+            ListHeightsOK = GetHeights(ConfigPanelVM.ListHeightsOK);
+
+            ListHeightsCenter = GetHeights(ConfigPanelVM.ListHeightsCenter);
+
             ConfigureCommand = _viewCommandsCreater.CreateConfigureCommand();
 
             InsertElementCommand = _viewCommandsCreater.CreateInsertElementCommand();
 
             SetCurrentSuffixCommand = _viewCommandsCreater.CreateSetCurrentSuffixCommand();
 
-            HeightTypeOfUK = 40.0;
+            SetHeightCommand = _viewCommandsCreater.CreateSetHeightCommand();
 
             AnalizeCommand = new RelayCommand(o =>
             {
@@ -72,56 +81,40 @@ namespace ApartmentPanel.Presentation.ViewModel
             get => _currentSuffix;
             set => Set(ref _currentSuffix, value);
         }
+        
+        private Height _elementHeight;
 
-        #region Heights
-        private double _heightTypeOfUK;
-
-        public double HeightTypeOfUK
+        public Height ElementHeight
         {
-            get => _heightTypeOfUK;
-            set => Set(ref _heightTypeOfUK, value);
+            get => _elementHeight;
+            set => Set(ref _elementHeight, value);
         }
 
-        private double _heightTypeOfOK;
+        #region listHeights
+        private ObservableCollection<double> _listHeightsOK;
 
-        public double HeightTypeOfOK
+        public ObservableCollection<double> ListHeightsOK
         {
-            get => _heightTypeOfOK;
-            set => Set(ref _heightTypeOfOK, value);
+            get => _listHeightsOK;
+            set => Set(ref _listHeightsOK, value);
         }
 
-        private double _heightTypeOfCenter;
+        private ObservableCollection<double> _listHeightsUK;
 
-        public double HeightTypeOfCenter
+        public ObservableCollection<double> ListHeightsUK
         {
-            get => _heightTypeOfCenter;
-            set => Set(ref _heightTypeOfCenter, value);
+            get => _listHeightsUK;
+            set => Set(ref _listHeightsUK, value);
+        }
+
+        private ObservableCollection<double> _listHeightsCenter;
+
+        public ObservableCollection<double> ListHeightsCenter
+        {
+            get => _listHeightsCenter;
+            set => Set(ref _listHeightsCenter, value);
         }
         #endregion
-
-        private ObservableCollection<double> _defaultHeightsTypeOfUK;
-
-        public ObservableCollection<double> DefaultHeightsTypeOfUK
-        {
-            get => _defaultHeightsTypeOfUK;
-            set => Set(ref _defaultHeightsTypeOfUK, value);
-        }
-
-        private ObservableCollection<double> _defaultHeightsTypeOfOK;
-
-        public ObservableCollection<double> DefaultHeightsTypeOfOK
-        {
-            get => _defaultHeightsTypeOfOK;
-            set => Set(ref _defaultHeightsTypeOfOK, value);
-        }
-
-        private ObservableCollection<double> _defaultHeightsTypeOfCenter;
-
-        public ObservableCollection<double> DefaultHeightsTypeOfCenter
-        {
-            get => _defaultHeightsTypeOfCenter;
-            set => Set(ref _defaultHeightsTypeOfCenter, value);
-        }
 
         private string _status;
 
@@ -137,6 +130,8 @@ namespace ApartmentPanel.Presentation.ViewModel
 
         public ICommand SetCurrentSuffixCommand { get; set; }
 
+        public ICommand SetHeightCommand { get; set; }
+
         public ICommand AnalizeCommand { get; set; }
 
         /*public ICommand SaveLatestConfigCommand { get; set; }
@@ -145,14 +140,26 @@ namespace ApartmentPanel.Presentation.ViewModel
 
         private void ExecuteOkApplyCancelActions(object obj, OkApplyCancel okApplyCancel)
         {
+            (ObservableDictionary<string, ObservableCollection<IApartmentElement>> panelCircuits,
+                ObservableCollection<double> heightsOk,
+                ObservableCollection<double> heightsUk,
+                ObservableCollection<double> heightsCenter) =
+                (ValueTuple<ObservableDictionary<string, ObservableCollection<IApartmentElement>>,
+                ObservableCollection<double>, 
+                ObservableCollection<double>, 
+                ObservableCollection<double>>)obj;
+
             switch (okApplyCancel)
             {
                 case OkApplyCancel.Ok:
                 case OkApplyCancel.Apply:
                     Circuits.Clear();
-                    var panelCircuits =
-                        (ObservableDictionary<string, ObservableCollection<IApartmentElement>>)obj;
+                    //var panelCircuits =
+                    //    (ObservableDictionary<string, ObservableCollection<IApartmentElement>>)obj;
                     Circuits = GetCircuits(panelCircuits);
+                    ListHeightsOK = GetHeights(heightsOk);
+                    ListHeightsUK = GetHeights(heightsUk);
+                    ListHeightsCenter = GetHeights(heightsCenter);
                     ConfigPanelVM.SaveLatestConfigCommand?.Execute(ConfigPanelVM);
                     break;
                 case OkApplyCancel.Cancel:
@@ -177,5 +184,9 @@ namespace ApartmentPanel.Presentation.ViewModel
             return result;
         }
 
+        private ObservableCollection<double> GetHeights(ObservableCollection<double> heights)
+        {
+            return new ObservableCollection<double>(heights.ToList());
+        }
     }
 }

@@ -70,7 +70,12 @@
     <Compile Include="Core\Models\CategorizedFamilySymbols.cs" />
     <Compile Include="Core\Models\Circuit.cs" />
     <Compile Include="Core\Models.Interfaces\IApartmentElement.cs" />
+    <Compile Include="Presentation\Models\Height.cs" />
+    <Compile Include="Presentation\Models\MockData\MockCircuit.cs" />
     <Compile Include="Presentation\Services\ModelAnalizing.cs" />
+    <Compile Include="Presentation\View\Components\HeightsList.xaml.cs">
+      <DependentUpon>HeightsList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utility\AnnotationUtility\FileAnnotationService\FileAnnotationReader.cs" />
     <Compile Include="Utility\AnnotationUtility\Interfaces\IAnnotationService.cs" />
     <Compile Include="Utility\AnnotationUtility\Interfaces\IAnnotationReader.cs" />
@@ -133,11 +138,18 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Presentation\Resources\Styles\ButtonStyle.xaml">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </Page>
     <Page Include="Presentation\View\Components\ConfigPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Presentation\View\Components\ElementsCard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\View\Components\HeightsList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -152,7 +164,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\Infrastructure.Interfaces\DTO\" />
-    <Folder Include="Presentation\Behaviors\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FontAwesome.WPF">

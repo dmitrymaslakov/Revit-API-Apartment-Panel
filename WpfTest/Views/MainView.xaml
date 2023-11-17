@@ -16,19 +16,19 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Header="Height">
-            <UniformGrid Columns="4">
+            <UniformGrid Columns="3">
                 <components:HeightsList 
                     TypeOfHeight="UK" 
                     ListHeights="{Binding ListHeightsUK}"
-                    GetHeightCommand="{Binding SetHeightCommand}"/>
+                    ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"/>
                 <components:HeightsList 
                     TypeOfHeight="OK" 
                     ListHeights="{Binding ListHeightsOK}"
-                    GetHeightCommand="{Binding SetHeightCommand}"/>
+                    ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"/>
                 <components:HeightsList 
                     TypeOfHeight="H" 
                     ListHeights="{Binding ListHeightsCenter}"
-                    GetHeightCommand="{Binding SetHeightCommand}"/>
+                    ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"/>
             </UniformGrid>
         </GroupBox>
         <WrapPanel Grid.Row="1">

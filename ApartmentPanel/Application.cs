@@ -12,6 +12,7 @@ using ApartmentPanel.Core;
 using ApartmentPanel.Presentation;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using ApartmentPanel.Presentation.ViewModel.Interfaces;
 
 namespace ApartmentPanel
 {
@@ -19,8 +20,8 @@ namespace ApartmentPanel
     [Regeneration(RegenerationOption.Manual)]
     public class Application : IExternalApplication
     {
-        public static MainView View;
-        public static MainViewModel _uiVM;
+        public static MainView MainView;
+        public static IMainViewModel MainViewVM;
         internal static Application _thisApp = null;
         private static IHost _host;
 
@@ -50,7 +51,7 @@ namespace ApartmentPanel
                 CreateWindow();
 
                 if (!DockablePane.PaneIsRegistered(MainView.PaneId))
-                    application.RegisterDockablePane(MainView.PaneId, MainView.PaneName, View);
+                    application.RegisterDockablePane(MainView.PaneId, MainView.PaneName, MainView);
 
                 application.ControlledApplication.DocumentClosing +=
                     Handler_DocumentClosing;
@@ -97,7 +98,8 @@ namespace ApartmentPanel
             View = new APView.MainView(_uiVM);*/
             /*_uiVM = new MainViewModel(new ApartmentElementService(new ApartmentElementRepository(exEvent, handler)));
             View = new MainView(_uiVM);*/
-            View = _host.Services.GetRequiredService<MainView>();
+            MainView = _host.Services.GetRequiredService<MainView>();
+            MainViewVM = _host.Services.GetRequiredService<IMainViewModel>();
         }
 
         /*private void CreateEventHandler()
@@ -118,7 +120,7 @@ namespace ApartmentPanel
             }
             finally
             {
-                _uiVM.ConfigPanelVM?.SaveLatestConfigCommand?.Execute(_uiVM.ConfigPanelVM);
+                MainViewVM.ConfigPanelVM?.SaveLatestConfigCommand?.Execute(MainViewVM.ConfigPanelVM);
             }
         }
 

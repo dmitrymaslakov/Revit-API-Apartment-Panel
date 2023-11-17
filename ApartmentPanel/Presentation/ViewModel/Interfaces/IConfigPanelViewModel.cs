@@ -39,6 +39,9 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         ICommand SetAnnotationPreviewCommand { get; set; }
         ICommand SetAnnotationToElementCommand { get; set; }
         IListElementsViewModel ListElementsVM { get; set; }
+        ObservableCollection<double> ListHeightsOK { get; set; }
+        ObservableCollection<double> ListHeightsUK { get; set; }
+        ObservableCollection<double> ListHeightsCenter { get; set; }
 
         ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration);
     }

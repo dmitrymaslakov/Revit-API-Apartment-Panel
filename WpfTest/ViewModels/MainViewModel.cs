@@ -12,7 +12,8 @@ namespace WpfTest.ViewModels
         public MainViewModel()
         {
             SetHeightCommand = new RelayCommand(OnSetHeightCommandExecuted);
-            ListHeightsOK = new ObservableCollection<double>(HeightsList.HeightsOK);
+            AddHeightCommand = new RelayCommand(OnAddHeightCommandExecuted);
+            ListHeightsOK = new ObservableCollection<double>();//(HeightsList.HeightsOK);
             ListHeightsUK = new ObservableCollection<double>(HeightsList.HeightsUK);
             ListHeightsCenter = new ObservableCollection<double>(HeightsList.HeightsCenter);
             //ElementHeight = new Height();
@@ -63,5 +64,15 @@ namespace WpfTest.ViewModels
             ElementHeight = new Height { TypeOf = typeOfHeight, Value = height };
         }
         #endregion
+
+        #region AddHeightCommand
+        public ICommand AddHeightCommand { get; set; }
+
+        private void OnAddHeightCommandExecuted(object o)
+        {
+            double newHeight = (double)o;
+        }
+        #endregion
+
     }
 }
