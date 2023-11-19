@@ -3,11 +3,11 @@
 namespace ApartmentPanel.Presentation.View.Components
 {
     /// <summary>
-    /// Interaction logic for ListElements.xaml
+    /// Interaction logic for ElementsList.xaml
     /// </summary>
-    public partial class ListElements : Window
+    public partial class ElementsList : Window
     {
-        public ListElements(object dataContext)
+        public ElementsList(object dataContext)
         {
             DataContext = dataContext;
             InitializeComponent();

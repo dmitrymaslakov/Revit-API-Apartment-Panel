@@ -1,10 +1,10 @@
 ﻿using ApartmentPanel.Core.Services.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Windows.Input;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Presentation.View.Components;
 using ApartmentPanel.Presentation.Models;
+using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
 
 namespace ApartmentPanel.Presentation.Commands
 {
@@ -13,7 +13,7 @@ namespace ApartmentPanel.Presentation.Commands
         private readonly IMainViewModel _viewProperties;
 
         public ViewCommandsCreater(IMainViewModel viewProperties,
-            IElementService apartmentElementService) : base(apartmentElementService) => 
+            IElementService apartmentElementService) : base(apartmentElementService) =>
             _viewProperties = viewProperties;
 
         public ICommand CreateConfigureCommand() => new RelayCommand(o =>
@@ -31,16 +31,17 @@ namespace ApartmentPanel.Presentation.Commands
             if (Keyboard.Modifiers == ModifierKeys.Control)
                 insertingMode = "multiple";
 
-            var props = new Dictionary<string, string>
-                {
-                    { nameof(circuit), circuit },
-                    { nameof(elementName), elementName },
-                    { nameof(elementCategory), elementCategory },
-                    { "lampSuffix", _viewProperties.CurrentSuffix },
-                    //{ "height", _viewProperties.HeightTypeOfUK.ToString() },
-                    { nameof(insertingMode), insertingMode },
-                };
-            _elementService.InsertToModel(props);
+            var elementDTO = new InsertElementDTO()
+            {
+                Name = elementName,
+                Category = elementCategory,
+                Circuit = circuit,
+                Height = _viewProperties.ElementHeight.Value,
+                TypeOfHeight = _viewProperties.ElementHeight.TypeOf,
+                CurrentSuffix = _viewProperties.CurrentSuffix,
+                InsertingMode = insertingMode
+            };
+            _elementService.InsertToModel(elementDTO);
         });
 
         public ICommand CreateSetCurrentSuffixCommand()
@@ -50,6 +51,19 @@ namespace ApartmentPanel.Presentation.Commands
         {
             (string typeOfHeight, double height) = (ValueTuple<string, double>)o;
             _viewProperties.ElementHeight = new Height { TypeOf = typeOfHeight, Value = height };
+        });
+
+        public ICommand CreateSetStatusCommand() => new RelayCommand(o =>
+        {
+            switch (o as string)
+            {
+                case "MouseEnter":
+                    _viewProperties.Status = "You should select the lamp(s) before inserting the switch";
+                    break;
+                case "MouseLeave":
+                    _viewProperties.Status = null;
+                    break;
+            }
         });
     }
 }

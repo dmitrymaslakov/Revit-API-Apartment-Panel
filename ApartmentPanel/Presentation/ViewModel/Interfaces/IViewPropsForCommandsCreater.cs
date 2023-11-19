@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
 using ApartmentPanel.Infrastructure;
-using ApartmentPanel.Core.Models;
+using ApartmentPanel.Presentation.Models;
 
 namespace ApartmentPanel.Presentation.ViewModel.Interfaces
 {

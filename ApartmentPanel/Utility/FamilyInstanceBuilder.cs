@@ -20,6 +20,7 @@ namespace ApartmentPanel.Utility
         private Document _document;
         private Selection _selection;
         private double _elevationFromLevel;
+        private string _height;
         private ElementId _currentLevelId;
         private string _circuit;
         private string _lampSuffix;
@@ -46,10 +47,16 @@ namespace ApartmentPanel.Utility
         }
 
         #region Configuration methods
-        public FamilyInstanceBuilder WithElevationFromLevel(string elevationFromLevel)
+        public FamilyInstanceBuilder WithHeight(double height, string typeOfHeight)
         {
-            bool isElevationParsed = double.TryParse(elevationFromLevel,
-                out _elevationFromLevel);
+            /*_height = height;
+            if (!string.IsNullOrEmpty(height))
+            {
+                string elevationFromLevel = height.Split('=')[1];
+                bool isElevationParsed = double.TryParse(elevationFromLevel,
+                    out _elevationFromLevel);
+            }*/
+
             return this;
         }
         public FamilyInstanceBuilder WithCurrentLevel()
@@ -201,7 +208,7 @@ namespace ApartmentPanel.Utility
                 case StaticData.TELEPHONE_DEVICES:
                 case StaticData.FIRE_ALARM_DEVICES:
                 case StaticData.COMMUNICATION_DEVICES:
-                    circuitParam.Set($"H={_elevationFromLevel}");
+                    circuitParam.Set(_height);
                     break;
             }
         }

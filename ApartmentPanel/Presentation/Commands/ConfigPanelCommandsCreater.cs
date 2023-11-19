@@ -50,7 +50,7 @@ namespace ApartmentPanel.Presentation.Commands
                 listElementsVM.AddElementToApartment = _addElementToApartment;
                 listElementsVM.AllElements = 
                     new ObservableCollection<IApartmentElement>(_elementService.GetAll(props));
-                new ListElements(listElementsVM).ShowDialog();
+                new ElementsList(listElementsVM).ShowDialog();
             };
             _circuitService = new CircuitService(_configPanelProperties);
         }

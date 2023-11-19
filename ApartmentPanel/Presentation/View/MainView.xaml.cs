@@ -53,7 +53,7 @@ namespace ApartmentPanel.Presentation.View
 
         public static string PaneName => "Apartment panel";
 
-        private void Button_KeyDown(object sender, KeyEventArgs e)
+        /*private void Button_KeyDown(object sender, KeyEventArgs e)
         {
             Button button = sender as Button;
             string currentCategory = button.Tag as string;
@@ -76,15 +76,15 @@ namespace ApartmentPanel.Presentation.View
                 characterValue = numericChar.ToString();
             }
             currentSuffix.Command?.Execute(characterValue);
-        }
+        }*/
 
-        private void Button_MouseEnter(object sender, MouseEventArgs e)
+        /*private void Button_MouseEnter(object sender, MouseEventArgs e)
         {
             Button button = sender as Button;
             if (button.Tag.ToString() == "Lighting Devices")
                 statusBarItem.Content = "You should select the lamp(s) before inserting the switch";
             button.Focus();
-        }
+        }*/
 
         private void Button_MouseLeave(object sender, MouseEventArgs e) 
             => statusBarItem.Content = null;

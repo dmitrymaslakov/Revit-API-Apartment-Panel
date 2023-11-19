@@ -1,11 +1,10 @@
 ﻿using ApartmentPanel.Core.Infrastructure.Interfaces;
+using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
 using ApartmentPanel.Core.Models;
 using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Utility.AnnotationUtility;
 using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
-using ApartmentPanel.Utility.AnnotationUtility.Interfaces;
-using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +16,10 @@ namespace ApartmentPanel.Core.Services
 {
     public class ElementService : IElementService
     {
-        private readonly IInfrastructureElementRepository _elementRepo;
+        private readonly IElementRepository _elementRepo;
 
         public ElementService
-            (IInfrastructureElementRepository elementRepo) => _elementRepo = elementRepo;
+            (IElementRepository elementRepo) => _elementRepo = elementRepo;
 
         public List<IApartmentElement> GetAll(List<(string name, string category)> props)
         {
@@ -47,7 +46,7 @@ namespace ApartmentPanel.Core.Services
 
         }
 
-        public void InsertToModel(Dictionary<string, string> apartmentElementDto) =>
+        public void InsertToModel(InsertElementDTO apartmentElementDto) =>
             _elementRepo.InsertToModel(apartmentElementDto);
 
         public IApartmentElement CloneFrom(IApartmentElement element)

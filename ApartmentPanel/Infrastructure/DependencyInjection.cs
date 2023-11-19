@@ -15,7 +15,7 @@ namespace ApartmentPanel.Infrastructure
                 services.AddSingleton<RequestHandler>();
                 services.AddSingleton(provider =>
                     ExternalEvent.Create(provider.GetService<RequestHandler>()));
-                services.AddTransient<IInfrastructureElementRepository, InfrastructureElementRepository>();
+                services.AddTransient<IElementRepository, InfrastructureElementRepository>();
             });
             return hostBuilder;
         }

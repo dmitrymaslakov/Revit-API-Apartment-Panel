@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using ApartmentPanel.Utility;
 using System.Linq;
+using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
 
 namespace ApartmentPanel.Infrastructure
 {
@@ -206,54 +207,54 @@ namespace ApartmentPanel.Infrastructure
 
         private void InsertElement()
         {
-            var elementData = Props as Dictionary<string, string>;
-            string elementName = elementData[nameof(elementName)];
+            var elementData = Props as InsertElementDTO;
+            /*string elementName = elementData[nameof(elementName)];
             string elementCategory = elementData[nameof(elementCategory)];
             string circuit = elementData[nameof(circuit)];
             string height = elementData[nameof(height)];
             string lampSuffix = elementData[nameof(lampSuffix)];
-            string insertingMode = elementData[nameof(insertingMode)];
+            string insertingMode = elementData[nameof(insertingMode)];*/
             bool isMultiple = true;
             List<FamilyInstance> lamps = null;
 
-            if (elementCategory.Contains(StaticData.LIGHTING_DEVICES))
+            if (elementData.Category.Contains(StaticData.LIGHTING_DEVICES))
                 lamps = PickLamp();
 
             while (isMultiple)
             {
                 try
                 {
-                    switch (elementCategory)
+                    switch (elementData.Category)
                     {
                         case StaticData.LIGHTING_FIXTURES:
                             new FamilyInstanceBuilder(Uiapp)
-                                .WithCircuit(circuit)
+                                .WithCircuit(elementData.Circuit)
                                 .WithCurrentLevel()
-                                .WithLampSuffix(lampSuffix)
-                                .Build(elementName);
+                                .WithLampSuffix(elementData.CurrentSuffix)
+                                .Build(elementData.Name);
                             break;
                         case StaticData.LIGHTING_DEVICES:
                             new FamilyInstanceBuilder(Uiapp)
                                 .WithSwitchSuffixes(lamps)
-                                .WithElevationFromLevel(height)
-                                .WithCircuit(circuit)
+                                .WithHeight(elementData.Height, elementData.TypeOfHeight)
+                                .WithCircuit(elementData.Circuit)
                                 .WithCurrentLevel()
-                                .Build(elementName);
+                                .Build(elementData.Name);
                             break;
                         case StaticData.ELECTRICAL_FIXTURES:
                         case StaticData.TELEPHONE_DEVICES:
                         case StaticData.FIRE_ALARM_DEVICES:
                         case StaticData.COMMUNICATION_DEVICES:
                             new FamilyInstanceBuilder(Uiapp)
-                                .WithElevationFromLevel(height)
-                                .WithCircuit(circuit)
+                                .WithHeight(elementData.Height, elementData.TypeOfHeight)
+                                .WithCircuit(elementData.Circuit)
                                 .WithCurrentLevel()
-                                .Build(elementName);
+                                .Build(elementData.Name);
                             break;
                         default:
                             break;
                     }
-                    if (!insertingMode.Contains("multiple")) isMultiple = false;
+                    if (!elementData.InsertingMode.Contains("multiple")) isMultiple = false;
                 }
                 catch (Autodesk.Revit.Exceptions.OperationCanceledException)
                 {

@@ -4,4 +4,9 @@
         <Setter Property="Width" Value="20"/>
         <Setter Property="Height" Value="20"/>
     </Style>
+    <Style x:Key="circuitButton" TargetType="Button">
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Margin" Value="2 0 2 0"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
 </ResourceDictionary>

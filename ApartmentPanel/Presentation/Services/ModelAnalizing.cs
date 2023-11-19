@@ -4,9 +4,9 @@ namespace ApartmentPanel.Presentation.Services
 {
     public class ModelAnalizing
     {
-        private readonly IInfrastructureElementRepository _repository;
+        private readonly IElementRepository _repository;
 
-        public ModelAnalizing(IInfrastructureElementRepository repository) => 
+        public ModelAnalizing(IElementRepository repository) => 
             _repository = repository;
 
         public void AnalizeElement() => _repository.Analize();

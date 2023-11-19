@@ -3,15 +3,18 @@ using System.Windows.Input;
 using System.Collections.ObjectModel;
 using ApartmentPanel.Utility;
 using ApartmentPanel.Presentation.Commands;
-using ApartmentPanel.Core.Models;
 using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Core.Models.Interfaces;
-using System.Windows;
 using ApartmentPanel.Presentation.Services;
-using System.Windows.Media.Media3D;
 using ApartmentPanel.Presentation.Models;
 using System;
+using ApartmentPanel.Core.Models;
+using System.Collections.Generic;
+using System.Windows.Media;
+using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
+using Autodesk.Revit.DB;
+using ApartmentPanel.Utility.AnnotationUtility;
 
 namespace ApartmentPanel.Presentation.ViewModel
 {
@@ -20,14 +23,37 @@ namespace ApartmentPanel.Presentation.ViewModel
         Ok, Apply, Cancel
     }
 
-    public class MainViewModel : ViewModelBase, IMainViewModel 
+    public class MainViewModel : ViewModelBase, IMainViewModel
     {
+        #region MockFields
+        private static ObservableCollection<IApartmentElement> el1 = new ObservableCollection<IApartmentElement>
+        {
+            new ApartmentElement { Name = "Switch", Category = "LightDev", },
+            new ApartmentElement { Name = "Socket", Category = "ElFix"},
+            new ApartmentElement { Name = "ThroughSwitch", Category= "LightDev"}
+        };
+        private static ObservableCollection<IApartmentElement> el2 = new ObservableCollection<IApartmentElement>
+        {
+            new ApartmentElement { Name = "Smoke Sensor", Category = "LightDev"},
+            new ApartmentElement { Name = "USB", Category = "LightDev"},
+            new ApartmentElement { Name = "ThroughSwitch", Category = "LightDev"}
+        };
+        #endregion
+        #region MockProps
+        public ObservableCollection<Circuit> MockCircuits { get; set; } = new ObservableCollection<Circuit>
+        {
+            new Circuit{Number="1", Elements=el1},
+            new Circuit{Number="2", Elements=el2},
+        };
+
+        #endregion
+
         private readonly ViewCommandsCreater _viewCommandsCreater;
         //private readonly ModelAnalizing _modelAnalizing;
 
         public MainViewModel()
         {
-            
+
         }
         public MainViewModel(IElementService elementService,
             IConfigPanelViewModel configPanelVM, ModelAnalizing modelAnalizing) : base(elementService)
@@ -58,6 +84,8 @@ namespace ApartmentPanel.Presentation.ViewModel
 
             SetHeightCommand = _viewCommandsCreater.CreateSetHeightCommand();
 
+            SetStatusCommand = _viewCommandsCreater.CreateSetStatusCommand();
+
             AnalizeCommand = new RelayCommand(o =>
             {
                 modelAnalizing.AnalizeElement();
@@ -81,7 +109,7 @@ namespace ApartmentPanel.Presentation.ViewModel
             get => _currentSuffix;
             set => Set(ref _currentSuffix, value);
         }
-        
+
         private Height _elementHeight;
 
         public Height ElementHeight
@@ -132,11 +160,9 @@ namespace ApartmentPanel.Presentation.ViewModel
 
         public ICommand SetHeightCommand { get; set; }
 
+        public ICommand SetStatusCommand { get; set; }
+
         public ICommand AnalizeCommand { get; set; }
-
-        /*public ICommand SaveLatestConfigCommand { get; set; }
-
-        public ICommand LoadLatestConfigCommand { get; set; }*/
 
         private void ExecuteOkApplyCancelActions(object obj, OkApplyCancel okApplyCancel)
         {
@@ -145,8 +171,8 @@ namespace ApartmentPanel.Presentation.ViewModel
                 ObservableCollection<double> heightsUk,
                 ObservableCollection<double> heightsCenter) =
                 (ValueTuple<ObservableDictionary<string, ObservableCollection<IApartmentElement>>,
-                ObservableCollection<double>, 
-                ObservableCollection<double>, 
+                ObservableCollection<double>,
+                ObservableCollection<double>,
                 ObservableCollection<double>>)obj;
 
             switch (okApplyCancel)

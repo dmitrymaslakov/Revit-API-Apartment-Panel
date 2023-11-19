@@ -10,21 +10,6 @@
              d:DataContext="{d:DesignInstance vm:MainViewModel, IsDesignTimeCreatable=True}"
              d:DesignHeight="500" d:DesignWidth="200">
     <UserControl.Resources>
-        <Style x:Key="circuitButton" TargetType="Button">
-            <!--<Style.Triggers>
-                <DataTrigger Binding="{Binding Annotation}" Value="{x:Null}">
-                    <Setter Property="Content" Value="{Binding Name}"/>
-                </DataTrigger>
-            </Style.Triggers>-->
-            <Setter Property="Width" Value="20"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Content" Value="{Binding Name}"/>
-            <!--<Setter Property="Content">                
-                <Setter.Value>
-                    <Image Source="{Binding Annotation}"/>
-                </Setter.Value>                
-            </Setter>-->
-        </Style>
         <Style x:Key="circuitTextBlock" TargetType="TextBlock">
             <Setter Property="Margin" Value="0 0 100 0"/>
         </Style>
@@ -38,7 +23,13 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <ListView Grid.Row="0" 
+        <components:CircuitsList 
+            Circuits="{Binding Circuits}"
+            HitElementCommand="{Binding InsertElementCommand}"
+            KeyDownCommand="{Binding SetCurrentSuffixCommand}"
+            MouseEnterCommand="{Binding SetStatusCommand}"
+            MouseLeaveCommand ="{Binding SetStatusCommand}"/>
+        <!--<ListView Grid.Row="0" 
                   ItemsSource="{Binding Circuits}" 
                   x:Name="apartmentCircuits">
             <ListView.ItemTemplate>
@@ -81,24 +72,27 @@
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
-        </ListView>
+        </ListView>-->
         <Button Grid.Row="1" 
                 Command="{Binding ConfigureCommand}"
                 Content="Config" 
                 Width="50" 
                 HorizontalAlignment="Right" 
                 Margin="0 0 40 0" />
-        <WrapPanel Grid.Row="2">
+        <TextBlock Grid.Row="2">
+            <Run Text="Current suffix of circuit: "/>
+            <Run Text="{Binding CurrentSuffix}"/>
+        </TextBlock>
+        <!--<WrapPanel Grid.Row="2">
             <TextBlock Text="Current suffix of circuit: "/>
-            <TextBlock
-                    Text="{Binding CurrentSuffix}">
+            <TextBlock Text="{Binding CurrentSuffix}">
                 <TextBlock.InputBindings>
                     <MouseBinding 
                         x:Name="currentSuffix" 
                         Command="{Binding SetCurrentSuffixCommand}"/>
                 </TextBlock.InputBindings>
             </TextBlock>
-        </WrapPanel>
+        </WrapPanel>-->
         <StackPanel Grid.Row="3">
             <GroupBox Header="Height">
                 <UniformGrid Columns="4" Width="250">
@@ -125,7 +119,6 @@
                 <Run Text="=" />
                 <Run Text="{Binding ElementHeight.Value}" />
             </TextBlock>
-
         </StackPanel>
         <!--<WrapPanel Grid.Row="3">
             <TextBlock Text="Height"/>

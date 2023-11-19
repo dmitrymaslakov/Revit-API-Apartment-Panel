@@ -1,12 +1,12 @@
 ﻿using Autodesk.Revit.UI;
 using ApartmentPanel.Core.Infrastructure.Interfaces;
-using ApartmentPanel.Core.Models.Interfaces;
 using System;
 using System.Collections.Generic;
+using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
 
 namespace ApartmentPanel.Infrastructure.Repositories
 {
-    public class InfrastructureElementRepository : BaseRepository, IInfrastructureElementRepository
+    public class InfrastructureElementRepository : BaseRepository, IElementRepository
     {
         public InfrastructureElementRepository(ExternalEvent exEvent, RequestHandler handler)
             : base(exEvent, handler) { }
@@ -18,7 +18,7 @@ namespace ApartmentPanel.Infrastructure.Repositories
             _exEvent.Raise();
         }
 
-        public void InsertToModel(Dictionary<string, string> apartmentElementDto)
+        public void InsertToModel(InsertElementDTO apartmentElementDto)
         {
             _handler.Request.Make(RequestId.Insert);
             _handler.Props = apartmentElementDto;
