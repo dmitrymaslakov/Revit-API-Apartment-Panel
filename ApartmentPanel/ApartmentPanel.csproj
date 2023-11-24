@@ -69,8 +69,13 @@
     <Compile Include="Core\Infrastructure.Interfaces\IElementRepository.cs" />
     <Compile Include="Core\Models\ApartmentElement.cs" />
     <Compile Include="Core\Models\CategorizedFamilySymbols.cs" />
+    <Compile Include="Infrastructure\Models\ElementInstaller.cs" />
+    <Compile Include="Presentation\Models\Batch\BatchedElement.cs" />
+    <Compile Include="Presentation\Models\Batch\BatchedRow.cs" />
+    <Compile Include="Presentation\Models\Batch\BatchedLocation.cs" />
     <Compile Include="Presentation\Models\Circuit.cs" />
     <Compile Include="Core\Models.Interfaces\IApartmentElement.cs" />
+    <Compile Include="Presentation\Models\Batch\ElementsBatch.cs" />
     <Compile Include="Presentation\Models\Height.cs" />
     <Compile Include="Presentation\Models\MockData\MockCircuit.cs" />
     <Compile Include="Presentation\Services\ModelAnalizing.cs" />
@@ -130,7 +135,7 @@
     <Compile Include="Utility\Converters\ElementDataConverter.cs" />
     <Compile Include="Utility\DependencyInjection.cs" />
     <Compile Include="Utility\Exceptions\CustomParameterException.cs" />
-    <Compile Include="Utility\FamilyInstanceBuilder.cs" />
+    <Compile Include="Infrastructure\Models\FamilyInstanceBuilder.cs" />
     <Compile Include="Utility\FileUtility.cs" />
     <Compile Include="Utility\Globals.cs" />
     <Compile Include="Utility\HeightUpdater.cs" />

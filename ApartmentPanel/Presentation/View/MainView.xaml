@@ -24,6 +24,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <components:CircuitsList 
+            Grid.Row="0"
             Circuits="{Binding Circuits}"
             HitElementCommand="{Binding InsertElementCommand}"
             KeyDownCommand="{Binding SetCurrentSuffixCommand}"
@@ -120,11 +121,9 @@
                 <Run Text="{Binding ElementHeight.Value}" />
             </TextBlock>
         </StackPanel>
-        <!--<WrapPanel Grid.Row="3">
-            <TextBlock Text="Height"/>
-            <TextBox Text="{Binding Height}" Margin="5 0 0 0" Width="30"/>
+        <WrapPanel Grid.Row="5">
             <Button Content="Analize" Command="{Binding AnalizeCommand}"/>
-        </WrapPanel>-->
+        </WrapPanel>
         <StatusBar Grid.Row="4">
             <StatusBarItem x:Name="statusBarItem" Content="{Binding Status}">
                 <StatusBarItem.Style>

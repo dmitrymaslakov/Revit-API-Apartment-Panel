@@ -17,6 +17,5 @@ namespace ApartmentPanel.Core.Services.Interfaces
         IApartmentElement CloneFrom(IApartmentElement element);
         void SetAnnotationTo(IApartmentElement element, BitmapSource img);
         ImageSource GetAnnotationFor(string elementName);
-        //void AddToApartment(Action<IApartmentElement> addElementToApartment);
     }
 }

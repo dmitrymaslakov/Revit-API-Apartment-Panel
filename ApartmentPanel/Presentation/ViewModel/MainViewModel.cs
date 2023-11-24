@@ -49,7 +49,7 @@ namespace ApartmentPanel.Presentation.ViewModel
         #endregion
 
         private readonly ViewCommandsCreater _viewCommandsCreater;
-        //private readonly ModelAnalizing _modelAnalizing;
+        private readonly ModelAnalizing _modelAnalizing;
 
         public MainViewModel()
         {
@@ -62,7 +62,7 @@ namespace ApartmentPanel.Presentation.ViewModel
 
             ConfigPanelVM = configPanelVM;
 
-            //_modelAnalizing = modelAnalizing;
+            _modelAnalizing = modelAnalizing;
 
             ConfigPanelVM.OkApplyCancelActions = ExecuteOkApplyCancelActions;
 

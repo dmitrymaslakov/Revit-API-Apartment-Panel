@@ -291,7 +291,7 @@ namespace ApartmentPanel.Infrastructure
             }
 
             Element selectedElement = Document.GetElement(selectedElementId);
-            FamilyInstance familyInstance = selectedElement as FamilyInstance;
+            var familyInstance = selectedElement as FamilyInstance;
             var lp = familyInstance.Location as LocationPoint;
             var pointFeets = lp.Point;
             var zCm = UnitUtils.ConvertFromInternalUnits(pointFeets.Z,

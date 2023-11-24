@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Media3D;
 using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Electrical;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using ApartmentPanel.Utility.Exceptions;
+using ApartmentPanel.Utility;
 
-namespace ApartmentPanel.Utility
+namespace ApartmentPanel.Infrastructure.Models
 {
     public class FamilyInstanceBuilder
     {
