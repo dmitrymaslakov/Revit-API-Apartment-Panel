@@ -1,4 +1,6 @@
-﻿namespace ApartmentPanel.Core.Infrastructure.Interfaces.DTO
+﻿using ApartmentPanel.Core.Models;
+
+namespace ApartmentPanel.Core.Infrastructure.Interfaces.DTO
 {
     public class InsertElementDTO
     {
@@ -6,8 +8,8 @@
         public string Name { get; set; }
         public string Category { get; set; }
         public string CurrentSuffix { get; set; }
-        public double Height { get; set; }
-        public string TypeOfHeight { get; set; }
+        public Height Height { get; set; }
         public string InsertingMode { get; set; }
+        public string SwitchNumbers { get; set; }
     }
 }

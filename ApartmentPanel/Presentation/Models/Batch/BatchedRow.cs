@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ApartmentPanel.Core.Models;
+using System.Collections.Generic;
 using System.Windows.Documents;
 
 namespace ApartmentPanel.Presentation.Models.Batch

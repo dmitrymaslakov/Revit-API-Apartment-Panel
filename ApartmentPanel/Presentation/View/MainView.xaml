@@ -98,7 +98,7 @@
             <GroupBox Header="Height">
                 <UniformGrid Columns="4" Width="250">
                     <components:HeightsList 
-                        TypeOfHeight="UK" 
+                        TypeOfHeight="UK"
                         ListHeights="{Binding ListHeightsUK}"
                         ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
                         AddHeightBtnVisibility="Collapsed"/>

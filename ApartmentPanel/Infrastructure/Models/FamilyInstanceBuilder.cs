@@ -5,6 +5,8 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using ApartmentPanel.Utility.Exceptions;
 using ApartmentPanel.Utility;
+using ApartmentPanel.Infrastructure.Models.LocationStrategies;
+using ApartmentPanel.Core.Models;
 
 namespace ApartmentPanel.Infrastructure.Models
 {
@@ -15,12 +17,13 @@ namespace ApartmentPanel.Infrastructure.Models
         private UIDocument _uiDocument;
         private Document _document;
         private Selection _selection;
-        private double _elevationFromLevel;
-        private string _height;
+        /*private double _elevationFromLevel;
+        private string _height;*/
+        private ILocationStrategy _locationStrategy;
         private ElementId _currentLevelId;
         private string _circuit;
         private string _lampSuffix;
-        private string _switchSuffixes;
+        private string _switchNumbers;
 
         #endregion
 
@@ -43,8 +46,9 @@ namespace ApartmentPanel.Infrastructure.Models
         }
 
         #region Configuration methods
-        public FamilyInstanceBuilder WithHeight(double height, string typeOfHeight)
+        public FamilyInstanceBuilder WithHeight(Height height, ILocationStrategy locationStrategy)
         {
+            _locationStrategy = locationStrategy;
             /*_height = height;
             if (!string.IsNullOrEmpty(height))
             {
@@ -52,7 +56,6 @@ namespace ApartmentPanel.Infrastructure.Models
                 bool isElevationParsed = double.TryParse(elevationFromLevel,
                     out _elevationFromLevel);
             }*/
-
             return this;
         }
         public FamilyInstanceBuilder WithCurrentLevel()
@@ -70,9 +73,9 @@ namespace ApartmentPanel.Infrastructure.Models
             _lampSuffix = lampSuffix;
             return this;
         }
-        public FamilyInstanceBuilder WithSwitchSuffixes(List<FamilyInstance> lamps)
+        public FamilyInstanceBuilder WithSwitchNumbers(string switchNumbers)
         {
-            _switchSuffixes = GetSuffixesFromLamp(lamps);
+            _switchNumbers = switchNumbers;
             return this;
         }
         #endregion
@@ -84,7 +87,7 @@ namespace ApartmentPanel.Infrastructure.Models
                 _selection.PickObject(ObjectType.PointOnElement, "Pick a host in the model");
 
             FamilyInstance newFamilyInstance = null;
-            using (var tr = new Transaction(_document, "Creating new FamilySymbol"))
+            using (var tr = new Transaction(_document, "Creating new FamilyInstance"))
             {
                 tr.Start();
                 XYZ dir = new XYZ(0, 0, 0);
@@ -156,7 +159,8 @@ namespace ApartmentPanel.Infrastructure.Models
                 .get_Parameter(BuiltInParameter.INSTANCE_SCHEDULE_ONLY_LEVEL_PARAM)
                 .Set(_currentLevelId);
         }
-        private void SetElevationFromLevel(FamilyInstance familyInstance)
+        
+        /*private void SetElevationFromLevel(FamilyInstance familyInstance)
         {
             double newElevationFeets = UnitUtils.ConvertToInternalUnits(_elevationFromLevel,
                 _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
@@ -164,7 +168,7 @@ namespace ApartmentPanel.Infrastructure.Models
             familyInstance
                 .get_Parameter(BuiltInParameter.INSTANCE_ELEVATION_PARAM)
                 .Set(newElevationFeets);
-        }
+        }*/
         private void SetCircuit(FamilyInstance familyInstance)
         {
             string customParameter = StaticData.ELEMENT_CIRCUIT_PARAM_NAME;
@@ -179,7 +183,7 @@ namespace ApartmentPanel.Infrastructure.Models
                     circuitParam.Set(_circuit + "/" + _lampSuffix);
                     break;
                 case StaticData.LIGHTING_DEVICES:
-                    circuitParam.Set(_circuit + "/" + _switchSuffixes);
+                    circuitParam.Set(_circuit + "/" + _switchNumbers);
                     break;
                 case StaticData.ELECTRICAL_FIXTURES:
                 case StaticData.TELEPHONE_DEVICES:
@@ -207,40 +211,6 @@ namespace ApartmentPanel.Infrastructure.Models
                     circuitParam.Set(_height);
                     break;
             }
-        }
-        private string GetSuffixesFromLamp(List<FamilyInstance> lamps)
-        {
-            var circuitParameters = new List<Parameter>();
-
-            string targetCircuitParam = StaticData.ELEMENT_CIRCUIT_PARAM_NAME;
-
-            foreach (var lamp in lamps)
-            {
-                var lampParameter = lamp.Parameters
-                    .OfType<Parameter>()
-                    .Where(p => p.Definition.Name.Contains(targetCircuitParam))
-                    .FirstOrDefault();
-
-                if (lampParameter == null)
-                    throw new CustomParameterException(targetCircuitParam, lamp.Name);
-
-                circuitParameters.Add(lampParameter);
-            }
-
-            var lampCircuits = new List<string>();
-
-            foreach (Parameter parameter in circuitParameters)
-                if (parameter.Definition.Name.Contains(targetCircuitParam))
-                    if (parameter.StorageType == StorageType.String)
-                        lampCircuits.Add(parameter.AsString());
-
-            var suffixes = lampCircuits
-                .Select(c => c.Substring(c.IndexOf("/") + 1))
-                .Distinct()
-                .OrderBy(c => c)
-                .ToList();
-
-            return string.Join(",", suffixes);
         }
         #endregion
     }

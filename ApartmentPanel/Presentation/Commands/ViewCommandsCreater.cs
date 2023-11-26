@@ -3,8 +3,9 @@ using System;
 using System.Windows.Input;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Presentation.View.Components;
-using ApartmentPanel.Presentation.Models;
 using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
+using ApartmentPanel.Core.Enums;
+using ApartmentPanel.Core.Models;
 
 namespace ApartmentPanel.Presentation.Commands
 {
@@ -36,11 +37,18 @@ namespace ApartmentPanel.Presentation.Commands
                 Name = elementName,
                 Category = elementCategory,
                 Circuit = circuit,
-                Height = _viewProperties.ElementHeight.Value,
-                TypeOfHeight = _viewProperties.ElementHeight.TypeOf,
+                /*Height = _viewProperties.ElementHeight != null
+                    ? _viewProperties.ElementHeight.Value
+                    : default,
+                TypeOfHeight = _viewProperties.ElementHeight?.TypeOf,*/
                 CurrentSuffix = _viewProperties.CurrentSuffix,
                 InsertingMode = insertingMode
             };
+            if (_viewProperties.ElementHeight != null)
+            {
+                elementDTO.Height.Value = _viewProperties.ElementHeight.Value;
+                elementDTO.Height.TypeOf = _viewProperties.ElementHeight.TypeOf;
+            }
             _elementService.InsertToModel(elementDTO);
         });
 
@@ -49,7 +57,7 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateSetHeightCommand() => new RelayCommand(o =>
         {
-            (string typeOfHeight, double height) = (ValueTuple<string, double>)o;
+            (TypeOfHeight typeOfHeight, double height) = (ValueTuple<TypeOfHeight, double>)o;
             _viewProperties.ElementHeight = new Height { TypeOf = typeOfHeight, Value = height };
         });
 

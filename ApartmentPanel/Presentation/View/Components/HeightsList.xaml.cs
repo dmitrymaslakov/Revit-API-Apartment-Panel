@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using ApartmentPanel.Core.Enums;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,12 +17,12 @@ namespace ApartmentPanel.Presentation.View.Components
         }
 
         public static readonly DependencyProperty TypeOfHeightProperty =
-            DependencyProperty.Register(nameof(TypeOfHeight), typeof(string), typeof(HeightsList),
-                new PropertyMetadata(string.Empty));
+            DependencyProperty.Register(nameof(TypeOfHeight), typeof(TypeOfHeight), typeof(HeightsList),
+                new PropertyMetadata(TypeOfHeight.UK));
 
-        public string TypeOfHeight
+        public TypeOfHeight TypeOfHeight
         {
-            get { return (string)GetValue(TypeOfHeightProperty); }
+            get { return (TypeOfHeight)GetValue(TypeOfHeightProperty); }
             set { SetValue(TypeOfHeightProperty, value); }
         }
 
@@ -58,7 +59,7 @@ namespace ApartmentPanel.Presentation.View.Components
         private void ListHeights_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListView listHeights = sender as ListView;
-            string typeOfHeight = ((GridView)listHeights.View).Columns[0].Header as string;
+            TypeOfHeight typeOfHeight = (TypeOfHeight)((GridView)listHeights.View).Columns[0].Header;
             bool b = double.TryParse(listHeights.SelectedItem?.ToString(), out double height);
             if (b) ActionWithSelectedHeightCommand?.Execute((typeOfHeight, height));
         }

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using ApartmentPanel.Utility;
 using System.Linq;
 using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
+using ApartmentPanel.Infrastructure.Models;
+using ApartmentPanel.Utility.Exceptions;
 
 namespace ApartmentPanel.Infrastructure
 {
@@ -140,7 +142,7 @@ namespace ApartmentPanel.Infrastructure
                 .Cast<FamilySymbol>()
                 .ToList();
 
-            List<(string name, string category)> familyProps = familySymbols                
+            List<(string name, string category)> familyProps = familySymbols
                 .Select(fs => (fs.Name, fs.Category.Name))
                 .ToList();
 
@@ -208,48 +210,43 @@ namespace ApartmentPanel.Infrastructure
         private void InsertElement()
         {
             var elementData = Props as InsertElementDTO;
-            /*string elementName = elementData[nameof(elementName)];
-            string elementCategory = elementData[nameof(elementCategory)];
-            string circuit = elementData[nameof(circuit)];
-            string height = elementData[nameof(height)];
-            string lampSuffix = elementData[nameof(lampSuffix)];
-            string insertingMode = elementData[nameof(insertingMode)];*/
             bool isMultiple = true;
-            List<FamilyInstance> lamps = null;
 
             if (elementData.Category.Contains(StaticData.LIGHTING_DEVICES))
-                lamps = PickLamp();
+            {
+                List<FamilyInstance> lamps = PickLamp();
+                string lampNumbers = GetNumbersFromLamps(lamps);
+                elementData.SwitchNumbers = lampNumbers;
+            }
 
             while (isMultiple)
             {
                 try
                 {
+                    FamilyInstanceBuilder instanceBuilder = null;
                     switch (elementData.Category)
                     {
                         case StaticData.LIGHTING_FIXTURES:
-                            new FamilyInstanceBuilder(Uiapp)
-                                .WithCircuit(elementData.Circuit)
-                                .WithCurrentLevel()
-                                .WithLampSuffix(elementData.CurrentSuffix)
-                                .Build(elementData.Name);
+                            instanceBuilder = new FamilyInstanceBuilder(Uiapp);
+                            new ElementInstaller(elementData, instanceBuilder)
+                                .InstallLightingFixtures();
                             break;
                         case StaticData.LIGHTING_DEVICES:
-                            new FamilyInstanceBuilder(Uiapp)
-                                .WithSwitchSuffixes(lamps)
-                                .WithHeight(elementData.Height, elementData.TypeOfHeight)
-                                .WithCircuit(elementData.Circuit)
-                                .WithCurrentLevel()
-                                .Build(elementData.Name);
+                            instanceBuilder = new FamilyInstanceBuilder(Uiapp);
+                            new ElementInstaller(elementData, instanceBuilder)
+                                .InstallLightingDevices();
                             break;
                         case StaticData.ELECTRICAL_FIXTURES:
+                            instanceBuilder = new FamilyInstanceBuilder(Uiapp);
+                            new ElementInstaller(elementData, instanceBuilder)
+                                .InstallElectricalFixtures();
+                            break;
                         case StaticData.TELEPHONE_DEVICES:
                         case StaticData.FIRE_ALARM_DEVICES:
                         case StaticData.COMMUNICATION_DEVICES:
-                            new FamilyInstanceBuilder(Uiapp)
-                                .WithHeight(elementData.Height, elementData.TypeOfHeight)
-                                .WithCircuit(elementData.Circuit)
-                                .WithCurrentLevel()
-                                .Build(elementData.Name);
+                            instanceBuilder = new FamilyInstanceBuilder(Uiapp);
+                            new ElementInstaller(elementData, instanceBuilder)
+                                .InstallCommunicationDevices();
                             break;
                         default:
                             break;
@@ -281,15 +278,54 @@ namespace ApartmentPanel.Infrastructure
             return collection;
         }
 
+        private string GetNumbersFromLamps(List<FamilyInstance> lamps)
+        {
+            var circuitParameters = new List<Parameter>();
+
+            string targetCircuitParam = StaticData.ELEMENT_CIRCUIT_PARAM_NAME;
+
+            foreach (var lamp in lamps)
+            {
+                var lampParameter = lamp.Parameters
+                    .OfType<Parameter>()
+                    .Where(p => p.Definition.Name.Contains(targetCircuitParam))
+                    .FirstOrDefault();
+
+                if (lampParameter == null)
+                    throw new CustomParameterException(targetCircuitParam, lamp.Name);
+
+                circuitParameters.Add(lampParameter);
+            }
+
+            var lampCircuits = new List<string>();
+
+            foreach (Parameter parameter in circuitParameters)
+                if (parameter.Definition.Name.Contains(targetCircuitParam))
+                    if (parameter.StorageType == StorageType.String)
+                        lampCircuits.Add(parameter.AsString());
+
+            var suffixes = lampCircuits
+                .Select(c => c.Substring(c.IndexOf("/") + 1))
+                .Distinct()
+                .OrderBy(c => c)
+                .ToList();
+
+            return string.Join(",", suffixes);
+        }
+
         private void AnalizeElement()
         {
+            /*var familyInstance = new FilteredElementCollector(Document)
+                .OfClass(typeof(FamilySymbol))
+                .Where(fs => fs.Name == StaticData.SINGLE_SOCKET)
+                .FirstOrDefault() as FamilySymbol;*/
+
             var selectedElementId = Selection.GetElementIds().FirstOrDefault();
             if (selectedElementId == null)
             {
                 // No element is selected
                 return;
             }
-
             Element selectedElement = Document.GetElement(selectedElementId);
             var familyInstance = selectedElement as FamilyInstance;
             var lp = familyInstance.Location as LocationPoint;
@@ -303,8 +339,26 @@ namespace ApartmentPanel.Infrastructure
                 Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
             var zMinCm = UnitUtils.ConvertFromInternalUnits(pointMin.Z,
                 Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+
+            var heightOfInstance = Math.Abs(zMaxCm) - Math.Abs(zMinCm);
+            var poinInCmMax = FeetToCm(bb.Max);
+            var poinInCmMin = FeetToCm(bb.Min);
+        }
+
+        private XYZ FeetToCm(XYZ feetPoint)
+        {
+            double x = UnitUtils.ConvertFromInternalUnits(feetPoint.X,
+                Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+            double y = UnitUtils.ConvertFromInternalUnits(feetPoint.Y,
+                Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+            double z = UnitUtils.ConvertFromInternalUnits(feetPoint.Z,
+                Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+
+            return new XYZ(x, y, z);
         }
     }
+
+
 
     class LightingDeviceSelectionFilter : ISelectionFilter
     {

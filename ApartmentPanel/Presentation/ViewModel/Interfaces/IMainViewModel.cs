@@ -1,4 +1,5 @@
-﻿using ApartmentPanel.Presentation.Models;
+﻿using ApartmentPanel.Core.Models;
+using ApartmentPanel.Presentation.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
