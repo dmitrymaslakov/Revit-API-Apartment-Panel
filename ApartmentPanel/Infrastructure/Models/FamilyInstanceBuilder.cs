@@ -7,6 +7,7 @@ using ApartmentPanel.Utility.Exceptions;
 using ApartmentPanel.Utility;
 using ApartmentPanel.Infrastructure.Models.LocationStrategies;
 using ApartmentPanel.Core.Models;
+using System;
 
 namespace ApartmentPanel.Infrastructure.Models
 {
@@ -17,8 +18,9 @@ namespace ApartmentPanel.Infrastructure.Models
         private UIDocument _uiDocument;
         private Document _document;
         private Selection _selection;
-        /*private double _elevationFromLevel;
-        private string _height;*/
+        /*private double _elevationFromLevel;*/
+        private double _height;
+        private string _renderedHeight;
         private ILocationStrategy _locationStrategy;
         private ElementId _currentLevelId;
         private string _circuit;
@@ -46,16 +48,19 @@ namespace ApartmentPanel.Infrastructure.Models
         }
 
         #region Configuration methods
-        public FamilyInstanceBuilder WithHeight(Height height, ILocationStrategy locationStrategy)
+        public FamilyInstanceBuilder SetLocationStrategy(ILocationStrategy locationStrategy)
         {
             _locationStrategy = locationStrategy;
-            /*_height = height;
-            if (!string.IsNullOrEmpty(height))
-            {
-                string elevationFromLevel = height.Split('=')[1];
-                bool isElevationParsed = double.TryParse(elevationFromLevel,
-                    out _elevationFromLevel);
-            }*/
+            return this;
+        }
+        public FamilyInstanceBuilder RenderHeightAs(Func<double, string> heightFormat)
+        {
+            _renderedHeight = heightFormat(_height);
+            return this;
+        }
+        public FamilyInstanceBuilder WithHeight(double height)
+        {
+            _height = height;
             return this;
         }
         public FamilyInstanceBuilder WithCurrentLevel()
@@ -105,8 +110,11 @@ namespace ApartmentPanel.Infrastructure.Models
             using (var tr = new Transaction(_document, "Config FamilyInstance"))
             {
                 tr.Start();
-                XYZ dir = new XYZ(0, 0, 0);
-                string category = familyInstance.Category.Name;
+                if (_currentLevelId != null) SetCurrentLevel(familyInstance);
+                if (_locationStrategy != null) _locationStrategy.SetRequiredLocation(familyInstance, _height);
+                if (string.IsNullOrEmpty(_renderedHeight)) SetHeight(familyInstance);
+                if (string.IsNullOrEmpty(_circuit)) SetCircuit(familyInstance);
+                /*string category = familyInstance.Category.Name;
                 if (_currentLevelId != null)
                 {
                     SetCurrentLevel(familyInstance);
@@ -130,8 +138,7 @@ namespace ApartmentPanel.Infrastructure.Models
                 catch (CustomParameterException ex)
                 {
                     TaskDialog.Show($"Exception", ex.Message);
-                }
-
+                }*/
                 tr.Commit();
             }
         }
@@ -159,7 +166,6 @@ namespace ApartmentPanel.Infrastructure.Models
                 .get_Parameter(BuiltInParameter.INSTANCE_SCHEDULE_ONLY_LEVEL_PARAM)
                 .Set(_currentLevelId);
         }
-        
         /*private void SetElevationFromLevel(FamilyInstance familyInstance)
         {
             double newElevationFeets = UnitUtils.ConvertToInternalUnits(_elevationFromLevel,
@@ -208,7 +214,7 @@ namespace ApartmentPanel.Infrastructure.Models
                 case StaticData.TELEPHONE_DEVICES:
                 case StaticData.FIRE_ALARM_DEVICES:
                 case StaticData.COMMUNICATION_DEVICES:
-                    circuitParam.Set(_height);
+                    circuitParam.Set(_renderedHeight);
                     break;
             }
         }

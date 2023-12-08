@@ -71,8 +71,9 @@
     <Compile Include="Core\Models\CategorizedFamilySymbols.cs" />
     <Compile Include="Infrastructure\Models\ElementInstaller.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\ILocationStrategy.cs" />
-    <Compile Include="Infrastructure\Models\LocationStrategies\BottomCenterLocationStrategy.cs" />
-    <Compile Include="Infrastructure\Models\LocationStrategies\TopCenterLocationStrategy.cs" />
+    <Compile Include="Infrastructure\Models\LocationStrategies\BottomLocationStrategy.cs" />
+    <Compile Include="Infrastructure\RevitInfrastructureBase.cs" />
+    <Compile Include="Infrastructure\Models\LocationStrategies\TopLocationStrategy.cs" />
     <Compile Include="Core\Enums\TypeOfHeight.cs" />
     <Compile Include="Presentation\Models\Batch\BatchedElement.cs" />
     <Compile Include="Presentation\Models\Batch\BatchedRow.cs" />

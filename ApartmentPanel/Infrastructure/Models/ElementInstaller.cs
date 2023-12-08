@@ -1,6 +1,8 @@
 ﻿using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
 using ApartmentPanel.Infrastructure.Models.LocationStrategies;
 using ApartmentPanel.Core.Enums;
+using System;
+using Autodesk.Revit.UI;
 
 namespace ApartmentPanel.Infrastructure.Models
 {
@@ -9,13 +11,17 @@ namespace ApartmentPanel.Infrastructure.Models
         private readonly InsertElementDTO _elementData;
         private readonly FamilyInstanceBuilder _familyInstanceBuilder;
         private readonly ILocationStrategy _locationStrategy;
+        private readonly Func<double, string> _heightFormat;
+        private readonly UIApplication _uiapp;
 
-        public ElementInstaller(InsertElementDTO elementData, 
+        public ElementInstaller(UIApplication uiapp, InsertElementDTO elementData,
             FamilyInstanceBuilder familyInstanceBuilder)
         {
+            _uiapp = uiapp;
             _elementData = elementData;
             _familyInstanceBuilder = familyInstanceBuilder;
             _locationStrategy = GetLocationStrategy(_elementData.Height.TypeOf);
+            _heightFormat = height => $"{_elementData.Height.TypeOf}={height}";
         }
         
         public ElementInstaller(string[] elements, FamilyInstanceBuilder familyInstanceBuilder)
@@ -36,7 +42,9 @@ namespace ApartmentPanel.Infrastructure.Models
         {
             _familyInstanceBuilder
                 .WithSwitchNumbers(_elementData.SwitchNumbers)
-                .WithHeight(_elementData.Height, _locationStrategy)
+                .SetLocationStrategy(_locationStrategy)
+                .RenderHeightAs(_heightFormat)
+                .WithHeight(_elementData.Height.Value)
                 .WithCircuit(_elementData.Circuit)
                 .WithCurrentLevel()
                 .Build(_elementData.Name);
@@ -45,7 +53,9 @@ namespace ApartmentPanel.Infrastructure.Models
         public void InstallElectricalFixtures()
         {
             _familyInstanceBuilder
-                .WithHeight(_elementData.Height, _locationStrategy)
+                .SetLocationStrategy(_locationStrategy)
+                .RenderHeightAs(_heightFormat)
+                .WithHeight(_elementData.Height.Value)
                 .WithCircuit(_elementData.Circuit)
                 .WithCurrentLevel()
                 .Build(_elementData.Name);
@@ -54,7 +64,9 @@ namespace ApartmentPanel.Infrastructure.Models
         public void InstallCommunicationDevices()
         {
             _familyInstanceBuilder
-                .WithHeight(_elementData.Height, _locationStrategy)
+                .SetLocationStrategy(_locationStrategy)
+                .RenderHeightAs(_heightFormat)
+                .WithHeight(_elementData.Height.Value)
                 .WithCurrentLevel()
                 .Build(_elementData.Name);
         }
@@ -64,9 +76,9 @@ namespace ApartmentPanel.Infrastructure.Models
             switch (typeOfHeight) 
             {
                 case TypeOfHeight.UK:
-                    return new BottomCenterLocationStrategy();
+                    return new BottomLocationStrategy(_uiapp);
                 case TypeOfHeight.OK:
-                    return new TopCenterLocationStrategy();
+                    return new TopLocationStrategy(_uiapp);
                 case TypeOfHeight.Center:
                     break;
             }

@@ -108,7 +108,7 @@
                         ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
                         AddHeightBtnVisibility="Collapsed"/>
                     <components:HeightsList 
-                        TypeOfHeight="H" 
+                        TypeOfHeight="Center" 
                         ListHeights="{Binding ListHeightsCenter}"
                         ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
                         AddHeightBtnVisibility="Collapsed"/>

@@ -11,24 +11,24 @@ using ApartmentPanel.Utility.Exceptions;
 
 namespace ApartmentPanel.Infrastructure
 {
-    public class RequestHandler : IExternalEventHandler
+    public class RequestHandler : RevitInfrastructureBase, IExternalEventHandler
     {
         public Request Request { get; } = new Request();
         public object Props { get; set; }
 
-        public UIApplication Uiapp { get; set; }
-        public UIDocument UiDocument { get; set; }
-        public Document Document { get; set; }
-        public Selection Selection { get; set; }
+        /*public UIApplication _uiapp { get; set; }
+        public UIDocument _uiDocument { get; set; }
+        public Document _document { get; set; }
+        public Selection _selection { get; set; }*/
 
         public void Execute(UIApplication uiapp)
         {
             try
             {
-                Uiapp = uiapp;
-                UiDocument = Uiapp.ActiveUIDocument;
-                Document = UiDocument.Document;
-                Selection = UiDocument.Selection;
+                _uiapp = uiapp;
+                _uiDocument = _uiapp.ActiveUIDocument;
+                _document = _uiDocument.Document;
+                _selection = _uiDocument.Selection;
 
                 switch (Request.Take())
                 {
@@ -114,7 +114,7 @@ namespace ApartmentPanel.Infrastructure
         {
             var showListElementsPanel = Props as Action<List<(string name, string category)>>;
             // Create a new FilteredElementCollector and filter by FamilySymbol class
-            var collector = new FilteredElementCollector(Document).OfClass(typeof(FamilySymbol));
+            var collector = new FilteredElementCollector(_document).OfClass(typeof(FamilySymbol));
             // Create a list of BuiltInCategory enums for the categories you want to filter by
             List<BuiltInCategory> categories = new List<BuiltInCategory>
             {
@@ -227,25 +227,25 @@ namespace ApartmentPanel.Infrastructure
                     switch (elementData.Category)
                     {
                         case StaticData.LIGHTING_FIXTURES:
-                            instanceBuilder = new FamilyInstanceBuilder(Uiapp);
-                            new ElementInstaller(elementData, instanceBuilder)
+                            instanceBuilder = new FamilyInstanceBuilder(_uiapp);
+                            new ElementInstaller(_uiapp, elementData, instanceBuilder)
                                 .InstallLightingFixtures();
                             break;
                         case StaticData.LIGHTING_DEVICES:
-                            instanceBuilder = new FamilyInstanceBuilder(Uiapp);
-                            new ElementInstaller(elementData, instanceBuilder)
+                            instanceBuilder = new FamilyInstanceBuilder(_uiapp);
+                            new ElementInstaller(_uiapp, elementData, instanceBuilder)
                                 .InstallLightingDevices();
                             break;
                         case StaticData.ELECTRICAL_FIXTURES:
-                            instanceBuilder = new FamilyInstanceBuilder(Uiapp);
-                            new ElementInstaller(elementData, instanceBuilder)
+                            instanceBuilder = new FamilyInstanceBuilder(_uiapp);
+                            new ElementInstaller(_uiapp, elementData, instanceBuilder)
                                 .InstallElectricalFixtures();
                             break;
                         case StaticData.TELEPHONE_DEVICES:
                         case StaticData.FIRE_ALARM_DEVICES:
                         case StaticData.COMMUNICATION_DEVICES:
-                            instanceBuilder = new FamilyInstanceBuilder(Uiapp);
-                            new ElementInstaller(elementData, instanceBuilder)
+                            instanceBuilder = new FamilyInstanceBuilder(_uiapp);
+                            new ElementInstaller(_uiapp, elementData, instanceBuilder)
                                 .InstallCommunicationDevices();
                             break;
                         default:
@@ -263,8 +263,8 @@ namespace ApartmentPanel.Infrastructure
 
         private List<FamilyInstance> PickLamp()
         {
-            var collection = Selection.GetElementIds()
-                            .Select(id => Document.GetElement(id))
+            var collection = _selection.GetElementIds()
+                            .Select(id => _document.GetElement(id))
                             .OfType<FamilyInstance>()
                             .Where(fs => fs.Category.Name.Contains("Lighting Fixtures"))
                             .ToList()
@@ -320,25 +320,25 @@ namespace ApartmentPanel.Infrastructure
                 .Where(fs => fs.Name == StaticData.SINGLE_SOCKET)
                 .FirstOrDefault() as FamilySymbol;*/
 
-            var selectedElementId = Selection.GetElementIds().FirstOrDefault();
+            var selectedElementId = _selection.GetElementIds().FirstOrDefault();
             if (selectedElementId == null)
             {
                 // No element is selected
                 return;
             }
-            Element selectedElement = Document.GetElement(selectedElementId);
+            Element selectedElement = _document.GetElement(selectedElementId);
             var familyInstance = selectedElement as FamilyInstance;
             var lp = familyInstance.Location as LocationPoint;
             var pointFeets = lp.Point;
             var zCm = UnitUtils.ConvertFromInternalUnits(pointFeets.Z,
-                Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+                _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
             var bb = familyInstance.get_BoundingBox(null);
             var pointMax = bb.Max;
             var pointMin = bb.Min;
             var zMaxCm = UnitUtils.ConvertFromInternalUnits(pointMax.Z,
-                Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+                _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
             var zMinCm = UnitUtils.ConvertFromInternalUnits(pointMin.Z,
-                Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+                _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
 
             var heightOfInstance = Math.Abs(zMaxCm) - Math.Abs(zMinCm);
             var poinInCmMax = FeetToCm(bb.Max);
@@ -348,11 +348,11 @@ namespace ApartmentPanel.Infrastructure
         private XYZ FeetToCm(XYZ feetPoint)
         {
             double x = UnitUtils.ConvertFromInternalUnits(feetPoint.X,
-                Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+                _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
             double y = UnitUtils.ConvertFromInternalUnits(feetPoint.Y,
-                Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+                _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
             double z = UnitUtils.ConvertFromInternalUnits(feetPoint.Z,
-                Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+                _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
 
             return new XYZ(x, y, z);
         }

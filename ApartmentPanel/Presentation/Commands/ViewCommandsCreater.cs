@@ -37,10 +37,7 @@ namespace ApartmentPanel.Presentation.Commands
                 Name = elementName,
                 Category = elementCategory,
                 Circuit = circuit,
-                /*Height = _viewProperties.ElementHeight != null
-                    ? _viewProperties.ElementHeight.Value
-                    : default,
-                TypeOfHeight = _viewProperties.ElementHeight?.TypeOf,*/
+                Height = new Height(),
                 CurrentSuffix = _viewProperties.CurrentSuffix,
                 InsertingMode = insertingMode
             };
