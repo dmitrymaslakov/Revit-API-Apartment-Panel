@@ -52,44 +52,4 @@
             </GridView>
         </ListView.View>
     </ListView>
-    <!--<ListView ItemsSource="???"
-              x:Name="apartmentCircuits">
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="???"
-                               x:Name="circuitNumber"
-                               Margin="0 0 70 0"/>
-                    <ListView ItemsSource="???">
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel/>
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Button 
-                                        Tag="???"                                        
-                                        KeyDown="Button_KeyDown"
-                                        MouseEnter="Button_MouseEnter"
-                                        MouseLeave="Button_MouseLeave"
-                                        Style="{StaticResource circuitButton}"
-                                        Command="{Binding DataContext.InsertElementCommand,
-                                            RelativeSource={RelativeSource AncestorType=UserControl}}">
-                                    <Button.CommandParameter>
-                                        <MultiBinding Converter="{StaticResource ElementDataConverter}">
-                                            <Binding Path="Text" ElementName="circuitNumber"/>
-                                            <Binding Path="Name"/>
-                                            <Binding Path="Category"/>
-                                        </MultiBinding>
-                                    </Button.CommandParameter>
-                                    <Image Source="{Binding Annotation}"/>
-                                </Button>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackPanel>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>-->
 </UserControl>

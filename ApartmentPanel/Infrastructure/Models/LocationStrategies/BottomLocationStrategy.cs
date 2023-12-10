@@ -12,15 +12,13 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
             XYZ basePoint = (familyInstance.Location as LocationPoint)?.Point;
             XYZ minPoint = familyInstance.get_BoundingBox(null).Min;
             XYZ targetPoint = new XYZ(basePoint.X, basePoint.Y, minPoint.Z);
-            XYZ deltaPoint = basePoint.Subtract(targetPoint);
+            XYZ deltaPoints = basePoint.Subtract(targetPoint);
 
             double heightInFeets = UnitUtils.ConvertToInternalUnits(height,
                 _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
 
-            XYZ newBasePoint = basePoint
-                .Subtract(deltaPoint)
-                .Add(new XYZ(0, 0, heightInFeets));
-            familyInstance.Location.Move(newBasePoint);
+            XYZ newBasePoint = new XYZ(basePoint.X, basePoint.Y, deltaPoints.Z + heightInFeets);
+            familyInstance.Location.Move(newBasePoint - basePoint);
         }
     }
 }

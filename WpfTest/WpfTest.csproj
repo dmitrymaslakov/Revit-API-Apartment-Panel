@@ -58,6 +58,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Components\Batch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Components\HeightsList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -69,10 +73,16 @@
     <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="MockData\HeightsList.cs" />
+    <Compile Include="Models\Batch\BatchedElement.cs" />
+    <Compile Include="Models\Batch\BatchedRow.cs" />
+    <Compile Include="Models\Batch\ElementsBatch.cs" />
     <Compile Include="Models\Height.cs" />
     <Compile Include="Utils\Converters\HeightDataConverter.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\Components\Batch.xaml.cs">
+      <DependentUpon>Batch.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Components\HeightsList.xaml.cs">
       <DependentUpon>HeightsList.xaml</DependentUpon>
     </Compile>

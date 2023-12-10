@@ -11,33 +11,6 @@
         Title="Testing WPF" 
         Height="450" Width="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="Height">
-            <UniformGrid Columns="3">
-                <components:HeightsList 
-                    TypeOfHeight="UK" 
-                    ListHeights="{Binding ListHeightsUK}"
-                    ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"/>
-                <components:HeightsList 
-                    TypeOfHeight="OK" 
-                    ListHeights="{Binding ListHeightsOK}"
-                    ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"/>
-                <components:HeightsList 
-                    TypeOfHeight="H" 
-                    ListHeights="{Binding ListHeightsCenter}"
-                    ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"/>
-            </UniformGrid>
-        </GroupBox>
-        <WrapPanel Grid.Row="1">
-            <TextBlock>
-                <Run Text="Current height: " />
-                <Run Text="{Binding ElementHeight.TypeOf}" />
-                <Run Text="=" />
-                <Run Text="{Binding ElementHeight.Value}" />
-            </TextBlock>
-        </WrapPanel>
+        <components:Batch ListBatchedRows="{Binding ElementsBatch.BatchedRows}"/>
     </Grid>
 </Window>

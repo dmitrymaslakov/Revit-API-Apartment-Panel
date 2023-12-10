@@ -117,7 +117,7 @@
                             TypeOfHeight="OK" 
                             ListHeights="{Binding ListHeightsOK}"/>
                                 <local:HeightsList 
-                            TypeOfHeight="H" 
+                            TypeOfHeight="Center" 
                             ListHeights="{Binding ListHeightsCenter}"/>
                             </UniformGrid>
                         </StackPanel>
