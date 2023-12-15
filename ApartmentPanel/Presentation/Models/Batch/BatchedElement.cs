@@ -1,6 +1,4 @@
-﻿using ApartmentPanel.Core.Models.Interfaces;
-using System.ComponentModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 
 namespace ApartmentPanel.Presentation.Models.Batch

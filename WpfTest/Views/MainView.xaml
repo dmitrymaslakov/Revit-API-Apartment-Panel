@@ -11,6 +11,17 @@
         Title="Testing WPF" 
         Height="450" Width="800">
     <Grid>
-        <components:Batch ListBatchedRows="{Binding ElementsBatch.BatchedRows}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <components:CircuitsList
+            Grid.Row="0"
+            Circuits="{Binding MockPanelCircuits}"
+            HitElementCommand="{Binding CreateNewElementForBatchCommand}"/>
+        <components:Batch 
+            Grid.Row="1"
+            ListBatchedRows="{Binding ElementsBatch.BatchedRows}"
+            AddElementToRowCommand="{Binding AddElementToRowCommand}"/>
     </Grid>
 </Window>

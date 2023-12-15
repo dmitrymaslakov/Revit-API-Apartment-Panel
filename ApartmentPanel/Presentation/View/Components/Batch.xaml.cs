@@ -1,11 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using ApartmentPanel.Presentation.Models.Batch;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using WpfTest.Models.Batch;
 
-namespace WpfTest.Views.Components
+namespace ApartmentPanel.Presentation.View.Components
 {
     /// <summary>
     /// Interaction logic for Batch.xaml

@@ -62,6 +62,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Components\CircuitsList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Components\HeightsList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -72,16 +76,24 @@
     </Page>
     <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="MarkupExtensions\EnumSourceExtention.cs" />
     <Compile Include="MockData\HeightsList.cs" />
+    <Compile Include="Models\ApartmentElement.cs" />
     <Compile Include="Models\Batch\BatchedElement.cs" />
     <Compile Include="Models\Batch\BatchedRow.cs" />
     <Compile Include="Models\Batch\ElementsBatch.cs" />
+    <Compile Include="Models\Circuit.cs" />
     <Compile Include="Models\Height.cs" />
+    <Compile Include="Models\TypeOfHeight.cs" />
+    <Compile Include="Utility\ObservableDictionary.cs" />
     <Compile Include="Utils\Converters\HeightDataConverter.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\Components\Batch.xaml.cs">
       <DependentUpon>Batch.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\CircuitsList.xaml.cs">
+      <DependentUpon>CircuitsList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Components\HeightsList.xaml.cs">
       <DependentUpon>HeightsList.xaml</DependentUpon>

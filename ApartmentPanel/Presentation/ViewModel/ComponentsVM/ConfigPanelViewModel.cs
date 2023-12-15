@@ -11,6 +11,9 @@ using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Core.Models;
+using ApartmentPanel.Presentation.Models.Batch;
+using ApartmentPanel.Presentation.Models;
+using System.Windows;
 
 namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 {
@@ -29,6 +32,14 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             new ApartmentElement { Name = "USB"},
             new ApartmentElement { Name = "ThroughSwitch"}
         };
+        private int _elementIndex = 1;
+        #endregion
+        #region MockProps
+        public ObservableCollection<Circuit> MockPanelCircuits { get; set; } = new ObservableCollection<Circuit>
+        {
+            new Circuit{ Number = "1", Elements = el1 },
+            new Circuit{ Number = "2", Elements = el2 },
+        };
         #endregion
 
         private readonly ConfigPanelCommandsCreater _commandCreater;
@@ -38,6 +49,25 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         public ConfigPanelViewModel(IElementService elementService,
             IListElementsViewModel listElementsVM) : base(elementService)
         {
+            #region MockInitialization
+            var _batchedElements1 = Enumerable.Range(1, 3).Select(i => new BatchedElement
+            {
+                Name = $"elName {_elementIndex++}",
+                Margin = new Thickness(i, 0, 0, 0)
+            });
+            var _rows = Enumerable.Range(1, 2).Select(i => new BatchedRow
+            {
+                Number = i,
+                HeightFromFloor = new Height(),
+                RowElements = new ObservableCollection<BatchedElement>(_batchedElements1)
+            });            
+            #endregion
+
+            ElementsBatch = new ElementsBatch
+            {
+                BatchedRows = new ObservableCollection<BatchedRow>(_rows)
+            };
+
             _commandCreater = new ConfigPanelCommandsCreater(this, ElementService);
             ListElementsVM = listElementsVM;
             ApartmentElements = new ObservableCollection<IApartmentElement>();
@@ -70,15 +100,6 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             SaveLatestConfigCommand = _commandCreater.CreateSaveLatestConfigCommand();
         }
 
-        #region MockProps
-        public ObservableDictionary<string, ObservableCollection<IApartmentElement>> MockPanelCircuits { get; set; } =
-            new ObservableDictionary<string, ObservableCollection<IApartmentElement>>
-            {
-                new KeyValuePair<string, ObservableCollection<IApartmentElement>>("1", el1),
-                new KeyValuePair<string, ObservableCollection<IApartmentElement>>("2", el2)
-            };
-
-        #endregion
         [JsonIgnore]
         public IListElementsViewModel ListElementsVM { get; set; }
 
@@ -150,6 +171,17 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         [JsonIgnore]
         public bool IsCancelEnabled { get => _isCancelEnabled; set => Set(ref _isCancelEnabled, value); }
 
+        #region Batch
+        public ElementsBatch ElementsBatch { get; set; }
+
+        private BatchedElement _newElementForBatch;
+        public BatchedElement NewElementForBatch
+        {
+            get => _newElementForBatch;
+            set => Set(ref _newElementForBatch, value);
+        }
+        #endregion
+
         #region listHeights
         private ObservableCollection<double> _listHeightsOK;
 
@@ -208,6 +240,10 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         public ICommand SaveLatestConfigCommand { get; set; }
         [JsonIgnore]
         public ICommand LoadLatestConfigCommand { get; set; }
+        [JsonIgnore]
+        public ICommand AddElementToRowCommand { get; set; }
+        [JsonIgnore]
+        public ICommand CreateNewElementForBatchCommand { get; set; }
         [JsonIgnore]
         public Action<object, OkApplyCancel> OkApplyCancelActions { get; set; }
 

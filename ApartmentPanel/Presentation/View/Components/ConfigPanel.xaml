@@ -50,11 +50,11 @@
             />
                     <StackPanel Grid.Column="1" Margin="0 20 0 0">
                         <Button Style="{StaticResource ArrowButton}"
-                    Command="{Binding AddElementToCircuitCommand}">
+                                Command="{Binding AddElementToCircuitCommand}">
                             <fa:ImageAwesome Icon="ArrowRight" Foreground="Green"/>
                         </Button>
                         <Button Style="{StaticResource ArrowButton}"
-                    Command="{Binding RemoveElementsFromCircuitCommand}">
+                                Command="{Binding RemoveElementsFromCircuitCommand}">
                             <fa:ImageAwesome Icon="ArrowLeft" Foreground="Blue"/>
                         </Button>
                     </StackPanel>
@@ -128,22 +128,24 @@
                 <TabItem.Header>
                     <TextBlock Text="Batch Insert"/>
                 </TabItem.Header>
-                <ListView ItemsSource="{Binding MockPanelCircuits}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Key}" Width="50"/>
-                                <ListView ItemsSource="{Binding Value}" DisplayMemberPath="Name">
-                                    <ListView.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel/>
-                                        </ItemsPanelTemplate>
-                                    </ListView.ItemsPanel>
-                                </ListView>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="37*"/>
+                        <ColumnDefinition Width="260*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <local:CircuitsList
+                        Grid.Row="0"
+                        Circuits="{Binding MockPanelCircuits}"
+                        HitElementCommand="{Binding CreateNewElementForBatchCommand}" Grid.ColumnSpan="2"/>
+                    <local:Batch 
+                        Grid.Row="1"
+                        ListBatchedRows="{Binding ElementsBatch.BatchedRows}"
+                        AddElementToRowCommand="{Binding AddElementToRowCommand}" Grid.ColumnSpan="2"/>
+                </Grid>
             </TabItem>
         </TabControl>
         <WrapPanel HorizontalAlignment="Right" Margin="0 0 50 0">

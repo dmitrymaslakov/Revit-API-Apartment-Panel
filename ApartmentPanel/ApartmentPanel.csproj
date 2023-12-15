@@ -75,6 +75,7 @@
     <Compile Include="Infrastructure\RevitInfrastructureBase.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\TopLocationStrategy.cs" />
     <Compile Include="Core\Enums\TypeOfHeight.cs" />
+    <Compile Include="Presentation\MarkupExtensions\EnumSourceExtention.cs" />
     <Compile Include="Presentation\Models\Batch\BatchedElement.cs" />
     <Compile Include="Presentation\Models\Batch\BatchedRow.cs" />
     <Compile Include="Presentation\Models\Batch\BatchedLocation.cs" />
@@ -84,6 +85,9 @@
     <Compile Include="Core\Models\Height.cs" />
     <Compile Include="Presentation\Models\MockData\MockCircuit.cs" />
     <Compile Include="Presentation\Services\ModelAnalizing.cs" />
+    <Compile Include="Presentation\View\Components\Batch.xaml.cs">
+      <DependentUpon>Batch.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\View\Components\CircuitsList.xaml.cs">
       <DependentUpon>CircuitsList.xaml</DependentUpon>
     </Compile>
@@ -154,6 +158,10 @@
   <ItemGroup>
     <Page Include="Presentation\Resources\Styles\ButtonStyle.xaml">
       <Generator>ResXFileCodeGenerator</Generator>
+    </Page>
+    <Page Include="Presentation\View\Components\Batch.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Presentation\View\Components\CircuitsList.xaml">
       <SubType>Designer</SubType>
