@@ -8,6 +8,7 @@ using System.Linq;
 using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
 using ApartmentPanel.Infrastructure.Models;
 using ApartmentPanel.Utility.Exceptions;
+using System.Text;
 
 namespace ApartmentPanel.Infrastructure
 {
@@ -52,9 +53,9 @@ namespace ApartmentPanel.Infrastructure
                             AddElement();
                             break;
                         }
-                    case RequestId.GetProperties:
+                    case RequestId.GettingParameters:
                         {
-                            //GetProperties();
+                            GetParameters();
                             break;
                         }
                     case RequestId.RemoveElement:
@@ -82,6 +83,27 @@ namespace ApartmentPanel.Infrastructure
         }
 
         public string GetName() => "Placement Apartment elements";
+
+        private void GetParameters()
+        {
+            var gettingParamsDTO = Props as GettingParamsDTO;
+
+            Element element = new FilteredElementCollector(_document)
+                .OfClass(typeof(FamilySymbol))
+                .Where(fs => fs.Name == gettingParamsDTO.ElementName)
+                .FirstOrDefault();
+
+            List<string> parameterItems = new List<string>();
+            ParameterSet parameters = element.Parameters;
+            foreach (Parameter param in parameters)
+            {
+                if (param == null) continue;
+                parameterItems.Add(param.Definition.Name);
+            }
+            var getParameters = Props as Action<string>;
+
+            Props = null;
+        }
 
         private void ShowConfigPanel()
         {

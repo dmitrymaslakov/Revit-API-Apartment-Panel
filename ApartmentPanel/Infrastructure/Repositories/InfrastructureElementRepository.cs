@@ -25,6 +25,13 @@ namespace ApartmentPanel.Infrastructure.Repositories
             _exEvent.Raise();
         }
 
+        public void GetParameters(GettingParamsDTO gettingParamsDTO)
+        {
+            _handler.Request.Make(RequestId.GettingParameters);
+            _handler.Props = gettingParamsDTO;
+            _exEvent.Raise();
+        }
+
         public void Analize()
         {
             _handler.Request.Make(RequestId.None);

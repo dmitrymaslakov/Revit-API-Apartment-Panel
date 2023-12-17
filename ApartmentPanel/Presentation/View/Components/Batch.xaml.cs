@@ -4,6 +4,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Xml.Linq;
 
 namespace ApartmentPanel.Presentation.View.Components
 {
@@ -14,6 +16,7 @@ namespace ApartmentPanel.Presentation.View.Components
     {
         public Batch() => InitializeComponent();
 
+        #region ListBatchedRowsProperty
         public static readonly DependencyProperty ListBatchedRowsProperty =
             DependencyProperty.Register(nameof(ListBatchedRows), typeof(ObservableCollection<BatchedRow>),
                 typeof(Batch), new PropertyMetadata(null));
@@ -23,6 +26,31 @@ namespace ApartmentPanel.Presentation.View.Components
             get { return (ObservableCollection<BatchedRow>)GetValue(ListBatchedRowsProperty); }
             set { SetValue(ListBatchedRowsProperty, value); }
         }
+        #endregion
+
+        #region BatchAnnotationProperty
+        public static readonly DependencyProperty BatchAnnotationProperty =
+            DependencyProperty.Register(nameof(BatchAnnotation), typeof(BitmapSource),
+                typeof(Batch), new PropertyMetadata(null));
+
+        public BitmapSource BatchAnnotation
+        {
+            get { return (BitmapSource)GetValue(BatchAnnotationProperty); }
+            set { SetValue(BatchAnnotationProperty, value); }
+        }
+        #endregion
+
+        #region BatchNameProperty
+        public static readonly DependencyProperty BatchNameProperty =
+            DependencyProperty.Register(nameof(BatchName), typeof(string),
+                typeof(Batch), new PropertyMetadata(string.Empty));
+
+        public string BatchName
+        {
+            get { return (string)GetValue(BatchNameProperty); }
+            set { SetValue(BatchNameProperty, value); }
+        }
+        #endregion
 
         public static readonly DependencyProperty AddElementToRowCommandProperty =
             DependencyProperty.Register(nameof(AddElementToRowCommand), typeof(ICommand),

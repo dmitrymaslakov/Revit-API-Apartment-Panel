@@ -14,6 +14,9 @@ using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Presentation.Services;
 using ApartmentPanel.Presentation.View.Components;
+using ApartmentPanel.Presentation.Models.Batch;
+using ApartmentPanel.Utility.AnnotationUtility;
+using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
 
 namespace ApartmentPanel.Presentation.Commands
 {
@@ -234,6 +237,23 @@ namespace ApartmentPanel.Presentation.Commands
             }
         });
 
+        public ICommand CreateSetAnnotationToElementsBatchCommand() => new RelayCommand(o =>
+        {
+            var annotationService = new AnnotationService(
+                new FileAnnotationCommunicatorFactory(_configPanelProperties.ElementsBatch.Name));
+
+            _configPanelProperties.ElementsBatch.Annotation =
+                annotationService.Save(_configPanelProperties.AnnotationPreview);
+
+            if (_configPanelProperties.SelectedApartmentElements.Count == 1)
+            {
+                IApartmentElement apartmentElement =
+                    _configPanelProperties.SelectedApartmentElements.FirstOrDefault();
+
+                _elementService.SetAnnotationTo(apartmentElement, _configPanelProperties.AnnotationPreview);
+            }
+        });
+
         public ICommand CreateSetAnnotationPreviewCommand() => new RelayCommand(o =>
         {
             var bitmapSource = o as BitmapSource;
@@ -264,6 +284,21 @@ namespace ApartmentPanel.Presentation.Commands
                 _elementService.GetSerializationOptions());
 
             File.WriteAllText(_configPanelProperties.LatestConfigPath, json);
+        });
+
+        public ICommand CreateSetNewElementForBatchCommand() => new RelayCommand(o =>
+        {
+            (string circuit, string elementName, string elementCategory) =
+                (ValueTuple<string, string, string>)o;
+
+            _configPanelProperties.NewElementForBatch = 
+                new BatchedElement { Circuit = circuit, Name = elementName };
+        });
+
+        public ICommand CreateAddElementToRowCommand() => new RelayCommand(o =>
+        {
+            var row = (BatchedRow)o;
+            row.RowElements.Add(_configPanelProperties.NewElementForBatch);
         });
     }
 }

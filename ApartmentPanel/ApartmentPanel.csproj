@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Application.cs" />
     <Compile Include="Core\DependencyInjection.cs" />
+    <Compile Include="Core\Infrastructure.Interfaces\DTO\GettingParamsDTO.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\DTO\InsertElementDTO.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\IElementRepository.cs" />
     <Compile Include="Core\Models\ApartmentElement.cs" />
@@ -85,6 +86,9 @@
     <Compile Include="Core\Models\Height.cs" />
     <Compile Include="Presentation\Models\MockData\MockCircuit.cs" />
     <Compile Include="Presentation\Services\ModelAnalizing.cs" />
+    <Compile Include="Presentation\View\Components\AnnotationPreview.xaml.cs">
+      <DependentUpon>AnnotationPreview.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\View\Components\Batch.xaml.cs">
       <DependentUpon>Batch.xaml</DependentUpon>
     </Compile>
@@ -158,6 +162,10 @@
   <ItemGroup>
     <Page Include="Presentation\Resources\Styles\ButtonStyle.xaml">
       <Generator>ResXFileCodeGenerator</Generator>
+    </Page>
+    <Page Include="Presentation\View\Components\AnnotationPreview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\View\Components\Batch.xaml">
       <Generator>MSBuild:Compile</Generator>

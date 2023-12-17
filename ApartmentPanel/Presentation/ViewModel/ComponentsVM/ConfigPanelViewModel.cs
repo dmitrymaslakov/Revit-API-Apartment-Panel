@@ -14,25 +14,44 @@ using ApartmentPanel.Core.Models;
 using ApartmentPanel.Presentation.Models.Batch;
 using ApartmentPanel.Presentation.Models;
 using System.Windows;
+using System.Collections;
+using System.Windows.Media;
+using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
 
 namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 {
     public class ConfigPanelViewModel : ViewModelBase, IConfigPanelViewModel
     {
         #region MockFields
+        static string mockAnnotation = "e:/Different/Study/Programming/C-sharp/Revit-API/Apartment-Panel/ApartmentPanel/bin/Debug/Resources/Annotations/Lamp.png";
         private static ObservableCollection<IApartmentElement> el1 = new ObservableCollection<IApartmentElement>
         {
-            new ApartmentElement { Name = "Switch"},
-            new ApartmentElement { Name = "Socket"},
-            new ApartmentElement { Name = "ThroughSwitch"}
+            new ApartmentElement { Name = "Switch", Annotation = new FileAnnotationReader(mockAnnotation).Get() },
+            new ApartmentElement { Name = "Socket", Annotation = new FileAnnotationReader(mockAnnotation).Get() },
+            new ApartmentElement { Name = "ThroughSwitch", Annotation = new FileAnnotationReader(mockAnnotation).Get() }
         };
         private static ObservableCollection<IApartmentElement> el2 = new ObservableCollection<IApartmentElement>
         {
-            new ApartmentElement { Name = "Smoke Sensor"},
-            new ApartmentElement { Name = "USB"},
-            new ApartmentElement { Name = "ThroughSwitch"}
+            new ApartmentElement { Name = "Smoke Sensor", Annotation = new FileAnnotationReader(mockAnnotation).Get() },
+            new ApartmentElement { Name = "USB", Annotation = new FileAnnotationReader(mockAnnotation).Get() },
+            new ApartmentElement { Name = "ThroughSwitch", Annotation = new FileAnnotationReader(mockAnnotation).Get() }
         };
-        private int _elementIndex = 1;
+        private static int _elementIndex = 1;
+        private static IEnumerable<BatchedElement> _batchedElements1 = 
+            Enumerable.Range(1, 3).Select(i => new BatchedElement
+            {
+                Name = $"elName {_elementIndex++}",
+                Margin = new Thickness(i, 0, 0, 0),
+                Annotation = new FileAnnotationReader(mockAnnotation).Get()
+            });
+        private static IEnumerable<BatchedRow> _rows = 
+            Enumerable.Range(1, 2).Select(i => new BatchedRow
+        {
+            Number = i,
+            HeightFromFloor = new Height(),
+            RowElements = new ObservableCollection<BatchedElement>(_batchedElements1)
+        });
+
         #endregion
         #region MockProps
         public ObservableCollection<Circuit> MockPanelCircuits { get; set; } = new ObservableCollection<Circuit>
@@ -40,6 +59,9 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             new Circuit{ Number = "1", Elements = el1 },
             new Circuit{ Number = "2", Elements = el2 },
         };
+        public ObservableCollection<BatchedRow> MockBatchedRows { get; set; } =
+            new ObservableCollection<BatchedRow>(_rows);
+        public ImageSource MockAnnotation { get; set; } = new FileAnnotationReader(mockAnnotation).Get();
         #endregion
 
         private readonly ConfigPanelCommandsCreater _commandCreater;
@@ -49,20 +71,6 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         public ConfigPanelViewModel(IElementService elementService,
             IListElementsViewModel listElementsVM) : base(elementService)
         {
-            #region MockInitialization
-            var _batchedElements1 = Enumerable.Range(1, 3).Select(i => new BatchedElement
-            {
-                Name = $"elName {_elementIndex++}",
-                Margin = new Thickness(i, 0, 0, 0)
-            });
-            var _rows = Enumerable.Range(1, 2).Select(i => new BatchedRow
-            {
-                Number = i,
-                HeightFromFloor = new Height(),
-                RowElements = new ObservableCollection<BatchedElement>(_batchedElements1)
-            });            
-            #endregion
-
             ElementsBatch = new ElementsBatch
             {
                 BatchedRows = new ObservableCollection<BatchedRow>(_rows)
@@ -95,9 +103,12 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             ApplyCommand = _commandCreater.CreateApplyCommand();
             CancelCommand = _commandCreater.CreateCancelCommand();
             SetAnnotationToElementCommand = _commandCreater.CreateSetAnnotationToElementCommand();
+            SetAnnotationToElementsBatchCommand = _commandCreater.CreateSetAnnotationToElementsBatchCommand();
             SetAnnotationPreviewCommand = _commandCreater.CreateSetAnnotationPreviewCommand();
             LoadLatestConfigCommand = _commandCreater.CreateLoadLatestConfigCommand();
             SaveLatestConfigCommand = _commandCreater.CreateSaveLatestConfigCommand();
+            SetNewElementForBatchCommand = _commandCreater.CreateSetNewElementForBatchCommand();
+            AddElementToRowCommand = _commandCreater.CreateAddElementToRowCommand();
         }
 
         [JsonIgnore]
@@ -235,15 +246,17 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         [JsonIgnore]
         public ICommand SetAnnotationToElementCommand { get; set; }
         [JsonIgnore]
+        public ICommand SetAnnotationToElementsBatchCommand { get; set; }
+        [JsonIgnore]
         public ICommand SetAnnotationPreviewCommand { get; set; }
         [JsonIgnore]
         public ICommand SaveLatestConfigCommand { get; set; }
         [JsonIgnore]
         public ICommand LoadLatestConfigCommand { get; set; }
         [JsonIgnore]
-        public ICommand AddElementToRowCommand { get; set; }
+        public ICommand SetNewElementForBatchCommand { get; set; }
         [JsonIgnore]
-        public ICommand CreateNewElementForBatchCommand { get; set; }
+        public ICommand AddElementToRowCommand { get; set; }
         [JsonIgnore]
         public Action<object, OkApplyCancel> OkApplyCancelActions { get; set; }
 

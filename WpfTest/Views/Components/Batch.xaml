@@ -12,36 +12,39 @@
              Background="White"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ListBox ItemsSource="{Binding ListBatchedRows, ElementName=root}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <ComboBox HorizontalAlignment="Center" 
+        <StackPanel Orientation="Horizontal">
+            <ListBox ItemsSource="{Binding ListBatchedRows, ElementName=root}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <ComboBox HorizontalAlignment="Center" 
                                   VerticalAlignment="Center" 
                                   ItemsSource="{Binding Source={mex:EnumSourceExtention {x:Type models:TypeOfHeight}}}"
                                   SelectedItem="{Binding HeightFromFloor.TypeOf}"/>
-                        <TextBox Text="{Binding HeightFromFloor.Value}" Width="20"/>
-                        <ListBox ItemsSource="{Binding RowElements}">
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Name}" Margin="0 0 10 0"/>
-                                        <TextBox Width="20" Text="{Binding Margin.Left}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                        <Button Width="20" Click="Button_Click">
-                            <fa:ImageAwesome Icon="Plus" Foreground="Green"/>
-                        </Button>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                            <TextBox Text="{Binding HeightFromFloor.Value}" Width="20"/>
+                            <ListBox ItemsSource="{Binding RowElements}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Name}" Margin="0 0 10 0"/>
+                                            <TextBox Width="20" Text="{Binding Margin.Left}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <Button Width="20" Click="Button_Click">
+                                <fa:ImageAwesome Icon="Plus" Foreground="Green"/>
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Image Source="{Binding Annotation, ElementName=root}" Width="30"/>
+        </StackPanel>
     </Grid>
 </UserControl>

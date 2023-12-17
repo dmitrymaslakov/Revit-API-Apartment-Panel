@@ -25,6 +25,8 @@ namespace ApartmentPanel.Presentation.View.Components
         }
 
         private void ClipboardChanged(object sender, EventArgs e)
-            => annotationPreview.Command?.Execute(Clipboard.GetImage());
+        {
+            mainAnnotationPreview.SetAnnotationPreviewCommand?.Execute(Clipboard.GetImage());
+        }
     }
 }

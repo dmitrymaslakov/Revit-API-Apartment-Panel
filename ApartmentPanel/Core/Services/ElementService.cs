@@ -62,8 +62,7 @@ namespace ApartmentPanel.Core.Services
             var annotationService = new AnnotationService(
                 new FileAnnotationCommunicatorFactory(element.Name));
 
-            element.Annotation =
-                annotationService.Save(annotation);
+            element.Annotation = annotationService.Save(annotation);
         }
 
         public ImageSource GetAnnotationFor(string elementName)
@@ -73,6 +72,11 @@ namespace ApartmentPanel.Core.Services
 
             return annotationService.IsAnnotationExists()
                 ? annotationService.Get() : null;
+        }
+
+        public void GetInstanceParameters()
+        {
+
         }
     }
 }

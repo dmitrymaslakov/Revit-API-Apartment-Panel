@@ -14,13 +14,15 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <components:CircuitsList
             Grid.Row="0"
             Circuits="{Binding MockPanelCircuits}"
-            HitElementCommand="{Binding CreateNewElementForBatchCommand}"/>
+            HitElementCommand="{Binding CreateNewElementForBatchCommand}"/>        
         <components:Batch 
             Grid.Row="1"
+            Annotation="{Binding MockAnnotation}"
             ListBatchedRows="{Binding ElementsBatch.BatchedRows}"
             AddElementToRowCommand="{Binding AddElementToRowCommand}"/>
     </Grid>

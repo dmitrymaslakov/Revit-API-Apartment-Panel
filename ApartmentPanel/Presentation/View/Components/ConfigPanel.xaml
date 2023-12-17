@@ -40,14 +40,13 @@
                         <ColumnDefinition Width="190"/>
                     </Grid.ColumnDefinitions>
                     <local:ElementsCard
-                Grid.Column="0"
-                Header="Apartment elements"
-                Elements="{Binding ApartmentElements}"
-                AddElementCommand="{Binding ShowListElementsCommand}"
-                RemoveElementCommand="{Binding RemoveApartmentElementsCommand}"
-                EditBtnVisibility="{x:Static Visibility.Collapsed}"
-                SelectedElementsCommand="{Binding SelectedApartmentElementsCommand}"
-            />
+                        Grid.Column="0"
+                        Header="Apartment elements"
+                        Elements="{Binding ApartmentElements}"
+                        AddElementCommand="{Binding ShowListElementsCommand}"
+                        RemoveElementCommand="{Binding RemoveApartmentElementsCommand}"
+                        EditBtnVisibility="{x:Static Visibility.Collapsed}"
+                        SelectedElementsCommand="{Binding SelectedApartmentElementsCommand}"/>
                     <StackPanel Grid.Column="1" Margin="0 20 0 0">
                         <Button Style="{StaticResource ArrowButton}"
                                 Command="{Binding AddElementToCircuitCommand}">
@@ -60,14 +59,14 @@
                     </StackPanel>
                     <StackPanel Grid.Column="2">
                         <local:ElementsCard
-                    x:Name="PanelCircuitsCard"
-                    Header="Panel circuits"     
-                    IsDictionaryKeys="True"
-                    Elements="{Binding PanelCircuits}"
-                    AddBtnVisibility="{x:Static Visibility.Collapsed}"
-                    EditBtnVisibility="{x:Static Visibility.Collapsed}"
-                    RemoveElementCommand="{Binding RemovePanelCircuitsCommand}"
-                    SelectedElementsCommand ="{Binding SelectPanelCircuitCommand}"/>
+                            x:Name="PanelCircuitsCard"
+                            Header="Panel circuits"     
+                            IsDictionaryKeys="True"
+                            Elements="{Binding PanelCircuits}"
+                            AddBtnVisibility="{x:Static Visibility.Collapsed}"
+                            EditBtnVisibility="{x:Static Visibility.Collapsed}"
+                            RemoveElementCommand="{Binding RemovePanelCircuitsCommand}"
+                            SelectedElementsCommand ="{Binding SelectPanelCircuitCommand}"/>
                         <GroupBox Header="New circuit">
                             <WrapPanel>
                                 <TextBox Text="{Binding NewCircuit}" Width="30" Margin="0 0 10 0"/>
@@ -77,34 +76,38 @@
                             </WrapPanel>
                         </GroupBox>
                     </StackPanel>
-                    <local:ElementsCard 
-                Grid.Column="3"
-                Header="Circuit elements"
-                Elements="{Binding CircuitElements}"
-                AddBtnVisibility="{x:Static Visibility.Collapsed}"
-                EditBtnVisibility="{x:Static Visibility.Collapsed}"
-                RemoveBtnVisibility="{x:Static Visibility.Collapsed}"
-                SelectedElementsCommand="{Binding SelectedCircuitElementCommand}"
-            />
-                    <GroupBox Grid.Row="1" Header="Annotation preview">
+                    <local:ElementsCard
+                        Grid.Column="3"
+                        Header="Circuit elements"
+                        Elements="{Binding CircuitElements}"
+                        AddBtnVisibility="{x:Static Visibility.Collapsed}"
+                        EditBtnVisibility="{x:Static Visibility.Collapsed}"
+                        RemoveBtnVisibility="{x:Static Visibility.Collapsed}"
+                        SelectedElementsCommand="{Binding SelectedCircuitElementCommand}"/>
+                    <local:AnnotationPreview 
+                        Grid.Row="1"
+                        x:Name="mainAnnotationPreview"
+                        Annotation="{Binding AnnotationPreview}"
+                        SetAnnotationPreviewCommand = "{Binding SetAnnotationPreviewCommand}"
+                        SetAnnotationToElementCommand ="{Binding SetAnnotationToElementCommand}"/>
+                    <!--<GroupBox Grid.Row="1" Header="Annotation preview">
                         <StackPanel Grid.Row="1" Grid.Column="2" Margin="0 0 35 0">
                             <Image
-                        Source="{Binding AnnotationPreview}" 
-                        Margin="20 0 20 0" Width="30" Height="30">
+                                Source="{Binding AnnotationPreview}" 
+                                Margin="20 0 20 0" Width="30" Height="30">
                                 <Image.InputBindings>
                                     <KeyBinding 
-                                x:Name="annotationPreview" 
-                                Command="{Binding SetAnnotationPreviewCommand}"/>
+                                        x:Name="annotationPreview" 
+                                        Command="{Binding SetAnnotationPreviewCommand}"/>
                                 </Image.InputBindings>
                             </Image>
                             <Button
-                        x:Name="applyToEl"
-                        Content="Apply to element"
-                        Height="20"
-                        Command="{Binding SetAnnotationToElementCommand}"
-                />
+                                x:Name="applyToEl"
+                                Content="Apply to element"
+                                Height="20"
+                                Command="{Binding SetAnnotationToElementCommand}"/>
                         </StackPanel>
-                    </GroupBox>
+                    </GroupBox>-->
                     <GroupBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3" Header="Height">
                         <StackPanel>
                             <UniformGrid Columns="3" Width="300" HorizontalAlignment="Left">
@@ -129,22 +132,26 @@
                     <TextBlock Text="Batch Insert"/>
                 </TabItem.Header>
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="37*"/>
-                        <ColumnDefinition Width="260*"/>
-                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <local:CircuitsList
                         Grid.Row="0"
                         Circuits="{Binding MockPanelCircuits}"
-                        HitElementCommand="{Binding CreateNewElementForBatchCommand}" Grid.ColumnSpan="2"/>
-                    <local:Batch 
+                        HitElementCommand="{Binding SetNewElementForBatchCommand}"/>
+                    <local:Batch
                         Grid.Row="1"
-                        ListBatchedRows="{Binding ElementsBatch.BatchedRows}"
-                        AddElementToRowCommand="{Binding AddElementToRowCommand}" Grid.ColumnSpan="2"/>
+                        ListBatchedRows="{Binding MockBatchedRows}"
+                        BatchAnnotation="{Binding MockAnnotation}"
+                        BatchName="{Binding ElementsBatch.Name, UpdateSourceTrigger=PropertyChanged}"
+                        AddElementToRowCommand="{Binding AddElementToRowCommand}"/>
+                    <local:AnnotationPreview 
+                        Grid.Row="2"
+                        x:Name="batchAnnotationPreview"
+                        SetAnnotationPreviewCommand="{Binding SetAnnotationPreviewCommand}"
+                        SetAnnotationToElementCommand="{Binding SetAnnotationToElementsBatchCommand}"/>
                 </Grid>
             </TabItem>
         </TabControl>

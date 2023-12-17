@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using WpfTest.Models.Batch;
 
 namespace WpfTest.Views.Components
@@ -22,6 +23,16 @@ namespace WpfTest.Views.Components
         {
             get { return (ObservableCollection<BatchedRow>)GetValue(ListBatchedRowsProperty); }
             set { SetValue(ListBatchedRowsProperty, value); }
+        }
+
+        public static readonly DependencyProperty AnnotationProperty =
+            DependencyProperty.Register(nameof(Annotation), typeof(BitmapSource),
+                typeof(Batch), new PropertyMetadata(null));
+
+        public BitmapSource Annotation
+        {
+            get { return (BitmapSource)GetValue(AnnotationProperty); }
+            set { SetValue(AnnotationProperty, value); }
         }
 
         public static readonly DependencyProperty AddElementToRowCommandProperty =

@@ -6,6 +6,9 @@ using WpfTest.Models;
 using System.Windows.Input;
 using WpfTest.Commands;
 using System;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Security.Policy;
 
 namespace WpfTest.ViewModels
 {
@@ -32,10 +35,23 @@ namespace WpfTest.ViewModels
             new Circuit{ Number = "1", Elements = el1 },
             new Circuit{ Number = "2", Elements = el2 },
         };
+
+        //private ImageSource _mockAnnotation;
+        static Uri uri = new Uri("e:/Different/Study/Programming/C-sharp/Revit-API/Apartment-Panel/ApartmentPanel/bin/Debug/Resources/Annotations/Lamp.png");
+
+        public ImageSource MockAnnotation { get; set; } = BitmapFromUri(uri);
+        /*{
+            get => _mockAnnotation;
+            set => Set(ref _mockAnnotation, value);
+        }*/
+
+
         #endregion
 
         public MainViewModel()
         {
+            /*var uri = new Uri("file:///e:/Different/Study/Programming/C-sharp/Revit-API/Apartment-Panel/ApartmentPanel/bin/Debug/Resources/Annotations/Lamp.png");
+            MockAnnotation = BitmapFromUri(uri);*/
             int elementIndex = 1;
             var BatchedElements1 = Enumerable.Range(1, 3).Select(i => new BatchedElement
             {
@@ -80,5 +96,15 @@ namespace WpfTest.ViewModels
 
             NewElementForBatch = new BatchedElement { Circuit = circuit, Name = elementName };
         }
+        private static ImageSource BitmapFromUri(Uri source)
+        {
+            var bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.UriSource = source;
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.EndInit();
+            return bitmap;
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ApartmentPanel.Core.Models.Interfaces;
+using ApartmentPanel.Presentation.Models.Batch;
 using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
 using ApartmentPanel.Utility;
 using System;
@@ -42,6 +43,8 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         ObservableCollection<double> ListHeightsOK { get; set; }
         ObservableCollection<double> ListHeightsUK { get; set; }
         ObservableCollection<double> ListHeightsCenter { get; set; }
+        BatchedElement NewElementForBatch { get; set; }
+        ElementsBatch ElementsBatch { get; set; }
 
         ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration);
     }
