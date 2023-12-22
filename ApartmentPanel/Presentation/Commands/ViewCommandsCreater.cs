@@ -49,6 +49,11 @@ namespace ApartmentPanel.Presentation.Commands
             _elementService.InsertToModel(elementDTO);
         });
 
+        public ICommand CreateInsertBatchCommand() => new RelayCommand(o =>
+        {
+            _elementService.InsertBatchToModel(batchDTO);
+        });
+
         public ICommand CreateSetCurrentSuffixCommand()
             => new RelayCommand(o => _viewProperties.CurrentSuffix = o as string);
 

@@ -21,40 +21,63 @@
                                   ItemsSource="{Binding Source={mex:EnumSourceExtention {x:Type models:TypeOfHeight}}}"
                                   SelectedItem="{Binding HeightFromFloor.TypeOf}"/>
                             <TextBox Text="{Binding HeightFromFloor.Value}" Width="20"/>
-                            <ListBox ItemsSource="{Binding RowElements}">
-                                <ListBox.ItemsPanel>
+                            <ListView ItemsSource="{Binding RowElements}"
+                                      x:Name="rowElements_lv"
+                                      SelectedItem="{Binding SelectedBatchedElement, ElementName=root}">
+                                <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal"/>
                                     </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                                <ListBox.ItemTemplate>
+                                </ListView.ItemsPanel>
+                                <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
                                             <Image Source="{Binding Annotation}" 
                                                    Width="20"
                                                    Margin="0 0 10 0"/>
-                                            <!--<TextBlock Text="{Binding Name}" Margin="0 0 10 0"/>-->
                                             <TextBox Width="20" Text="{Binding Margin.Left}"/>
                                         </StackPanel>
                                     </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                            <Button Width="20" Click="Button_Click">
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <Button Width="20" Click="Button_Add">
                                 <fa:ImageAwesome Icon="Plus" Foreground="Green"/>
+                            </Button>
+                            <Button Width="20" Click="Button_Remove">
+                                <fa:ImageAwesome Icon="Trash" Foreground="Red"/>
                             </Button>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Name of batch: "/>
-                    <TextBox 
+            <GroupBox Header="Annotation">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Name of batch: "/>
+                        <TextBox 
                         Text="{Binding BatchName, ElementName=root, UpdateSourceTrigger=PropertyChanged}" 
                         Width="50"/>
+                    </StackPanel>
+                    <Image Source="{Binding BatchAnnotation, ElementName=root}" Width="30"/>
                 </StackPanel>
-                <Image Source="{Binding BatchAnnotation, ElementName=root}" Width="30"/>
-            </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Parameters">
+                <ListView ItemsSource="{Binding SelectedBatchedElement.Parameters, ElementName=root}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                            <GridViewColumn Header="Value">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Width="50"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </GroupBox>
         </StackPanel>
     </Grid>
 </UserControl>

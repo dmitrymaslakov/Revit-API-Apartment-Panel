@@ -23,13 +23,17 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <components:CircuitsList 
+        <components:CircuitList 
             Grid.Row="0"
             Circuits="{Binding Circuits}"
             HitElementCommand="{Binding InsertElementCommand}"
             KeyDownCommand="{Binding SetCurrentSuffixCommand}"
             MouseEnterCommand="{Binding SetStatusCommand}"
             MouseLeaveCommand ="{Binding SetStatusCommand}"/>
+        <components:BatchList 
+            Grid.Row="1"
+            Batches="{Binding ElementBatches}"
+            HitElementCommand="{Binding }"/>
         <!--<ListView Grid.Row="0" 
                   ItemsSource="{Binding Circuits}" 
                   x:Name="apartmentCircuits">
@@ -74,13 +78,13 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>-->
-        <Button Grid.Row="1" 
+        <Button Grid.Row="2" 
                 Command="{Binding ConfigureCommand}"
                 Content="Config" 
                 Width="50" 
                 HorizontalAlignment="Right" 
                 Margin="0 0 40 0" />
-        <TextBlock Grid.Row="2">
+        <TextBlock Grid.Row="3">
             <Run Text="Current suffix of circuit: "/>
             <Run Text="{Binding CurrentSuffix}"/>
         </TextBlock>
@@ -94,20 +98,20 @@
                 </TextBlock.InputBindings>
             </TextBlock>
         </WrapPanel>-->
-        <StackPanel Grid.Row="3">
+        <StackPanel Grid.Row="4">
             <GroupBox Header="Height">
                 <UniformGrid Columns="4" Width="250">
-                    <components:HeightsList 
+                    <components:HeightList 
                         TypeOfHeight="UK"
                         ListHeights="{Binding ListHeightsUK}"
                         ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
                         AddHeightBtnVisibility="Collapsed"/>
-                    <components:HeightsList 
+                    <components:HeightList 
                         TypeOfHeight="OK" 
                         ListHeights="{Binding ListHeightsOK}"
                         ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
                         AddHeightBtnVisibility="Collapsed"/>
-                    <components:HeightsList 
+                    <components:HeightList 
                         TypeOfHeight="Center" 
                         ListHeights="{Binding ListHeightsCenter}"
                         ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
@@ -121,10 +125,7 @@
                 <Run Text="{Binding ElementHeight.Value}" />
             </TextBlock>
         </StackPanel>
-        <WrapPanel Grid.Row="5">
-            <Button Content="Analize" Command="{Binding AnalizeCommand}"/>
-        </WrapPanel>
-        <StatusBar Grid.Row="4">
+        <StatusBar Grid.Row="5">
             <StatusBarItem x:Name="statusBarItem" Content="{Binding Status}">
                 <StatusBarItem.Style>
                     <Style TargetType="StatusBarItem">
@@ -138,5 +139,8 @@
                 </StatusBarItem.Style>
             </StatusBarItem>
         </StatusBar>
+        <!--<WrapPanel Grid.Row="5">
+            <Button Content="Analize" Command="{Binding AnalizeCommand}"/>
+        </WrapPanel>-->
     </Grid>
 </UserControl>

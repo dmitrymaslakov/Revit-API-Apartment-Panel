@@ -7,17 +7,17 @@ using System.Windows.Input;
 namespace ApartmentPanel.Presentation.View.Components
 {
     /// <summary>
-    /// Interaction logic for HeightsList.xaml
+    /// Interaction logic for HeightList.xaml
     /// </summary>
-    public partial class HeightsList : UserControl
+    public partial class HeightList : UserControl
     {
-        public HeightsList()
+        public HeightList()
         {
             InitializeComponent();
         }
 
         public static readonly DependencyProperty TypeOfHeightProperty =
-            DependencyProperty.Register(nameof(TypeOfHeight), typeof(TypeOfHeight), typeof(HeightsList),
+            DependencyProperty.Register(nameof(TypeOfHeight), typeof(TypeOfHeight), typeof(HeightList),
                 new PropertyMetadata(TypeOfHeight.UK));
 
         public TypeOfHeight TypeOfHeight
@@ -28,7 +28,7 @@ namespace ApartmentPanel.Presentation.View.Components
 
         public static readonly DependencyProperty ListHeightsProperty =
             DependencyProperty.Register(nameof(ListHeights), typeof(ObservableCollection<double>),
-                typeof(HeightsList), new PropertyMetadata(null));
+                typeof(HeightList), new PropertyMetadata(null));
 
         public ObservableCollection<double> ListHeights
         {
@@ -38,7 +38,7 @@ namespace ApartmentPanel.Presentation.View.Components
 
         public static readonly DependencyProperty AddHeightBtnVisibilityProperty =
             DependencyProperty.Register(nameof(AddHeightBtnVisibility), typeof(Visibility),
-                typeof(HeightsList), new PropertyMetadata(Visibility.Visible));
+                typeof(HeightList), new PropertyMetadata(Visibility.Visible));
 
         public Visibility AddHeightBtnVisibility
         {
@@ -48,7 +48,7 @@ namespace ApartmentPanel.Presentation.View.Components
 
         public static readonly DependencyProperty ActionWithSelectedHeightCommandProperty =
             DependencyProperty.Register(nameof(ActionWithSelectedHeightCommand), typeof(ICommand),
-                typeof(HeightsList), new PropertyMetadata(null));
+                typeof(HeightList), new PropertyMetadata(null));
 
         public ICommand ActionWithSelectedHeightCommand
         {

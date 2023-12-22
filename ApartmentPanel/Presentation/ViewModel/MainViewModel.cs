@@ -10,11 +10,7 @@ using ApartmentPanel.Presentation.Services;
 using ApartmentPanel.Presentation.Models;
 using System;
 using ApartmentPanel.Core.Models;
-using System.Collections.Generic;
-using System.Windows.Media;
-using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
-using Autodesk.Revit.DB;
-using ApartmentPanel.Utility.AnnotationUtility;
+using ApartmentPanel.Presentation.Models.Batch;
 
 namespace ApartmentPanel.Presentation.ViewModel
 {
@@ -38,6 +34,7 @@ namespace ApartmentPanel.Presentation.ViewModel
             new ApartmentElement { Name = "USB", Category = "LightDev"},
             new ApartmentElement { Name = "ThroughSwitch", Category = "LightDev"}
         };
+        private readonly ModelAnalizing _modelAnalizing;
         #endregion
         #region MockProps
         public ObservableCollection<Circuit> MockCircuits { get; set; } = new ObservableCollection<Circuit>
@@ -45,11 +42,10 @@ namespace ApartmentPanel.Presentation.ViewModel
             new Circuit{Number="1", Elements=el1},
             new Circuit{Number="2", Elements=el2},
         };
-
+        public ICommand AnalizeCommand { get; set; }
         #endregion
 
         private readonly ViewCommandsCreater _viewCommandsCreater;
-        private readonly ModelAnalizing _modelAnalizing;
 
         public MainViewModel()
         {
@@ -58,52 +54,48 @@ namespace ApartmentPanel.Presentation.ViewModel
         public MainViewModel(IElementService elementService,
             IConfigPanelViewModel configPanelVM, ModelAnalizing modelAnalizing) : base(elementService)
         {
-            _viewCommandsCreater = new ViewCommandsCreater(this, ElementService);
-
-            ConfigPanelVM = configPanelVM;
-
+            #region MockInitializing
             _modelAnalizing = modelAnalizing;
-
-            ConfigPanelVM.OkApplyCancelActions = ExecuteOkApplyCancelActions;
-
-            ConfigPanelVM.LoadLatestConfigCommand?.Execute(null);
-
-            Circuits = GetCircuits(ConfigPanelVM.PanelCircuits);
-
-            ListHeightsUK = GetHeights(ConfigPanelVM.ListHeightsUK);
-
-            ListHeightsOK = GetHeights(ConfigPanelVM.ListHeightsOK);
-
-            ListHeightsCenter = GetHeights(ConfigPanelVM.ListHeightsCenter);
-
-            ConfigureCommand = _viewCommandsCreater.CreateConfigureCommand();
-
-            InsertElementCommand = _viewCommandsCreater.CreateInsertElementCommand();
-
-            SetCurrentSuffixCommand = _viewCommandsCreater.CreateSetCurrentSuffixCommand();
-
-            SetHeightCommand = _viewCommandsCreater.CreateSetHeightCommand();
-
-            SetStatusCommand = _viewCommandsCreater.CreateSetStatusCommand();
-
             AnalizeCommand = new RelayCommand(o =>
             {
                 modelAnalizing.AnalizeElement();
             });
+            #endregion
+
+            _viewCommandsCreater = new ViewCommandsCreater(this, ElementService);
+            ConfigPanelVM = configPanelVM;
+            ConfigPanelVM.OkApplyCancelActions = ExecuteOkApplyCancelActions;
+            ConfigPanelVM.LoadLatestConfigCommand?.Execute(null);
+            Circuits = GetCircuits(ConfigPanelVM.PanelCircuits);
+            ElementBatches = GetBatch(ConfigPanelVM.ListElementBatches);
+            ListHeightsUK = GetHeights(ConfigPanelVM.ListHeightsUK);
+            ListHeightsOK = GetHeights(ConfigPanelVM.ListHeightsOK);
+            ListHeightsCenter = GetHeights(ConfigPanelVM.ListHeightsCenter);
+            ConfigureCommand = _viewCommandsCreater.CreateConfigureCommand();
+            InsertElementCommand = _viewCommandsCreater.CreateInsertElementCommand();
+            InsertBatchCommand = _viewCommandsCreater.CreateInsertBatchCommand();
+            SetCurrentSuffixCommand = _viewCommandsCreater.CreateSetCurrentSuffixCommand();
+            SetHeightCommand = _viewCommandsCreater.CreateSetHeightCommand();
+            SetStatusCommand = _viewCommandsCreater.CreateSetStatusCommand();
         }
 
         public IConfigPanelViewModel ConfigPanelVM { get; set; }
 
         private ObservableCollection<Circuit> _circuits;
-
         public ObservableCollection<Circuit> Circuits
         {
             get => _circuits;
             set => Set(ref _circuits, value);
         }
 
-        private string _currentSuffix;
+        private ObservableCollection<ElementBatch> _elementBatches;
+        public ObservableCollection<ElementBatch> ElementBatches
+        {
+            get => _elementBatches;
+            set => Set(ref _elementBatches, value);
+        }
 
+        private string _currentSuffix;
         public string CurrentSuffix
         {
             get => _currentSuffix;
@@ -111,7 +103,6 @@ namespace ApartmentPanel.Presentation.ViewModel
         }
 
         private Height _elementHeight;
-
         public Height ElementHeight
         {
             get => _elementHeight;
@@ -120,7 +111,6 @@ namespace ApartmentPanel.Presentation.ViewModel
 
         #region listHeights
         private ObservableCollection<double> _listHeightsOK;
-
         public ObservableCollection<double> ListHeightsOK
         {
             get => _listHeightsOK;
@@ -128,7 +118,6 @@ namespace ApartmentPanel.Presentation.ViewModel
         }
 
         private ObservableCollection<double> _listHeightsUK;
-
         public ObservableCollection<double> ListHeightsUK
         {
             get => _listHeightsUK;
@@ -136,7 +125,6 @@ namespace ApartmentPanel.Presentation.ViewModel
         }
 
         private ObservableCollection<double> _listHeightsCenter;
-
         public ObservableCollection<double> ListHeightsCenter
         {
             get => _listHeightsCenter;
@@ -145,7 +133,6 @@ namespace ApartmentPanel.Presentation.ViewModel
         #endregion
 
         private string _status;
-
         public string Status
         {
             get => _status;
@@ -153,16 +140,11 @@ namespace ApartmentPanel.Presentation.ViewModel
         }
 
         public ICommand ConfigureCommand { get; set; }
-
         public ICommand InsertElementCommand { get; set; }
-
+        public ICommand InsertBatchCommand { get; set; }
         public ICommand SetCurrentSuffixCommand { get; set; }
-
         public ICommand SetHeightCommand { get; set; }
-
         public ICommand SetStatusCommand { get; set; }
-
-        public ICommand AnalizeCommand { get; set; }
 
         private void ExecuteOkApplyCancelActions(object obj, OkApplyCancel okApplyCancel)
         {
@@ -206,6 +188,16 @@ namespace ApartmentPanel.Presentation.ViewModel
                     Elements = new ObservableCollection<IApartmentElement>(
                             circuit.Value.Select(ap => ap.Clone()).ToList())
                 });
+            }
+            return result;
+        }
+
+        private ObservableCollection<ElementBatch> GetBatch(ObservableCollection<ElementBatch> listElementBatches)
+        {
+            var result = new ObservableCollection<ElementBatch>();
+            foreach (var batch in listElementBatches)
+            {
+                result.Add(batch.Clone());
             }
             return result;
         }

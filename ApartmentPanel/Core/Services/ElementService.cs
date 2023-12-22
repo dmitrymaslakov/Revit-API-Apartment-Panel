@@ -74,6 +74,9 @@ namespace ApartmentPanel.Core.Services
                 ? annotationService.Get() : null;
         }
 
+        public void InsertBatchToModel(InsertElementDTO batchDto) =>
+            _elementRepo.InsertBatchToModel(batchDto);
+
         public void GetInstanceParameters()
         {
 

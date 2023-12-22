@@ -53,7 +53,7 @@ namespace ApartmentPanel.Presentation.Commands
                 listElementsVM.AddElementToApartment = _addElementToApartment;
                 listElementsVM.AllElements = 
                     new ObservableCollection<IApartmentElement>(_elementService.GetAll(props));
-                new ElementsList(listElementsVM).ShowDialog();
+                new ElementList(listElementsVM).ShowDialog();
             };
             _circuitService = new CircuitService(_configPanelProperties);
         }
@@ -240,9 +240,9 @@ namespace ApartmentPanel.Presentation.Commands
         public ICommand CreateSetAnnotationToElementsBatchCommand() => new RelayCommand(o =>
         {
             var annotationService = new AnnotationService(
-                new FileAnnotationCommunicatorFactory(_configPanelProperties.ElementsBatch.Name));
+                new FileAnnotationCommunicatorFactory(_configPanelProperties.ElementBatch.Name));
 
-            _configPanelProperties.ElementsBatch.Annotation =
+            _configPanelProperties.ElementBatch.Annotation =
                 annotationService.Save(_configPanelProperties.AnnotationPreview);
 
             if (_configPanelProperties.SelectedApartmentElements.Count == 1)
@@ -299,6 +299,12 @@ namespace ApartmentPanel.Presentation.Commands
         {
             var row = (BatchedRow)o;
             row.RowElements.Add(_configPanelProperties.NewElementForBatch);
+        });
+
+        public ICommand CreateRemoveElementFromRowCommand() => new RelayCommand(o =>
+        {
+            var row = (BatchedRow)o;
+            row.RowElements.Remove(_configPanelProperties.SelectedBatchedElement);
         });
     }
 }

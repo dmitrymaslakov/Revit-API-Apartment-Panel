@@ -52,6 +52,19 @@ namespace ApartmentPanel.Presentation.View.Components
         }
         #endregion
 
+        #region SelectedBatchedElementProperty
+        public static readonly DependencyProperty SelectedBatchedElementProperty =
+            DependencyProperty.Register(nameof(SelectedBatchedElement), typeof(BatchedElement),
+                typeof(Batch), new PropertyMetadata(null));
+
+        public BatchedElement SelectedBatchedElement
+        {
+            get { return (BatchedElement)GetValue(SelectedBatchedElementProperty); }
+            set { SetValue(SelectedBatchedElementProperty, value); }
+        }
+        #endregion
+
+        #region AddElementToRowCommandProperty
         public static readonly DependencyProperty AddElementToRowCommandProperty =
             DependencyProperty.Register(nameof(AddElementToRowCommand), typeof(ICommand),
                 typeof(Batch), new PropertyMetadata(null));
@@ -61,13 +74,19 @@ namespace ApartmentPanel.Presentation.View.Components
             get { return (ICommand)GetValue(AddElementToRowCommandProperty); }
             set { SetValue(AddElementToRowCommandProperty, value); }
         }
+        #endregion
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        #region RemoveElementFromRowCommandProperty
+        public static readonly DependencyProperty RemoveElementFromRowCommandProperty =
+            DependencyProperty.Register(nameof(RemoveElementFromRowCommand), typeof(ICommand),
+                typeof(Batch), new PropertyMetadata(null));
+
+        public ICommand RemoveElementFromRowCommand
         {
-            Button button = sender as Button;
-            BatchedRow targetRow = FindParentRow(button);
-            AddElementToRowCommand?.Execute(targetRow);
+            get { return (ICommand)GetValue(RemoveElementFromRowCommandProperty); }
+            set { SetValue(RemoveElementFromRowCommandProperty, value); }
         }
+        #endregion
 
         private BatchedRow FindParentRow(DependencyObject child)
         {
@@ -80,5 +99,18 @@ namespace ApartmentPanel.Presentation.View.Components
             return (parent as ContentPresenter).Content as BatchedRow;
         }
 
+        private void Button_Add(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            BatchedRow targetRow = FindParentRow(button);
+            AddElementToRowCommand?.Execute(targetRow);
+        }
+
+        private void Button_Remove(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            BatchedRow targetRow = FindParentRow(button);
+            RemoveElementFromRowCommand?.Execute(targetRow);
+        }
     }
 }

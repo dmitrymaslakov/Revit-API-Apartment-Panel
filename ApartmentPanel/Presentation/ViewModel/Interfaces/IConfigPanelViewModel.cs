@@ -44,7 +44,13 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         ObservableCollection<double> ListHeightsUK { get; set; }
         ObservableCollection<double> ListHeightsCenter { get; set; }
         BatchedElement NewElementForBatch { get; set; }
-        ElementsBatch ElementsBatch { get; set; }
+        ElementBatch ElementBatch { get; set; }
+        BatchedElement SelectedBatchedElement { get; set; }
+        ICommand SetNewElementForBatchCommand { get; set; }
+        ICommand AddElementToRowCommand { get; set; }
+        ICommand RemoveElementFromRowCommand { get; set; }
+        ICommand SetAnnotationToElementsBatchCommand { get; set; }
+        ObservableCollection<ElementBatch> ListElementBatches { get; set; }
 
         ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration);
     }

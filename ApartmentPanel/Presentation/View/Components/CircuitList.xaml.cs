@@ -10,14 +10,13 @@ using System.Windows.Media;
 namespace ApartmentPanel.Presentation.View.Components
 {
     /// <summary>
-    /// Interaction logic for CircuitsList.xaml
+    /// Interaction logic for CircuitList.xaml
     /// </summary>
-    public partial class CircuitsList : UserControl
+    public partial class CircuitList : UserControl
     {
         public static readonly DependencyProperty CircuitsProperty =
             DependencyProperty.Register(nameof(Circuits), typeof(ObservableCollection<Circuit>),
-                typeof(CircuitsList), new PropertyMetadata(null));
-
+                typeof(CircuitList), new PropertyMetadata(null));
         public ObservableCollection<Circuit> Circuits
         {
             get { return (ObservableCollection<Circuit>)GetValue(CircuitsProperty); }
@@ -26,8 +25,7 @@ namespace ApartmentPanel.Presentation.View.Components
 
         public static readonly DependencyProperty HitElementCommandProperty =
             DependencyProperty.Register(nameof(HitElementCommand), typeof(ICommand), 
-                typeof(CircuitsList), new PropertyMetadata(null));
-
+                typeof(CircuitList), new PropertyMetadata(null));
         public ICommand HitElementCommand
         {
             get { return (ICommand)GetValue(HitElementCommandProperty); }
@@ -36,8 +34,7 @@ namespace ApartmentPanel.Presentation.View.Components
 
         public static readonly DependencyProperty KeyDownCommandProperty =
             DependencyProperty.Register(nameof(KeyDownCommand), typeof(ICommand),
-                typeof(CircuitsList), new PropertyMetadata(null));
-
+                typeof(CircuitList), new PropertyMetadata(null));
         public ICommand KeyDownCommand
         {
             get { return (ICommand)GetValue(KeyDownCommandProperty); }
@@ -46,8 +43,7 @@ namespace ApartmentPanel.Presentation.View.Components
 
         public static readonly DependencyProperty MouseEnterCommandProperty =
             DependencyProperty.Register(nameof(MouseEnterCommand), typeof(ICommand),
-                typeof(CircuitsList), new PropertyMetadata(null));
-
+                typeof(CircuitList), new PropertyMetadata(null));
         public ICommand MouseEnterCommand
         {
             get { return (ICommand)GetValue(MouseEnterCommandProperty); }
@@ -56,15 +52,14 @@ namespace ApartmentPanel.Presentation.View.Components
 
         public static readonly DependencyProperty MouseLeaveCommandProperty =
             DependencyProperty.Register(nameof(MouseLeaveCommand), typeof(ICommand),
-                typeof(CircuitsList), new PropertyMetadata(null));
-
+                typeof(CircuitList), new PropertyMetadata(null));
         public ICommand MouseLeaveCommand
         {
             get { return (ICommand)GetValue(MouseLeaveCommandProperty); }
             set { SetValue(MouseLeaveCommandProperty, value); }
         }
 
-        public CircuitsList()
+        public CircuitList()
         {
             InitializeComponent();
         }

@@ -6,6 +6,7 @@ namespace ApartmentPanel.Infrastructure
     {
         None,
         Insert,
+        BatchInsert,
         Configure,
         AddElement,
         EditElement,

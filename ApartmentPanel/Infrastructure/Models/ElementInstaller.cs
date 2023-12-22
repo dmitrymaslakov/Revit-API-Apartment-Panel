@@ -24,8 +24,9 @@ namespace ApartmentPanel.Infrastructure.Models
             _heightFormat = height => $"{_elementData.Height.TypeOf}={height}";
         }
         
-        public ElementInstaller(string[] elements, FamilyInstanceBuilder familyInstanceBuilder)
+        public ElementInstaller(UIApplication uiapp, string[] batch, FamilyInstanceBuilder familyInstanceBuilder)
         {
+            _uiapp = uiapp;
             _familyInstanceBuilder = familyInstanceBuilder;
         }
 

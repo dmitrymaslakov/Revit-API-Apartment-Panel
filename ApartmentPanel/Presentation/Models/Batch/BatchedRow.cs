@@ -2,6 +2,7 @@
 using ApartmentPanel.Presentation.ViewModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 
 namespace ApartmentPanel.Presentation.Models.Batch
@@ -17,5 +18,15 @@ namespace ApartmentPanel.Presentation.Models.Batch
             set => Set(ref _rowElements, value);
         }
         public List<Thickness> Margins { get; set; }
+
+        public BatchedRow Clone()
+        {
+            return new BatchedRow
+            {
+                Number = Number,
+                HeightFromFloor = new Height { TypeOf = HeightFromFloor.TypeOf, Value = HeightFromFloor.Value },
+                RowElements = new ObservableCollection<BatchedElement>(RowElements.Select(e => e.Clone()))
+            };
+        }
     }
 }

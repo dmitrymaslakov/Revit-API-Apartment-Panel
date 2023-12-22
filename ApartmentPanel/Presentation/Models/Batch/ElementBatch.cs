@@ -1,10 +1,11 @@
 ﻿using ApartmentPanel.Presentation.ViewModel;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Media;
 
 namespace ApartmentPanel.Presentation.Models.Batch
 {
-    public class ElementsBatch : ViewModelBase
+    public class ElementBatch : ViewModelBase
     {
         public ObservableCollection<BatchedRow> BatchedRows { get; set; }
 
@@ -22,5 +23,14 @@ namespace ApartmentPanel.Presentation.Models.Batch
             set => Set(ref _annotation, value);
         }
 
+        public ElementBatch Clone()
+        {
+            return new ElementBatch
+            {
+                Name = Name,
+                Annotation = Annotation?.Clone(),
+                BatchedRows = new ObservableCollection<BatchedRow>(BatchedRows.Select(row => row.Clone())),
+            };
+        }
     }
 }

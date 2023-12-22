@@ -48,6 +48,11 @@ namespace ApartmentPanel.Infrastructure
                             InsertElement();
                             break;
                         }
+                    case RequestId.BatchInsert:
+                        {
+                            InsertBatch();
+                            break;
+                        }
                     case RequestId.AddElement:
                         {
                             AddElement();
@@ -228,6 +233,14 @@ namespace ApartmentPanel.Infrastructure
                     new ApartmentElement { Name = fs.Name, Category = fs.Category.Name }))
             }).ToList();
         }*/
+
+        private void InsertBatch()
+        {
+            var elementData = Props as InsertElementDTO;
+            var instanceBuilder = new FamilyInstanceBuilder(_uiapp);
+            new ElementInstaller(_uiapp, elementData, instanceBuilder)
+                                .InstallLightingFixtures();
+        }
 
         private void InsertElement()
         {

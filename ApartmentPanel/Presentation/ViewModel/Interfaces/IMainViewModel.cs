@@ -19,5 +19,6 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         ObservableCollection<double> ListHeightsCenter { get; set; }
         ICommand SetHeightCommand { get; set; }
         Height ElementHeight { get; set; }
+        ICommand InsertBatchCommand { get; set; }
     }
 }

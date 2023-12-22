@@ -8,7 +8,7 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance vm:ConfigPanelViewModel, IsDesignTimeCreatable=True}"
-        d:DesignHeight="450" d:DesignWidth="600" Width="600"
+        d:DesignHeight="450" d:DesignWidth="700" Width="700"
         x:Name="Confige">
     <Window.Resources>
         <Style x:Key="ArrowButton" TargetType="Button">
@@ -112,14 +112,14 @@
                         <StackPanel>
                             <UniformGrid Columns="3" Width="300" HorizontalAlignment="Left">
                                 <StackPanel>
-                                    <local:HeightsList
+                                    <local:HeightList
                             TypeOfHeight="UK" 
                             ListHeights="{Binding ListHeightsUK}"/>
                                 </StackPanel>
-                                <local:HeightsList 
+                                <local:HeightList 
                             TypeOfHeight="OK" 
                             ListHeights="{Binding ListHeightsOK}"/>
-                                <local:HeightsList 
+                                <local:HeightList 
                             TypeOfHeight="Center" 
                             ListHeights="{Binding ListHeightsCenter}"/>
                             </UniformGrid>
@@ -137,7 +137,11 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <local:CircuitsList
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <local:CircuitList
                         Grid.Row="0"
                         Circuits="{Binding MockPanelCircuits}"
                         HitElementCommand="{Binding SetNewElementForBatchCommand}"/>
@@ -145,6 +149,7 @@
                         Grid.Row="1"
                         ListBatchedRows="{Binding MockBatchedRows}"
                         BatchAnnotation="{Binding MockAnnotation}"
+                        SelectedBatchedElement="{Binding SelectedBatchedElement}"
                         BatchName="{Binding ElementsBatch.Name, UpdateSourceTrigger=PropertyChanged}"
                         AddElementToRowCommand="{Binding AddElementToRowCommand}"/>
                     <local:AnnotationPreview 
@@ -152,6 +157,14 @@
                         x:Name="batchAnnotationPreview"
                         SetAnnotationPreviewCommand="{Binding SetAnnotationPreviewCommand}"
                         SetAnnotationToElementCommand="{Binding SetAnnotationToElementsBatchCommand}"/>
+                    <local:ElementsCard
+                        Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
+                        Header="Element Batches"
+                        Elements="{Binding ListElementBatches}"
+                        AddElementCommand="{Binding AddBatchedElementsCommand}"
+                        RemoveElementCommand="{Binding RemoveBatchedElementsCommand}"
+                        EditBtnVisibility="{x:Static Visibility.Collapsed}"
+                        SelectedElementsCommand="{Binding SelectedBatchedElementsCommand}"/>
                 </Grid>
             </TabItem>
         </TabControl>
