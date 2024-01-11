@@ -17,5 +17,7 @@ namespace ApartmentPanel.Core.Services.Interfaces
         IApartmentElement CloneFrom(IApartmentElement element);
         void SetAnnotationTo(IApartmentElement element, BitmapSource img);
         ImageSource GetAnnotationFor(string elementName);
+        void InsertBatchToModel(InsertBatchDTO batchDto);
+        void SetBatchedElementParameters(SetParamsDTO setParamsDTO);
     }
 }

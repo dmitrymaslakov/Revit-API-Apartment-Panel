@@ -8,17 +8,14 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance vm:ConfigPanelViewModel, IsDesignTimeCreatable=True}"
-        d:DesignHeight="450" d:DesignWidth="700" Width="700"
+        d:DesignHeight="450" d:DesignWidth="750" Width="750"
         x:Name="Confige">
     <Window.Resources>
-        <Style x:Key="ArrowButton" TargetType="Button">
-            <Setter Property="Width" Value="20"/>
-            <Setter Property="Height" Value="20"/>
-        </Style>
-        <Style x:Key="FinishedButton" TargetType="Button">
-            <Setter Property="Width" Value="40"/>
-            <Setter Property="Margin" Value="5 0 5 0"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources/Styles/ButtonStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     <StackPanel>
         <TabControl>
@@ -61,12 +58,21 @@
                         <local:ElementsCard
                             x:Name="PanelCircuitsCard"
                             Header="Panel circuits"     
-                            IsDictionaryKeys="True"
                             Elements="{Binding PanelCircuits}"
                             AddBtnVisibility="{x:Static Visibility.Collapsed}"
                             EditBtnVisibility="{x:Static Visibility.Collapsed}"
                             RemoveElementCommand="{Binding RemovePanelCircuitsCommand}"
                             SelectedElementsCommand ="{Binding SelectPanelCircuitCommand}"/>
+
+                        <!--<local:ElementsCard
+                            x:Name="PanelCircuitsCard"
+                            Header="Panel circuits"     
+                            IsDictionaryKeys="True"
+                            Elements="{Binding PanelCircuits}"
+                            AddBtnVisibility="{x:Static Visibility.Collapsed}"
+                            EditBtnVisibility="{x:Static Visibility.Collapsed}"
+                            RemoveElementCommand="{Binding RemovePanelCircuitsCommand}"
+                            SelectedElementsCommand ="{Binding SelectPanelCircuitCommand}"/>-->
                         <GroupBox Header="New circuit">
                             <WrapPanel>
                                 <TextBox Text="{Binding NewCircuit}" Width="30" Margin="0 0 10 0"/>
@@ -139,32 +145,43 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="30"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <local:CircuitList
                         Grid.Row="0"
-                        Circuits="{Binding MockPanelCircuits}"
+                        Circuits="{Binding PanelCircuits}"
                         HitElementCommand="{Binding SetNewElementForBatchCommand}"/>
                     <local:Batch
                         Grid.Row="1"
-                        ListBatchedRows="{Binding MockBatchedRows}"
-                        BatchAnnotation="{Binding MockAnnotation}"
-                        SelectedBatchedElement="{Binding SelectedBatchedElement}"
-                        BatchName="{Binding ElementsBatch.Name, UpdateSourceTrigger=PropertyChanged}"
-                        AddElementToRowCommand="{Binding AddElementToRowCommand}"/>
+                        ListBatchedRows="{Binding ElementBatch.BatchedRows}"
+                        BatchAnnotation="{Binding ElementBatch.Annotation}"
+                        SelectedBatchedElement="{Binding SelectedBatchedElement, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        SelectedRow="{Binding SelectedBatchedRow, Mode=TwoWay}"
+                        BatchName="{Binding ElementBatch.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        AddElementToRowCommand="{Binding AddElementToRowCommand}"
+                        RemoveElementFromRowCommand="{Binding RemoveElementFromRowCommand}"
+                        AddRowToBatchCommand="{Binding AddRowToBatchCommand}"
+                        RemoveRowFromBatchCommand="{Binding RemoveRowFromBatchCommand}"/>
                     <local:AnnotationPreview 
                         Grid.Row="2"
                         x:Name="batchAnnotationPreview"
+                        Annotation="{Binding AnnotationPreview}"
                         SetAnnotationPreviewCommand="{Binding SetAnnotationPreviewCommand}"
                         SetAnnotationToElementCommand="{Binding SetAnnotationToElementsBatchCommand}"/>
+                    <Button Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" 
+                            Style="{StaticResource ArrowButton}"
+                            Command="{Binding AddBatchToElementBatchesCommand}">
+                        <fa:ImageAwesome Icon="ArrowRight" Foreground="Green"/>
+                    </Button>
                     <local:ElementsCard
-                        Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
-                        Header="Element Batches"
-                        Elements="{Binding ListElementBatches}"
-                        AddElementCommand="{Binding AddBatchedElementsCommand}"
-                        RemoveElementCommand="{Binding RemoveBatchedElementsCommand}"
+                        Grid.Row="0" Grid.Column="2" Grid.RowSpan="3"
+                        Header="Batches"                    
+                        Elements="{Binding Batches}"
+                        RemoveElementCommand="{Binding RemoveBatchCommand}"
+                        AddBtnVisibility="{x:Static Visibility.Collapsed}"
                         EditBtnVisibility="{x:Static Visibility.Collapsed}"
-                        SelectedElementsCommand="{Binding SelectedBatchedElementsCommand}"/>
+                        SelectedElementsCommand="{Binding SelectedBatchesCommand}"/>
                 </Grid>
             </TabItem>
         </TabControl>

@@ -3,6 +3,7 @@ using ApartmentPanel.Infrastructure.Models.LocationStrategies;
 using ApartmentPanel.Core.Enums;
 using System;
 using Autodesk.Revit.UI;
+using Autodesk.Revit.DB;
 
 namespace ApartmentPanel.Infrastructure.Models
 {
@@ -23,63 +24,65 @@ namespace ApartmentPanel.Infrastructure.Models
             _locationStrategy = GetLocationStrategy(_elementData.Height.TypeOf);
             _heightFormat = height => $"{_elementData.Height.TypeOf}={height}";
         }
-        
-        public ElementInstaller(UIApplication uiapp, string[] batch, FamilyInstanceBuilder familyInstanceBuilder)
-        {
-            _uiapp = uiapp;
-            _familyInstanceBuilder = familyInstanceBuilder;
-        }
 
-        public void InstallLightingFixtures()
+        public ElementId InstallLightingFixtures(Reference host = null)
         {
-            _familyInstanceBuilder
+            return _familyInstanceBuilder
                 .WithCircuit(_elementData.Circuit)
                 .WithCurrentLevel()
                 .WithLampSuffix(_elementData.CurrentSuffix)
+                .WithHost(host)
+                //.WithOffset(_elementData.Offset)
                 .Build(_elementData.Name);
         }
 
-        public void InstallLightingDevices()
+        public ElementId InstallLightingDevices(Reference host = null)
         {
-            _familyInstanceBuilder
+            return _familyInstanceBuilder
                 .WithSwitchNumbers(_elementData.SwitchNumbers)
                 .SetLocationStrategy(_locationStrategy)
                 .RenderHeightAs(_heightFormat)
                 .WithHeight(_elementData.Height.Value)
                 .WithCircuit(_elementData.Circuit)
                 .WithCurrentLevel()
+                .WithHost(host)
+                //.WithOffset(_elementData.Offset)
                 .Build(_elementData.Name);
         }
 
-        public void InstallElectricalFixtures()
+        public ElementId InstallElectricalFixtures(Reference host = null)
         {
-            _familyInstanceBuilder
+            return _familyInstanceBuilder
                 .SetLocationStrategy(_locationStrategy)
                 .RenderHeightAs(_heightFormat)
                 .WithHeight(_elementData.Height.Value)
                 .WithCircuit(_elementData.Circuit)
                 .WithCurrentLevel()
+                .WithHost(host)
+                //.WithOffset(_elementData.Offset)
                 .Build(_elementData.Name);
         }
 
-        public void InstallCommunicationDevices()
+        public ElementId InstallCommunicationDevices(Reference host = null)
         {
-            _familyInstanceBuilder
+            return _familyInstanceBuilder
                 .SetLocationStrategy(_locationStrategy)
                 .RenderHeightAs(_heightFormat)
                 .WithHeight(_elementData.Height.Value)
                 .WithCurrentLevel()
+                .WithHost(host)
+                //.WithOffset(_elementData.Offset)
                 .Build(_elementData.Name);
         }
 
         private ILocationStrategy GetLocationStrategy(TypeOfHeight typeOfHeight)
         {
-            switch (typeOfHeight) 
+            switch (typeOfHeight)
             {
                 case TypeOfHeight.UK:
-                    return new BottomLocationStrategy(_uiapp);
+                    return new BottomLocationStrategy(_uiapp) { HorizontalOffset = _elementData.Offset };
                 case TypeOfHeight.OK:
-                    return new TopLocationStrategy(_uiapp);
+                    return new TopLocationStrategy(_uiapp) { HorizontalOffset = _elementData.Offset };
                 case TypeOfHeight.Center:
                     break;
             }

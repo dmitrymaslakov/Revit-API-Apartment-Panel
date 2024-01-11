@@ -1,4 +1,7 @@
 ﻿using ApartmentPanel.Core.Models;
+using ApartmentPanel.Presentation.Models.Batch;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace ApartmentPanel.Core.Infrastructure.Interfaces.DTO
 {
@@ -11,5 +14,9 @@ namespace ApartmentPanel.Core.Infrastructure.Interfaces.DTO
         public Height Height { get; set; }
         public string InsertingMode { get; set; }
         public string SwitchNumbers { get; set; }
+        public Thickness Margin { get; set; }
+        public double Offset { get; set; }
+        public BatchedLocation Location { get; set; }
+        public Dictionary<string, string> Parameters;
     }
 }

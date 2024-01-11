@@ -1,8 +1,6 @@
-﻿using ApartmentPanel.Core.Models;
-using ApartmentPanel.Presentation.Models.Batch;
-using System.Collections.ObjectModel;
-using System.Windows.Media;
+﻿using ApartmentPanel.Presentation.Models.Batch;
 using System.Windows;
+using System.Collections.Generic;
 
 namespace ApartmentPanel.Core.Infrastructure.Interfaces.DTO
 {
@@ -13,6 +11,6 @@ namespace ApartmentPanel.Core.Infrastructure.Interfaces.DTO
         public string Circuit { get; set; }
         public BatchedLocation Location { get; set; }
         public Thickness Margin { get; set; }
-        public List<Parameter> Parameters;
+        public Dictionary<string, string> Parameters;
     }
 }

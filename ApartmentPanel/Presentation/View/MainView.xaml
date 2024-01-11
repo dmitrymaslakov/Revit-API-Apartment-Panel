@@ -22,6 +22,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <components:CircuitList 
             Grid.Row="0"
@@ -33,7 +34,7 @@
         <components:BatchList 
             Grid.Row="1"
             Batches="{Binding ElementBatches}"
-            HitElementCommand="{Binding }"/>
+            HitElementCommand="{Binding InsertBatchCommand}"/>
         <!--<ListView Grid.Row="0" 
                   ItemsSource="{Binding Circuits}" 
                   x:Name="apartmentCircuits">
@@ -139,8 +140,8 @@
                 </StatusBarItem.Style>
             </StatusBarItem>
         </StatusBar>
-        <!--<WrapPanel Grid.Row="5">
+        <WrapPanel Grid.Row="6">
             <Button Content="Analize" Command="{Binding AnalizeCommand}"/>
-        </WrapPanel>-->
+        </WrapPanel>
     </Grid>
 </UserControl>

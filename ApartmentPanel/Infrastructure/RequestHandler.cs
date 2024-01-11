@@ -58,9 +58,9 @@ namespace ApartmentPanel.Infrastructure
                             AddElement();
                             break;
                         }
-                    case RequestId.GettingParameters:
+                    case RequestId.SettingParameters:
                         {
-                            GetParameters();
+                            SetParameters();
                             break;
                         }
                     case RequestId.RemoveElement:
@@ -89,25 +89,40 @@ namespace ApartmentPanel.Infrastructure
 
         public string GetName() => "Placement Apartment elements";
 
-        private void GetParameters()
+        private void SetParameters()
         {
-            var gettingParamsDTO = Props as GettingParamsDTO;
+            var setParamsDTO = Props as SetParamsDTO;
 
-            Element element = new FilteredElementCollector(_document)
+            bool isInstanceExist = 
+                TryGetInstance(_document, setParamsDTO.ElementName, out FamilyInstance element);
+
+            if (!isInstanceExist) return;
+            var element2 = new FilteredElementCollector(_document)
                 .OfClass(typeof(FamilySymbol))
-                .Where(fs => fs.Name == gettingParamsDTO.ElementName)
-                .FirstOrDefault();
+                .Where(fs => fs.Name == setParamsDTO.ElementName)
+                .FirstOrDefault() as FamilyInstance;
 
-            List<string> parameterItems = new List<string>();
-            ParameterSet parameters = element.Parameters;
-            foreach (Parameter param in parameters)
+            List<string> parameters = new List<string>();
+            ParameterSet parameterSet = element.Parameters;
+            ParameterMap parameterMap = element.ParametersMap;
+            foreach (Parameter param in parameterSet)
             {
                 if (param == null) continue;
-                parameterItems.Add(param.Definition.Name);
+                parameters.Add(param.Definition.Name);
             }
-            var getParameters = Props as Action<string>;
-
+            setParamsDTO.SetInstanceParameters(parameters);
             Props = null;
+        }
+
+        private bool TryGetInstance(Document document, string elementName, out FamilyInstance element)
+        {
+            element = new FilteredElementCollector(document)
+                .OfClass(typeof(FamilyInstance))                
+                .ToElements()
+                .Select(e => e as FamilyInstance)
+                .FirstOrDefault(fi => string.Equals(fi.Name, elementName));
+
+            return !(element is null);
         }
 
         private void ShowConfigPanel()
@@ -236,10 +251,8 @@ namespace ApartmentPanel.Infrastructure
 
         private void InsertBatch()
         {
-            var elementData = Props as InsertElementDTO;
-            var instanceBuilder = new FamilyInstanceBuilder(_uiapp);
-            new ElementInstaller(_uiapp, elementData, instanceBuilder)
-                                .InstallLightingFixtures();
+            var batchData = Props as InsertBatchDTO;
+            new BatchInstaller(_uiapp, batchData).Install();
         }
 
         private void InsertElement()
@@ -350,32 +363,53 @@ namespace ApartmentPanel.Infrastructure
 
         private void AnalizeElement()
         {
-            /*var familyInstance = new FilteredElementCollector(Document)
-                .OfClass(typeof(FamilySymbol))
-                .Where(fs => fs.Name == StaticData.SINGLE_SOCKET)
-                .FirstOrDefault() as FamilySymbol;*/
-
             var selectedElementId = _selection.GetElementIds().FirstOrDefault();
-            if (selectedElementId == null)
-            {
-                // No element is selected
-                return;
-            }
+            if (selectedElementId == null) return;
             Element selectedElement = _document.GetElement(selectedElementId);
             var familyInstance = selectedElement as FamilyInstance;
-            var lp = familyInstance.Location as LocationPoint;
-            var pointFeets = lp.Point;
-            var zCm = UnitUtils.ConvertFromInternalUnits(pointFeets.Z,
+            View3D view3D = new FilteredElementCollector(_document)
+                .OfClass(typeof(View3D))
+                .Cast<View3D>()
+                .FirstOrDefault(v => !v.IsTemplate);
+            Options geomOpts = new Options
+            {
+                /*ComputeReferences = true,
+                IncludeNonVisibleObjects = true,
+                DetailLevel = ViewDetailLevel.Fine*/
+                View = view3D as View,
+            };
+            GeometryElement geometryElement = familyInstance.get_Geometry(geomOpts);
+            
+            int count = geometryElement.Count();
+            foreach (var item in geometryElement)
+            {
+                if (item is GeometryInstance geometryInstance)
+                {
+                    var ig = geometryInstance.GetInstanceGeometry();
+                    var bbig = ig.GetBoundingBox();
+                    var max = bbig.Max;
+                    var min = bbig.Min;
+
+                    var xMaxbbIg = ig.GetBoundingBox().Max.X;
+                    var xMinbbIg = ig.GetBoundingBox().Min.X;
+                    var w = Math.Abs(xMaxbbIg - xMinbbIg);
+                }
+                var to = item.GetType();
+            }
+            BoundingBoxXYZ bb = geometryElement.GetBoundingBox();
+            //BoundingBoxXYZ bb = familyInstance.get_BoundingBox(null);
+            XYZ pointMax = bb.Max;
+            XYZ pointMin = bb.Min;
+
+            double xMax = pointMax.X;
+            double xMin = pointMin.X;
+
+            double xMaxCm = UnitUtils.ConvertFromInternalUnits(xMax,
                 _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
-            var bb = familyInstance.get_BoundingBox(null);
-            var pointMax = bb.Max;
-            var pointMin = bb.Min;
-            var zMaxCm = UnitUtils.ConvertFromInternalUnits(pointMax.Z,
-                _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
-            var zMinCm = UnitUtils.ConvertFromInternalUnits(pointMin.Z,
+            double xMinCm = UnitUtils.ConvertFromInternalUnits(xMin,
                 _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
 
-            var heightOfInstance = Math.Abs(zMaxCm) - Math.Abs(zMinCm);
+            var heightOfInstance = Math.Abs(xMaxCm - xMinCm);
             var poinInCmMax = FeetToCm(bb.Max);
             var poinInCmMin = FeetToCm(bb.Min);
         }

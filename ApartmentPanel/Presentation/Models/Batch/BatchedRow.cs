@@ -9,6 +9,12 @@ namespace ApartmentPanel.Presentation.Models.Batch
 {
     public class BatchedRow : ViewModelBase
     {
+        public BatchedRow()
+        {
+            RowElements = new ObservableCollection<BatchedElement> ();
+            HeightFromFloor = new Height();
+            Margins = new List<Thickness> ();
+        }
         public int Number { get; set; }
         public Height HeightFromFloor { get; set; }
         private ObservableCollection<BatchedElement> _rowElements;

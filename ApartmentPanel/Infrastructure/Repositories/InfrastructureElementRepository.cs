@@ -25,17 +25,17 @@ namespace ApartmentPanel.Infrastructure.Repositories
             _exEvent.Raise();
         }
 
-        public void InsertBatchToModel(InsertElementDTO batchDto)
+        public void InsertBatchToModel(InsertBatchDTO batchDto)
         {
             _handler.Request.Make(RequestId.BatchInsert);
             _handler.Props = batchDto;
             _exEvent.Raise();
         }
 
-        public void GetParameters(GettingParamsDTO gettingParamsDTO)
+        public void SetParameters(SetParamsDTO setParamsDTO)
         {
-            _handler.Request.Make(RequestId.GettingParameters);
-            _handler.Props = gettingParamsDTO;
+            _handler.Request.Make(RequestId.SettingParameters);
+            _handler.Props = setParamsDTO;
             _exEvent.Raise();
         }
 

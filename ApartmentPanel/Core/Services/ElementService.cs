@@ -43,7 +43,6 @@ namespace ApartmentPanel.Core.Services
                     new TypeMappingConverter<IApartmentElement, ApartmentElement>()
                 }
             };
-
         }
 
         public void InsertToModel(InsertElementDTO apartmentElementDto) =>
@@ -74,12 +73,10 @@ namespace ApartmentPanel.Core.Services
                 ? annotationService.Get() : null;
         }
 
-        public void InsertBatchToModel(InsertElementDTO batchDto) =>
+        public void InsertBatchToModel(InsertBatchDTO batchDto) =>
             _elementRepo.InsertBatchToModel(batchDto);
 
-        public void GetInstanceParameters()
-        {
-
-        }
+        public void SetBatchedElementParameters(SetParamsDTO setParamsDTO) => 
+            _elementRepo.SetParameters(setParamsDTO);
     }
 }

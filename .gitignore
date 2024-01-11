@@ -9,6 +9,7 @@
 
 # User-specific files
 *.rvt
+*.rfa
 *.suo
 *.user
 *.sln.docstates

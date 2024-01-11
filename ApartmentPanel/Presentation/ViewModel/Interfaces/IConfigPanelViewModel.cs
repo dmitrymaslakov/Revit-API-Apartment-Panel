@@ -1,4 +1,5 @@
 ﻿using ApartmentPanel.Core.Models.Interfaces;
+using ApartmentPanel.Presentation.Models;
 using ApartmentPanel.Presentation.Models.Batch;
 using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
 using ApartmentPanel.Utility;
@@ -19,10 +20,12 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         Action<object, OkApplyCancel> OkApplyCancelActions { get; set; }
         ObservableCollection<IApartmentElement> ApartmentElements { get; set; }
         ObservableCollection<IApartmentElement> CircuitElements { get; set; }
-        ObservableDictionary<string, ObservableCollection<IApartmentElement>> PanelCircuits { get; set; }
+        ObservableCollection<Circuit> PanelCircuits { get; set; }
+        //ObservableDictionary<string, ObservableCollection<IApartmentElement>> PanelCircuits { get; set; }
         ObservableCollection<IApartmentElement> SelectedApartmentElements { get; set; }
         ObservableCollection<IApartmentElement> SelectedCircuitElements { get; set; }
-        ObservableCollection<KeyValuePair<string, ObservableCollection<IApartmentElement>>> SelectedPanelCircuits { get; set; }
+        ObservableCollection<Circuit> SelectedPanelCircuits { get; set; }
+        //ObservableCollection<KeyValuePair<string, ObservableCollection<IApartmentElement>>> SelectedPanelCircuits { get; set; }
         ICommand ShowListElementsCommand { get; set; }
         ICommand AddElementToCircuitCommand { get; set; }
         ICommand AddPanelCircuitCommand { get; set; }
@@ -50,7 +53,15 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         ICommand AddElementToRowCommand { get; set; }
         ICommand RemoveElementFromRowCommand { get; set; }
         ICommand SetAnnotationToElementsBatchCommand { get; set; }
-        ObservableCollection<ElementBatch> ListElementBatches { get; set; }
+        ObservableCollection<ElementBatch> Batches { get; set; }
+        ICommand AddBatchToElementBatchesCommand { get; set; }
+        ICommand SelectedBatchesCommand { get; set; }
+        ICommand RemoveBatchCommand { get; set; }
+        ObservableCollection<ElementBatch> SelectedBatches { get; set; }
+        ICommand AddRowToBatchCommand { get; set; }
+        ICommand RemoveRowFromBatchCommand { get; set; }
+        BatchedRow SelectedBatchedRow { get; set; }
+        Action<List<string>> SetParametersToBatchElement { get; set; }
 
         ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration);
     }

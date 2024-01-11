@@ -14,15 +14,6 @@
                 <ResourceDictionary Source="../../Resources/Styles/ButtonStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-        <!--<DataTemplate x:Key="DictionaryKeyDataTemplate">
-            <TextBlock Text="{Binding Key}" />
-        </DataTemplate>
-        <DataTemplate x:Key="DictionaryValueDataTemplate">
-            <TextBlock Text="{Binding Value}" />
-        </DataTemplate>
-        <DataTemplate x:Key="CollectionDataTemplate">
-            <TextBlock Text="{Binding}" />
-        </DataTemplate>-->
     </UserControl.Resources>
     <Grid Background="White">
         <GroupBox Header="{Binding Header, ElementName=root}">
@@ -30,6 +21,7 @@
                 <ListView ItemsSource="{Binding Elements, ElementName=root}" 
                           x:Name="lv"                          
                           SelectionMode="Extended"
+                          SelectedItem="{Binding SelectedElement, ElementName=root}"
                           SelectionChanged="Lv_SelectionChanged">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -39,6 +31,9 @@
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Text" Value="{Binding Name}" />
                                             <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Name}" Value="{x:Null}">
+                                                    <Setter Property="Text" Value="{Binding Number}" />
+                                                </DataTrigger>
                                                 <DataTrigger Binding="{Binding IsDictionaryKeys, ElementName=root}" Value="True">
                                                     <Setter Property="Text" Value="{Binding Key}" />
                                                 </DataTrigger>

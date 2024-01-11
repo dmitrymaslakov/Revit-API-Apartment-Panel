@@ -11,8 +11,14 @@
              Background="White"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <StackPanel Orientation="Horizontal">
-            <ListView ItemsSource="{Binding ListBatchedRows, ElementName=root}">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <ListView ItemsSource="{Binding ListBatchedRows, ElementName=root}"
+                      SelectedItem="{Binding SelectedRow, ElementName=root, Mode=TwoWay}"
+                      SelectionChanged="ListView_SelectionElementChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -22,8 +28,7 @@
                                   SelectedItem="{Binding HeightFromFloor.TypeOf}"/>
                             <TextBox Text="{Binding HeightFromFloor.Value}" Width="20"/>
                             <ListView ItemsSource="{Binding RowElements}"
-                                      x:Name="rowElements_lv"
-                                      SelectedItem="{Binding SelectedBatchedElement, ElementName=root}">
+                                      SelectedItem="{Binding SelectedBatchedElement, ElementName=root, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal"/>
@@ -32,15 +37,26 @@
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Image Source="{Binding Annotation}" 
+                                            <TextBox Width="20" Text="{Binding Margin.Left, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                                <TextBox.Style>
+                                                    <Style TargetType="TextBox">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <!--<Style.Triggers>
+                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource NextSibling}}" Value="{x:Null}">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>-->
+                                                    </Style>
+                                                </TextBox.Style>
+                                            </TextBox>
+                                                <Image Source="{Binding Annotation}" 
                                                    Width="20"
-                                                   Margin="0 0 10 0"/>
-                                            <TextBox Width="20" Text="{Binding Margin.Left}"/>
+                                                   Margin="10 0 0 0"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                            <Button Width="20" Click="Button_Add">
+                            <Button Width="20" Click="Button_AddElementToRow">
                                 <fa:ImageAwesome Icon="Plus" Foreground="Green"/>
                             </Button>
                             <Button Width="20" Click="Button_Remove">
@@ -55,14 +71,16 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Name of batch: "/>
                         <TextBox 
-                        Text="{Binding BatchName, ElementName=root, UpdateSourceTrigger=PropertyChanged}" 
-                        Width="50"/>
+                            Text="{Binding BatchName, ElementName=root, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                            Width="50"
+                            />
                     </StackPanel>
                     <Image Source="{Binding BatchAnnotation, ElementName=root}" Width="30"/>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="Parameters">
-                <ListView ItemsSource="{Binding SelectedBatchedElement.Parameters, ElementName=root}">
+                <ListView ItemsSource="{Binding SelectedBatchedElement.Parameters, ElementName=root}"
+                          Height="150">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
@@ -78,6 +96,10 @@
                     </ListView.View>
                 </ListView>
             </GroupBox>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Button Content="Add row" Click="Button_AddRow"/>
+            <Button x:Name="removeRowBtn" Content="Remove row" Click="Button_RemoveRow"/>
         </StackPanel>
     </Grid>
 </UserControl>

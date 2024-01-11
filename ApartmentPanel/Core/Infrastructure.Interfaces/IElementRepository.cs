@@ -10,5 +10,7 @@ namespace ApartmentPanel.Core.Infrastructure.Interfaces
         void Analize();
 
         void InsertToModel(InsertElementDTO elementDto);
+        void InsertBatchToModel(InsertBatchDTO batchDto);
+        void SetParameters(SetParamsDTO setParamsDTO);
     }
 }

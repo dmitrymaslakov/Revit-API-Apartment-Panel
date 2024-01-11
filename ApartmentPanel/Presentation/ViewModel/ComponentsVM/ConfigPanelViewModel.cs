@@ -14,7 +14,6 @@ using ApartmentPanel.Core.Models;
 using ApartmentPanel.Presentation.Models.Batch;
 using ApartmentPanel.Presentation.Models;
 using System.Windows;
-using System.Collections;
 using System.Windows.Media;
 using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
 
@@ -23,7 +22,8 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
     public class ConfigPanelViewModel : ViewModelBase, IConfigPanelViewModel
     {
         #region MockFields
-        static string mockAnnotation = "d:/Programming/Revit-2023/ApartmentPanelSln/ApartmentPanel/bin/Debug/Resources/Annotations/Lamp.png";
+        //static string mockAnnotation = "d:/Programming/Revit-2023/ApartmentPanelSln/ApartmentPanel/bin/Debug/Resources/Annotations/Lamp.png";
+        static string mockAnnotation = "E:\\Different\\Study\\Programming\\C-sharp\\Revit-API\\Apartment-Panel\\ApartmentPanel\\bin\\Debug\\Resources\\Annotations\\Lamp.png";
         private static ObservableCollection<IApartmentElement> el1 = new ObservableCollection<IApartmentElement>
         {
             new ApartmentElement { Name = "Switch", Annotation = new FileAnnotationReader(mockAnnotation).Get() },
@@ -43,31 +43,36 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
                 Name = $"paramName {_elementIndex++}",
                 Value = $"paramValue {_elementIndex++}"
             });
-        private static IEnumerable<BatchedElement> _batchedElements1 =             
+        private static IEnumerable<BatchedElement> _batchedElements1 =
             Enumerable.Range(1, 3).Select(i => new BatchedElement
             {
                 Name = $"elName {_elementIndex++}",
-                Margin = new Thickness(i, 0, 0, 0),
+                Margin = new BatchedMargin(0, 0, i, 0),
                 Annotation = new FileAnnotationReader(mockAnnotation).Get(),
                 Parameters = new ObservableCollection<Parameter>(_parameters)
             });
-        private static IEnumerable<BatchedRow> _rows = 
+        private static IEnumerable<BatchedRow> _rows =
             Enumerable.Range(1, 2).Select(i => new BatchedRow
-        {
-            Number = i,
-            HeightFromFloor = new Height(),
-            RowElements = new ObservableCollection<BatchedElement>(_batchedElements1)
-        });
+            {
+                Number = i,
+                HeightFromFloor = new Height(),
+                RowElements = new ObservableCollection<BatchedElement>(_batchedElements1)
+            });
 
         #endregion
         #region MockProps
+        [JsonIgnore]
+        public ObservableCollection<IApartmentElement> MockEl1 { get; set; } = el1;
+        [JsonIgnore]
         public ObservableCollection<Circuit> MockPanelCircuits { get; set; } = new ObservableCollection<Circuit>
         {
             new Circuit{ Number = "1", Elements = el1 },
             new Circuit{ Number = "2", Elements = el2 },
         };
+        [JsonIgnore]
         public ObservableCollection<BatchedRow> MockBatchedRows { get; set; } =
             new ObservableCollection<BatchedRow>(_rows);
+        [JsonIgnore]
         public ImageSource MockAnnotation { get; set; } = new FileAnnotationReader(mockAnnotation).Get();
         #endregion
 
@@ -78,19 +83,35 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         public ConfigPanelViewModel(IElementService elementService,
             IListElementsViewModel listElementsVM) : base(elementService)
         {
+            /*ElementBatch = new ElementBatch
+            {
+                Name = "SomeName",
+                Annotation = new FileAnnotationReader(mockAnnotation).Get(),
+                BatchedRows = new ObservableCollection<BatchedRow>(_rows)
+            };*/
             ElementBatch = new ElementBatch
             {
-                BatchedRows = new ObservableCollection<BatchedRow>(_rows)
+                BatchedRows = new ObservableCollection<BatchedRow>
+                {
+                    new BatchedRow()
+                }
             };
-
+            Batches = new ObservableCollection<ElementBatch>();
+            //NewElementForBatch = new BatchedElement();
+            SelectedBatchedElement = new BatchedElement();
+            SelectedBatches = new ObservableCollection<ElementBatch>();
+            SetParametersToBatchElement = OnSetParametersToBatchElementExecuted;
             _commandCreater = new ConfigPanelCommandsCreater(this, ElementService);
             ListElementsVM = listElementsVM;
             ApartmentElements = new ObservableCollection<IApartmentElement>();
-            PanelCircuits = new ObservableDictionary<string, ObservableCollection<IApartmentElement>>();
+            //PanelCircuits = new ObservableDictionary<string, ObservableCollection<IApartmentElement>>();
+            PanelCircuits = new ObservableCollection<Circuit>();
             CircuitElements = new ObservableCollection<IApartmentElement>();
             SelectedApartmentElements = new ObservableCollection<IApartmentElement>();
-            SelectedPanelCircuits =
-                new ObservableCollection<KeyValuePair<string, ObservableCollection<IApartmentElement>>>();
+            /*SelectedPanelCircuits =
+                new ObservableCollection<KeyValuePair<string, ObservableCollection<IApartmentElement>>>();*/
+            SelectedPanelCircuits = new ObservableCollection<Circuit>();
+
             SelectedCircuitElements = new ObservableCollection<IApartmentElement>();
             ListHeightsOK = new ObservableCollection<double>();
             ListHeightsUK = new ObservableCollection<double>();
@@ -117,6 +138,11 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             SetNewElementForBatchCommand = _commandCreater.CreateSetNewElementForBatchCommand();
             AddElementToRowCommand = _commandCreater.CreateAddElementToRowCommand();
             RemoveElementFromRowCommand = _commandCreater.CreateRemoveElementFromRowCommand();
+            AddBatchToElementBatchesCommand = _commandCreater.CreateAddBatchToElementBatchesCommand();
+            SelectedBatchesCommand = _commandCreater.CreateSelectedBatchesCommand();
+            RemoveBatchCommand = _commandCreater.CreateRemoveBatchCommand();
+            AddRowToBatchCommand = _commandCreater.CreateAddRowToBatchCommand();
+            RemoveRowFromBatchCommand = _commandCreater.CreateRemoveRowFromBatchCommand();
         }
 
         [JsonIgnore]
@@ -130,12 +156,19 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             set => Set(ref _apartmentElements, value);
         }
 
-        private ObservableDictionary<string, ObservableCollection<IApartmentElement>> _panelCircuits;
-        public ObservableDictionary<string, ObservableCollection<IApartmentElement>> PanelCircuits
+        private ObservableCollection<Circuit> _panelCircuits;
+        public ObservableCollection<Circuit> PanelCircuits
         {
             get => _panelCircuits;
             set => Set(ref _panelCircuits, value);
         }
+
+        /*private ObservableDictionary<string, ObservableCollection<IApartmentElement>> _panelCircuits;
+        public ObservableDictionary<string, ObservableCollection<IApartmentElement>> PanelCircuits
+        {
+            get => _panelCircuits;
+            set => Set(ref _panelCircuits, value);
+        }*/
 
         private ObservableCollection<IApartmentElement> _selectedApartmentElements;
         [JsonIgnore]
@@ -145,7 +178,15 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             set => Set(ref _selectedApartmentElements, value);
         }
 
-        private ObservableCollection
+        private ObservableCollection<Circuit> _selectedPanelCircuits;
+        [JsonIgnore]
+        public ObservableCollection<Circuit> SelectedPanelCircuits
+        {
+            get => _selectedPanelCircuits;
+            set => Set(ref _selectedPanelCircuits, value);
+        }
+
+        /*private ObservableCollection
             <KeyValuePair<string, ObservableCollection<IApartmentElement>>> _selectedPanelCircuits;
         [JsonIgnore]
         public ObservableCollection
@@ -153,7 +194,7 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         {
             get => _selectedPanelCircuits;
             set => Set(ref _selectedPanelCircuits, value);
-        }
+        }*/
 
         private ObservableCollection<IApartmentElement> _selectedCircuitElements;
         [JsonIgnore]
@@ -184,14 +225,18 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         public bool IsCancelEnabled { get => _isCancelEnabled; set => Set(ref _isCancelEnabled, value); }
 
         #region Batch
-        public ElementBatch ElementBatch { get; set; }
-
-        private ObservableCollection<ElementBatch> _listElementBatches;
-        [JsonIgnore]
-        public ObservableCollection<ElementBatch> ListElementBatches
+        private ElementBatch _elementBatch;
+        public ElementBatch ElementBatch
         {
-            get => _listElementBatches;
-            set => Set(ref _listElementBatches, value);
+            get => _elementBatch;
+            set => Set(ref _elementBatch, value);
+        }
+
+        private ObservableCollection<ElementBatch> _batches;
+        public ObservableCollection<ElementBatch> Batches
+        {
+            get => _batches;
+            set => Set(ref _batches, value);
         }
 
         private BatchedElement _newElementForBatch;
@@ -207,11 +252,36 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             get => _selectedBatchedElement;
             set => Set(ref _selectedBatchedElement, value);
         }
+
+        private BatchedRow _selectedBatchedRow;
+        public BatchedRow SelectedBatchedRow
+        {
+            get => _selectedBatchedRow;
+            set => Set(ref _selectedBatchedRow, value);
+        }
+
+        private ObservableCollection<ElementBatch> _selectedBatches;
+        [JsonIgnore]
+        public ObservableCollection<ElementBatch> SelectedBatches
+        {
+            get => _selectedBatches;
+            set => Set(ref _selectedBatches, value);
+        }
+
+        [JsonIgnore]
+        public ICommand AddBatchToElementBatchesCommand { get; set; }
+        [JsonIgnore]
+        public ICommand SelectedBatchesCommand { get; set; }
+        [JsonIgnore]
+        public ICommand RemoveBatchCommand { get; set; }
+        [JsonIgnore]
+        public ICommand AddRowToBatchCommand { get; set; }
+        [JsonIgnore]
+        public ICommand RemoveRowFromBatchCommand { get; set; }
         #endregion
 
-        #region listHeights
+        #region ListHeights
         private ObservableCollection<double> _listHeightsOK;
-
         public ObservableCollection<double> ListHeightsOK
         {
             get => _listHeightsOK;
@@ -219,7 +289,6 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         }
 
         private ObservableCollection<double> _listHeightsUK;
-
         public ObservableCollection<double> ListHeightsUK
         {
             get => _listHeightsUK;
@@ -227,7 +296,6 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         }
 
         private ObservableCollection<double> _listHeightsCenter;
-
         public ObservableCollection<double> ListHeightsCenter
         {
             get => _listHeightsCenter;
@@ -277,11 +345,21 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         public ICommand RemoveElementFromRowCommand { get; set; }
         [JsonIgnore]
         public Action<object, OkApplyCancel> OkApplyCancelActions { get; set; }
+        [JsonIgnore]
+        public Action<List<string>> SetParametersToBatchElement { get; set; }
+        private void OnSetParametersToBatchElementExecuted(List<string> parameterNames)
+        {
+            var parameters = parameterNames
+                .Select(pn => new Parameter { Name = pn})
+                .ToList();
+            NewElementForBatch.Parameters = new ObservableCollection<Parameter>(parameters);
+        }
 
         public ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration)
         {
             ApartmentElements = latestConfiguration.ApartmentElements;
             PanelCircuits = latestConfiguration.PanelCircuits;
+            Batches = latestConfiguration.Batches;
             if (latestConfiguration.ListHeightsOK != null)
                 ListHeightsOK = latestConfiguration.ListHeightsOK;
             if (latestConfiguration.ListHeightsUK != null)
@@ -291,18 +369,25 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 
             foreach (var apartmentElement in ApartmentElements)
             {
-                /*var annService = new AnnotationService(
-                    new FileAnnotationCommunicatorFactory(apartmentElement.Name));
-
-                apartmentElement.Annotation = annService.IsAnnotationExists()
-                    ? annService.Get() : null;*/
                 apartmentElement.Annotation = ElementService.GetAnnotationFor(apartmentElement.Name);
             };
+            foreach (var batch in Batches)
+            {
+                batch.Annotation = ElementService.GetAnnotationFor(batch.Name);
+                foreach (var row in batch.BatchedRows)
+                {
+                    foreach (var element in row.RowElements)
+                    {
+                        element.Annotation = ElementService.GetAnnotationFor(element.Name);
+                    }
+                }
+            }
 
             for (int i = 0; i < PanelCircuits.Count; i++)
             {
                 var newCircuitElements = new ObservableCollection<IApartmentElement>();
-                var circuitElements = PanelCircuits[i].Value;
+                var circuitElements = PanelCircuits[i].Elements;
+                //var circuitElements = PanelCircuits[i].Value;
 
                 foreach (var apartmentElement in ApartmentElements)
                 {
@@ -315,9 +400,12 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
                         circuitElements[index] = apartmentElement;
                     }
                 }
-                PanelCircuits[i] =
+                PanelCircuits[i] = 
+                    new Circuit { Number = PanelCircuits[i].Number, Elements = circuitElements };
+
+                /*PanelCircuits[i] =
                     new KeyValuePair<string, ObservableCollection<IApartmentElement>>(
-                        PanelCircuits[i].Key, circuitElements);
+                        PanelCircuits[i].Key, circuitElements);*/
             }
             return this;
         }

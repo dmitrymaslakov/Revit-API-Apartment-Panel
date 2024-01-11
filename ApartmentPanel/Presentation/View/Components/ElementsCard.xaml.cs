@@ -9,26 +9,40 @@ namespace ApartmentPanel.Presentation.View.Components
     /// </summary>
     public partial class ElementsCard : UserControl
     {
+        #region HeaderProperty
         public static readonly DependencyProperty HeaderProperty =
             DependencyProperty.Register(nameof(Header), typeof(string), typeof(ElementsCard),
                 new PropertyMetadata(string.Empty));
-
         public string Header
         {
             get { return (string)GetValue(HeaderProperty); }
             set { SetValue(HeaderProperty, value); }
         }
+        #endregion
 
+        #region ElementsProperty
         public static readonly DependencyProperty ElementsProperty =
             DependencyProperty.Register(nameof(Elements), typeof(object),
                 typeof(ElementsCard), new PropertyMetadata(null));
-
         public object Elements
         {
             get { return GetValue(ElementsProperty); }
             set { SetValue(ElementsProperty, value); }
         }
+        #endregion
 
+        #region SelectedElementProperty
+        public static readonly DependencyProperty SelectedElementProperty =
+            DependencyProperty.Register(nameof(SelectedElement), typeof(object),
+                typeof(ElementsCard), new PropertyMetadata(null));
+
+        public object SelectedElement
+        {
+            get { return GetValue(SelectedElementProperty); }
+            set { SetValue(SelectedElementProperty, value); }
+        }
+
+        #endregion
         public static readonly DependencyProperty SelectedElementsProperty =
             DependencyProperty.Register(nameof(SelectedElements), typeof(object),
                 typeof(ElementsCard), new PropertyMetadata(null));
@@ -67,16 +81,6 @@ namespace ApartmentPanel.Presentation.View.Components
         {
             get { return (string)GetValue(RemoveBtnVisibilityProperty); }
             set { SetValue(RemoveBtnVisibilityProperty, value); }
-        }
-
-        public static readonly DependencyProperty IsDictionaryKeysProperty =
-            DependencyProperty.Register(nameof(IsDictionaryKeys), typeof(bool),
-                typeof(ElementsCard), new PropertyMetadata(false));
-
-        public bool IsDictionaryKeys
-        {
-            get { return (bool)GetValue(IsDictionaryKeysProperty); }
-            set { SetValue(IsDictionaryKeysProperty, value); }
         }
 
         public static readonly DependencyProperty AddElementCommandProperty =

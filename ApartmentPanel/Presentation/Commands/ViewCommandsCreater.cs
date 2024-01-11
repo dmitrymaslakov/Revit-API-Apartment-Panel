@@ -1,11 +1,16 @@
 ﻿using ApartmentPanel.Core.Services.Interfaces;
 using System;
 using System.Windows.Input;
+using System.Windows;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Presentation.View.Components;
 using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
 using ApartmentPanel.Core.Enums;
 using ApartmentPanel.Core.Models;
+using ApartmentPanel.Presentation.Models.Batch;
+using System.Windows.Documents;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ApartmentPanel.Presentation.Commands
 {
@@ -51,6 +56,42 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateInsertBatchCommand() => new RelayCommand(o =>
         {
+            var elementBatch = o as ElementBatch;
+            var elementsDTO = new List<InsertElementDTO>();
+            foreach (BatchedRow row in elementBatch.BatchedRows)
+            {
+                foreach (BatchedElement element in row.RowElements)
+                {
+                    InsertElementDTO elDto = new InsertElementDTO
+                    {
+                        Category = element.Category,
+                        Circuit = element.Circuit,
+                        Height = new Height
+                        {
+                            TypeOf = row.HeightFromFloor.TypeOf,
+                            Value = row.HeightFromFloor.Value
+                        },
+                        //Location = element.Location,
+                        Margin = new Thickness
+                        {
+                            Left = element.Margin.Left,
+                            Top = element.Margin.Top,
+                            Right = element.Margin.Right,
+                            Bottom = element.Margin.Bottom
+                        },
+                        Name = element.Name,
+                        Parameters = element.Parameters
+                        .GroupBy(p => p.Name)
+                        .ToDictionary(g => g.Key, g => g.First().Value)
+                    };
+                    elementsDTO.Add(elDto);
+                }
+            }
+            InsertBatchDTO batchDTO = new InsertBatchDTO
+            {
+                BatchedElements = elementsDTO
+            };
+
             _elementService.InsertBatchToModel(batchDTO);
         });
 

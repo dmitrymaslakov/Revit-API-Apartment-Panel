@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
-using ApartmentPanel.Utility;
 using ApartmentPanel.Presentation.Commands;
 using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
@@ -67,7 +66,7 @@ namespace ApartmentPanel.Presentation.ViewModel
             ConfigPanelVM.OkApplyCancelActions = ExecuteOkApplyCancelActions;
             ConfigPanelVM.LoadLatestConfigCommand?.Execute(null);
             Circuits = GetCircuits(ConfigPanelVM.PanelCircuits);
-            ElementBatches = GetBatch(ConfigPanelVM.ListElementBatches);
+            ElementBatches = GetBatches(ConfigPanelVM.Batches);
             ListHeightsUK = GetHeights(ConfigPanelVM.ListHeightsUK);
             ListHeightsOK = GetHeights(ConfigPanelVM.ListHeightsOK);
             ListHeightsCenter = GetHeights(ConfigPanelVM.ListHeightsCenter);
@@ -148,11 +147,15 @@ namespace ApartmentPanel.Presentation.ViewModel
 
         private void ExecuteOkApplyCancelActions(object obj, OkApplyCancel okApplyCancel)
         {
-            (ObservableDictionary<string, ObservableCollection<IApartmentElement>> panelCircuits,
+            //(ObservableDictionary<string, ObservableCollection<IApartmentElement>> panelCircuits,
+            (ObservableCollection<Circuit> panelCircuits,
+                ObservableCollection<ElementBatch> batches,
                 ObservableCollection<double> heightsOk,
                 ObservableCollection<double> heightsUk,
                 ObservableCollection<double> heightsCenter) =
-                (ValueTuple<ObservableDictionary<string, ObservableCollection<IApartmentElement>>,
+                //(ValueTuple<ObservableDictionary<string, ObservableCollection<IApartmentElement>>,
+                (ValueTuple<ObservableCollection<Circuit>,
+                ObservableCollection<ElementBatch>,
                 ObservableCollection<double>,
                 ObservableCollection<double>,
                 ObservableCollection<double>>)obj;
@@ -165,6 +168,8 @@ namespace ApartmentPanel.Presentation.ViewModel
                     //var panelCircuits =
                     //    (ObservableDictionary<string, ObservableCollection<IApartmentElement>>)obj;
                     Circuits = GetCircuits(panelCircuits);
+                    ElementBatches.Clear();
+                    ElementBatches = GetBatches(batches);
                     ListHeightsOK = GetHeights(heightsOk);
                     ListHeightsUK = GetHeights(heightsUk);
                     ListHeightsCenter = GetHeights(heightsCenter);
@@ -176,35 +181,39 @@ namespace ApartmentPanel.Presentation.ViewModel
             }
         }
 
-        private ObservableCollection<Circuit> GetCircuits(
-            ObservableDictionary<string, ObservableCollection<IApartmentElement>> panelCircuits)
+        private ObservableCollection<Circuit> GetCircuits(ObservableCollection<Circuit> panelCircuits)
+            //ObservableDictionary<string, ObservableCollection<IApartmentElement>> panelCircuits)
         {
             var result = new ObservableCollection<Circuit>();
             foreach (var circuit in panelCircuits)
             {
                 result.Add(new Circuit
                 {
-                    Number = circuit.Key,
+                    Number = circuit.Number,
                     Elements = new ObservableCollection<IApartmentElement>(
-                            circuit.Value.Select(ap => ap.Clone()).ToList())
+                            circuit.Elements.Select(ap => ap.Clone()).ToList())
+                    /*Number = circuit.Key,
+                    Elements = new ObservableCollection<IApartmentElement>(
+                            circuit.Value.Select(ap => ap.Clone()).ToList())*/
                 });
             }
             return result;
         }
 
-        private ObservableCollection<ElementBatch> GetBatch(ObservableCollection<ElementBatch> listElementBatches)
+        private ObservableCollection<ElementBatch> GetBatches(ObservableCollection<ElementBatch> batches)
         {
             var result = new ObservableCollection<ElementBatch>();
-            foreach (var batch in listElementBatches)
+            if (batches != null)
             {
-                result.Add(batch.Clone());
+                foreach (var batch in batches)
+                {
+                    result.Add(batch.Clone());
+                }
             }
             return result;
         }
 
-        private ObservableCollection<double> GetHeights(ObservableCollection<double> heights)
-        {
-            return new ObservableCollection<double>(heights.ToList());
-        }
+        private ObservableCollection<double> GetHeights(ObservableCollection<double> heights) =>
+            new ObservableCollection<double>(heights.ToList());
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ApartmentPanel.Presentation.ViewModel;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Windows.Media;
 
 namespace ApartmentPanel.Presentation.Models.Batch
@@ -17,6 +18,7 @@ namespace ApartmentPanel.Presentation.Models.Batch
         }
 
         private ImageSource _annotation;
+        [JsonIgnore]
         public ImageSource Annotation
         {
             get => _annotation;

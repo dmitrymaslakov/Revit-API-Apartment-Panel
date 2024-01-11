@@ -65,13 +65,16 @@
   <ItemGroup>
     <Compile Include="Application.cs" />
     <Compile Include="Core\DependencyInjection.cs" />
-    <Compile Include="Core\Infrastructure.Interfaces\DTO\GettingParamsDTO.cs" />
+    <Compile Include="Core\Infrastructure.Interfaces\DTO\SetParamsDTO.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\DTO\InsertBatchDTO.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\DTO\InsertBatchedElementDTO.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\DTO\InsertElementDTO.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\IElementRepository.cs" />
     <Compile Include="Core\Models\ApartmentElement.cs" />
     <Compile Include="Core\Models\CategorizedFamilySymbols.cs" />
+    <Compile Include="Infrastructure\Models\BatchedInstance.cs" />
+    <Compile Include="Infrastructure\Models\BatchedInstanceRow.cs" />
+    <Compile Include="Infrastructure\Models\BatchInstaller.cs" />
     <Compile Include="Infrastructure\Models\ElementInstaller.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\ILocationStrategy.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\BottomLocationStrategy.cs" />
@@ -82,6 +85,7 @@
     <Compile Include="Presentation\Models\Batch\BatchedElement.cs" />
     <Compile Include="Presentation\Models\Batch\BatchedRow.cs" />
     <Compile Include="Presentation\Models\Batch\BatchedLocation.cs" />
+    <Compile Include="Presentation\Models\Batch\BatchedMargin.cs" />
     <Compile Include="Presentation\Models\Circuit.cs" />
     <Compile Include="Core\Models.Interfaces\IApartmentElement.cs" />
     <Compile Include="Presentation\Models\Batch\ElementBatch.cs" />
@@ -131,10 +135,8 @@
     <Compile Include="Presentation\ViewModel\ComponentsVM\ConfigPanelViewModel.cs" />
     <Compile Include="Presentation\ViewModel\Interfaces\IListElementsViewModel.cs" />
     <Compile Include="Presentation\ViewModel\ComponentsVM\ListElementsViewModel.cs" />
-    <Compile Include="Presentation\ViewModel\Interfaces\IConfigPanelPropsForCommandsCreater.cs" />
     <Compile Include="Presentation\ViewModel\Interfaces\IConfigPanelViewModel.cs" />
     <Compile Include="Presentation\ViewModel\Interfaces\IMainViewModel.cs" />
-    <Compile Include="Presentation\ViewModel\Interfaces\IViewPropsForCommandsCreater.cs" />
     <Compile Include="Presentation\ViewModel\MainViewModel.cs" />
     <Compile Include="Presentation\ViewModel\ViewModelBase.cs" />
     <Compile Include="Presentation\View\Components\ConfigPanel.xaml.cs">
@@ -155,6 +157,7 @@
     <Compile Include="Utility\DependencyInjection.cs" />
     <Compile Include="Utility\Exceptions\CustomParameterException.cs" />
     <Compile Include="Infrastructure\Models\FamilyInstanceBuilder.cs" />
+    <Compile Include="Utility\FamilyInstacePointCounter.cs" />
     <Compile Include="Utility\FileUtility.cs" />
     <Compile Include="Utility\Globals.cs" />
     <Compile Include="Utility\HeightUpdater.cs" />

@@ -112,9 +112,10 @@ namespace ApartmentPanel.Presentation.View.Components
 
             string category = element.Category;
             string name = element.Name;
+            ImageSource annotation = element.Annotation;
             string circuitNumber = circuit?.Number;
 
-            HitElementCommand?.Execute((circuitNumber, name, category));
+            HitElementCommand?.Execute((circuitNumber, name, category, annotation));
         }
 
         private Circuit FindParentCircuit(DependencyObject child)

@@ -8,16 +8,17 @@ using ApartmentPanel.Utility;
 using ApartmentPanel.Infrastructure.Models.LocationStrategies;
 using ApartmentPanel.Core.Models;
 using System;
+using Microsoft.Extensions.Hosting;
 
 namespace ApartmentPanel.Infrastructure.Models
 {
-    public class FamilyInstanceBuilder
+    public class FamilyInstanceBuilder : RevitInfrastructureBase
     {
         #region Private fields
-        private UIApplication _uiapp;
+        /*private UIApplication _uiapp;
         private UIDocument _uiDocument;
         private Document _document;
-        private Selection _selection;
+        private Selection _selection;*/
         /*private double _elevationFromLevel;*/
         private double _height;
         private string _renderedHeight;
@@ -26,22 +27,24 @@ namespace ApartmentPanel.Infrastructure.Models
         private string _circuit;
         private string _lampSuffix;
         private string _switchNumbers;
+        //private double _offset;
 
         #endregion
 
-        public FamilyInstanceBuilder(UIApplication uiapp)
-        {
-            _uiapp = uiapp;
-            _uiDocument = _uiapp.ActiveUIDocument;
-            _document = _uiDocument.Document;
-            _selection = _uiDocument.Selection;
-        }
+        public FamilyInstanceBuilder(UIApplication uiapp) : base(uiapp) { }
+
+        public Reference Host { get; private set; }
+
         public ElementId Build(string elementName)
         {
             var familySymbol = new FilteredElementCollector(_document)
                 .OfClass(typeof(FamilySymbol))
                 .Where(fs => fs.Name == elementName)
                 .FirstOrDefault() as FamilySymbol;
+
+            if (Host == null)
+                Host = PickHost();
+
             ElementId familyInstanceId = FamilyInstanceCreate(familySymbol);
             FamilyInstanceConfigure(familyInstanceId);
             return familyInstanceId;
@@ -83,22 +86,35 @@ namespace ApartmentPanel.Infrastructure.Models
             _switchNumbers = switchNumbers;
             return this;
         }
+        public FamilyInstanceBuilder WithHost(Reference host)
+        {
+            Host = host;
+            return this;
+        }
+        /*public FamilyInstanceBuilder WithOffset(double offset = 0)
+        {
+            if (offset != 0) _offset = offset;
+            return this;
+        }*/
         #endregion
 
         #region Private methods
+        private Reference PickHost() => 
+            _selection.PickObject(ObjectType.PointOnElement, "Pick a host in the model");
         private ElementId FamilyInstanceCreate(FamilySymbol symbol)
         {
-            Reference reference =
-                _selection.PickObject(ObjectType.PointOnElement, "Pick a host in the model");
-
             FamilyInstance newFamilyInstance = null;
             using (var tr = new Transaction(_document, "Creating new FamilyInstance"))
             {
                 tr.Start();
                 XYZ dir = new XYZ(0, 0, 0);
+                /*XYZ location = _offset != 0 
+                    ? new XYZ(Host.GlobalPoint.X + _offset, Host.GlobalPoint.Y, Host.GlobalPoint.Z)
+                    : Host.GlobalPoint; */
+
                 newFamilyInstance = _uiDocument
                     .Document.Create
-                    .NewFamilyInstance(reference, reference.GlobalPoint, dir, symbol);
+                    .NewFamilyInstance(Host, Host.GlobalPoint, dir, symbol);
                 tr.Commit();
             }
             return newFamilyInstance.Id;
