@@ -157,7 +157,8 @@
     <Compile Include="Utility\DependencyInjection.cs" />
     <Compile Include="Utility\Exceptions\CustomParameterException.cs" />
     <Compile Include="Infrastructure\Models\FamilyInstanceBuilder.cs" />
-    <Compile Include="Utility\FamilyInstacePointCounter.cs" />
+    <Compile Include="Utility\Extensions\MathExtensions.cs" />
+    <Compile Include="Utility\FamilyInstacePoints.cs" />
     <Compile Include="Utility\FileUtility.cs" />
     <Compile Include="Utility\Globals.cs" />
     <Compile Include="Utility\HeightUpdater.cs" />
@@ -209,7 +210,12 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{56a58163-b31a-4c93-b3d4-32dcfb7a2556}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FontAwesome.WPF">
       <Version>4.7.0.9</Version>

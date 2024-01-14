@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace ApartmentPanel.Utility
 {
-    public class FamilyInstacePointCounter : RevitInfrastructureBase
+    public class FamilyInstacePoints : RevitInfrastructureBase
     {
-        public FamilyInstacePointCounter(UIApplication uiapp, FamilyInstance familyInstance) : base(uiapp)
+        public FamilyInstacePoints(UIApplication uiapp, FamilyInstance familyInstance) : base(uiapp)
         {
             View3D view3D = new FilteredElementCollector(_document)
                 .OfClass(typeof(View3D))

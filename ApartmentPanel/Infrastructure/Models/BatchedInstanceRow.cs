@@ -127,7 +127,7 @@ namespace ApartmentPanel.Infrastructure.Models
 
         private double GetOffsetFromFamilyInstance(BatchedInstance batchedInstance, bool isHead)
         {
-            var poinCounter = new FamilyInstacePointCounter(_uiapp, batchedInstance.Instance);
+            var poinCounter = new FamilyInstacePoints(_uiapp, batchedInstance.Instance);
             var (basePoint, maxPoint, minPoint) = (poinCounter.Location, poinCounter.Max, poinCounter.Min);
             double instanceWidth;
             

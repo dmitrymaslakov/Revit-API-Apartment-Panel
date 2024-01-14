@@ -13,6 +13,10 @@ using ApartmentPanel.Presentation;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
+using Autodesk.Revit.UI.Selection;
+using System.Linq;
+using System.Diagnostics;
+using Utility.Extensions;
 
 namespace ApartmentPanel
 {
@@ -141,7 +145,6 @@ namespace ApartmentPanel
         public virtual Result Execute(ExternalCommandData commandData,
             ref string message, ElementSet elements)
         {
-            TaskDialog.Show("It's command", "");
             UIApplication uiapp = commandData.Application;
 
             if (DockablePane.PaneIsRegistered(MainView.PaneId))
@@ -155,7 +158,7 @@ namespace ApartmentPanel
                 return Result.Failed;
             }
 
-            var heightUpdater = new HeightUpdater(uiapp.ActiveAddInId);
+            /*var heightUpdater = new HeightUpdater(uiapp.ActiveAddInId);
             UpdaterRegistry.RegisterUpdater(heightUpdater);
 
             Document _document = uiapp.ActiveUIDocument.Document;
@@ -176,8 +179,7 @@ namespace ApartmentPanel
             UpdaterRegistry.AddTrigger(
                 heightUpdater.GetUpdaterId(), elementFilter,
                 Element.GetChangeTypeParameter(
-                    new ElementId(BuiltInParameter.INSTANCE_ELEVATION_PARAM)));
-
+                    new ElementId(BuiltInParameter.INSTANCE_ELEVATION_PARAM)));*/
             return Result.Succeeded;
         }
     }

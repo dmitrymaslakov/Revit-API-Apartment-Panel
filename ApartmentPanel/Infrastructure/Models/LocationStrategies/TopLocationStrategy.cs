@@ -3,6 +3,8 @@ using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.UI;
 using System;
 using ApartmentPanel.Utility;
+using System.Net.Http.Headers;
+using ApartmentPanel.Utility.Extensions;
 
 namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
 {
@@ -14,8 +16,8 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
 
         public void SetRequiredLocation(FamilyInstance familyInstance, double height)
         {
-            var poinCounter = new FamilyInstacePointCounter(_uiapp, familyInstance);
-            var (basePoint, maxPoint, minPoint) = (poinCounter.Location, poinCounter.Max, poinCounter.Min);
+            var instancePoints = new FamilyInstacePoints(_uiapp, familyInstance);
+            var (basePoint, maxPoint, minPoint) = (instancePoints.Location, instancePoints.Max, instancePoints.Min);
 
             XYZ targetPoint = new XYZ(basePoint.X, basePoint.Y, maxPoint.Z);
             XYZ deltaPoints = basePoint.Subtract(targetPoint);
@@ -24,10 +26,17 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
 
             double fullOffset = HorizontalOffset == 0 
                 ? 0 
-                : Math.Abs(basePoint.X - minPoint.X) + HorizontalOffset;
+                : Math.Abs(maxPoint.X - minPoint.X)/2 + HorizontalOffset;
             XYZ newBasePoint = new XYZ(basePoint.X + fullOffset, basePoint.Y, deltaPoints.Z + heightInFeets);
             XYZ translation = newBasePoint - basePoint;
-            familyInstance.Location.Move(translation);
+            Transform instanceTransform = familyInstance.GetTransform();
+            XYZ localXAxis = instanceTransform.BasisX;
+            XYZ globalXAxis = XYZ.BasisX;
+            double angle = globalXAxis.AngleOnPlaneTo(localXAxis, XYZ.BasisZ);
+            Transform rotation = Transform.CreateRotation(XYZ.BasisZ, angle);
+            XYZ rotatedTranslation = rotation.OfVector(translation);
+
+            familyInstance.Location.Move(rotatedTranslation);
         }
     }
 }
