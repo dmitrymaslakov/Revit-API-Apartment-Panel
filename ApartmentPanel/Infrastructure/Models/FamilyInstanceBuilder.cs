@@ -112,8 +112,10 @@ namespace ApartmentPanel.Infrastructure.Models
                     ? new XYZ(Host.GlobalPoint.X + _offset, Host.GlobalPoint.Y, Host.GlobalPoint.Z)
                     : Host.GlobalPoint; */
 
-                newFamilyInstance = _uiDocument
-                    .Document.Create
+                newFamilyInstance = /*_uiDocument
+                    .Document*/
+                    _document
+                    .Create
                     .NewFamilyInstance(Host, Host.GlobalPoint, dir, symbol);
                 tr.Commit();
             }

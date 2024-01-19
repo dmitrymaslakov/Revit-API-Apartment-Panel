@@ -120,10 +120,7 @@ namespace ApartmentPanel.Infrastructure.Models
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         private double GetOffsetFromFamilyInstance(BatchedInstance batchedInstance, bool isHead)
         {
