@@ -8,7 +8,7 @@ namespace ApartmentPanel.Infrastructure.Models
 {
     public class BatchedInstance
     {
-        public FamilyInstance Instance { get; set; }
+        public BuiltInstance Instance { get; set; }
         //public BatchedLocation Location { get; set; }
         public Thickness Margin { get; set; }
         public BatchedInstance Next { get; set; }

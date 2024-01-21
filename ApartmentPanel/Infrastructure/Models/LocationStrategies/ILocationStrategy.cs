@@ -5,6 +5,6 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
 {
     public interface ILocationStrategy
     {
-        void SetRequiredLocation(FamilyInstance familyInstance, double height);
+        void SetRequiredLocation(BuiltInstance builtInstance, double height);
     }
 }

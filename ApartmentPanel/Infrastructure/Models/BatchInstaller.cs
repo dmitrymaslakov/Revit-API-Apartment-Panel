@@ -18,7 +18,7 @@ namespace ApartmentPanel.Infrastructure.Models
         {
             var batchedInstances = new BatchedInstanceRow(_uiapp);
             Reference host = null;
-            ElementId id = null;
+            BuiltInstance builtInstance = null;
             FamilyInstanceBuilder instanceBuilder = null;
 
             foreach (var elementData in _batch.BatchedElements)
@@ -30,35 +30,35 @@ namespace ApartmentPanel.Infrastructure.Models
                 {
                     case StaticData.LIGHTING_FIXTURES:
                         instanceBuilder = new FamilyInstanceBuilder(_uiapp);
-                        id = new ElementInstaller(_uiapp, elementData, instanceBuilder)
+                        builtInstance = new ElementInstaller(_uiapp, elementData, instanceBuilder)
                             .InstallLightingFixtures(host);
                         break;
                     case StaticData.LIGHTING_DEVICES:
                         instanceBuilder = new FamilyInstanceBuilder(_uiapp);
-                        id = new ElementInstaller(_uiapp, elementData, instanceBuilder)
+                        builtInstance = new ElementInstaller(_uiapp, elementData, instanceBuilder)
                             .InstallLightingDevices(host);
                         break;
                     case StaticData.ELECTRICAL_FIXTURES:
                         instanceBuilder = new FamilyInstanceBuilder(_uiapp);
-                        id = new ElementInstaller(_uiapp, elementData, instanceBuilder)
+                        builtInstance = new ElementInstaller(_uiapp, elementData, instanceBuilder)
                             .InstallElectricalFixtures(host);
                         break;
                     case StaticData.TELEPHONE_DEVICES:
                     case StaticData.FIRE_ALARM_DEVICES:
                     case StaticData.COMMUNICATION_DEVICES:
                         instanceBuilder = new FamilyInstanceBuilder(_uiapp);
-                        id = new ElementInstaller(_uiapp, elementData, instanceBuilder)
+                        builtInstance = new ElementInstaller(_uiapp, elementData, instanceBuilder)
                             .InstallCommunicationDevices(host);
                         break;
                     default:
                         break;
                 }
-                if (id != null)
+                if (builtInstance != null)
                 {
-                    var instance = _document.GetElement(id) as FamilyInstance;
+                    //var instance = _document.GetElement(builtInstance.Id) as FamilyInstance;
                     batchedInstances.Add(new BatchedInstance()
                     {
-                        Instance = instance,
+                        Instance = builtInstance,
                         Margin = elementData.Margin,
                     });
 

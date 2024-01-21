@@ -10,8 +10,9 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
 
         public double HorizontalOffset { get; set; }
 
-        public void SetRequiredLocation(FamilyInstance familyInstance, double height)
+        public void SetRequiredLocation(BuiltInstance builtInstance, double height)
         {
+            var familyInstance = _document.GetElement(builtInstance.Id) as FamilyInstance;
             XYZ basePoint = (familyInstance.Location as LocationPoint)?.Point;
             XYZ minPoint = familyInstance.get_BoundingBox(null).Min;
             XYZ targetPoint = new XYZ(basePoint.X, basePoint.Y, minPoint.Z);

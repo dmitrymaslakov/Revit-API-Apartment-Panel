@@ -34,8 +34,9 @@ namespace ApartmentPanel.Infrastructure.Models
         public FamilyInstanceBuilder(UIApplication uiapp) : base(uiapp) { }
 
         public Reference Host { get; private set; }
+        //public BuiltInstance BuiltInstance { get; private set; }
 
-        public ElementId Build(string elementName)
+        public BuiltInstance Build(string elementName)
         {
             var familySymbol = new FilteredElementCollector(_document)
                 .OfClass(typeof(FamilySymbol))
@@ -46,8 +47,9 @@ namespace ApartmentPanel.Infrastructure.Models
                 Host = PickHost();
 
             ElementId familyInstanceId = FamilyInstanceCreate(familySymbol);
-            FamilyInstanceConfigure(familyInstanceId);
-            return familyInstanceId;
+            BuiltInstance builtInstance = new BuiltInstance(_uiapp, familyInstanceId);
+            FamilyInstanceConfigure(builtInstance);
+            return builtInstance;
         }
 
         #region Configuration methods
@@ -99,7 +101,7 @@ namespace ApartmentPanel.Infrastructure.Models
         #endregion
 
         #region Private methods
-        private Reference PickHost() => 
+        private Reference PickHost() =>
             _selection.PickObject(ObjectType.PointOnElement, "Pick a host in the model");
         private ElementId FamilyInstanceCreate(FamilySymbol symbol)
         {
@@ -121,15 +123,14 @@ namespace ApartmentPanel.Infrastructure.Models
             }
             return newFamilyInstance.Id;
         }
-        private void FamilyInstanceConfigure(ElementId familyInstanceId)
+        private void FamilyInstanceConfigure(BuiltInstance builtInstance)
         {
-            FamilyInstance familyInstance = _document.GetElement(familyInstanceId) as FamilyInstance;
+            FamilyInstance familyInstance = _document.GetElement(builtInstance.Id) as FamilyInstance;
 
             using (var tr = new Transaction(_document, "Config FamilyInstance"))
             {
                 tr.Start();
                 if (_currentLevelId != null) SetCurrentLevel(familyInstance);
-                if (_locationStrategy != null) _locationStrategy.SetRequiredLocation(familyInstance, _height);
                 if (string.IsNullOrEmpty(_renderedHeight)) SetHeight(familyInstance);
                 if (string.IsNullOrEmpty(_circuit)) SetCircuit(familyInstance);
                 /*string category = familyInstance.Category.Name;
@@ -159,6 +160,7 @@ namespace ApartmentPanel.Infrastructure.Models
                 }*/
                 tr.Commit();
             }
+            if (_locationStrategy != null) _locationStrategy.SetRequiredLocation(builtInstance, _height);
         }
         private ElementId GetViewLevel()
         {

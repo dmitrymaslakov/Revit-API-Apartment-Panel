@@ -75,6 +75,7 @@
     <Compile Include="Infrastructure\Models\BatchedInstance.cs" />
     <Compile Include="Infrastructure\Models\BatchedInstanceRow.cs" />
     <Compile Include="Infrastructure\Models\BatchInstaller.cs" />
+    <Compile Include="Infrastructure\Models\BuiltInstance.cs" />
     <Compile Include="Infrastructure\Models\ElementInstaller.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\ILocationStrategy.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\BottomLocationStrategy.cs" />

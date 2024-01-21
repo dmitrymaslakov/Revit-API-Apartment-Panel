@@ -1,11 +1,6 @@
-﻿using ApartmentPanel.Utility;
-using Autodesk.Revit.DB;
+﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Controls;
 
 namespace ApartmentPanel.Infrastructure.Models
 {
@@ -124,17 +119,19 @@ namespace ApartmentPanel.Infrastructure.Models
 
         private double GetOffsetFromFamilyInstance(BatchedInstance batchedInstance, bool isHead)
         {
-            var poinCounter = new FamilyInstacePoints(_uiapp, batchedInstance.Instance);
-            var (basePoint, maxPoint, minPoint) = (poinCounter.Location, poinCounter.Max, poinCounter.Min);
+            /*var poinCounter = new FamilyInstacePoints(_uiapp, batchedInstance.Instance);
+            var (basePoint, maxPoint, minPoint) = (poinCounter.Location, poinCounter.Max, poinCounter.Min);*/
             double instanceWidth;
-            
+
             if (isHead)
-                instanceWidth = Math.Abs(basePoint.X - maxPoint.X);
+                instanceWidth = batchedInstance.Instance.Width / 2;
+            //instanceWidth = Math.Abs(basePoint.X - maxPoint.X);
             else
-                instanceWidth = Math.Abs(minPoint.X - maxPoint.X);
+                instanceWidth = batchedInstance.Instance.Width;
+            //instanceWidth = Math.Abs(minPoint.X - maxPoint.X);
 
             double leftMarginInFeets = UnitUtils.ConvertToInternalUnits(batchedInstance.Margin.Left,
-                _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
+                    _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
             return instanceWidth + leftMarginInFeets;
         }
     }

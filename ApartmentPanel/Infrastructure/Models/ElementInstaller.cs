@@ -25,7 +25,7 @@ namespace ApartmentPanel.Infrastructure.Models
             _heightFormat = height => $"{_elementData.Height.TypeOf}={height}";
         }
 
-        public ElementId InstallLightingFixtures(Reference host = null)
+        public BuiltInstance InstallLightingFixtures(Reference host = null)
         {
             return _familyInstanceBuilder
                 .WithCircuit(_elementData.Circuit)
@@ -36,7 +36,7 @@ namespace ApartmentPanel.Infrastructure.Models
                 .Build(_elementData.Name);
         }
 
-        public ElementId InstallLightingDevices(Reference host = null)
+        public BuiltInstance InstallLightingDevices(Reference host = null)
         {
             return _familyInstanceBuilder
                 .WithSwitchNumbers(_elementData.SwitchNumbers)
@@ -50,7 +50,7 @@ namespace ApartmentPanel.Infrastructure.Models
                 .Build(_elementData.Name);
         }
 
-        public ElementId InstallElectricalFixtures(Reference host = null)
+        public BuiltInstance InstallElectricalFixtures(Reference host = null)
         {
             return _familyInstanceBuilder
                 .SetLocationStrategy(_locationStrategy)
@@ -63,7 +63,7 @@ namespace ApartmentPanel.Infrastructure.Models
                 .Build(_elementData.Name);
         }
 
-        public ElementId InstallCommunicationDevices(Reference host = null)
+        public BuiltInstance InstallCommunicationDevices(Reference host = null)
         {
             return _familyInstanceBuilder
                 .SetLocationStrategy(_locationStrategy)

@@ -28,10 +28,21 @@ namespace RevitTest
 
             try
             {
-                /*var selectedElementId = _selection.GetElementIds().FirstOrDefault();
+                var selectedElementId = _selection.GetElementIds().FirstOrDefault();
                 var familyInstance = _document.GetElement(selectedElementId) as FamilyInstance;
 
-                View3D view3D = new FilteredElementCollector(_document)
+                Transform instanceTransform = familyInstance.GetTransform();
+                XYZ localXAxis = instanceTransform.BasisX;
+                XYZ globalXAxis = XYZ.BasisX;
+                double angle = globalXAxis.AngleOnPlaneTo(localXAxis, XYZ.BasisZ);
+                double angle1 = globalXAxis.AngleOnPlaneTo(globalXAxis, XYZ.BasisZ);
+                bool isAnglesEquals = Equals(Math.Round(angle, 3), Math.Round(Math.PI * 2, 3));
+                double tolerance = 0.001; // set the tolerance value
+                bool areParallel = globalXAxis.IsAlmostEqualTo(localXAxis, tolerance);
+                Debug.Write($"angleRad - {angle}");
+                Debug.Write($"angleDeg - {ToDegrees(angle)}");
+                Debug.Write($"areParallel - {areParallel}");
+                /*View3D view3D = new FilteredElementCollector(_document)
                     .OfClass(typeof(View3D))
                     .Cast<View3D>()
                     .FirstOrDefault(v => !v.IsTemplate);
@@ -73,21 +84,6 @@ namespace RevitTest
                 Transform rotation = Transform.CreateRotation(XYZ.BasisZ, angle);
                 Transform globalTransform = Transform.Identity;
                 XYZ rotatedMinMaxXVector = rotation.OfVector(minMaxXVector);*/
-                var familySymbol = new FilteredElementCollector(_document)
-                    .OfClass(typeof(FamilySymbol))
-                    .Where(fs => fs.Name == "Single Socket")
-                    .FirstOrDefault() as FamilySymbol;
-                var fsBB = familySymbol.get_BoundingBox(null);
-                View3D view3D = new FilteredElementCollector(_document)
-                    .OfClass(typeof(View3D))
-                    .Cast<View3D>()
-                    .FirstOrDefault(v => !v.IsTemplate);
-                Options geomOpts = new Options
-                {
-                    ComputeReferences = true,
-                    //View = _document.ActiveView,
-                    DetailLevel = ViewDetailLevel.Fine
-                };
                 /*var gFS = familySymbol.get_Geometry(geomOpts);
                 foreach (var item in gFS)
                 {
@@ -121,20 +117,89 @@ namespace RevitTest
                 TaskDialog.Show("Analize_Exception", ex.Message);
             }
         }
-        private ElementId FamilyInstanceCreate(Document document, FamilySymbol symbol, View view)
+        private ElementId CreateFamilyInstance(Document document, FamilySymbol symbol, Wall wall)
         {
+            Face face = null;
+            Options geomOptions = new Options { ComputeReferences = true };
+            GeometryElement wallGeom = wall.get_Geometry(geomOptions);
+            foreach (GeometryObject geomObj in wallGeom)
+            {
+                Solid geomSolid = geomObj as Solid;
+                if (null != geomSolid)
+                {
+                    foreach (Face geomFace in geomSolid.Faces)
+                    {
+                        face = geomFace;
+                        break;
+                    }
+                    break;
+                }
+            }
+
+            // Get the center of the wall 
+            BoundingBoxUV bboxUV = face.GetBoundingBox();
+            UV center = (bboxUV.Max + bboxUV.Min) / 2.0;
+            XYZ location = face.Evaluate(center);
+            XYZ normal = face.ComputeNormal(center);
+            XYZ refDir = normal.CrossProduct(XYZ.BasisZ);
             FamilyInstance newFamilyInstance = null;
             using (var tr = new Transaction(document, "Creating new FamilyInstance"))
             {
                 tr.Start();
-                XYZ origin = new XYZ(0, 0, 0);
-                newFamilyInstance = document.Create
-                    .NewFamilyInstance(origin, symbol, view);
+                XYZ dir = new XYZ(0, 0, 0);
+
+                newFamilyInstance = document
+                    .Create
+                    .NewFamilyInstance(face, location, refDir, symbol);
                 tr.Commit();
             }
             return newFamilyInstance.Id;
         }
 
+        private Wall CreateWall(Document doc)
+        {
+            // Create a line to define the wall's location
+            Line line = Line.CreateBound(new XYZ(0, 0, 0), new XYZ(10, 0, 0));
+
+            // Find a suitable wall type (you may need to adjust this based on your project)
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            WallType wallType = collector
+                .OfClass(typeof(WallType))
+                .Cast<WallType>()
+                .FirstOrDefault(wt => wt.Kind == WallKind.Basic);
+            Wall wallResult = null;
+            if (wallType != null)
+            {
+                // Set the level for the wall (you may need to adjust this based on your project)
+                Level level = new FilteredElementCollector(doc)
+                    .OfCategory(BuiltInCategory.OST_Levels)
+                    .WhereElementIsNotElementType()
+                    .Cast<Level>()
+                    .FirstOrDefault();
+
+                if (level != null)
+                {
+                    // Create the wall
+                    Transaction transaction = new Transaction(doc, "Create Wall");
+                    transaction.Start();
+
+                    wallResult = Wall.Create(doc, line, wallType.Id, level.Id, 10, 0, false, false);
+
+                    transaction.Commit();
+
+                    TaskDialog.Show("Success", "Wall created successfully.");
+                }
+                else
+                {
+                    TaskDialog.Show("Error", "No suitable level found.");
+                }
+            }
+            else
+            {
+                TaskDialog.Show("Error", "No suitable wall type found.");
+            }
+            return wallResult;
+        }
         private double ToRadians(double degrees)
             => degrees * Math.PI / 180;
         private double ToDegrees(double radians)
