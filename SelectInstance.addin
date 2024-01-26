@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Assembly>D:\Programming\Revit-2023\ApartmentPanelSln\RevitTest\bin\Debug\RevitTest.dll</Assembly>
+    <ClientId>3557fd4b-f87f-488c-9910-673bd8259f6d</ClientId>
+    <FullClassName>RevitTest.SelectInstanceCommand</FullClassName>
+    <Text>RevitTest.SelectInstanceCommand</Text>
+    <Description>Just RevitTest</Description>
+    <VisibilityMode>AlwaysVisible</VisibilityMode>
+	<LanguageType>Unknown</LanguageType>
+	<VendorId>ADSK</VendorId>
+  </AddIn>
+</RevitAddIns>

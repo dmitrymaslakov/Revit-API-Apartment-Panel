@@ -24,8 +24,8 @@
         </Grid.RowDefinitions>
         <TreeView ItemsSource="{Binding Source={StaticResource GroupedItems}}" 
                   Grid.Row="0" 
-                  x:Name="elementsTree"
-                  >
+                  Height="300"
+                  x:Name="elementsTree">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Items}">
                     <TextBlock Text="{Binding Name}" />
@@ -42,7 +42,7 @@
                 </GroupStyle>
             </TreeView.GroupStyle>
         </TreeView>
-        <!--<TreeView ItemsSource="{Binding AllElements, ElementName=ListItems}" 
+        <!--<TreeView ItemsSource="{Binding AllElements}" 
                   Grid.Row="0"
                   x:Name="elementsTree"                  
                   SelectedItemChanged="TreeView_SelectedItemChanged">

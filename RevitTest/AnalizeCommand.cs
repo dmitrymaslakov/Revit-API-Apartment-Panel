@@ -234,13 +234,14 @@ namespace RevitTest
                 {
                     categoryFilter1, categoryFilter2, categoryFilter3, categoryFilter4
                 });
-                var instances = new FilteredElementCollector(_document, _document.ActiveView.Id)
+                //var instances = new FilteredElementCollector(_document, _document.ActiveView.Id)
+                var instances = new FilteredElementCollector(_document)
                     .WherePasses(orFilter)
                     .OfClass(typeof(FamilyInstance))
                     .ToElements()
                     .Where(fi => TryFindParameterValue(fi))
-                    .Select(e => e.Id);
-
+                    .Select(e => e.Id)
+                    ;
                 _selection.SetElementIds(new List<ElementId>(instances));
             }
             catch (Exception ex)
@@ -250,11 +251,32 @@ namespace RevitTest
         }
         private bool TryFindParameterValue(Element instance)
         {
-            string parameterName = "Elevation from Level";
+            //string pV = "UK=44"; //48.5
+            //string pV = "UK=125";
+            //string pV = "UK=144"; //139.5
+            //string pV = "UK=230";
+            //string pV = "OK=35"; //30.5
+            //string pV = "OK=40"; //35.5
+            //string pV = "OK=60"; //55.5
+            //string pV = "OK=110"; //105.5
+            //string pV = "OK=120";//115.5
+            //string pV = "OK=121"; //116.5
+            string pV = "OK=160"; //155.5
+            //string pV = "OK=230";
+            //string parameterName = "Elevation from Level";
+            string parameterName = "H-UK";
             Parameter parameter = instance.LookupParameter(parameterName);
-            if (parameter == null) throw new ArgumentNullException(parameterName);
-
-            return parameter.AsDouble() == 0;
+            //if (parameter == null) throw new ArgumentNullException(parameterName);
+            //Debug.Write(string);
+            //return Math.Round(parameter.AsDouble(), 2) == 0.0;
+            if (parameter is null || string.IsNullOrEmpty(parameter.AsString()))
+            {
+                return false;
+            }
+            else
+            {
+                return parameter.AsString().Contains(pV);
+            }
         }
     }
 }

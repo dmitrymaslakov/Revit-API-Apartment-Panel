@@ -52,7 +52,7 @@ namespace ApartmentPanel.Presentation.Commands
             };
             _showListElements = props =>
             {
-                var listElementsVM = _configPanelProperties.ListElementsVM;
+                IListElementsViewModel listElementsVM = _configPanelProperties.ListElementsVM;
                 listElementsVM.AddElementToApartment = _addElementToApartment;
                 listElementsVM.AllElements =
                     new ObservableCollection<IApartmentElement>(_elementService.GetAll(props));

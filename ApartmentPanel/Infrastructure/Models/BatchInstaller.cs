@@ -1,4 +1,5 @@
 ﻿using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
+using ApartmentPanel.Presentation.Models.Batch;
 using ApartmentPanel.Utility;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -23,7 +24,8 @@ namespace ApartmentPanel.Infrastructure.Models
 
             foreach (var elementData in _batch.BatchedElements)
             {
-                if (_batch.BatchedElements.IndexOf(elementData) > 0)
+                //if (_batch.BatchedElements.IndexOf(elementData) > 0)
+                if (!IsElementStartNewRow(elementData))
                     elementData.Offset = batchedInstances.GetOffset();
 
                 switch (elementData.Category)
@@ -56,6 +58,8 @@ namespace ApartmentPanel.Infrastructure.Models
                 if (builtInstance != null)
                 {
                     //var instance = _document.GetElement(builtInstance.Id) as FamilyInstance;
+                    if (batchedInstances.Count != 0 && IsElementStartNewRow(elementData)) batchedInstances.Clear();
+
                     batchedInstances.Add(new BatchedInstance()
                     {
                         Instance = builtInstance,
@@ -68,6 +72,10 @@ namespace ApartmentPanel.Infrastructure.Models
             }
         }
 
+        private bool IsElementStartNewRow(InsertElementDTO element)
+        {
+            return element.Location.Y == 0;
+        }
         private double GetValueFromLocationToInstanceEdge(FamilyInstance familyInstance)
         {
             XYZ basePoint = (familyInstance.Location as LocationPoint)?.Point;

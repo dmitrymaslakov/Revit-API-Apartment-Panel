@@ -9,6 +9,10 @@ namespace ApartmentPanel.Presentation.Models.Batch
 {
     public class BatchedElement : ViewModelBase
     {
+        public BatchedElement()
+        {
+            Margin = new BatchedMargin(0,0,0,0);
+        }
         public string Name { get; set; }
         public string Category { get; set; }
         public string Circuit { get; set; }

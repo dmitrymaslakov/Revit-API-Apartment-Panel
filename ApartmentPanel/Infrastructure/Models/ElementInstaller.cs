@@ -32,6 +32,7 @@ namespace ApartmentPanel.Infrastructure.Models
                 .WithCurrentLevel()
                 .WithLampSuffix(_elementData.CurrentSuffix)
                 .WithHost(host)
+                .WithParameters(_elementData.Parameters)
                 //.WithOffset(_elementData.Offset)
                 .Build(_elementData.Name);
         }
@@ -41,11 +42,12 @@ namespace ApartmentPanel.Infrastructure.Models
             return _familyInstanceBuilder
                 .WithSwitchNumbers(_elementData.SwitchNumbers)
                 .SetLocationStrategy(_locationStrategy)
-                .RenderHeightAs(_heightFormat)
                 .WithHeight(_elementData.Height.Value)
+                .RenderHeightAs(_heightFormat)
                 .WithCircuit(_elementData.Circuit)
                 .WithCurrentLevel()
                 .WithHost(host)
+                .WithParameters(_elementData.Parameters)
                 //.WithOffset(_elementData.Offset)
                 .Build(_elementData.Name);
         }
@@ -54,11 +56,12 @@ namespace ApartmentPanel.Infrastructure.Models
         {
             return _familyInstanceBuilder
                 .SetLocationStrategy(_locationStrategy)
-                .RenderHeightAs(_heightFormat)
                 .WithHeight(_elementData.Height.Value)
+                .RenderHeightAs(_heightFormat)
                 .WithCircuit(_elementData.Circuit)
                 .WithCurrentLevel()
                 .WithHost(host)
+                .WithParameters(_elementData.Parameters)
                 //.WithOffset(_elementData.Offset)
                 .Build(_elementData.Name);
         }
@@ -67,10 +70,11 @@ namespace ApartmentPanel.Infrastructure.Models
         {
             return _familyInstanceBuilder
                 .SetLocationStrategy(_locationStrategy)
-                .RenderHeightAs(_heightFormat)
                 .WithHeight(_elementData.Height.Value)
+                .RenderHeightAs(_heightFormat)
                 .WithCurrentLevel()
                 .WithHost(host)
+                .WithParameters(_elementData.Parameters)
                 //.WithOffset(_elementData.Offset)
                 .Build(_elementData.Name);
         }

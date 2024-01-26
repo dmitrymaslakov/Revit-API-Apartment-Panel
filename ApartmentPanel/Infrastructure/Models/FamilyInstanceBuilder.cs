@@ -9,17 +9,13 @@ using ApartmentPanel.Infrastructure.Models.LocationStrategies;
 using ApartmentPanel.Core.Models;
 using System;
 using Microsoft.Extensions.Hosting;
+using System.Security.Cryptography;
 
 namespace ApartmentPanel.Infrastructure.Models
 {
     public class FamilyInstanceBuilder : RevitInfrastructureBase
     {
         #region Private fields
-        /*private UIApplication _uiapp;
-        private UIDocument _uiDocument;
-        private Document _document;
-        private Selection _selection;*/
-        /*private double _elevationFromLevel;*/
         private double _height;
         private string _renderedHeight;
         private ILocationStrategy _locationStrategy;
@@ -27,7 +23,7 @@ namespace ApartmentPanel.Infrastructure.Models
         private string _circuit;
         private string _lampSuffix;
         private string _switchNumbers;
-        //private double _offset;
+        private Dictionary<string, string> _parameters;
 
         #endregion
 
@@ -93,11 +89,11 @@ namespace ApartmentPanel.Infrastructure.Models
             Host = host;
             return this;
         }
-        /*public FamilyInstanceBuilder WithOffset(double offset = 0)
+        public FamilyInstanceBuilder WithParameters(Dictionary<string, string> parameters)
         {
-            if (offset != 0) _offset = offset;
+            _parameters = parameters;
             return this;
-        }*/
+        }
         #endregion
 
         #region Private methods
@@ -131,8 +127,9 @@ namespace ApartmentPanel.Infrastructure.Models
             {
                 tr.Start();
                 if (_currentLevelId != null) SetCurrentLevel(familyInstance);
-                if (string.IsNullOrEmpty(_renderedHeight)) SetHeight(familyInstance);
-                if (string.IsNullOrEmpty(_circuit)) SetCircuit(familyInstance);
+                if (!string.IsNullOrEmpty(_renderedHeight)) SetHeight(familyInstance);
+                if (!string.IsNullOrEmpty(_circuit)) SetCircuit(familyInstance);
+                if (_parameters != null) SetParameters(familyInstance);
                 /*string category = familyInstance.Category.Name;
                 if (_currentLevelId != null)
                 {
@@ -236,6 +233,25 @@ namespace ApartmentPanel.Infrastructure.Models
                 case StaticData.COMMUNICATION_DEVICES:
                     circuitParam.Set(_renderedHeight);
                     break;
+            }
+        }
+        private void SetParameters(FamilyInstance familyInstance)
+        {
+            foreach (var parameter in _parameters)
+            {
+                if (!string.IsNullOrEmpty(parameter.Value))
+                {
+                    Parameter instanceParam = familyInstance.LookupParameter(parameter.Key);
+                    if (instanceParam == null)
+                        throw new CustomParameterException(parameter.Key, familyInstance.Name);
+
+                    if (double.TryParse(parameter.Value, out double valueAsDouble))
+                    {
+                        double valueAsDoubleInFeet = UnitUtils.ConvertToInternalUnits(valueAsDouble,
+                            _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());                         
+                        instanceParam.Set(valueAsDoubleInFeet);
+                    }
+                }
             }
         }
         #endregion

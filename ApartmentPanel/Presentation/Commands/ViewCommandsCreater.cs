@@ -11,6 +11,7 @@ using ApartmentPanel.Presentation.Models.Batch;
 using System.Windows.Documents;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
 
 namespace ApartmentPanel.Presentation.Commands
 {
@@ -29,8 +30,8 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateInsertElementCommand() => new RelayCommand(o =>
         {
-            (string circuit, string elementName, string elementCategory) =
-                (ValueTuple<string, string, string>)o;
+            (string circuit, string elementName, string elementCategory, ImageSource annotation) =
+                (ValueTuple<string, string, string, ImageSource>)o;
 
             string insertingMode = "single";
 
@@ -71,7 +72,11 @@ namespace ApartmentPanel.Presentation.Commands
                             TypeOf = row.HeightFromFloor.TypeOf,
                             Value = row.HeightFromFloor.Value
                         },
-                        //Location = element.Location,
+                        Location = new BatchedLocation
+                        {
+                            X = elementBatch.BatchedRows.IndexOf(row),
+                            Y = row.RowElements.IndexOf(element)
+                        },
                         Margin = new Thickness
                         {
                             Left = element.Margin.Left,

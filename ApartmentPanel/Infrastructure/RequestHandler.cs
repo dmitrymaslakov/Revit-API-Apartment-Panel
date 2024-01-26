@@ -9,6 +9,7 @@ using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
 using ApartmentPanel.Infrastructure.Models;
 using ApartmentPanel.Utility.Exceptions;
 using System.Text;
+using System.Diagnostics;
 
 namespace ApartmentPanel.Infrastructure
 {
@@ -35,7 +36,7 @@ namespace ApartmentPanel.Infrastructure
                 {
                     case RequestId.None:
                         {
-                            AnalizeElement();
+                            AnalizeElement(uiapp);
                             return;
                         }
                     case RequestId.Configure:
@@ -272,33 +273,35 @@ namespace ApartmentPanel.Infrastructure
                 try
                 {
                     FamilyInstanceBuilder instanceBuilder = null;
+                    BuiltInstance builtInstance = null;
                     switch (elementData.Category)
                     {
                         case StaticData.LIGHTING_FIXTURES:
                             instanceBuilder = new FamilyInstanceBuilder(_uiapp);
-                            new ElementInstaller(_uiapp, elementData, instanceBuilder)
+                            builtInstance = new ElementInstaller(_uiapp, elementData, instanceBuilder)
                                 .InstallLightingFixtures();
                             break;
                         case StaticData.LIGHTING_DEVICES:
                             instanceBuilder = new FamilyInstanceBuilder(_uiapp);
-                            new ElementInstaller(_uiapp, elementData, instanceBuilder)
+                            builtInstance = new ElementInstaller(_uiapp, elementData, instanceBuilder)
                                 .InstallLightingDevices();
                             break;
                         case StaticData.ELECTRICAL_FIXTURES:
                             instanceBuilder = new FamilyInstanceBuilder(_uiapp);
-                            new ElementInstaller(_uiapp, elementData, instanceBuilder)
+                            builtInstance = new ElementInstaller(_uiapp, elementData, instanceBuilder)
                                 .InstallElectricalFixtures();
                             break;
                         case StaticData.TELEPHONE_DEVICES:
                         case StaticData.FIRE_ALARM_DEVICES:
                         case StaticData.COMMUNICATION_DEVICES:
                             instanceBuilder = new FamilyInstanceBuilder(_uiapp);
-                            new ElementInstaller(_uiapp, elementData, instanceBuilder)
+                            builtInstance = new ElementInstaller(_uiapp, elementData, instanceBuilder)
                                 .InstallCommunicationDevices();
                             break;
                         default:
                             break;
                     }
+                    if (builtInstance != null) _selection.SetElementIds(new List<ElementId> { builtInstance.Id });
                     if (!elementData.InsertingMode.Contains("multiple")) isMultiple = false;
                 }
                 catch (Autodesk.Revit.Exceptions.OperationCanceledException)
@@ -361,57 +364,49 @@ namespace ApartmentPanel.Infrastructure
             return string.Join(",", suffixes);
         }
 
-        private void AnalizeElement()
+        private void AnalizeElement(UIApplication uiapp)
         {
-            var selectedElementId = _selection.GetElementIds().FirstOrDefault();
-            if (selectedElementId == null) return;
-            Element selectedElement = _document.GetElement(selectedElementId);
-            var familyInstance = selectedElement as FamilyInstance;
-            View3D view3D = new FilteredElementCollector(_document)
-                .OfClass(typeof(View3D))
-                .Cast<View3D>()
-                .FirstOrDefault(v => !v.IsTemplate);
-            Options geomOpts = new Options
+            UIApplication _uiapp = uiapp;
+            UIDocument _uiDocument = _uiapp.ActiveUIDocument;
+            Document _document = _uiDocument.Document;
+            Selection _selection = _uiDocument.Selection;
+
+            try
             {
-                /*ComputeReferences = true,
-                IncludeNonVisibleObjects = true,
-                DetailLevel = ViewDetailLevel.Fine*/
-                View = view3D as View,
-            };
-            GeometryElement geometryElement = familyInstance.get_Geometry(geomOpts);
-            
-            int count = geometryElement.Count();
-            foreach (var item in geometryElement)
-            {
-                if (item is GeometryInstance geometryInstance)
+                ElementCategoryFilter categoryFilter1 = new ElementCategoryFilter(BuiltInCategory.OST_ElectricalFixtures);
+                ElementCategoryFilter categoryFilter2 = new ElementCategoryFilter(BuiltInCategory.OST_LightingDevices);
+                ElementCategoryFilter categoryFilter3 = new ElementCategoryFilter(BuiltInCategory.OST_LightingFixtures);
+                ElementCategoryFilter categoryFilter4 = new ElementCategoryFilter(BuiltInCategory.OST_CommunicationDevices);
+                //LogicalOrFilter orFilter = new LogicalOrFilter(categoryFilter1, categoryFilter2);
+                LogicalOrFilter orFilter = new LogicalOrFilter(new List<ElementFilter>
                 {
-                    var ig = geometryInstance.GetInstanceGeometry();
-                    var bbig = ig.GetBoundingBox();
-                    var max = bbig.Max;
-                    var min = bbig.Min;
-
-                    var xMaxbbIg = ig.GetBoundingBox().Max.X;
-                    var xMinbbIg = ig.GetBoundingBox().Min.X;
-                    var w = Math.Abs(xMaxbbIg - xMinbbIg);
-                }
-                var to = item.GetType();
+                    categoryFilter1, categoryFilter2, categoryFilter3, categoryFilter4
+                });
+                var instances = new FilteredElementCollector(_document, _document.ActiveView.Id)
+                //var instances = new FilteredElementCollector(_document)
+                    .WherePasses(orFilter)
+                    .OfClass(typeof(FamilyInstance))
+                    .ToElements()
+                    .Where(fi => TryFindParameterValue(fi))
+                    .Select(e => e.Id)
+                    ;
+                Debug.Write($"instances - {instances.Count()}");
+                _selection.SetElementIds(new List<ElementId>(instances));
             }
-            BoundingBoxXYZ bb = geometryElement.GetBoundingBox();
-            //BoundingBoxXYZ bb = familyInstance.get_BoundingBox(null);
-            XYZ pointMax = bb.Max;
-            XYZ pointMin = bb.Min;
-
-            double xMax = pointMax.X;
-            double xMin = pointMin.X;
-
-            double xMaxCm = UnitUtils.ConvertFromInternalUnits(xMax,
-                _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
-            double xMinCm = UnitUtils.ConvertFromInternalUnits(xMin,
-                _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
-
-            var heightOfInstance = Math.Abs(xMaxCm - xMinCm);
-            var poinInCmMax = FeetToCm(bb.Max);
-            var poinInCmMin = FeetToCm(bb.Min);
+            catch (Exception ex)
+            {
+                TaskDialog.Show("Analize_Exception", ex.Message);
+            }
+        }
+        private bool TryFindParameterValue(Element instance)
+        {
+            //string parameterName = "Elevation from Level";
+            string parameterName = "H-UK";
+            Parameter parameter = instance.LookupParameter(parameterName);
+            if (parameter == null) throw new ArgumentNullException(parameterName);
+            //Debug.Write(parameter.AsString().Contains("OK=40"));
+            //return Math.Round(parameter.AsDouble(), 2) == 0.0;
+            return parameter.AsString().Contains("OK=40");
         }
 
         private XYZ FeetToCm(XYZ feetPoint)
