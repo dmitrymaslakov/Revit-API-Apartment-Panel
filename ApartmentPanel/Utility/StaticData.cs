@@ -17,6 +17,6 @@
         public const string ELECTRICAL_FIXTURES = "Electrical Fixtures";
 
         public const string ELEMENT_HEIGHT_PARAM_NAME = "H-UK";//"UK-HEIGHT";"ASRV-H"
-        public const string ELEMENT_CIRCUIT_PARAM_NAME = "NA-CIRCUIT";//"RBX-CIRCUIT" "ASRV Circuit Number"
+        public const string ELEMENT_CIRCUIT_PARAM_NAME = "RBX-CIRCUIT";//"NA-CIRCUIT" "ASRV Circuit Number"
     }
 }

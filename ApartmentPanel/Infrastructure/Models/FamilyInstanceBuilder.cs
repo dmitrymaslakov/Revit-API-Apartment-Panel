@@ -123,10 +123,10 @@ namespace ApartmentPanel.Infrastructure.Models
         {
             FamilyInstance familyInstance = _document.GetElement(builtInstance.Id) as FamilyInstance;
 
+            if (_currentLevelId != null) SetCurrentLevel(familyInstance);
             using (var tr = new Transaction(_document, "Config FamilyInstance"))
             {
                 tr.Start();
-                if (_currentLevelId != null) SetCurrentLevel(familyInstance);
                 if (!string.IsNullOrEmpty(_renderedHeight)) SetHeight(familyInstance);
                 if (!string.IsNullOrEmpty(_circuit)) SetCircuit(familyInstance);
                 if (_parameters != null) SetParameters(familyInstance);
@@ -179,9 +179,14 @@ namespace ApartmentPanel.Infrastructure.Models
         }
         private void SetCurrentLevel(FamilyInstance familyInstance)
         {
-            familyInstance
+            using (var tr = new Transaction(_document, "Set current level"))
+            {
+                tr.Start();
+                familyInstance
                 .get_Parameter(BuiltInParameter.INSTANCE_SCHEDULE_ONLY_LEVEL_PARAM)
                 .Set(_currentLevelId);
+                tr.Commit();
+            }
         }
         /*private void SetElevationFromLevel(FamilyInstance familyInstance)
         {
@@ -248,7 +253,7 @@ namespace ApartmentPanel.Infrastructure.Models
                     if (double.TryParse(parameter.Value, out double valueAsDouble))
                     {
                         double valueAsDoubleInFeet = UnitUtils.ConvertToInternalUnits(valueAsDouble,
-                            _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());                         
+                            _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
                         instanceParam.Set(valueAsDoubleInFeet);
                     }
                 }

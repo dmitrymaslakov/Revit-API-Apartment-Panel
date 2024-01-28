@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 //using Utility.Extensions;
 
 namespace RevitTest
@@ -28,89 +29,16 @@ namespace RevitTest
 
             try
             {
-                var selectedElementId = _selection.GetElementIds().FirstOrDefault();
-                var familyInstance = _document.GetElement(selectedElementId) as FamilyInstance;
-
-                Transform instanceTransform = familyInstance.GetTransform();
-                XYZ localXAxis = instanceTransform.BasisX;
-                XYZ globalXAxis = XYZ.BasisX;
-                double angle = globalXAxis.AngleOnPlaneTo(localXAxis, XYZ.BasisZ);
-                double angle1 = globalXAxis.AngleOnPlaneTo(globalXAxis, XYZ.BasisZ);
-                bool isAnglesEquals = Equals(Math.Round(angle, 3), Math.Round(Math.PI * 2, 3));
-                double tolerance = 0.001; // set the tolerance value
-                bool areParallel = globalXAxis.IsAlmostEqualTo(localXAxis, tolerance);
-                Debug.Write($"angleRad - {angle}");
-                Debug.Write($"angleDeg - {ToDegrees(angle)}");
-                Debug.Write($"areParallel - {areParallel}");
-                /*View3D view3D = new FilteredElementCollector(_document)
-                    .OfClass(typeof(View3D))
-                    .Cast<View3D>()
-                    .FirstOrDefault(v => !v.IsTemplate);
-                Options geomOpts = new Options { View = view3D };
-                var instanceGeometry = familyInstance
-                    .get_Geometry(geomOpts)
-                    .OfType<GeometryInstance>()
-                    ?.FirstOrDefault()
-                    ?.GetInstanceGeometry();
-                var symbolGeometry = familyInstance
-                    .get_Geometry(geomOpts)
-                    .OfType<GeometryInstance>()
-                    ?.FirstOrDefault()
-                    ?.SymbolGeometry;
-
-                var viewBB = view3D.get_BoundingBox(null);
-                foreach (GeometryObject item in symbolGeometry)
-                {         
-                    Solid solid = item as Solid;
-                    //Debug.Write($"viz - {viz}");
-                }
-
-                XYZ max = instanceGeometry.GetBoundingBox().Max;
-                XYZ min = instanceGeometry.GetBoundingBox().Min;
-                XYZ symbolMax = symbolGeometry.GetBoundingBox().Max;
-                XYZ symbolMin = symbolGeometry.GetBoundingBox().Min;
-
-                double x = Math.Abs(max.X - min.X);
-                double y = Math.Abs(max.Y - min.Y);
-
-                XYZ minMaxXVector = new XYZ(x, y, 0);
-
-                Transform instanceTransform = familyInstance.GetTransform();
-                XYZ localXAxis = instanceTransform.BasisX;
-                XYZ globalXAxis = XYZ.BasisX;
-                double angle = globalXAxis.AngleOnPlaneTo(localXAxis, XYZ.BasisZ);
-                double angleInDegrees = ToDegrees(angle);
-
-                Transform rotation = Transform.CreateRotation(XYZ.BasisZ, angle);
-                Transform globalTransform = Transform.Identity;
-                XYZ rotatedMinMaxXVector = rotation.OfVector(minMaxXVector);*/
-                /*var gFS = familySymbol.get_Geometry(geomOpts);
-                foreach (var item in gFS)
-                {
-                    Solid solid = item as Solid;
-                    var sBB = solid.GetBoundingBox();
-                    var sMax = sBB.Max;
-                    var sMin = sBB.Min;
-                    Debug.Write($"sMax - {sMax}");
-                    Debug.Write($"sMin - {sMin}");
-                    Debug.Write($"item - {item}");
-                }*/
-                /*var instanceGeometry = familySymbol
-                    .get_Geometry(geomOpts)
-                    .OfType<GeometryInstance>()
-                    ?.FirstOrDefault()
-                    ?.GetInstanceGeometry();
-
-                XYZ max = instanceGeometry.GetBoundingBox().Max;
-                XYZ min = instanceGeometry.GetBoundingBox().Min;*/
-
-                /*Debug.Write($"fsBB.Max - {fsBB.Max}");
-                Debug.Write($"fsBB.Min - {fsBB.Min}");
-                Debug.Write($"g.Max - {max}");
-                Debug.Write($"g.Min - {min}");*/
-
-                /*View view = _document.ActiveView;
-                FamilyInstanceCreate(_document, familySymbol, view);*/
+                ElementId levelId = GetViewLevel(_document);
+                Level level = _document.GetElement(levelId) as Level;
+                double elevation = level.Elevation;
+                Debug.Write($"elevation - {elevation}");
+                /*var selectedElementId = _selection.GetElementIds().FirstOrDefault();
+                var element = _document.GetElement(selectedElementId);
+                var familyInstance = element as FamilyInstance;
+                GetLevelInformation(element);*/
+                //Getinfo_Level(_document);
+                /*Debug.Write($"g.Min - {min}");*/
             }
             catch (Exception ex)
             {
@@ -204,7 +132,79 @@ namespace RevitTest
             => degrees * Math.PI / 180;
         private double ToDegrees(double radians)
             => radians * 180 / Math.PI;
+        private ElementId GetViewLevel(Document doc)
+        {
+            View active = doc.ActiveView;
+            ElementId levelId = null;
+            Parameter level = active.LookupParameter("Associated Level");
+            if (level == null)
+                return null;
 
+            FilteredElementCollector lvlCollector = new FilteredElementCollector(doc);
+            ICollection<Element> lvlCollection = lvlCollector.OfClass(typeof(Level)).ToElements();
+            foreach (Element l in lvlCollection)
+            {
+                Level lvl = l as Level;
+                if (lvl.Name == level.AsString())
+                    levelId = lvl.Id;
+            }
+            return levelId;
+        }
+        private void GetLevelInformation(Element element)
+        {
+            // Get the level object to which the element is assigned.
+            if (element.LevelId.Equals(ElementId.InvalidElementId))
+            {
+                TaskDialog.Show("Revit", "The element isn't based on a level.");
+            }
+            else
+            {
+                Level level = element.Document.GetElement(element.LevelId) as Level;
+
+                // Format the prompt information(Name and elevation)
+                String prompt = "The element is based on a level.";
+                prompt += "\nThe level name is:  " + level.Name;
+                prompt += "\nThe level elevation is:  " + level.Elevation;
+
+                // Show the information to the user.
+                TaskDialog.Show("Revit", prompt);
+            }
+        }
+        private void Getinfo_Level(Document document)
+        {
+            StringBuilder levelInformation = new StringBuilder();
+            int levelNumber = 0;
+            FilteredElementCollector collector = new FilteredElementCollector(document);
+            ICollection<Element> collection = collector.OfClass(typeof(Level)).ToElements();
+            foreach (Element e in collection)
+            {
+                Level level = e as Level;
+
+                if (null != level)
+                {
+                    // keep track of number of levels
+                    levelNumber++;
+
+                    //get the name of the level
+                    levelInformation.Append("\nLevel Name: " + level.Name);
+
+                    //get the elevation of the level
+                    levelInformation.Append("\n\tElevation: " + level.Elevation);
+
+                    // get the project elevation of the level
+                    levelInformation.Append("\n\tProject Elevation: " + level.ProjectElevation);
+
+                    var point = (level.Location as LocationPoint).Point;
+                    levelInformation.Append("\n\tpoint: " + point);
+                }
+            }
+
+            //number of total levels in current document
+            levelInformation.Append("\n\n There are " + levelNumber + " levels in the document!");
+
+            //show the level information in the messagebox
+            TaskDialog.Show("Revit", levelInformation.ToString());
+        }
     }
 
     [Transaction(TransactionMode.Manual)]

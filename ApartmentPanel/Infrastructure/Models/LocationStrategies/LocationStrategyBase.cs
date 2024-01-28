@@ -2,6 +2,9 @@
 using ApartmentPanel.Utility;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using System;
+using System.Collections.Generic;
+using System.Windows.Controls;
 
 namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
 {
@@ -37,7 +40,12 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
                 ? 0
                 : builtInstance.Width / 2 + HorizontalOffset;
 
-            XYZ newBasePoint = new XYZ(basePoint.X + fullOffset, basePoint.Y, deltaPoints.Z + heightInFeets);
+            double levelElevation = GetLevelElevation();
+            //XYZ newBasePoint = new XYZ(basePoint.X + fullOffset, basePoint.Y, deltaPoints.Z + heightInFeets);
+            XYZ newBasePoint = new XYZ(
+                basePoint.X + fullOffset, 
+                basePoint.Y,
+                levelElevation - Math.Abs(deltaPoints.Z) + heightInFeets);
             XYZ translation = newBasePoint - basePoint;
             Transform rotation = Transform.CreateRotation(XYZ.BasisZ, angle);
             XYZ rotatedTranslation = rotation.OfVector(translation);
@@ -55,6 +63,32 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
             XYZ localXAxis = instanceTransform.BasisX;
             XYZ globalXAxis = XYZ.BasisX;
             return globalXAxis.AngleOnPlaneTo(localXAxis, XYZ.BasisZ);
+        }
+        protected ElementId GetViewLevel(Document doc)
+        {
+            View active = doc.ActiveView;
+            ElementId levelId = null;
+            Parameter level = active.LookupParameter("Associated Level");
+            if (level == null)
+                return null;
+
+            FilteredElementCollector lvlCollector = new FilteredElementCollector(doc);
+            ICollection<Element> lvlCollection = lvlCollector.OfClass(typeof(Level)).ToElements();
+            foreach (Element l in lvlCollection)
+            {
+                Level lvl = l as Level;
+                if (lvl.Name == level.AsString())
+                    levelId = lvl.Id;
+            }
+            return levelId;
+        }
+
+        protected double GetLevelElevation()
+        {
+            ElementId levelId = GetViewLevel(_document);
+            Level level = _document.GetElement(levelId) as Level;
+            double elevation = level.Elevation;
+            return elevation;
         }
     }
 }
