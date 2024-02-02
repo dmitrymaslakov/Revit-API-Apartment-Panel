@@ -19,6 +19,7 @@
         <GroupBox Header="{Binding Header, ElementName=root}">
             <StackPanel>
                 <ListView ItemsSource="{Binding Elements, ElementName=root}" 
+                          Height="500"
                           x:Name="lv"                          
                           SelectionMode="Extended"
                           SelectedItem="{Binding SelectedElement, ElementName=root}"

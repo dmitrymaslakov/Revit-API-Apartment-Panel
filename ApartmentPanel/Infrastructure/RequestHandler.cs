@@ -264,8 +264,9 @@ namespace ApartmentPanel.Infrastructure
             if (elementData.Category.Contains(StaticData.LIGHTING_DEVICES))
             {
                 List<FamilyInstance> lamps = PickLamp();
-                string lampNumbers = GetNumbersFromLamps(lamps);
-                elementData.SwitchNumbers = lampNumbers;
+                elementData.SwitchNumbers = lamps.Count == 0
+                    ? ""
+                    : GetNumbersFromLamps(lamps);
             }
 
             while (isMultiple)
@@ -320,12 +321,12 @@ namespace ApartmentPanel.Infrastructure
                             .Where(fs => fs.Category.Name.Contains("Lighting Fixtures"))
                             .ToList()
                             ;
-            if (collection.Count() < 1)
+            /*if (collection.Count() < 1)
             {
                 string message =
                     "Please select the lamp(s) of Lighting Fixtures category before inserting the switch.";
                 throw new Exception(message);
-            }
+            }*/
             return collection;
         }
 

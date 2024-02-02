@@ -13,7 +13,8 @@ namespace ApartmentPanel.Utility
                 .OfClass(typeof(View3D))
                 .Cast<View3D>()
                 .FirstOrDefault(v => !v.IsTemplate);
-            Options geomOpts = new Options { View = view3D };
+            //Options geomOpts = new Options { View = view3D };
+            Options geomOpts = new Options { DetailLevel = ViewDetailLevel.Fine };
             var geometryElement = familyInstance
                 .get_Geometry(geomOpts)
                 .OfType<GeometryInstance>()

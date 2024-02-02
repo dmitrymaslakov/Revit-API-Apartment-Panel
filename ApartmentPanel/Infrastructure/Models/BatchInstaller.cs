@@ -4,6 +4,7 @@ using ApartmentPanel.Utility;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace ApartmentPanel.Infrastructure.Models
@@ -21,7 +22,7 @@ namespace ApartmentPanel.Infrastructure.Models
             Reference host = null;
             BuiltInstance builtInstance = null;
             FamilyInstanceBuilder instanceBuilder = null;
-
+            List<ElementId> instanceIds = new List<ElementId>();
             foreach (var elementData in _batch.BatchedElements)
             {
                 //if (_batch.BatchedElements.IndexOf(elementData) > 0)
@@ -58,6 +59,7 @@ namespace ApartmentPanel.Infrastructure.Models
                 if (builtInstance != null)
                 {
                     //var instance = _document.GetElement(builtInstance.Id) as FamilyInstance;
+                    instanceIds.Add(builtInstance.Id);
                     if (batchedInstances.Count != 0 && IsElementStartNewRow(elementData)) batchedInstances.Clear();
 
                     batchedInstances.Add(new BatchedInstance()
@@ -70,6 +72,7 @@ namespace ApartmentPanel.Infrastructure.Models
                         host = instanceBuilder.Host;
                 }
             }
+            _selection.SetElementIds(instanceIds);
         }
 
         private bool IsElementStartNewRow(InsertElementDTO element)

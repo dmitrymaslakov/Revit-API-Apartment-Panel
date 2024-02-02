@@ -202,7 +202,8 @@ namespace ApartmentPanel.Infrastructure.Models
             string customParameter = StaticData.ELEMENT_CIRCUIT_PARAM_NAME;
             Parameter circuitParam = familyInstance.LookupParameter(customParameter);
             if (circuitParam == null)
-                throw new CustomParameterException(customParameter, familyInstance.Name);
+                return;
+                //throw new CustomParameterException(customParameter, familyInstance.Name);
 
             string category = familyInstance.Category.Name;
             switch (category)
@@ -226,7 +227,8 @@ namespace ApartmentPanel.Infrastructure.Models
             string customParameter = StaticData.ELEMENT_HEIGHT_PARAM_NAME;
             Parameter circuitParam = familyInstance.LookupParameter(customParameter);
             if (circuitParam == null)
-                throw new CustomParameterException(customParameter, familyInstance.Name);
+                return;
+                //throw new CustomParameterException(customParameter, familyInstance.Name);
 
             string category = familyInstance.Category.Name;
             switch (category)
@@ -248,7 +250,8 @@ namespace ApartmentPanel.Infrastructure.Models
                 {
                     Parameter instanceParam = familyInstance.LookupParameter(parameter.Key);
                     if (instanceParam == null)
-                        throw new CustomParameterException(parameter.Key, familyInstance.Name);
+                        return;
+                        //throw new CustomParameterException(parameter.Key, familyInstance.Name);
 
                     if (double.TryParse(parameter.Value, out double valueAsDouble))
                     {

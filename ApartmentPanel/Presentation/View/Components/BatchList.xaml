@@ -20,7 +20,7 @@
         <ListView.ItemTemplate>
             <DataTemplate>
                 <Button Click="Button_Click">
-                    <Image Source="{Binding Annotation}"/>
+                    <Image Source="{Binding Annotation}" Width="25" Height="25"/>
                 </Button>
             </DataTemplate>
         </ListView.ItemTemplate>

@@ -19,7 +19,7 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <ListView ItemsSource="{Binding Circuits, ElementName=root}">
+    <ListView ItemsSource="{Binding Circuits, ElementName=root}" Height="400">
         <ListView.View>
             <GridView ColumnHeaderContainerStyle="{StaticResource columnHeaderStyle}">
                 <GridViewColumn 

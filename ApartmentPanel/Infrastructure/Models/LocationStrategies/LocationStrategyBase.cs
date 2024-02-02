@@ -45,7 +45,7 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
             XYZ newBasePoint = new XYZ(
                 basePoint.X + fullOffset, 
                 basePoint.Y,
-                levelElevation - Math.Abs(deltaPoints.Z) + heightInFeets);
+                levelElevation + deltaPoints.Z + heightInFeets);
             XYZ translation = newBasePoint - basePoint;
             Transform rotation = Transform.CreateRotation(XYZ.BasisZ, angle);
             XYZ rotatedTranslation = rotation.OfVector(translation);

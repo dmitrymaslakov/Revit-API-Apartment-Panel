@@ -37,6 +37,9 @@
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
+                                            <Image Source="{Binding Annotation}" 
+                                                   Width="20"
+                                                   Margin="0 0 10 0"/>
                                             <TextBox Width="20" Text="{Binding Margin.Left, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                                 <TextBox.Style>
                                                     <Style TargetType="TextBox">
@@ -49,9 +52,6 @@
                                                     </Style>
                                                 </TextBox.Style>
                                             </TextBox>
-                                                <Image Source="{Binding Annotation}" 
-                                                   Width="20"
-                                                   Margin="10 0 0 0"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
