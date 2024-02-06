@@ -8,7 +8,7 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance vm:ConfigPanelViewModel, IsDesignTimeCreatable=True}"
-        d:DesignHeight="750" d:DesignWidth="900" Width="900"
+        d:DesignHeight="800" d:DesignWidth="900" Width="900" Height="800"
         x:Name="Confige">
     <Window.Resources>
         <ResourceDictionary>

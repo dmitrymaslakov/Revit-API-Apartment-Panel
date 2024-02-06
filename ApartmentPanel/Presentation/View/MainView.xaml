@@ -140,8 +140,8 @@
                 </StatusBarItem.Style>
             </StatusBarItem>
         </StatusBar>
-        <WrapPanel Grid.Row="6">
+        <!--<WrapPanel Grid.Row="6">
             <Button Content="Analize" Command="{Binding AnalizeCommand}"/>
-        </WrapPanel>
+        </WrapPanel>-->
     </Grid>
 </UserControl>
