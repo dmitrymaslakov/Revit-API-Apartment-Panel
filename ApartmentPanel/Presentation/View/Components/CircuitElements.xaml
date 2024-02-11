@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="ApartmentPanel.Presentation.View.Components.CircuitElements"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mex="clr-namespace:ApartmentPanel.Presentation.MarkupExtensions"
+             xmlns:models="clr-namespace:ApartmentPanel.Core.Enums"
+             xmlns:local="clr-namespace:ApartmentPanel.Presentation.View.Components"
+             mc:Ignorable="d" 
+             x:Name="root"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Background="White">
+        <GroupBox Header="{Binding Header, ElementName=root}">
+            <StackPanel>
+                <ListView ItemsSource="{Binding Elements, ElementName=root}" 
+                          Height="400"
+                          x:Name="lv"                          
+                          SelectionMode="Extended"
+                          SelectionChanged="Lv_SelectionChanged">
+                    <!--SelectedItem="{Binding SelectedElement, ElementName=root}"-->
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <WrapPanel>
+                                <TextBlock Width="75" Text="{Binding Name}"/>
+                                <Image Width="20" 
+                                       Margin="45 0 0 0"
+                                       Source="{Binding Annotation}">
+                                </Image>
+                                <ComboBox HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" 
+                                          ItemsSource="{Binding Source={mex:EnumSourceExtention {x:Type models:TypeOfHeight}}}"
+                                          SelectedItem="{Binding MountingHeight.TypeOf, Mode=TwoWay}"/>
+                                <TextBox Text="{Binding MountingHeight.Value, Mode=TwoWay}" Width="20"/>
+                            </WrapPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+</UserControl>

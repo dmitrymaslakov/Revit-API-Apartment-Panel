@@ -19,7 +19,7 @@ namespace ApartmentPanel.Core.Models
             get => _annotation;
             set => Set(ref _annotation, value);
         }
-
+        public Height MountingHeight { get; set; }
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -41,7 +41,8 @@ namespace ApartmentPanel.Core.Models
             {
                 Name = Name,
                 Category = Category,
-                Annotation = Annotation?.Clone()
+                Annotation = Annotation?.Clone(),
+                MountingHeight = MountingHeight.Clone()
             };
         }
     }

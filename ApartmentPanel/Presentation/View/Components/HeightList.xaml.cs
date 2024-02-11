@@ -56,11 +56,20 @@ namespace ApartmentPanel.Presentation.View.Components
             set { SetValue(ActionWithSelectedHeightCommandProperty, value); }
         }
 
-        private void ListHeights_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        /*private void ListHeights_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListView listHeights = sender as ListView;
             TypeOfHeight typeOfHeight = (TypeOfHeight)((GridView)listHeights.View).Columns[0].Header;
             bool b = double.TryParse(listHeights.SelectedItem?.ToString(), out double height);
+            if (b) ActionWithSelectedHeightCommand?.Execute((typeOfHeight, height));
+        }*/
+
+        private void ListHeights_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ListView listHeights = sender as ListView;
+            TypeOfHeight typeOfHeight = (TypeOfHeight)((GridView)listHeights.View).Columns[0].Header;
+            ListViewItem listViewItem = e.OriginalSource as ListViewItem;
+            bool b = double.TryParse(listViewItem?.Content?.ToString(), out double height);
             if (b) ActionWithSelectedHeightCommand?.Execute((typeOfHeight, height));
         }
 

@@ -12,6 +12,7 @@ using System.Windows.Documents;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
+using ApartmentPanel.Core.Models.Interfaces;
 
 namespace ApartmentPanel.Presentation.Commands
 {
@@ -30,8 +31,10 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateInsertElementCommand() => new RelayCommand(o =>
         {
-            (string circuit, string elementName, string elementCategory, ImageSource annotation) =
-                (ValueTuple<string, string, string, ImageSource>)o;
+            /*(string circuit, string elementName, string elementCategory, ImageSource annotation) =
+                (ValueTuple<string, string, string, ImageSource>)o;*/
+            (string circuit, IApartmentElement element) =
+                (ValueTuple<string, IApartmentElement>)o;
 
             string insertingMode = "single";
 
@@ -40,10 +43,14 @@ namespace ApartmentPanel.Presentation.Commands
 
             var elementDTO = new InsertElementDTO()
             {
-                Name = elementName,
-                Category = elementCategory,
-                Circuit = circuit,
-                Height = new Height(),
+                Name = element.Name,
+                Category = element.Category,
+                Circuit = new CircuitDTO
+                {
+                    Number = circuit,
+                    ResponsibleForCircuitParameter = _viewProperties.ConfigPanelVM.ResponsibleForCircuit
+                },
+                Height = element.MountingHeight.Clone(),
                 CurrentSuffix = _viewProperties.CurrentSuffix,
                 InsertingMode = insertingMode
             };
@@ -51,6 +58,8 @@ namespace ApartmentPanel.Presentation.Commands
             {
                 elementDTO.Height.Value = _viewProperties.ElementHeight.Value;
                 elementDTO.Height.TypeOf = _viewProperties.ElementHeight.TypeOf;
+                elementDTO.Height.ResponsibleForHeightParameter = 
+                    _viewProperties.ConfigPanelVM.ResponsibleForHeight;
             }
             _elementService.InsertToModel(elementDTO);
         });
@@ -66,11 +75,16 @@ namespace ApartmentPanel.Presentation.Commands
                     InsertElementDTO elDto = new InsertElementDTO
                     {
                         Category = element.Category,
-                        Circuit = element.Circuit,
+                        Circuit = new CircuitDTO
+                        {
+                            Number = element.Circuit,
+                            ResponsibleForCircuitParameter = _viewProperties.ConfigPanelVM.ResponsibleForCircuit
+                        },
                         Height = new Height
                         {
                             TypeOf = row.HeightFromFloor.TypeOf,
-                            Value = row.HeightFromFloor.Value
+                            Value = row.HeightFromFloor.Value,
+                            ResponsibleForHeightParameter = _viewProperties.ConfigPanelVM.ResponsibleForHeight
                         },
                         Location = new BatchedLocation
                         {

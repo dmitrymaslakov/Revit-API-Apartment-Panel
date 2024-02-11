@@ -24,6 +24,8 @@ namespace ApartmentPanel.Infrastructure.Models
         private string _lampSuffix;
         private string _switchNumbers;
         private Dictionary<string, string> _parameters;
+        private string _responsibleForHeightParameter;
+        private string _responsibleForCircuitParameter;
 
         #endregion
 
@@ -64,6 +66,12 @@ namespace ApartmentPanel.Infrastructure.Models
             _height = height;
             return this;
         }
+        public FamilyInstanceBuilder WithResponsibleForHeight(string parameterName)
+        {
+            _responsibleForHeightParameter = parameterName;
+            return this;
+        }
+
         public FamilyInstanceBuilder WithCurrentLevel()
         {
             _currentLevelId = GetViewLevel();
@@ -74,6 +82,12 @@ namespace ApartmentPanel.Infrastructure.Models
             _circuit = circuit;
             return this;
         }
+        public FamilyInstanceBuilder WithResponsibleForCircuit(string parameterName)
+        {
+            _responsibleForCircuitParameter = parameterName;
+            return this;
+        }
+
         public FamilyInstanceBuilder WithLampSuffix(string lampSuffix)
         {
             _lampSuffix = lampSuffix;
@@ -199,11 +213,11 @@ namespace ApartmentPanel.Infrastructure.Models
         }*/
         private void SetCircuit(FamilyInstance familyInstance)
         {
-            string customParameter = StaticData.ELEMENT_CIRCUIT_PARAM_NAME;
-            Parameter circuitParam = familyInstance.LookupParameter(customParameter);
+            //string customParameter = StaticData.ELEMENT_CIRCUIT_PARAM_NAME;
+            Parameter circuitParam = familyInstance.LookupParameter(_responsibleForCircuitParameter);
             if (circuitParam == null)
                 return;
-                //throw new CustomParameterException(customParameter, familyInstance.Name);
+            //throw new CustomParameterException(customParameter, familyInstance.Name);
 
             string category = familyInstance.Category.Name;
             switch (category)
@@ -224,11 +238,11 @@ namespace ApartmentPanel.Infrastructure.Models
         }
         private void SetHeight(FamilyInstance familyInstance)
         {
-            string customParameter = StaticData.ELEMENT_HEIGHT_PARAM_NAME;
-            Parameter circuitParam = familyInstance.LookupParameter(customParameter);
+            //string customParameter = StaticData.ELEMENT_HEIGHT_PARAM_NAME;
+            Parameter circuitParam = familyInstance.LookupParameter(_responsibleForHeightParameter);
             if (circuitParam == null)
                 return;
-                //throw new CustomParameterException(customParameter, familyInstance.Name);
+            //throw new CustomParameterException(customParameter, familyInstance.Name);
 
             string category = familyInstance.Category.Name;
             switch (category)
@@ -251,7 +265,7 @@ namespace ApartmentPanel.Infrastructure.Models
                     Parameter instanceParam = familyInstance.LookupParameter(parameter.Key);
                     if (instanceParam == null)
                         return;
-                        //throw new CustomParameterException(parameter.Key, familyInstance.Name);
+                    //throw new CustomParameterException(parameter.Key, familyInstance.Name);
 
                     if (double.TryParse(parameter.Value, out double valueAsDouble))
                     {

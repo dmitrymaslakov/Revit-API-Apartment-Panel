@@ -28,12 +28,12 @@ namespace ApartmentPanel.Infrastructure.Models
         public BuiltInstance InstallLightingFixtures(Reference host = null)
         {
             return _familyInstanceBuilder
-                .WithCircuit(_elementData.Circuit)
+                .WithCircuit(_elementData.Circuit.Number)
+                .WithResponsibleForCircuit(_elementData.Circuit.ResponsibleForCircuitParameter)
                 .WithCurrentLevel()
                 .WithLampSuffix(_elementData.CurrentSuffix)
                 .WithHost(host)
                 .WithParameters(_elementData.Parameters)
-                //.WithOffset(_elementData.Offset)
                 .Build(_elementData.Name);
         }
 
@@ -43,12 +43,13 @@ namespace ApartmentPanel.Infrastructure.Models
                 .WithSwitchNumbers(_elementData.SwitchNumbers)
                 .SetLocationStrategy(_locationStrategy)
                 .WithHeight(_elementData.Height.Value)
+                .WithResponsibleForHeight(_elementData.Height.ResponsibleForHeightParameter)
                 .RenderHeightAs(_heightFormat)
-                .WithCircuit(_elementData.Circuit)
+                .WithCircuit(_elementData.Circuit.Number)
+                .WithResponsibleForCircuit(_elementData.Circuit.ResponsibleForCircuitParameter)
                 .WithCurrentLevel()
                 .WithHost(host)
                 .WithParameters(_elementData.Parameters)
-                //.WithOffset(_elementData.Offset)
                 .Build(_elementData.Name);
         }
 
@@ -57,12 +58,13 @@ namespace ApartmentPanel.Infrastructure.Models
             return _familyInstanceBuilder
                 .SetLocationStrategy(_locationStrategy)
                 .WithHeight(_elementData.Height.Value)
+                .WithResponsibleForHeight(_elementData.Height.ResponsibleForHeightParameter)
                 .RenderHeightAs(_heightFormat)
-                .WithCircuit(_elementData.Circuit)
+                .WithCircuit(_elementData.Circuit.Number)
+                .WithResponsibleForCircuit(_elementData.Circuit.ResponsibleForCircuitParameter)
                 .WithCurrentLevel()
                 .WithHost(host)
                 .WithParameters(_elementData.Parameters)
-                //.WithOffset(_elementData.Offset)
                 .Build(_elementData.Name);
         }
 
@@ -71,11 +73,11 @@ namespace ApartmentPanel.Infrastructure.Models
             return _familyInstanceBuilder
                 .SetLocationStrategy(_locationStrategy)
                 .WithHeight(_elementData.Height.Value)
+                .WithResponsibleForHeight(_elementData.Height.ResponsibleForHeightParameter)
                 .RenderHeightAs(_heightFormat)
                 .WithCurrentLevel()
                 .WithHost(host)
                 .WithParameters(_elementData.Parameters)
-                //.WithOffset(_elementData.Offset)
                 .Build(_elementData.Name);
         }
 

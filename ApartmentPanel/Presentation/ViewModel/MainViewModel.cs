@@ -6,7 +6,6 @@ using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Presentation.Services;
-using ApartmentPanel.Presentation.Models;
 using System;
 using ApartmentPanel.Core.Models;
 using ApartmentPanel.Presentation.Models.Batch;

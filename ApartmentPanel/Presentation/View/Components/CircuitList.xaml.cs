@@ -1,5 +1,5 @@
-﻿using ApartmentPanel.Core.Models.Interfaces;
-using ApartmentPanel.Presentation.Models;
+﻿using ApartmentPanel.Core.Models;
+using ApartmentPanel.Core.Models.Interfaces;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -110,12 +110,13 @@ namespace ApartmentPanel.Presentation.View.Components
             IApartmentElement element = button.DataContext as IApartmentElement;
             Circuit circuit = FindParentCircuit(button);
 
-            string category = element.Category;
+            /*string category = element.Category;
             string name = element.Name;
-            ImageSource annotation = element.Annotation;
+            ImageSource annotation = element.Annotation;*/
             string circuitNumber = circuit?.Number;
 
-            HitElementCommand?.Execute((circuitNumber, name, category, annotation));
+            //HitElementCommand?.Execute((circuitNumber, name, category, annotation));
+            HitElementCommand?.Execute((circuitNumber, element));
         }
 
         private Circuit FindParentCircuit(DependencyObject child)

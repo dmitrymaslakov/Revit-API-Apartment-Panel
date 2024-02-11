@@ -20,7 +20,8 @@
         <ListView ItemsSource="{Binding ListHeights, ElementName=root}"
                   x:Name="heightsListLV"
                   Height="100"
-                  SelectionChanged="ListHeights_SelectionChanged">
+                  GotFocus="ListHeights_GotFocus">
+                  <!--SelectionChanged="ListHeights_SelectionChanged"-->
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="{Binding TypeOfHeight, ElementName=root}" 

@@ -11,19 +11,12 @@
         Title="Testing WPF" 
         Height="450" Width="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <components:CircuitsList
-            Grid.Row="0"
-            Circuits="{Binding MockPanelCircuits}"
-            HitElementCommand="{Binding CreateNewElementForBatchCommand}"/>        
-        <components:Batch 
-            Grid.Row="1"
-            Annotation="{Binding MockAnnotation}"
-            ListBatchedRows="{Binding ElementsBatch.BatchedRows}"
-            AddElementToRowCommand="{Binding AddElementToRowCommand}"/>
+        <StackPanel Orientation="Horizontal">
+            <ListView x:Name="list1" 
+                      ItemsSource="{Binding List1}"
+                      GotFocus="list1_GotFocus"
+                      LostFocus="list1_LostFocus"/>
+            <ListView x:Name="list2" ItemsSource="{Binding List2}"/>
+        </StackPanel>
     </Grid>
 </Window>

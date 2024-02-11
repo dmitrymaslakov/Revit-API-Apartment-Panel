@@ -1,5 +1,5 @@
-﻿using ApartmentPanel.Core.Models.Interfaces;
-using ApartmentPanel.Presentation.Models;
+﻿using ApartmentPanel.Core.Models;
+using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Presentation.Models.Batch;
 using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
 using ApartmentPanel.Utility;
@@ -37,8 +37,8 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         ICommand RemoveElementsFromCircuitCommand { get; set; }
         ICommand RemovePanelCircuitsCommand { get; set; }
         ICommand SaveLatestConfigCommand { get; set; }
-        ICommand SelectedApartmentElementsCommand { get; set; }
-        ICommand SelectedCircuitElementCommand { get; set; }
+        ICommand SelectApartmentElementsCommand { get; set; }
+        ICommand SelectCircuitElementCommand { get; set; }
         ICommand SelectPanelCircuitCommand { get; set; }
         ICommand SetAnnotationPreviewCommand { get; set; }
         ICommand SetAnnotationToElementCommand { get; set; }
@@ -62,6 +62,8 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         ICommand RemoveRowFromBatchCommand { get; set; }
         BatchedRow SelectedBatchedRow { get; set; }
         Action<List<string>> SetParametersToBatchElement { get; set; }
+        string ResponsibleForHeight { get; set; }
+        string ResponsibleForCircuit { get; set; }
 
         ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration);
     }

@@ -32,6 +32,7 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="190"/>
+                        <ColumnDefinition Width="210"/>
                         <ColumnDefinition Width="40"/>
                         <ColumnDefinition Width="120"/>
                         <ColumnDefinition Width="190"/>
@@ -43,8 +44,23 @@
                         AddElementCommand="{Binding ShowListElementsCommand}"
                         RemoveElementCommand="{Binding RemoveApartmentElementsCommand}"
                         EditBtnVisibility="{x:Static Visibility.Collapsed}"
-                        SelectedElementsCommand="{Binding SelectedApartmentElementsCommand}"/>
-                    <StackPanel Grid.Column="1" Margin="0 20 0 0">
+                        SelectElementsCommand="{Binding SelectApartmentElementsCommand}"/>
+                    <GroupBox Header="Responsible for: " 
+                              Grid.Column="1">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="height is" Margin="0 0 10 0"/>
+                                <TextBox Text="{Binding ResponsibleForHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="circuit is" Margin="0 0 10 0"/>
+                                <TextBox Text="{Binding ResponsibleForCircuit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+                            </StackPanel>
+
+                        </StackPanel>
+
+                    </GroupBox>
+                    <StackPanel Grid.Column="2" Margin="0 20 0 0">
                         <Button Style="{StaticResource ArrowButton}"
                                 Command="{Binding AddElementToCircuitCommand}">
                             <fa:ImageAwesome Icon="ArrowRight" Foreground="Green"/>
@@ -54,7 +70,7 @@
                             <fa:ImageAwesome Icon="ArrowLeft" Foreground="Blue"/>
                         </Button>
                     </StackPanel>
-                    <StackPanel Grid.Column="2">
+                    <StackPanel Grid.Column="3">
                         <local:ElementsCard
                             x:Name="PanelCircuitsCard"
                             Header="Panel circuits"     
@@ -62,17 +78,7 @@
                             AddBtnVisibility="{x:Static Visibility.Collapsed}"
                             EditBtnVisibility="{x:Static Visibility.Collapsed}"
                             RemoveElementCommand="{Binding RemovePanelCircuitsCommand}"
-                            SelectedElementsCommand ="{Binding SelectPanelCircuitCommand}"/>
-
-                        <!--<local:ElementsCard
-                            x:Name="PanelCircuitsCard"
-                            Header="Panel circuits"     
-                            IsDictionaryKeys="True"
-                            Elements="{Binding PanelCircuits}"
-                            AddBtnVisibility="{x:Static Visibility.Collapsed}"
-                            EditBtnVisibility="{x:Static Visibility.Collapsed}"
-                            RemoveElementCommand="{Binding RemovePanelCircuitsCommand}"
-                            SelectedElementsCommand ="{Binding SelectPanelCircuitCommand}"/>-->
+                            SelectElementsCommand ="{Binding SelectPanelCircuitCommand}"/>
                         <GroupBox Header="New circuit">
                             <WrapPanel>
                                 <TextBox Text="{Binding NewCircuit}" Width="30" Margin="0 0 10 0"/>
@@ -82,39 +88,26 @@
                             </WrapPanel>
                         </GroupBox>
                     </StackPanel>
-                    <local:ElementsCard
-                        Grid.Column="3"
+                    <local:CircuitElements
+                        Grid.Column="4"
+                        Header="Circuit elements"
+                        Elements="{Binding CircuitElements}"
+                        SelectElementsCommand="{Binding SelectCircuitElementCommand}"/>
+                    <!--<local:ElementsCard
+                        Grid.Column="4"
                         Header="Circuit elements"
                         Elements="{Binding CircuitElements}"
                         AddBtnVisibility="{x:Static Visibility.Collapsed}"
                         EditBtnVisibility="{x:Static Visibility.Collapsed}"
                         RemoveBtnVisibility="{x:Static Visibility.Collapsed}"
-                        SelectedElementsCommand="{Binding SelectedCircuitElementCommand}"/>
+                        SelectElementsCommand="{Binding SelectCircuitElementCommand}"/>-->
                     <local:AnnotationPreview 
                         Grid.Row="1"
                         x:Name="mainAnnotationPreview"
                         Annotation="{Binding AnnotationPreview}"
                         SetAnnotationPreviewCommand = "{Binding SetAnnotationPreviewCommand}"
                         SetAnnotationToElementCommand ="{Binding SetAnnotationToElementCommand}"/>
-                    <!--<GroupBox Grid.Row="1" Header="Annotation preview">
-                        <StackPanel Grid.Row="1" Grid.Column="2" Margin="0 0 35 0">
-                            <Image
-                                Source="{Binding AnnotationPreview}" 
-                                Margin="20 0 20 0" Width="30" Height="30">
-                                <Image.InputBindings>
-                                    <KeyBinding 
-                                        x:Name="annotationPreview" 
-                                        Command="{Binding SetAnnotationPreviewCommand}"/>
-                                </Image.InputBindings>
-                            </Image>
-                            <Button
-                                x:Name="applyToEl"
-                                Content="Apply to element"
-                                Height="20"
-                                Command="{Binding SetAnnotationToElementCommand}"/>
-                        </StackPanel>
-                    </GroupBox>-->
-                    <GroupBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3" Header="Height">
+                    <GroupBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Header="Height">
                         <StackPanel>
                             <UniformGrid Columns="3" Width="300" HorizontalAlignment="Left">
                                 <StackPanel>
@@ -181,7 +174,7 @@
                         RemoveElementCommand="{Binding RemoveBatchCommand}"
                         AddBtnVisibility="{x:Static Visibility.Collapsed}"
                         EditBtnVisibility="{x:Static Visibility.Collapsed}"
-                        SelectedElementsCommand="{Binding SelectedBatchesCommand}"/>
+                        SelectElementsCommand="{Binding SelectedBatchesCommand}"/>
                 </Grid>
             </TabItem>
         </TabControl>

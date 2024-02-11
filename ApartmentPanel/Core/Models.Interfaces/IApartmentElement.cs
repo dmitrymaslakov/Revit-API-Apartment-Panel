@@ -8,6 +8,7 @@ namespace ApartmentPanel.Core.Models.Interfaces
         ImageSource Annotation { get; set; }
         string Category { get; set; }
         string Name { get; set; }
+        Height MountingHeight { get; set; }
 
         IApartmentElement Clone();
     }

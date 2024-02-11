@@ -67,11 +67,11 @@
     <Compile Include="Core\DependencyInjection.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\DTO\SetParamsDTO.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\DTO\InsertBatchDTO.cs" />
-    <Compile Include="Core\Infrastructure.Interfaces\DTO\InsertBatchedElementDTO.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\DTO\InsertElementDTO.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\IElementRepository.cs" />
     <Compile Include="Core\Models\ApartmentElement.cs" />
     <Compile Include="Core\Models\CategorizedFamilySymbols.cs" />
+    <Compile Include="Core\Infrastructure.Interfaces\DTO\CircuitDTO.cs" />
     <Compile Include="Infrastructure\Enums\LocationType.cs" />
     <Compile Include="Infrastructure\Models\BatchedInstance.cs" />
     <Compile Include="Infrastructure\Models\BatchedInstanceRow.cs" />
@@ -89,7 +89,7 @@
     <Compile Include="Presentation\Models\Batch\BatchedRow.cs" />
     <Compile Include="Presentation\Models\Batch\BatchedLocation.cs" />
     <Compile Include="Presentation\Models\Batch\BatchedMargin.cs" />
-    <Compile Include="Presentation\Models\Circuit.cs" />
+    <Compile Include="Core\Models\Circuit.cs" />
     <Compile Include="Core\Models.Interfaces\IApartmentElement.cs" />
     <Compile Include="Presentation\Models\Batch\ElementBatch.cs" />
     <Compile Include="Core\Models\Height.cs" />
@@ -104,6 +104,9 @@
     </Compile>
     <Compile Include="Presentation\View\Components\BatchList.xaml.cs">
       <DependentUpon>BatchList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\View\Components\CircuitElements.xaml.cs">
+      <DependentUpon>CircuitElements.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\View\Components\CircuitList.xaml.cs">
       <DependentUpon>CircuitList.xaml</DependentUpon>
@@ -185,6 +188,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Presentation\View\Components\BatchList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\View\Components\CircuitElements.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

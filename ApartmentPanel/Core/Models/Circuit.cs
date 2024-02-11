@@ -1,7 +1,7 @@
 ﻿using ApartmentPanel.Core.Models.Interfaces;
 using System.Collections.ObjectModel;
 
-namespace ApartmentPanel.Presentation.Models
+namespace ApartmentPanel.Core.Models
 {
     public class Circuit
     {

@@ -43,6 +43,7 @@ namespace ApartmentPanel.Presentation.View.Components
         }
 
         #endregion
+
         public static readonly DependencyProperty SelectedElementsProperty =
             DependencyProperty.Register(nameof(SelectedElements), typeof(object),
                 typeof(ElementsCard), new PropertyMetadata(null));
@@ -113,14 +114,14 @@ namespace ApartmentPanel.Presentation.View.Components
             set { SetValue(RemoveElementCommandProperty, value); }
         }
 
-        public static readonly DependencyProperty SelectedElementsCommandProperty =
-            DependencyProperty.Register(nameof(SelectedElementsCommand), typeof(ICommand),
+        public static readonly DependencyProperty SelectElementsCommandProperty =
+            DependencyProperty.Register(nameof(SelectElementsCommand), typeof(ICommand),
                 typeof(ElementsCard), new PropertyMetadata(null));
 
-        public ICommand SelectedElementsCommand
+        public ICommand SelectElementsCommand
         {
-            get { return (ICommand)GetValue(SelectedElementsCommandProperty); }
-            set { SetValue(SelectedElementsCommandProperty, value); }
+            get { return (ICommand)GetValue(SelectElementsCommandProperty); }
+            set { SetValue(SelectElementsCommandProperty, value); }
         }
 
         public ElementsCard() => InitializeComponent();
@@ -128,7 +129,7 @@ namespace ApartmentPanel.Presentation.View.Components
         private void Lv_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectedElements = lv.SelectedItems;
-            SelectedElementsCommand?.Execute(lv.SelectedItems);
+            SelectElementsCommand?.Execute(lv.SelectedItems);
         }
     }
 }

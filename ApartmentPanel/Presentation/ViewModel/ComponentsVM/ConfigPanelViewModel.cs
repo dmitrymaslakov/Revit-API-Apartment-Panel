@@ -124,9 +124,9 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             RemovePanelCircuitsCommand = _commandCreater.CreateRemoveCircuitsFromPanelCommand();
             AddElementToCircuitCommand = _commandCreater.CreateAddElementsToCircuitCommand();
             RemoveElementsFromCircuitCommand = _commandCreater.CreateRemoveElementsFromCircuitCommand();
-            SelectedApartmentElementsCommand = _commandCreater.CreateCollectSelectedApartmentElementsCommand();
-            SelectPanelCircuitCommand = _commandCreater.CreateCollectSelectedCircuitsCommand();
-            SelectedCircuitElementCommand = _commandCreater.CreateCollectSelectedCircuitElementsCommand();
+            SelectApartmentElementsCommand = _commandCreater.CreateSelectApartmentElementsCommand();
+            SelectPanelCircuitCommand = _commandCreater.CreateSelectPanelCircuitCommand();
+            SelectCircuitElementCommand = _commandCreater.CreateCollectSelectedCircuitElementsCommand();
             OkCommand = _commandCreater.CreateOkCommand();
             ApplyCommand = _commandCreater.CreateApplyCommand();
             CancelCommand = _commandCreater.CreateCancelCommand();
@@ -224,6 +224,20 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         [JsonIgnore]
         public bool IsCancelEnabled { get => _isCancelEnabled; set => Set(ref _isCancelEnabled, value); }
 
+        private string _responsibleForHeight;
+        public string ResponsibleForHeight
+        {
+            get => _responsibleForHeight;
+            set => Set(ref _responsibleForHeight, value);
+        }
+
+        private string _responsibleForCircuit;
+        public string ResponsibleForCircuit
+        {
+            get => _responsibleForCircuit;
+            set => Set(ref _responsibleForCircuit, value);
+        }
+
         #region Batch
         private ElementBatch _elementBatch;
         public ElementBatch ElementBatch
@@ -316,11 +330,11 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         [JsonIgnore]
         public ICommand RemoveElementsFromCircuitCommand { get; set; }
         [JsonIgnore]
-        public ICommand SelectedApartmentElementsCommand { get; set; }
+        public ICommand SelectApartmentElementsCommand { get; set; }
         [JsonIgnore]
         public ICommand SelectPanelCircuitCommand { get; set; }
         [JsonIgnore]
-        public ICommand SelectedCircuitElementCommand { get; set; }
+        public ICommand SelectCircuitElementCommand { get; set; }
         [JsonIgnore]
         public ICommand OkCommand { get; set; }
         [JsonIgnore]
@@ -368,6 +382,9 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             if (latestConfiguration.ListHeightsCenter != null)
                 ListHeightsCenter = latestConfiguration.ListHeightsCenter;
 
+            ResponsibleForHeight = latestConfiguration.ResponsibleForHeight;
+            ResponsibleForCircuit = latestConfiguration.ResponsibleForCircuit;
+
             foreach (var apartmentElement in ApartmentElements)
             {
                 apartmentElement.Annotation = ElementService.GetAnnotationFor(apartmentElement.Name);
@@ -389,7 +406,6 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             {
                 var newCircuitElements = new ObservableCollection<IApartmentElement>();
                 var circuitElements = PanelCircuits[i].Elements;
-                //var circuitElements = PanelCircuits[i].Value;
 
                 foreach (var apartmentElement in ApartmentElements)
                 {
@@ -404,10 +420,6 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
                 }
                 PanelCircuits[i] =
                     new Circuit { Number = PanelCircuits[i].Number, Elements = circuitElements };
-
-                /*PanelCircuits[i] =
-                    new KeyValuePair<string, ObservableCollection<IApartmentElement>>(
-                        PanelCircuits[i].Key, circuitElements);*/
             }
             return this;
         }
