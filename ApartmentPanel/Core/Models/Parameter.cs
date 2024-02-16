@@ -1,23 +1,23 @@
-﻿using ApartmentPanel.Presentation.ViewModel;
+﻿using ApartmentPanel.Utility;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-namespace ApartmentPanel.Presentation.Models
+namespace ApartmentPanel.Core.Models
 {
-    public class Parameter : ViewModelBase
+    public class Parameter : NotifyPropertyChanged
     {
-        /*public string Name { get; set; }
-        public string Value { get; set; }*/
         private string _name;
         public string Name
         {
             get => _name;
             set => Set(ref _name, value);
         }
+
         private string _value;
         public string Value
         {
             get => _value;
             set => Set(ref _value, value);
         }
-
     }
 }

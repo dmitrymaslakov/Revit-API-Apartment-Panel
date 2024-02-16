@@ -75,6 +75,7 @@ namespace ApartmentPanel.Presentation.ViewModel
             SetCurrentSuffixCommand = _viewCommandsCreater.CreateSetCurrentSuffixCommand();
             SetHeightCommand = _viewCommandsCreater.CreateSetHeightCommand();
             SetStatusCommand = _viewCommandsCreater.CreateSetStatusCommand();
+            ResetHeightCommand = _viewCommandsCreater.CreateResetHeightCommand();
         }
 
         public IConfigPanelViewModel ConfigPanelVM { get; set; }
@@ -128,6 +129,13 @@ namespace ApartmentPanel.Presentation.ViewModel
             get => _listHeightsCenter;
             set => Set(ref _listHeightsCenter, value);
         }
+
+        private bool _isResetHeight;
+        public bool IsResetHeight
+        {
+            get => _isResetHeight;
+            set => Set(ref _isResetHeight, value);
+        }
         #endregion
 
         private string _status;
@@ -143,6 +151,7 @@ namespace ApartmentPanel.Presentation.ViewModel
         public ICommand SetCurrentSuffixCommand { get; set; }
         public ICommand SetHeightCommand { get; set; }
         public ICommand SetStatusCommand { get; set; }
+        public ICommand ResetHeightCommand { get; set; }
 
         private void ExecuteOkApplyCancelActions(object obj, OkApplyCancel okApplyCancel)
         {
@@ -181,7 +190,7 @@ namespace ApartmentPanel.Presentation.ViewModel
         }
 
         private ObservableCollection<Circuit> GetCircuits(ObservableCollection<Circuit> panelCircuits)
-            //ObservableDictionary<string, ObservableCollection<IApartmentElement>> panelCircuits)
+        //ObservableDictionary<string, ObservableCollection<IApartmentElement>> panelCircuits)
         {
             var result = new ObservableCollection<Circuit>();
             foreach (var circuit in panelCircuits)

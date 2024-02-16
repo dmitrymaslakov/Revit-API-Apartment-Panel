@@ -121,7 +121,8 @@ namespace ApartmentPanel.Infrastructure
                 .OfClass(typeof(FamilyInstance))                
                 .ToElements()
                 .Select(e => e as FamilyInstance)
-                .FirstOrDefault(fi => string.Equals(fi.Name, elementName));
+                //.FirstOrDefault(fi => string.Equals(fi.Name, elementName));
+                .FirstOrDefault(fi => fi.Name.Contains(elementName));
 
             return !(element is null);
         }

@@ -7,6 +7,7 @@ using ApartmentPanel.Utility.AnnotationUtility;
 using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
 using System.Windows.Media;
@@ -24,7 +25,12 @@ namespace ApartmentPanel.Core.Services
         public List<IApartmentElement> GetAll(List<(string name, string category)> props)
         {
             return props
-                .Select(p => new ApartmentElement { Name = p.name, Category = p.category })
+                .Select(p => new ApartmentElement
+                {
+                    Name = p.name,
+                    Category = p.category,
+                    MountingHeight = new Height()
+                })
                 .Cast<IApartmentElement>()
                 .ToList();
         }
@@ -76,7 +82,7 @@ namespace ApartmentPanel.Core.Services
         public void InsertBatchToModel(InsertBatchDTO batchDto) =>
             _elementRepo.InsertBatchToModel(batchDto);
 
-        public void SetBatchedElementParameters(SetParamsDTO setParamsDTO) => 
+        public void SetElementParameters(SetParamsDTO setParamsDTO) => 
             _elementRepo.SetParameters(setParamsDTO);
     }
 }

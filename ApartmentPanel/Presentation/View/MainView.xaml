@@ -8,7 +8,7 @@
              xmlns:components="clr-namespace:ApartmentPanel.Presentation.View.Components"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:MainViewModel, IsDesignTimeCreatable=True}"
-             d:DesignHeight="500" d:DesignWidth="200">
+             d:DesignHeight="700" d:DesignWidth="200">
     <UserControl.Resources>
         <Style x:Key="circuitTextBlock" TargetType="TextBlock">
             <Setter Property="Margin" Value="0 0 100 0"/>
@@ -106,19 +106,23 @@
                         TypeOfHeight="UK"
                         ListHeights="{Binding ListHeightsUK}"
                         ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
-                        AddHeightBtnVisibility="Collapsed"/>
+                        AddHeightBtnVisibility="Collapsed"
+                        ResetSelection="{Binding IsResetHeight}"/>
                     <components:HeightList 
                         TypeOfHeight="OK" 
                         ListHeights="{Binding ListHeightsOK}"
                         ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
-                        AddHeightBtnVisibility="Collapsed"/>
+                        AddHeightBtnVisibility="Collapsed"
+                        ResetSelection="{Binding IsResetHeight}"/>
                     <components:HeightList 
                         TypeOfHeight="Center" 
                         ListHeights="{Binding ListHeightsCenter}"
                         ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
-                        AddHeightBtnVisibility="Collapsed"/>
+                        AddHeightBtnVisibility="Collapsed"
+                        ResetSelection="{Binding IsResetHeight}"/>
                 </UniformGrid>
             </GroupBox>
+            <Button Content="Reset height" Command="{Binding ResetHeightCommand}" Width="80"/>
             <TextBlock>
                 <Run Text="Current height: " />
                 <Run Text="{Binding ElementHeight.TypeOf}" />

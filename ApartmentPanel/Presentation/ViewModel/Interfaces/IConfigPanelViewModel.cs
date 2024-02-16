@@ -61,9 +61,10 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         ICommand AddRowToBatchCommand { get; set; }
         ICommand RemoveRowFromBatchCommand { get; set; }
         BatchedRow SelectedBatchedRow { get; set; }
-        Action<List<string>> SetParametersToBatchElement { get; set; }
+        Action<List<string>> SetParametersToElement { get; set; }
         string ResponsibleForHeight { get; set; }
         string ResponsibleForCircuit { get; set; }
+        IApartmentElement SelectedCircuitElement { get; set; }
 
         ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration);
     }

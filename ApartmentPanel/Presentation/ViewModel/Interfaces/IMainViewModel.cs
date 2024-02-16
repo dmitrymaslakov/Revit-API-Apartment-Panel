@@ -19,5 +19,8 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         ICommand SetHeightCommand { get; set; }
         Height ElementHeight { get; set; }
         ICommand InsertBatchCommand { get; set; }
+        ICommand SetStatusCommand { get; set; }
+        ICommand ResetHeightCommand { get; set; }
+        bool IsResetHeight { get; set; }
     }
 }

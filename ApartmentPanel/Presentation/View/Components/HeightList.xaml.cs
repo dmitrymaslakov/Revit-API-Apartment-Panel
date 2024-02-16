@@ -39,13 +39,13 @@ namespace ApartmentPanel.Presentation.View.Components
         public static readonly DependencyProperty AddHeightBtnVisibilityProperty =
             DependencyProperty.Register(nameof(AddHeightBtnVisibility), typeof(Visibility),
                 typeof(HeightList), new PropertyMetadata(Visibility.Visible));
-
         public Visibility AddHeightBtnVisibility
         {
             get { return (Visibility)GetValue(AddHeightBtnVisibilityProperty); }
             set { SetValue(AddHeightBtnVisibilityProperty, value); }
         }
 
+        #region ActionWithSelectedHeightCommand
         public static readonly DependencyProperty ActionWithSelectedHeightCommandProperty =
             DependencyProperty.Register(nameof(ActionWithSelectedHeightCommand), typeof(ICommand),
                 typeof(HeightList), new PropertyMetadata(null));
@@ -55,14 +55,26 @@ namespace ApartmentPanel.Presentation.View.Components
             get { return (ICommand)GetValue(ActionWithSelectedHeightCommandProperty); }
             set { SetValue(ActionWithSelectedHeightCommandProperty, value); }
         }
+        #endregion
 
-        /*private void ListHeights_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        #region ResetSelectionProperty
+        public static readonly DependencyProperty ResetSelectionProperty =
+            DependencyProperty.Register(nameof(ResetSelection), typeof(bool),
+                typeof(HeightList), new PropertyMetadata(false, OnResetSelectionChanged));
+        public bool ResetSelection
         {
-            ListView listHeights = sender as ListView;
-            TypeOfHeight typeOfHeight = (TypeOfHeight)((GridView)listHeights.View).Columns[0].Header;
-            bool b = double.TryParse(listHeights.SelectedItem?.ToString(), out double height);
-            if (b) ActionWithSelectedHeightCommand?.Execute((typeOfHeight, height));
-        }*/
+            get { return (bool)GetValue(ResetSelectionProperty); }
+            set { SetValue(ResetSelectionProperty, value); }
+        }
+        private static void OnResetSelectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var heightList = d as HeightList;
+            if (heightList == null) return;
+
+            if (heightList.ResetSelection)
+                heightList.heightsListLV.SelectedItems.Clear();
+        }
+        #endregion
 
         private void ListHeights_GotFocus(object sender, RoutedEventArgs e)
         {

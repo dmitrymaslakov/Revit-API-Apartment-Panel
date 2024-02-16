@@ -33,13 +33,14 @@ namespace ApartmentPanel.Presentation.Commands
         {
             /*(string circuit, string elementName, string elementCategory, ImageSource annotation) =
                 (ValueTuple<string, string, string, ImageSource>)o;*/
-            (string circuit, IApartmentElement element) =
-                (ValueTuple<string, IApartmentElement>)o;
+            (string circuit, IApartmentElement element) = (ValueTuple<string, IApartmentElement>)o;
 
             string insertingMode = "single";
 
             if (Keyboard.Modifiers == ModifierKeys.Control)
                 insertingMode = "multiple";
+
+            element.MountingHeight.ResponsibleForHeightParameter = _viewProperties.ConfigPanelVM.ResponsibleForHeight;
 
             var elementDTO = new InsertElementDTO()
             {
@@ -52,6 +53,9 @@ namespace ApartmentPanel.Presentation.Commands
                 },
                 Height = element.MountingHeight.Clone(),
                 CurrentSuffix = _viewProperties.CurrentSuffix,
+                Parameters = element.Parameters
+                        .GroupBy(p => p.Name)
+                        .ToDictionary(g => g.Key, g => g.First().Value),
                 InsertingMode = insertingMode
             };
             if (_viewProperties.ElementHeight != null)
@@ -121,6 +125,7 @@ namespace ApartmentPanel.Presentation.Commands
         {
             (TypeOfHeight typeOfHeight, double height) = (ValueTuple<TypeOfHeight, double>)o;
             _viewProperties.ElementHeight = new Height { TypeOf = typeOfHeight, Value = height };
+            if (_viewProperties.IsResetHeight) _viewProperties.IsResetHeight = false;
         });
 
         public ICommand CreateSetStatusCommand() => new RelayCommand(o =>
@@ -134,6 +139,12 @@ namespace ApartmentPanel.Presentation.Commands
                     _viewProperties.Status = null;
                     break;
             }
+        });
+
+        public ICommand CreateResetHeightCommand() => new RelayCommand(o =>
+        {
+            _viewProperties.IsResetHeight = true;
+            _viewProperties.ElementHeight = null;
         });
     }
 }

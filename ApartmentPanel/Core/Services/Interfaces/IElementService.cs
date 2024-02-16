@@ -18,6 +18,6 @@ namespace ApartmentPanel.Core.Services.Interfaces
         void SetAnnotationTo(IApartmentElement element, BitmapSource img);
         ImageSource GetAnnotationFor(string elementName);
         void InsertBatchToModel(InsertBatchDTO batchDto);
-        void SetBatchedElementParameters(SetParamsDTO setParamsDTO);
+        void SetElementParameters(SetParamsDTO setParamsDTO);
     }
 }

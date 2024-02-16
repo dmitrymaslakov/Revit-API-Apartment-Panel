@@ -32,6 +32,18 @@ namespace ApartmentPanel.Presentation.View.Components
             set { SetValue(ElementsProperty, value); }
         }
         #endregion
+        
+        #region SelectedElementProperty
+        public static readonly DependencyProperty SelectedElementProperty =
+            DependencyProperty.Register(nameof(SelectedElement), typeof(IApartmentElement),
+                typeof(CircuitElements), new PropertyMetadata(null));
+
+        public IApartmentElement SelectedElement
+        {
+            get { return (IApartmentElement)GetValue(SelectedElementProperty); }
+            set { SetValue(SelectedElementProperty, value); }
+        }
+        #endregion
 
         public static readonly DependencyProperty SelectElementsCommandProperty =
             DependencyProperty.Register(nameof(SelectElementsCommand), typeof(ICommand),

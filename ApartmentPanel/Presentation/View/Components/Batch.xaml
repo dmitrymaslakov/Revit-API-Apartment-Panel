@@ -4,16 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:mex="clr-namespace:ApartmentPanel.Presentation.MarkupExtensions"
+             xmlns:local="clr-namespace:ApartmentPanel.Presentation.View.Components"
              xmlns:models="clr-namespace:ApartmentPanel.Core.Enums"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
              x:Name="root"
              Background="White"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="310" d:DesignWidth="800" Height="310">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0">
             <ListView ItemsSource="{Binding ListBatchedRows, ElementName=root}"
@@ -78,7 +79,9 @@
                     <Image Source="{Binding BatchAnnotation, ElementName=root}" Width="30"/>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="Parameters">
+            <local:ElementParameters Header="Parameters"
+                                     Parameters="{Binding SelectedBatchedElement.Parameters, ElementName=root}"/>
+            <!--<GroupBox Header="Parameters">
                 <ListView ItemsSource="{Binding SelectedBatchedElement.Parameters, ElementName=root}"
                           Height="150">
                     <ListView.View>
@@ -95,7 +98,7 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-            </GroupBox>
+            </GroupBox>-->
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
             <Button Content="Add row" Click="Button_AddRow"/>

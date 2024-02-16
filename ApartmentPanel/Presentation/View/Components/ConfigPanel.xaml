@@ -8,7 +8,7 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance vm:ConfigPanelViewModel, IsDesignTimeCreatable=True}"
-        d:DesignHeight="800" d:DesignWidth="900" Width="900" Height="800"
+        d:DesignHeight="1000" d:DesignWidth="1000" Width="1000" Height="1000"
         x:Name="Confige">
     <Window.Resources>
         <ResourceDictionary>
@@ -35,7 +35,8 @@
                         <ColumnDefinition Width="210"/>
                         <ColumnDefinition Width="40"/>
                         <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="190"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="200"/>
                     </Grid.ColumnDefinitions>
                     <local:ElementsCard
                         Grid.Column="0"
@@ -60,7 +61,7 @@
                         </StackPanel>
 
                     </GroupBox>
-                    <StackPanel Grid.Column="2" Margin="0 20 0 0">
+                    <StackPanel Grid.Column="2">
                         <Button Style="{StaticResource ArrowButton}"
                                 Command="{Binding AddElementToCircuitCommand}">
                             <fa:ImageAwesome Icon="ArrowRight" Foreground="Green"/>
@@ -92,7 +93,11 @@
                         Grid.Column="4"
                         Header="Circuit elements"
                         Elements="{Binding CircuitElements}"
+                        SelectedElement="{Binding SelectedCircuitElement, Mode=TwoWay}"
                         SelectElementsCommand="{Binding SelectCircuitElementCommand}"/>
+                    <local:ElementParameters Grid.Column="5" 
+                                             Header="ElementParameters"
+                                             Parameters="{Binding SelectedCircuitElement.Parameters}"/>
                     <!--<local:ElementsCard
                         Grid.Column="4"
                         Header="Circuit elements"
@@ -106,8 +111,8 @@
                         x:Name="mainAnnotationPreview"
                         Annotation="{Binding AnnotationPreview}"
                         SetAnnotationPreviewCommand = "{Binding SetAnnotationPreviewCommand}"
-                        SetAnnotationToElementCommand ="{Binding SetAnnotationToElementCommand}"/>
-                    <GroupBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Header="Height">
+                        SetAnnotationToElementCommand ="{Binding SetAnnotationToElementCommand}" Grid.RowSpan="3"/>
+                    <GroupBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Header="Height" Grid.RowSpan="3">
                         <StackPanel>
                             <UniformGrid Columns="3" Width="300" HorizontalAlignment="Left">
                                 <StackPanel>

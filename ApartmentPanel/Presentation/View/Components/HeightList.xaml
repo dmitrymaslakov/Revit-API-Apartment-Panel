@@ -6,8 +6,8 @@
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
              x:Name="root"
-             d:DesignHeight="160" 
-             d:DesignWidth="120"
+             d:DesignHeight="180" 
+             d:DesignWidth="160"
              Height="160">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -19,7 +19,7 @@
     <StackPanel>
         <ListView ItemsSource="{Binding ListHeights, ElementName=root}"
                   x:Name="heightsListLV"
-                  Height="100"
+                  Height="130"
                   GotFocus="ListHeights_GotFocus">
                   <!--SelectionChanged="ListHeights_SelectionChanged"-->
             <ListView.View>

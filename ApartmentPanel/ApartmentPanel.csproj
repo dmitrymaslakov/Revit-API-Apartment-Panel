@@ -70,6 +70,7 @@
     <Compile Include="Core\Infrastructure.Interfaces\DTO\InsertElementDTO.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\IElementRepository.cs" />
     <Compile Include="Core\Models\ApartmentElement.cs" />
+    <Compile Include="Core\Models\BaseElement.cs" />
     <Compile Include="Core\Models\CategorizedFamilySymbols.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\DTO\CircuitDTO.cs" />
     <Compile Include="Infrastructure\Enums\LocationType.cs" />
@@ -94,8 +95,9 @@
     <Compile Include="Presentation\Models\Batch\ElementBatch.cs" />
     <Compile Include="Core\Models\Height.cs" />
     <Compile Include="Presentation\Models\MockData\MockCircuit.cs" />
-    <Compile Include="Presentation\Models\Parameter.cs" />
+    <Compile Include="Core\Models\Parameter.cs" />
     <Compile Include="Presentation\Services\ModelAnalizing.cs" />
+    <Compile Include="Utility\NotifyPropertyChanged.cs" />
     <Compile Include="Presentation\View\Components\AnnotationPreview.xaml.cs">
       <DependentUpon>AnnotationPreview.xaml</DependentUpon>
     </Compile>
@@ -110,6 +112,9 @@
     </Compile>
     <Compile Include="Presentation\View\Components\CircuitList.xaml.cs">
       <DependentUpon>CircuitList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\View\Components\ElementParameters.xaml.cs">
+      <DependentUpon>ElementParameters.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\View\Components\HeightList.xaml.cs">
       <DependentUpon>HeightList.xaml</DependentUpon>
@@ -202,6 +207,10 @@
     <Page Include="Presentation\View\Components\ConfigPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\View\Components\ElementParameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\View\Components\ElementsCard.xaml">
       <Generator>MSBuild:Compile</Generator>

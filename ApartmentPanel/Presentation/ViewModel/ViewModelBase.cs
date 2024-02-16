@@ -1,53 +1,19 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using ApartmentPanel.Core.Services.Interfaces;
+using ApartmentPanel.Utility;
 
 namespace ApartmentPanel.Presentation.ViewModel
 {
     public delegate TViewModel CreateViewModel<TViewModel>() where TViewModel : ViewModelBase;
 
-    public abstract class ViewModelBase : INotifyPropertyChanged
+    public abstract class ViewModelBase : NotifyPropertyChanged
     {
-        private bool _disposed;
         [JsonIgnore]
         public IElementService ElementService { get; }
 
         public ViewModelBase() { }
 
         public ViewModelBase(IElementService elementService) => 
-            ElementService = elementService;
-        
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        protected virtual bool Set<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
-        {
-            if (Equals(field, value))
-            {
-                return false;
-            }
-            field = value;
-            OnPropertyChanged(propertyName);
-            return true;
-        }
-
-        public virtual void Dispose()
-        {
-            Dispose(true);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposing || _disposed)
-            {
-                return;
-            }
-            _disposed = true;
-        }
+            ElementService = elementService;        
     }
 }

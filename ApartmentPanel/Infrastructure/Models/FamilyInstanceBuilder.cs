@@ -6,7 +6,7 @@ using Autodesk.Revit.UI.Selection;
 using ApartmentPanel.Utility.Exceptions;
 using ApartmentPanel.Utility;
 using ApartmentPanel.Infrastructure.Models.LocationStrategies;
-using ApartmentPanel.Core.Models;
+//using ApartmentPanel.Core.Models;
 using System;
 using Microsoft.Extensions.Hosting;
 using System.Security.Cryptography;
@@ -223,10 +223,12 @@ namespace ApartmentPanel.Infrastructure.Models
             switch (category)
             {
                 case StaticData.LIGHTING_FIXTURES:
-                    circuitParam.Set(_circuit + "/" + _lampSuffix);
+                    _lampSuffix = string.IsNullOrEmpty(_lampSuffix) ? _lampSuffix : "/" + _lampSuffix;
+                    circuitParam.Set(_circuit + _lampSuffix);
                     break;
                 case StaticData.LIGHTING_DEVICES:
-                    circuitParam.Set(_circuit + "/" + _switchNumbers);
+                    _switchNumbers = string.IsNullOrEmpty(_switchNumbers) ? _switchNumbers : "/" + _switchNumbers;
+                    circuitParam.Set(_circuit + _switchNumbers);
                     break;
                 case StaticData.ELECTRICAL_FIXTURES:
                 case StaticData.TELEPHONE_DEVICES:
@@ -272,6 +274,10 @@ namespace ApartmentPanel.Infrastructure.Models
                         double valueAsDoubleInFeet = UnitUtils.ConvertToInternalUnits(valueAsDouble,
                             _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());
                         instanceParam.Set(valueAsDoubleInFeet);
+                    }
+                    else
+                    {
+                        instanceParam.Set(parameter.Value);
                     }
                 }
             }

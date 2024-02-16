@@ -19,6 +19,7 @@ using ApartmentPanel.Utility.AnnotationUtility;
 using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
 using System.Windows.Media;
 using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
+using System.Security.Cryptography;
 
 namespace ApartmentPanel.Presentation.Commands
 {
@@ -99,7 +100,7 @@ namespace ApartmentPanel.Presentation.Commands
                 _configPanelProperties.IsCancelEnabled = true;
         });
 
-        public ICommand CreateAddElementsToCircuitCommand() => new RelayCommand(o =>
+        public ICommand CreateAddElementToCircuitCommand() => new RelayCommand(o =>
         {
             if (_configPanelProperties.SelectedPanelCircuits.Count > 1
                 || _configPanelProperties.SelectedPanelCircuits.Count == 0
@@ -121,7 +122,25 @@ namespace ApartmentPanel.Presentation.Commands
                 .Contains(selectedApartmentElement.Name);
 
                 if (!IsElementExist)
-                    _configPanelProperties.PanelCircuits.First(c => c.Number == selectedPanelCircuit.Number).Elements.Add(selectedApartmentElement);
+                {
+                    _configPanelProperties.SetParametersToElement = null;
+                    _configPanelProperties.SetParametersToElement = (List<string> parameterNames) =>
+                        {
+                            var parameters = parameterNames
+                                .Select(pn => new Parameter { Name = pn })
+                                .ToList();
+                            selectedApartmentElement.Parameters = new ObservableCollection<Parameter>(parameters);
+                        };
+                    SetParamsDTO setParamsDTO = new SetParamsDTO
+                    {
+                        ElementName = selectedApartmentElement.Name,
+                        SetInstanceParameters = _configPanelProperties.SetParametersToElement
+                    };
+                    _elementService.SetElementParameters(setParamsDTO);
+
+                    _configPanelProperties.PanelCircuits
+                    .First(c => c.Number == selectedPanelCircuit.Number).Elements.Add(selectedApartmentElement.Clone());
+                }
 
                 _circuitService.AddCurrentCircuitElements(_configPanelProperties.PanelCircuits.First(c => c.Number == selectedPanelCircuit.Number).Elements);
             }
@@ -175,7 +194,7 @@ namespace ApartmentPanel.Presentation.Commands
             }
         });
 
-        public ICommand CreateCollectSelectedCircuitElementsCommand() => new RelayCommand(o =>
+        public ICommand CreateSelectCircuitElementCommand() => new RelayCommand(o =>
         {
             var circuitElements = (o as IList<object>)?.OfType<ApartmentElement>();
             if (_configPanelProperties.SelectedCircuitElements.Count != 0)
@@ -184,6 +203,19 @@ namespace ApartmentPanel.Presentation.Commands
             if (circuitElements.Count() != 0)
                 foreach (var circuitElement in circuitElements)
                     _configPanelProperties.SelectedCircuitElements.Add(circuitElement);
+
+            /*var element = _configPanelProperties.SelectedCircuitElements.FirstOrDefault();
+            if (element == null)
+                return;
+
+            _configPanelProperties.SetParametersToElement = OnSetParametersToCircuitElementExecuted;
+            SetParamsDTO setParamsDTO = new SetParamsDTO
+            {
+                ElementName = element.Name,
+                SetInstanceParameters = _configPanelProperties.SetParametersToElement
+            };
+            _elementService.SetElementParameters(setParamsDTO);
+            _configPanelProperties.CircuitElementParameters = element.Parameters;*/
         });
 
         public ICommand CreateOkCommand() => new RelayCommand(o =>
@@ -264,23 +296,26 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateSetNewElementForBatchCommand() => new RelayCommand(o =>
         {
-            (string circuit, string elementName, string elementCategory, ImageSource annotation) =
-                (ValueTuple<string, string, string, ImageSource>)o;
+            /*(string circuit, string elementName, string elementCategory, ImageSource annotation) =
+                (ValueTuple<string, string, string, ImageSource>)o;*/
+            (string circuit, IApartmentElement element) = (ValueTuple<string, IApartmentElement>)o;
+
 
             _configPanelProperties.NewElementForBatch = new BatchedElement
             {
                 Circuit = circuit,
-                Category = elementCategory,
-                Name = elementName,
-                Annotation = annotation
+                Category = element.Category,
+                Name = element.Name,
+                Annotation = element.Annotation
             };
 
+            _configPanelProperties.SetParametersToElement = OnSetParametersToBatchElementExecuted;
             SetParamsDTO setParamsDTO = new SetParamsDTO
             {
-                ElementName = elementName,
-                SetInstanceParameters = _configPanelProperties.SetParametersToBatchElement
+                ElementName = element.Name,
+                SetInstanceParameters = _configPanelProperties.SetParametersToElement
             };
-            _elementService.SetBatchedElementParameters(setParamsDTO);
+            _elementService.SetElementParameters(setParamsDTO);
         });
 
         public ICommand CreateAddElementToRowCommand() => new RelayCommand(o =>
@@ -361,5 +396,23 @@ namespace ApartmentPanel.Presentation.Commands
                 if (isRemoved) _configPanelProperties.SelectedBatchedRow = null;
             }
         });
+
+        private void OnSetParametersToBatchElementExecuted(List<string> parameterNames)
+        {
+            var parameters = parameterNames
+                .Select(pn => new Parameter { Name = pn })
+                .ToList();
+            _configPanelProperties.NewElementForBatch.Parameters = new ObservableCollection<Parameter>(parameters);
+        }
+
+        private void OnSetParametersToCircuitElementExecuted(List<string> parameterNames)
+        {
+            var parameters = parameterNames
+                .Select(pn => new Parameter { Name = pn })
+                .ToList();
+            var circuitElement = _configPanelProperties.SelectedCircuitElements.FirstOrDefault();
+            if (circuitElement != null)
+                circuitElement.Parameters = new ObservableCollection<Parameter>(parameters);
+        }
     }
 }
