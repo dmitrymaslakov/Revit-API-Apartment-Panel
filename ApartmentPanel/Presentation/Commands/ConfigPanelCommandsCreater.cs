@@ -20,6 +20,7 @@ using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
 using System.Windows.Media;
 using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
 using System.Security.Cryptography;
+using Autodesk.Revit.UI;
 
 namespace ApartmentPanel.Presentation.Commands
 {
@@ -38,6 +39,21 @@ namespace ApartmentPanel.Presentation.Commands
             {
                 if (!_configPanelProperties.ApartmentElements.Select(ae => ae.Name).Contains(newElement.Name))
                 {
+                    /*_configPanelProperties.SetParametersToElement = null;
+                    _configPanelProperties.SetParametersToElement = (List<string> parameterNames) =>
+                        {
+                            var parameters = parameterNames
+                                .Select(pn => new Parameter { Name = pn })
+                                .ToList();
+                            newElement.Parameters = new ObservableCollection<Parameter>(parameters);
+                        };
+                    SetParamsDTO setParamsDTO = new SetParamsDTO
+                    {
+                        ElementName = newElement.Name,
+                        SetInstanceParameters = _configPanelProperties.SetParametersToElement
+                    };
+                    _elementService.SetElementParameters(setParamsDTO);*/
+
                     IApartmentElement newApartmentElement = elementService.CloneFrom(newElement);
                     _configPanelProperties.ApartmentElements.Add(newApartmentElement);
                 }
@@ -123,23 +139,24 @@ namespace ApartmentPanel.Presentation.Commands
 
                 if (!IsElementExist)
                 {
+                    IApartmentElement elementClone = selectedApartmentElement.Clone();
                     _configPanelProperties.SetParametersToElement = null;
                     _configPanelProperties.SetParametersToElement = (List<string> parameterNames) =>
                         {
                             var parameters = parameterNames
                                 .Select(pn => new Parameter { Name = pn })
                                 .ToList();
-                            selectedApartmentElement.Parameters = new ObservableCollection<Parameter>(parameters);
+                            elementClone.Parameters = new ObservableCollection<Parameter>(parameters);
                         };
                     SetParamsDTO setParamsDTO = new SetParamsDTO
                     {
-                        ElementName = selectedApartmentElement.Name,
+                        ElementName = elementClone.Name,
                         SetInstanceParameters = _configPanelProperties.SetParametersToElement
                     };
                     _elementService.SetElementParameters(setParamsDTO);
 
                     _configPanelProperties.PanelCircuits
-                    .First(c => c.Number == selectedPanelCircuit.Number).Elements.Add(selectedApartmentElement.Clone());
+                    .First(c => c.Number == selectedPanelCircuit.Number).Elements.Add(elementClone);
                 }
 
                 _circuitService.AddCurrentCircuitElements(_configPanelProperties.PanelCircuits.First(c => c.Number == selectedPanelCircuit.Number).Elements);
@@ -403,6 +420,7 @@ namespace ApartmentPanel.Presentation.Commands
                 .Select(pn => new Parameter { Name = pn })
                 .ToList();
             _configPanelProperties.NewElementForBatch.Parameters = new ObservableCollection<Parameter>(parameters);
+            TaskDialog.Show("OnSetParametersToBatchElementExecuted", "is executed");
         }
 
         private void OnSetParametersToCircuitElementExecuted(List<string> parameterNames)

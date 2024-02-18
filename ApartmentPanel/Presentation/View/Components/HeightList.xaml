@@ -8,7 +8,7 @@
              x:Name="root"
              d:DesignHeight="180" 
              d:DesignWidth="160"
-             Height="160">
+             Height="Auto">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -19,7 +19,7 @@
     <StackPanel>
         <ListView ItemsSource="{Binding ListHeights, ElementName=root}"
                   x:Name="heightsListLV"
-                  Height="130"
+                  Height="Auto"
                   GotFocus="ListHeights_GotFocus">
                   <!--SelectionChanged="ListHeights_SelectionChanged"-->
             <ListView.View>

@@ -3,6 +3,7 @@
     public enum LocationType
     {
         Top,
-        Bottom
+        Bottom,
+        Center
     }
 }

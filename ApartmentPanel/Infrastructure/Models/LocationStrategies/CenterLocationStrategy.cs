@@ -3,13 +3,13 @@ using ApartmentPanel.Infrastructure.Enums;
 
 namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
 {
-    public class TopLocationStrategy : LocationStrategyBase, ILocationStrategy
+    public class CenterLocationStrategy : LocationStrategyBase, ILocationStrategy
     {
-        public TopLocationStrategy(UIApplication uiapp) : base(uiapp) { }
+        public CenterLocationStrategy(UIApplication uiapp) : base(uiapp) { }
 
         public void SetRequiredLocation(BuiltInstance builtInstance, double height)
         {
-            LocationType locationType = LocationType.Top;
+            LocationType locationType = LocationType.Center;
             SetRequiredLocationBase(builtInstance, height, locationType);
         }
     }

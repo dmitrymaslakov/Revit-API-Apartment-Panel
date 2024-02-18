@@ -21,7 +21,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <WrapPanel>
-                                <TextBlock Width="75" Text="{Binding Name}"/>
+                                <TextBlock Width="Auto" Text="{Binding Name}"/>
                                 <Image Width="20" 
                                        Margin="45 0 0 0"
                                        Source="{Binding Annotation}">

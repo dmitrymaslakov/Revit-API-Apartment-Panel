@@ -28,6 +28,11 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
                 case LocationType.Bottom:
                     targetPoint = new XYZ(basePoint.X, basePoint.Y, minPoint.Z);
                     break;
+                case LocationType.Center:
+                    double deltaMinMaxPointsZ = maxPoint.Z - minPoint.Z;
+                    double centerPointZ = minPoint.Z + deltaMinMaxPointsZ/2;
+                    targetPoint = new XYZ(basePoint.X, basePoint.Y, centerPointZ);
+                    break;
             }
 
             XYZ deltaPoints = basePoint.Subtract(targetPoint);
@@ -41,7 +46,6 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
                 : builtInstance.Width / 2 + HorizontalOffset;
 
             double levelElevation = GetLevelElevation();
-            //XYZ newBasePoint = new XYZ(basePoint.X + fullOffset, basePoint.Y, deltaPoints.Z + heightInFeets);
             XYZ newBasePoint = new XYZ(
                 basePoint.X + fullOffset, 
                 basePoint.Y,

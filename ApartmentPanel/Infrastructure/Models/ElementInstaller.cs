@@ -22,7 +22,12 @@ namespace ApartmentPanel.Infrastructure.Models
             _elementData = elementData;
             _familyInstanceBuilder = familyInstanceBuilder;
             _locationStrategy = GetLocationStrategy(_elementData.Height.TypeOf);
-            _heightFormat = height => $"{_elementData.Height.TypeOf}={height}";
+            _heightFormat = height =>
+            {
+                return _elementData.Height.TypeOf == TypeOfHeight.Center 
+                ? $"H={height}"
+                : $"{_elementData.Height.TypeOf}={height}";
+            };
         }
 
         public BuiltInstance InstallLightingFixtures(Reference host = null)
@@ -90,7 +95,7 @@ namespace ApartmentPanel.Infrastructure.Models
                 case TypeOfHeight.OK:
                     return new TopLocationStrategy(_uiapp) { HorizontalOffset = _elementData.Offset };
                 case TypeOfHeight.Center:
-                    break;
+                    return new CenterLocationStrategy(_uiapp) { HorizontalOffset = _elementData.Offset };
             }
             return null;
         }
