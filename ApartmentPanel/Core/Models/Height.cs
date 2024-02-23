@@ -1,12 +1,30 @@
 ﻿using ApartmentPanel.Core.Enums;
+using ApartmentPanel.Utility;
 
 namespace ApartmentPanel.Core.Models
 {
-    public class Height
+    public class Height : NotifyPropertyChanged
     {
         public TypeOfHeight TypeOf { get; set; }
-        public double Value { get; set; }
-        public string ResponsibleForHeightParameter { get; set; }
+        private double _fromFloor;
+        public double FromFloor 
+        { 
+            get => _fromFloor; 
+            set => Set(ref _fromFloor, value); 
+        }
+        private double _fromLevel;
+        public double FromLevel 
+        { 
+            get => _fromLevel;
+            set => Set(ref _fromLevel, value);
+        }
+
+        private string _responsibleForHeightParameter;
+        public string ResponsibleForHeightParameter 
+        { 
+            get => _responsibleForHeightParameter;
+            set => Set(ref _responsibleForHeightParameter, value);
+        }
 
         public Height Clone()
         {
@@ -14,7 +32,8 @@ namespace ApartmentPanel.Core.Models
             {
                 ResponsibleForHeightParameter = ResponsibleForHeightParameter,
                 TypeOf = TypeOf,
-                Value = Value
+                FromFloor = FromFloor,
+                FromLevel = FromLevel
             };
         }
     }

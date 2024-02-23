@@ -11,12 +11,10 @@
         Title="Testing WPF" 
         Height="450" Width="800">
     <Grid>
-        <StackPanel Orientation="Horizontal">
-            <ListView x:Name="list1" 
-                      ItemsSource="{Binding List1}"
-                      GotFocus="list1_GotFocus"
-                      LostFocus="list1_LostFocus"/>
-            <ListView x:Name="list2" ItemsSource="{Binding List2}"/>
-        </StackPanel>
+        <Button 
+            Content="Check" 
+            Width="60" 
+            Height="20"
+            Command="{Binding FindFiles}"/>
     </Grid>
 </Window>

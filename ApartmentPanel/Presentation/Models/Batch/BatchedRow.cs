@@ -30,7 +30,7 @@ namespace ApartmentPanel.Presentation.Models.Batch
             return new BatchedRow
             {
                 Number = Number,
-                HeightFromFloor = new Height { TypeOf = HeightFromFloor.TypeOf, Value = HeightFromFloor.Value },
+                HeightFromFloor = new Height { TypeOf = HeightFromFloor.TypeOf, FromFloor = HeightFromFloor.FromFloor },
                 RowElements = new ObservableCollection<BatchedElement>(RowElements.Select(e => e.Clone()))
             };
         }

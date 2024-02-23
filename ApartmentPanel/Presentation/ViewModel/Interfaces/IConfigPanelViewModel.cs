@@ -65,6 +65,7 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         string ResponsibleForHeight { get; set; }
         string ResponsibleForCircuit { get; set; }
         IApartmentElement SelectedCircuitElement { get; set; }
+        ObservableCollection<string> Configs { get; set; }
 
         ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration);
     }

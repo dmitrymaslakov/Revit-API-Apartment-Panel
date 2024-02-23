@@ -15,14 +15,16 @@ using ApartmentPanel.Presentation.Models.Batch;
 using System.Windows;
 using System.Windows.Media;
 using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
+using System.Text.RegularExpressions;
+using System.IO;
 
 namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 {
     public class ConfigPanelViewModel : ViewModelBase, IConfigPanelViewModel
     {
         #region MockFields
-        //static string mockAnnotation = "d:/Programming/Revit-2023/ApartmentPanelSln/ApartmentPanel/bin/Debug/Resources/Annotations/Lamp.png";
-        static string mockAnnotation = "E:\\Different\\Study\\Programming\\C-sharp\\Revit-API\\Apartment-Panel\\ApartmentPanel\\bin\\Debug\\Resources\\Annotations\\Lamp.png";
+        static string mockAnnotation = "d:/Programming/Revit-2023/ApartmentPanelSln/ApartmentPanel/bin/Debug/Resources/Annotations/Lamp.png";
+        //static string mockAnnotation = "E:\\Different\\Study\\Programming\\C-sharp\\Revit-API\\Apartment-Panel\\ApartmentPanel\\bin\\Debug\\Resources\\Annotations\\Lamp.png";
         private static ObservableCollection<IApartmentElement> el1 = new ObservableCollection<IApartmentElement>
         {
             new ApartmentElement { Name = "Switch", Annotation = new FileAnnotationReader(mockAnnotation).Get() },
@@ -115,7 +117,11 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             ListHeightsOK = new ObservableCollection<double>();
             ListHeightsUK = new ObservableCollection<double>();
             ListHeightsCenter = new ObservableCollection<double>();
-            LatestConfigPath = FileUtility.GetAssemblyPath() + "/LatestConfig.json";
+            //LatestConfigPath = FileUtility.GetAssemblyPath() + "/LatestConfig.json";
+            if(TryFindConfigs(out ObservableCollection<string> configs))
+                Configs = configs;
+            else Configs = new ObservableCollection<string>();
+
             IsCancelEnabled = false;
             ShowListElementsCommand = _commandCreater.CreateShowListElementsCommand();
             RemoveApartmentElementsCommand = _commandCreater.CreateRemoveElementsFromApartmentCommand();
@@ -142,6 +148,7 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             RemoveBatchCommand = _commandCreater.CreateRemoveBatchCommand();
             AddRowToBatchCommand = _commandCreater.CreateAddRowToBatchCommand();
             RemoveRowFromBatchCommand = _commandCreater.CreateRemoveRowFromBatchCommand();
+            AddConfigCommand = _commandCreater.CreateAddConfigCommand(); 
         }
 
         [JsonIgnore]
@@ -324,6 +331,9 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         }
         #endregion
 
+        private ObservableCollection<string> _configs;
+        public ObservableCollection<string> Configs { get => _configs; set => Set(ref _configs, value); }
+
         [JsonIgnore]
         public ICommand ShowListElementsCommand { get; set; }
         [JsonIgnore]
@@ -365,16 +375,11 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         [JsonIgnore]
         public ICommand RemoveElementFromRowCommand { get; set; }
         [JsonIgnore]
+        public ICommand AddConfigCommand { get; set; }
+        [JsonIgnore]
         public Action<object, OkApplyCancel> OkApplyCancelActions { get; set; }
         [JsonIgnore]
         public Action<List<string>> SetParametersToElement { get; set; }
-        /*private void OnSetParametersToBatchElementExecuted(List<string> parameterNames)
-        {
-            var parameters = parameterNames
-                .Select(pn => new Parameter { Name = pn })
-                .ToList();
-            NewElementForBatch.Parameters = new ObservableCollection<Parameter>(parameters);
-        }*/
 
         public ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration)
         {
@@ -425,26 +430,26 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
                     new Circuit { Number = PanelCircuits[i].Number, Elements = circuitElements };
             }
 
-            /*for (int i = 0; i < PanelCircuits.Count; i++)
-            {
-                var newCircuitElements = new ObservableCollection<IApartmentElement>();
-                var circuitElements = PanelCircuits[i].Elements;
-
-                foreach (var apartmentElement in ApartmentElements)
-                {
-                    var matchingCircuitElement = circuitElements
-                        .FirstOrDefault(c => c.Name == apartmentElement.Name);
-
-                    if (matchingCircuitElement != null)
-                    {
-                        int index = circuitElements.IndexOf(matchingCircuitElement);
-                        circuitElements[index] = apartmentElement;
-                    }
-                }
-                PanelCircuits[i] =
-                    new Circuit { Number = PanelCircuits[i].Number, Elements = circuitElements };
-            }*/
             return this;
+        }
+
+        private bool TryFindConfigs(out ObservableCollection<string> configs)
+        {
+            configs = null;
+            string assemblyPath = FileUtility.GetAssemblyPath();
+            var files = Directory.GetFiles(assemblyPath, "*.json").Select(Path.GetFileName);
+
+            string pattern = @"LatestConfig\.json$";
+
+            foreach (var file in files)
+            {
+                if (Regex.IsMatch(file, pattern))
+                {
+                    if (configs == null) configs = new ObservableCollection<string> { file };
+                    else configs.Add(file);
+                }
+            }
+            return configs != null;
         }
     }
 }

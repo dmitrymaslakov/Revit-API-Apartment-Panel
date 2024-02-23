@@ -25,112 +25,66 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <components:CircuitList 
-            Grid.Row="0"
+            Grid.Row="1"
             Circuits="{Binding Circuits}"
             HitElementCommand="{Binding InsertElementCommand}"
             KeyDownCommand="{Binding SetCurrentSuffixCommand}"
             MouseEnterCommand="{Binding SetStatusCommand}"
             MouseLeaveCommand ="{Binding SetStatusCommand}"/>
         <components:BatchList 
-            Grid.Row="1"
+            Grid.Row="2"
             Batches="{Binding ElementBatches}"
             HitElementCommand="{Binding InsertBatchCommand}"/>
-        <!--<ListView Grid.Row="0" 
-                  ItemsSource="{Binding Circuits}" 
-                  x:Name="apartmentCircuits">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Number}" 
-                                   x:Name="circuitNumber"
-                                   Style="{StaticResource circuitTextBlock}"/>
-                        <ListView ItemsSource="{Binding Elements}">
-                            <ListView.Resources>
-                                <converters:ElementDataConverter x:Key="ElementDataConverter"/>
-                            </ListView.Resources>
-                            <ListView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel/>
-                                </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Button 
-                                        Tag="{Binding Category}"                                        
-                                        KeyDown="Button_KeyDown"
-                                        MouseEnter="Button_MouseEnter"
-                                        MouseLeave="Button_MouseLeave"
-                                        Style="{StaticResource circuitButton}"
-                                        Command="{Binding DataContext.InsertElementCommand,
-                                            RelativeSource={RelativeSource AncestorType=UserControl}}">
-                                        <Button.CommandParameter>
-                                            <MultiBinding Converter="{StaticResource ElementDataConverter}">
-                                                <Binding Path="Text" ElementName="circuitNumber"/>
-                                                <Binding Path="Name"/>
-                                                <Binding Path="Category"/>
-                                            </MultiBinding>
-                                        </Button.CommandParameter>
-                                        <Image Source="{Binding Annotation}"/>
-                                    </Button>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>-->
-        <Button Grid.Row="2" 
+        <Button Grid.Row="3" 
                 Command="{Binding ConfigureCommand}"
                 Content="Config" 
                 Width="50" 
                 HorizontalAlignment="Right" 
                 Margin="0 0 40 0" />
-        <TextBlock Grid.Row="3">
-            <Run Text="Current suffix of circuit: "/>
-            <Run Text="{Binding CurrentSuffix}"/>
-        </TextBlock>
-        <!--<WrapPanel Grid.Row="2">
-            <TextBlock Text="Current suffix of circuit: "/>
-            <TextBlock Text="{Binding CurrentSuffix}">
-                <TextBlock.InputBindings>
-                    <MouseBinding 
-                        x:Name="currentSuffix" 
-                        Command="{Binding SetCurrentSuffixCommand}"/>
-                </TextBlock.InputBindings>
-            </TextBlock>
-        </WrapPanel>-->
         <StackPanel Grid.Row="4">
-            <GroupBox Header="Height">
-                <UniformGrid Columns="4" Width="250">
-                    <components:HeightList 
-                        TypeOfHeight="UK"
-                        ListHeights="{Binding ListHeightsUK}"
-                        ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
-                        AddHeightBtnVisibility="Collapsed"
-                        ResetSelection="{Binding IsResetHeight}"/>
-                    <components:HeightList 
+            <TextBlock>
+                <Run Text="Current suffix of circuit: "/>
+                <Run Text="{Binding CurrentSuffix}"/>
+            </TextBlock>
+            <WrapPanel>
+                <TextBlock Text="Floor height" Margin="0 0 5 0"/>
+                <TextBox Text="{Binding FloorHeight}" Width="50"/>
+            </WrapPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="5">
+            <StackPanel Orientation="Horizontal">
+                <GroupBox Header="Height">
+                    <UniformGrid Columns="4" Width="250">
+                        <components:HeightList
+                            TypeOfHeight="UK"
+                            ListHeights="{Binding ListHeightsUK}"
+                            ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
+                            AddHeightBtnVisibility="Collapsed"
+                            ResetSelection="{Binding IsResetHeight}"/>
+                        <components:HeightList 
                         TypeOfHeight="OK" 
                         ListHeights="{Binding ListHeightsOK}"
                         ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
                         AddHeightBtnVisibility="Collapsed"
                         ResetSelection="{Binding IsResetHeight}"/>
-                    <components:HeightList 
+                        <components:HeightList 
                         TypeOfHeight="Center" 
                         ListHeights="{Binding ListHeightsCenter}"
                         ActionWithSelectedHeightCommand="{Binding SetHeightCommand}"
                         AddHeightBtnVisibility="Collapsed"
                         ResetSelection="{Binding IsResetHeight}"/>
-                </UniformGrid>
-            </GroupBox>
+                    </UniformGrid>
+                </GroupBox>
+            </StackPanel>
             <Button Content="Reset height" Command="{Binding ResetHeightCommand}" Width="80"/>
             <TextBlock>
                 <Run Text="Current height: " />
                 <Run Text="{Binding ElementHeight.TypeOf}" />
                 <Run Text="=" />
-                <Run Text="{Binding ElementHeight.Value}" />
+                <Run Text="{Binding ElementHeight.FromFloor}" />
             </TextBlock>
         </StackPanel>
-        <StatusBar Grid.Row="5">
+        <StatusBar Grid.Row="6">
             <StatusBarItem x:Name="statusBarItem" Content="{Binding Status}">
                 <StatusBarItem.Style>
                     <Style TargetType="StatusBarItem">

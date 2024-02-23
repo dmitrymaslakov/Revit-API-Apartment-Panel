@@ -12,6 +12,8 @@
 *.rfa
 *.suo
 *.user
+*.dwg
+*.bak
 *.sln.docstates
 Shared_Parameters.txt
 

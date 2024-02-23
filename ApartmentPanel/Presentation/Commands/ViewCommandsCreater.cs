@@ -40,6 +40,7 @@ namespace ApartmentPanel.Presentation.Commands
             if (Keyboard.Modifiers == ModifierKeys.Control)
                 insertingMode = "multiple";
 
+            element.MountingHeight.FromLevel = element.MountingHeight.FromFloor + _viewProperties.FloorHeight;
             element.MountingHeight.ResponsibleForHeightParameter = _viewProperties.ConfigPanelVM.ResponsibleForHeight;
 
             var elementDTO = new InsertElementDTO()
@@ -60,7 +61,7 @@ namespace ApartmentPanel.Presentation.Commands
             };
             if (_viewProperties.ElementHeight != null)
             {
-                elementDTO.Height.Value = _viewProperties.ElementHeight.Value;
+                elementDTO.Height.FromFloor = _viewProperties.ElementHeight.FromFloor;
                 elementDTO.Height.TypeOf = _viewProperties.ElementHeight.TypeOf;
                 elementDTO.Height.ResponsibleForHeightParameter = 
                     _viewProperties.ConfigPanelVM.ResponsibleForHeight;
@@ -87,7 +88,7 @@ namespace ApartmentPanel.Presentation.Commands
                         Height = new Height
                         {
                             TypeOf = row.HeightFromFloor.TypeOf,
-                            Value = row.HeightFromFloor.Value,
+                            FromFloor = row.HeightFromFloor.FromFloor,
                             ResponsibleForHeightParameter = _viewProperties.ConfigPanelVM.ResponsibleForHeight
                         },
                         Location = new BatchedLocation
@@ -124,7 +125,7 @@ namespace ApartmentPanel.Presentation.Commands
         public ICommand CreateSetHeightCommand() => new RelayCommand(o =>
         {
             (TypeOfHeight typeOfHeight, double height) = (ValueTuple<TypeOfHeight, double>)o;
-            _viewProperties.ElementHeight = new Height { TypeOf = typeOfHeight, Value = height };
+            _viewProperties.ElementHeight = new Height { TypeOf = typeOfHeight, FromFloor = height };
             if (_viewProperties.IsResetHeight) _viewProperties.IsResetHeight = false;
         });
 

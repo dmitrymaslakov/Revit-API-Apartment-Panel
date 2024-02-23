@@ -414,6 +414,11 @@ namespace ApartmentPanel.Presentation.Commands
             }
         });
 
+        public ICommand CreateAddConfigCommand() => new RelayCommand(o =>
+        {
+            _configPanelProperties.Configs.Add()
+        }
+
         private void OnSetParametersToBatchElementExecuted(List<string> parameterNames)
         {
             var parameters = parameterNames
@@ -432,5 +437,6 @@ namespace ApartmentPanel.Presentation.Commands
             if (circuitElement != null)
                 circuitElement.Parameters = new ObservableCollection<Parameter>(parameters);
         }
+
     }
 }

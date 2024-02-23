@@ -98,6 +98,9 @@
     <Compile Include="Presentation\Models\MockData\MockCircuit.cs" />
     <Compile Include="Core\Models\Parameter.cs" />
     <Compile Include="Presentation\Services\ModelAnalizing.cs" />
+    <Compile Include="Presentation\View\Components\ConfigList.xaml.cs">
+      <DependentUpon>ConfigList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utility\NotifyPropertyChanged.cs" />
     <Compile Include="Presentation\View\Components\AnnotationPreview.xaml.cs">
       <DependentUpon>AnnotationPreview.xaml</DependentUpon>
@@ -212,6 +215,10 @@
     <Page Include="Presentation\View\Components\ElementParameters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\View\Components\ConfigList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Presentation\View\Components\ElementsCard.xaml">
       <Generator>MSBuild:Compile</Generator>

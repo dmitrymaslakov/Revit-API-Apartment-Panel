@@ -16,7 +16,8 @@ namespace ApartmentPanel.Infrastructure.Models
     public class FamilyInstanceBuilder : RevitInfrastructureBase
     {
         #region Private fields
-        private double _height;
+        private double _heightFromFloor;
+        private double _heightFromLevel;
         private string _renderedHeight;
         private ILocationStrategy _locationStrategy;
         private ElementId _currentLevelId;
@@ -58,12 +59,13 @@ namespace ApartmentPanel.Infrastructure.Models
         }
         public FamilyInstanceBuilder RenderHeightAs(Func<double, string> heightFormat)
         {
-            _renderedHeight = heightFormat(_height);
+            _renderedHeight = heightFormat(_heightFromFloor);
             return this;
         }
-        public FamilyInstanceBuilder WithHeight(double height)
+        public FamilyInstanceBuilder WithHeight(double fromFloor, double fromLevel)
         {
-            _height = height;
+            _heightFromFloor = fromFloor;
+            _heightFromLevel = fromLevel;
             return this;
         }
         public FamilyInstanceBuilder WithResponsibleForHeight(string parameterName)
@@ -171,7 +173,7 @@ namespace ApartmentPanel.Infrastructure.Models
                 }*/
                 tr.Commit();
             }
-            if (_locationStrategy != null) _locationStrategy.SetRequiredLocation(builtInstance, _height);
+            if (_locationStrategy != null) _locationStrategy.SetRequiredLocation(builtInstance, _heightFromLevel);
         }
         private ElementId GetViewLevel()
         {

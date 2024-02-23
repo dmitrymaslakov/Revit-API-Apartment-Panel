@@ -107,6 +107,13 @@ namespace ApartmentPanel.Presentation.ViewModel
             get => _elementHeight;
             set => Set(ref _elementHeight, value);
         }
+        
+        private double _floorHeight;
+        public double FloorHeight
+        {
+            get => _floorHeight;
+            set => Set(ref _floorHeight, value);
+        }
 
         #region listHeights
         private ObservableCollection<double> _listHeightsOK;
@@ -190,7 +197,6 @@ namespace ApartmentPanel.Presentation.ViewModel
         }
 
         private ObservableCollection<Circuit> GetCircuits(ObservableCollection<Circuit> panelCircuits)
-        //ObservableDictionary<string, ObservableCollection<IApartmentElement>> panelCircuits)
         {
             var result = new ObservableCollection<Circuit>();
             foreach (var circuit in panelCircuits)
@@ -200,9 +206,6 @@ namespace ApartmentPanel.Presentation.ViewModel
                     Number = circuit.Number,
                     Elements = new ObservableCollection<IApartmentElement>(
                             circuit.Elements.Select(ap => ap.Clone()).ToList())
-                    /*Number = circuit.Key,
-                    Elements = new ObservableCollection<IApartmentElement>(
-                            circuit.Value.Select(ap => ap.Clone()).ToList())*/
                 });
             }
             return result;

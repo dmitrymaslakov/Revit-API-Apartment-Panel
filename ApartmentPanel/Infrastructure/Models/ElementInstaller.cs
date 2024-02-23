@@ -47,7 +47,7 @@ namespace ApartmentPanel.Infrastructure.Models
             return _familyInstanceBuilder
                 .WithSwitchNumbers(_elementData.SwitchNumbers)
                 .SetLocationStrategy(_locationStrategy)
-                .WithHeight(_elementData.Height.Value)
+                .WithHeight(_elementData.Height.FromFloor, _elementData.Height.FromLevel)
                 .WithResponsibleForHeight(_elementData.Height.ResponsibleForHeightParameter)
                 .RenderHeightAs(_heightFormat)
                 .WithCircuit(_elementData.Circuit.Number)
@@ -62,7 +62,7 @@ namespace ApartmentPanel.Infrastructure.Models
         {
             return _familyInstanceBuilder
                 .SetLocationStrategy(_locationStrategy)
-                .WithHeight(_elementData.Height.Value)
+                .WithHeight(_elementData.Height.FromFloor, _elementData.Height.FromLevel)
                 .WithResponsibleForHeight(_elementData.Height.ResponsibleForHeightParameter)
                 .RenderHeightAs(_heightFormat)
                 .WithCircuit(_elementData.Circuit.Number)
@@ -77,7 +77,7 @@ namespace ApartmentPanel.Infrastructure.Models
         {
             return _familyInstanceBuilder
                 .SetLocationStrategy(_locationStrategy)
-                .WithHeight(_elementData.Height.Value)
+                .WithHeight(_elementData.Height.FromFloor, _elementData.Height.FromLevel)
                 .WithResponsibleForHeight(_elementData.Height.ResponsibleForHeightParameter)
                 .RenderHeightAs(_heightFormat)
                 .WithCurrentLevel()

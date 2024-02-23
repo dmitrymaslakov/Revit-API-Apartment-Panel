@@ -189,6 +189,22 @@
                         SelectElementsCommand="{Binding SelectedBatchesCommand}"/>
                 </Grid>
             </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Configs"/>
+                </TabItem.Header>
+                <StackPanel>
+                    <local:ConfigList 
+                        Elements="{Binding Configs}"
+                        AddElementCommand="{Binding AddConfigCommand}"
+                        EditBtnVisibility="{x:Static Visibility.Collapsed}"/>
+                    <Button Content="Load"/>
+                    <TextBlock>
+                        <Run Text="Current config: "/>
+                        <Run Text="{Binding }"/>
+                    </TextBlock>
+                </StackPanel>
+            </TabItem>
         </TabControl>
         <WrapPanel HorizontalAlignment="Right" Margin="0 0 50 0">
             <Button Style="{StaticResource FinishedButton}"

@@ -22,5 +22,6 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         ICommand SetStatusCommand { get; set; }
         ICommand ResetHeightCommand { get; set; }
         bool IsResetHeight { get; set; }
+        double FloorHeight { get; set; }
     }
 }
