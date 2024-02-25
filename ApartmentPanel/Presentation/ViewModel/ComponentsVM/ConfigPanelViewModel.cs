@@ -23,8 +23,8 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
     public class ConfigPanelViewModel : ViewModelBase, IConfigPanelViewModel
     {
         #region MockFields
-        static string mockAnnotation = "d:/Programming/Revit-2023/ApartmentPanelSln/ApartmentPanel/bin/Debug/Resources/Annotations/Lamp.png";
-        //static string mockAnnotation = "E:\\Different\\Study\\Programming\\C-sharp\\Revit-API\\Apartment-Panel\\ApartmentPanel\\bin\\Debug\\Resources\\Annotations\\Lamp.png";
+        //static string mockAnnotation = "d:/Programming/Revit-2023/ApartmentPanelSln/ApartmentPanel/bin/Debug/Resources/Annotations/Lamp.png";
+        static string mockAnnotation = "E:\\Different\\Study\\Programming\\C-sharp\\Revit-API\\Apartment-Panel\\ApartmentPanel\\bin\\Debug\\Resources\\Annotations\\Lamp.png";
         private static ObservableCollection<IApartmentElement> el1 = new ObservableCollection<IApartmentElement>
         {
             new ApartmentElement { Name = "Switch", Annotation = new FileAnnotationReader(mockAnnotation).Get() },
@@ -153,7 +153,7 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 
         [JsonIgnore]
         public IListElementsViewModel ListElementsVM { get; set; }
-        public string LatestConfigPath { get; }
+        public string LatestConfigPath { get; set; }
 
         private ObservableCollection<IApartmentElement> _apartmentElements;
         public ObservableCollection<IApartmentElement> ApartmentElements
@@ -192,16 +192,6 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             set => Set(ref _selectedPanelCircuits, value);
         }
 
-        /*private ObservableCollection
-            <KeyValuePair<string, ObservableCollection<IApartmentElement>>> _selectedPanelCircuits;
-        [JsonIgnore]
-        public ObservableCollection
-            <KeyValuePair<string, ObservableCollection<IApartmentElement>>> SelectedPanelCircuits
-        {
-            get => _selectedPanelCircuits;
-            set => Set(ref _selectedPanelCircuits, value);
-        }*/
-
         private ObservableCollection<IApartmentElement> _circuitElements;
         [JsonIgnore]
         public ObservableCollection<IApartmentElement> CircuitElements
@@ -226,9 +216,11 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             set => Set(ref _selectedCircuitElement, value);
         }
 
-        private BitmapSource _annotationPreview;
+        //private BitmapSource _annotationPreview;
+        private BitmapImage _annotationPreview;
         [JsonIgnore]
-        public BitmapSource AnnotationPreview { get => _annotationPreview; set => Set(ref _annotationPreview, value); }
+        //public BitmapSource AnnotationPreview { get => _annotationPreview; set => Set(ref _annotationPreview, value); }
+        public BitmapImage AnnotationPreview { get => _annotationPreview; set => Set(ref _annotationPreview, value); }
 
         private string _newCircuit;
         [JsonIgnore]
@@ -242,14 +234,22 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         public string ResponsibleForHeight
         {
             get => _responsibleForHeight;
-            set => Set(ref _responsibleForHeight, value);
+            set
+            {
+                Set(ref _responsibleForHeight, value);
+                if (!IsCancelEnabled) IsCancelEnabled = true;
+            }
         }
 
         private string _responsibleForCircuit;
         public string ResponsibleForCircuit
         {
             get => _responsibleForCircuit;
-            set => Set(ref _responsibleForCircuit, value);
+            set
+            {
+                Set(ref _responsibleForCircuit, value);
+                if (!IsCancelEnabled) IsCancelEnabled = true;
+            }
         }
 
         #region Batch
@@ -332,7 +332,20 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         #endregion
 
         private ObservableCollection<string> _configs;
+        [JsonIgnore] 
         public ObservableCollection<string> Configs { get => _configs; set => Set(ref _configs, value); }
+
+        private string _selectedConfig;
+        [JsonIgnore]
+        public string SelectedConfig { get => _selectedConfig; set => Set(ref _selectedConfig, value); }
+
+        private string _currentConfig; 
+        [JsonIgnore]
+        public string CurrentConfig { get => _currentConfig; set => Set(ref _currentConfig, value); }
+        
+        private string _newConfig;
+        [JsonIgnore]
+        public string NewConfig { get => _newConfig; set => Set(ref _newConfig, value); }
 
         [JsonIgnore]
         public ICommand ShowListElementsCommand { get; set; }
@@ -439,17 +452,32 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             string assemblyPath = FileUtility.GetAssemblyPath();
             var files = Directory.GetFiles(assemblyPath, "*.json").Select(Path.GetFileName);
 
-            string pattern = @"LatestConfig\.json$";
+            string targetSubstring = "LatestConfig";
+            string pattern = $"{targetSubstring}\\.json$";
 
             foreach (var file in files)
             {
                 if (Regex.IsMatch(file, pattern))
                 {
-                    if (configs == null) configs = new ObservableCollection<string> { file };
-                    else configs.Add(file);
+                    string configName = GetConfigName(file);
+                    bool isEmpty = string.IsNullOrEmpty(configName);
+                    if (!isEmpty && configs == null)
+                        configs = new ObservableCollection<string> { configName };
+                    else if (!isEmpty)
+                        configs.Add(configName);
                 }
             }
             return configs != null;
+        }
+
+        private string GetConfigName(string fileName)
+        {
+            string targetSubstring = "LatestConfig";
+
+            int startIndex = fileName.IndexOf(targetSubstring);
+            if (startIndex != -1)
+                return fileName.Substring(0, startIndex);
+            return "";
         }
     }
 }

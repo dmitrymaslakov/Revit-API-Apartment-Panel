@@ -63,7 +63,7 @@ namespace ApartmentPanel.Presentation.ViewModel
             _viewCommandsCreater = new ViewCommandsCreater(this, ElementService);
             ConfigPanelVM = configPanelVM;
             ConfigPanelVM.OkApplyCancelActions = ExecuteOkApplyCancelActions;
-            ConfigPanelVM.LoadLatestConfigCommand?.Execute(null);
+            //ConfigPanelVM.LoadLatestConfigCommand?.Execute(null);
             Circuits = GetCircuits(ConfigPanelVM.PanelCircuits);
             ElementBatches = GetBatches(ConfigPanelVM.Batches);
             ListHeightsUK = GetHeights(ConfigPanelVM.ListHeightsUK);
@@ -162,6 +162,7 @@ namespace ApartmentPanel.Presentation.ViewModel
 
         private void ExecuteOkApplyCancelActions(object obj, OkApplyCancel okApplyCancel)
         {
+            if (string.IsNullOrEmpty(ConfigPanelVM.LatestConfigPath)) return;
             //(ObservableDictionary<string, ObservableCollection<IApartmentElement>> panelCircuits,
             (ObservableCollection<Circuit> panelCircuits,
                 ObservableCollection<ElementBatch> batches,

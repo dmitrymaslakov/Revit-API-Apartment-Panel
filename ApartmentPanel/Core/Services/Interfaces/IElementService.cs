@@ -15,8 +15,10 @@ namespace ApartmentPanel.Core.Services.Interfaces
         List<IApartmentElement> GetAll(List<(string name, string category)> props);
         void AddToApartment(Action<List<(string name, string category)>> addElementToApartment);
         IApartmentElement CloneFrom(IApartmentElement element);
-        void SetAnnotationTo(IApartmentElement element, BitmapSource img);
-        ImageSource GetAnnotationFor(string elementName);
+        //void SetAnnotationTo(IApartmentElement element, BitmapSource img);
+        void SetAnnotationTo(IApartmentElement element, BitmapImage img);
+        //ImageSource GetAnnotationFor(string elementName);
+        BitmapImage GetAnnotationFor(string elementName);
         void InsertBatchToModel(InsertBatchDTO batchDto);
         void SetElementParameters(SetParamsDTO setParamsDTO);
     }

@@ -11,14 +11,16 @@ namespace ApartmentPanel.Utility.AnnotationUtility
         public AnnotationService(IAnnotationCommunicatorFactory annotationCommunicatorFactory)
             => _annotationCommunicatorFactory = annotationCommunicatorFactory;
 
-        public ImageSource Get()
+        //public ImageSource Get()
+        public BitmapImage Get()
         {
             using (IAnnotationReader reader = _annotationCommunicatorFactory.CreateAnnotationReader())
             {
                 return reader.Get();
             }
         }
-        public BitmapSource Save(BitmapSource annotation)
+        //public BitmapSource Save(BitmapSource annotation)
+        public BitmapImage Save(BitmapImage annotation)
         {
             using (IAnnotationWriter writer = _annotationCommunicatorFactory.CreateAnnotationWriter())
             {

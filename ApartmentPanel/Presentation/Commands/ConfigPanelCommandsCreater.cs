@@ -21,6 +21,10 @@ using System.Windows.Media;
 using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
 using System.Security.Cryptography;
 using Autodesk.Revit.UI;
+using Utility;
+using System.Text;
+using ApartmentPanel.Core.Services;
+using System.Windows;
 
 namespace ApartmentPanel.Presentation.Commands
 {
@@ -88,7 +92,9 @@ namespace ApartmentPanel.Presentation.Commands
         public ICommand CreateAddCircuitToPanelCommand() => new RelayCommand(o =>
         {
             if (!string.IsNullOrEmpty(_configPanelProperties.NewCircuit)
-              && !_configPanelProperties.PanelCircuits.ToList().Exists(c => c.Number == _configPanelProperties.NewCircuit))
+              && !_configPanelProperties.PanelCircuits
+                  .ToList()
+                  .Exists(c => c.Number == _configPanelProperties.NewCircuit))
             {
                 _configPanelProperties.PanelCircuits.Add(new Circuit
                 {
@@ -140,6 +146,10 @@ namespace ApartmentPanel.Presentation.Commands
                 if (!IsElementExist)
                 {
                     IApartmentElement elementClone = selectedApartmentElement.Clone();
+                    elementClone.Annotation = selectedApartmentElement.Annotation;
+                    bool b1 = ReferenceEquals(elementClone.Annotation, selectedApartmentElement.Annotation);
+                    bool b2 = ReferenceEquals(elementClone, selectedApartmentElement);
+
                     _configPanelProperties.SetParametersToElement = null;
                     _configPanelProperties.SetParametersToElement = (List<string> parameterNames) =>
                         {
@@ -266,7 +276,8 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateSetAnnotationToElementCommand() => new RelayCommand(o =>
         {
-            if (_configPanelProperties.SelectedApartmentElements.Count == 1)
+            if (_configPanelProperties.SelectedApartmentElements.Count == 1 
+                && _configPanelProperties.AnnotationPreview != null)
             {
                 IApartmentElement apartmentElement =
                     _configPanelProperties.SelectedApartmentElements.FirstOrDefault();
@@ -287,11 +298,30 @@ namespace ApartmentPanel.Presentation.Commands
         public ICommand CreateSetAnnotationPreviewCommand() => new RelayCommand(o =>
         {
             var bitmapSource = o as BitmapSource;
-            _configPanelProperties.AnnotationPreview = bitmapSource;
+
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            MemoryStream memoryStream = new MemoryStream();
+            BitmapImage bImg = new BitmapImage();
+
+            encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+            encoder.Save(memoryStream);
+
+            memoryStream.Position = 0;
+            bImg.BeginInit();
+            bImg.StreamSource = memoryStream;
+            bImg.EndInit();
+            _configPanelProperties.AnnotationPreview = bImg;
         });
 
         public ICommand CreateLoadLatestConfigCommand() => new RelayCommand(o =>
         {
+            var stringBuilder = new StringBuilder(FileUtility.GetAssemblyPath());
+            stringBuilder
+            .Append($"\\{_configPanelProperties.SelectedConfig}")
+            .Append("LatestConfig")
+            .Append(".json");
+
+            _configPanelProperties.LatestConfigPath = stringBuilder.ToString();
             if (File.Exists(_configPanelProperties.LatestConfigPath))
             {
                 string json = File.ReadAllText(_configPanelProperties.LatestConfigPath);
@@ -300,7 +330,31 @@ namespace ApartmentPanel.Presentation.Commands
 
                 _configPanelProperties.ApplyLatestConfiguration(deso);
             }
+            else
+            {
+                var configPanel = ResetConfiguration();
+                string json = JsonSerializer.Serialize(configPanel,
+                    _elementService.GetSerializationOptions());
+                File.WriteAllText(_configPanelProperties.LatestConfigPath, json);
+            }
+            _configPanelProperties.CurrentConfig = _configPanelProperties.SelectedConfig;
         });
+
+        private ConfigPanelViewModel ResetConfiguration()
+        {
+            _configPanelProperties.ApartmentElements = new ObservableCollection<IApartmentElement>();
+            _configPanelProperties.PanelCircuits = new ObservableCollection<Circuit>();
+            _configPanelProperties.Batches = new ObservableCollection<ElementBatch>();
+
+            _configPanelProperties.ListHeightsOK = new ObservableCollection<double>();
+            _configPanelProperties.ListHeightsUK = new ObservableCollection<double>();
+            _configPanelProperties.ListHeightsCenter = new ObservableCollection<double>();
+
+            _configPanelProperties.ResponsibleForHeight = string.Empty;
+            _configPanelProperties.ResponsibleForCircuit = string.Empty;
+
+            return _configPanelProperties as ConfigPanelViewModel;
+        }
 
         public ICommand CreateSaveLatestConfigCommand() => new RelayCommand(o =>
         {
@@ -416,8 +470,18 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateAddConfigCommand() => new RelayCommand(o =>
         {
-            _configPanelProperties.Configs.Add()
-        }
+            if (!string.IsNullOrEmpty(_configPanelProperties.NewConfig) 
+                && !_configPanelProperties.Configs
+                .ToList()
+                .Exists(c => c == _configPanelProperties.NewConfig))
+            {
+                _configPanelProperties.Configs.Add(_configPanelProperties.NewConfig);
+
+                if (!_configPanelProperties.IsCancelEnabled)
+                    _configPanelProperties.IsCancelEnabled = true;
+            }
+            _configPanelProperties.NewConfig = string.Empty;
+        });
 
         private void OnSetParametersToBatchElementExecuted(List<string> parameterNames)
         {

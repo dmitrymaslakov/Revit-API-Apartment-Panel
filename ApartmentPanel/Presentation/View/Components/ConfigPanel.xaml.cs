@@ -13,7 +13,7 @@ namespace ApartmentPanel.Presentation.View.Components
         {
             DataContext = dataContext;
             InitializeComponent();
-            OkBtn.CommandParameter = new Action(Confige.Close);
+            OkBtn.CommandParameter = new Action(Config.Close);
         }
 
         protected override void OnSourceInitialized(EventArgs e)

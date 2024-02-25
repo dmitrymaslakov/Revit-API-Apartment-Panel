@@ -12,7 +12,8 @@ namespace ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService
 
         public FileAnnotationWriter(string fileName) => _fileName = fileName;
 
-        public BitmapSource Save(BitmapSource annotation)
+        //public BitmapSource Save(BitmapSource annotation)
+        public BitmapImage Save(BitmapImage annotation)
         {
             if (_disposed)
                 throw new Exception("Object is disposed.");

@@ -5,6 +5,7 @@ namespace ApartmentPanel.Utility.AnnotationUtility.Interfaces
 {
     public interface IAnnotationWriter : IDisposable
     {
-        BitmapSource Save(BitmapSource annotation);
+        //BitmapSource Save(BitmapSource annotation);
+        BitmapImage Save(BitmapImage annotation);
     }
 }

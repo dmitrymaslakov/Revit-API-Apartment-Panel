@@ -13,9 +13,10 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
 {
     public interface IConfigPanelViewModel
     {
-        BitmapSource AnnotationPreview { get; set; }
+        //BitmapSource AnnotationPreview { get; set; }
+        BitmapImage AnnotationPreview { get; set; }
         bool IsCancelEnabled { get; set; }
-        string LatestConfigPath { get; }
+        string LatestConfigPath { get; set; }
         string NewCircuit { get; set; }
         Action<object, OkApplyCancel> OkApplyCancelActions { get; set; }
         ObservableCollection<IApartmentElement> ApartmentElements { get; set; }
@@ -66,6 +67,10 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         string ResponsibleForCircuit { get; set; }
         IApartmentElement SelectedCircuitElement { get; set; }
         ObservableCollection<string> Configs { get; set; }
+        string SelectedConfig { get; set; }
+        string CurrentConfig { get; set; }
+        string NewConfig { get; set; }
+        ICommand AddConfigCommand { get; set; }
 
         ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration);
     }

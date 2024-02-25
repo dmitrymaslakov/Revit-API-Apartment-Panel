@@ -8,8 +8,8 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance vm:ConfigPanelViewModel, IsDesignTimeCreatable=True}"
-        d:DesignHeight="1000" d:DesignWidth="1000" Width="1000" Height="1000"
-        x:Name="Confige">
+        d:DesignHeight="1000" d:DesignWidth="1300" Width="1300" Height="1000"
+        x:Name="Config">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -196,12 +196,26 @@
                 <StackPanel>
                     <local:ConfigList 
                         Elements="{Binding Configs}"
-                        AddElementCommand="{Binding AddConfigCommand}"
+                        SelectedElement="{Binding SelectedConfig, Mode=TwoWay}"
+                        AddBtnVisibility="{x:Static Visibility.Collapsed}"
                         EditBtnVisibility="{x:Static Visibility.Collapsed}"/>
-                    <Button Content="Load"/>
+                    <!--<GroupBox Header="New config">
+                        <WrapPanel>
+                            <TextBox Text="{Binding NewConfig}" Width="200" Margin="0 0 10 0"/>
+                            <Button Height="20" Command="{Binding AddConfigCommand}">
+                                <fa:ImageAwesome Icon="Plus" Foreground="Green"/>
+                            </Button>
+                        </WrapPanel>
+                    </GroupBox>-->
+                    <local:AddingNewName 
+                        Header="New config"
+                        NewName="{Binding NewConfig, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        GetNewNameCommand="{Binding AddConfigCommand}"/>
+                    <Button Content="Load" Width="130"
+                            Command="{Binding LoadLatestConfigCommand}"/>
                     <TextBlock>
                         <Run Text="Current config: "/>
-                        <Run Text="{Binding }"/>
+                        <Run Text="{Binding CurrentConfig}"/>
                     </TextBlock>
                 </StackPanel>
             </TabItem>

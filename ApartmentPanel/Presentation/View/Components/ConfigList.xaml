@@ -22,7 +22,7 @@
                           Height="350"
                           x:Name="lv"                          
                           SelectionMode="Extended"
-                          SelectedItem="{Binding SelectedElement, ElementName=root}"
+                          SelectedItem="{Binding SelectedElement, ElementName=root, Mode=TwoWay}"
                           SelectionChanged="Lv_SelectionChanged">
                 </ListView>
                 <WrapPanel>

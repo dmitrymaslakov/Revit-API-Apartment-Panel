@@ -5,8 +5,10 @@ namespace ApartmentPanel.Utility.AnnotationUtility.Interfaces
 {
     public interface IAnnotationService
     {
-        ImageSource Get();
         bool IsAnnotationExists();
-        BitmapSource Save(BitmapSource annotation);
+        //ImageSource Get();
+        BitmapImage Get();
+        //BitmapSource Save(BitmapSource annotation);
+        BitmapImage Save(BitmapImage annotation);
     }
 }

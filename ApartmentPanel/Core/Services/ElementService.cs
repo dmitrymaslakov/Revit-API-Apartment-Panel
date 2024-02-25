@@ -62,15 +62,16 @@ namespace ApartmentPanel.Core.Services
             return newApartmentElement;
         }
 
-        public void SetAnnotationTo(IApartmentElement element, BitmapSource annotation)
+        //public void SetAnnotationTo(IApartmentElement element, BitmapSource annotation)
+        public void SetAnnotationTo(IApartmentElement element, BitmapImage annotation)
         {
             var annotationService = new AnnotationService(
                 new FileAnnotationCommunicatorFactory(element.Name));
-
             element.Annotation = annotationService.Save(annotation);
         }
 
-        public ImageSource GetAnnotationFor(string elementName)
+        //public ImageSource GetAnnotationFor(string elementName)
+        public BitmapImage GetAnnotationFor(string elementName)
         {
             var annotationService = new AnnotationService(
             new FileAnnotationCommunicatorFactory(elementName));

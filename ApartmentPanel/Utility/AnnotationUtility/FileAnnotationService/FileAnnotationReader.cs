@@ -8,7 +8,8 @@ namespace ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService
 {
     public class FileAnnotationReader : IDisposable, IAnnotationReader
     {
-        private ImageSource _annotation;
+        //private ImageSource _annotation;
+        private BitmapImage _annotation;
         private bool _disposed;
 
         public FileAnnotationReader(string fullPath)
@@ -23,7 +24,8 @@ namespace ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService
             }
         }
 
-        public ImageSource Get()
+        //public ImageSource Get()
+        public BitmapImage Get()
         {
             if (_disposed)
                 throw new Exception("Object is disposed.");
@@ -37,7 +39,8 @@ namespace ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService
             _annotation = null;
         }
 
-        private ImageSource BitmapFromUri(Uri source)
+        //private ImageSource BitmapFromUri(Uri source)
+        private BitmapImage BitmapFromUri(Uri source)
         {
             var bitmap = new BitmapImage();
             bitmap.BeginInit();

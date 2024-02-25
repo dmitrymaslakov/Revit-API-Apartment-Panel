@@ -17,8 +17,6 @@ namespace ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService
                 .ToString();
         }
 
-
-
         public bool IsAnnotationExists() => File.Exists(_fullPath);
 
         public IAnnotationReader CreateAnnotationReader() => new FileAnnotationReader(_fullPath);
