@@ -146,10 +146,8 @@ namespace ApartmentPanel.Presentation.Commands
                 if (!IsElementExist)
                 {
                     IApartmentElement elementClone = selectedApartmentElement.Clone();
-                    elementClone.Annotation = selectedApartmentElement.Annotation;
-                    bool b1 = ReferenceEquals(elementClone.Annotation, selectedApartmentElement.Annotation);
-                    bool b2 = ReferenceEquals(elementClone, selectedApartmentElement);
-
+                    selectedApartmentElement.AnnotationChanged += elementClone.AnnotationChanged_Handler;
+                    elementClone.IsSubscriber = true;
                     _configPanelProperties.SetParametersToElement = null;
                     _configPanelProperties.SetParametersToElement = (List<string> parameterNames) =>
                         {
@@ -184,12 +182,22 @@ namespace ApartmentPanel.Presentation.Commands
             if (string.IsNullOrEmpty(selectedPanelCircuit.Number)) return;
 
             foreach (var selectedCircuitElement in _configPanelProperties.SelectedCircuitElements)
+            {
                 selectedPanelCircuit.Elements.Remove(selectedCircuitElement);
+                UnsubscribeFromAnnotationChanged(selectedCircuitElement);
+            }
 
             _circuitService.AddCurrentCircuitElements(selectedPanelCircuit.Elements);
             if (!_configPanelProperties.IsCancelEnabled)
                 _configPanelProperties.IsCancelEnabled = true;
         });
+
+        private void UnsubscribeFromAnnotationChanged(IApartmentElement subscriber)
+        {
+            IApartmentElement sender = _configPanelProperties.ApartmentElements
+                .FirstOrDefault(ae => ae.Name.Contains(subscriber.Name));
+            if (sender != null) sender.AnnotationChanged -= subscriber.AnnotationChanged_Handler;
+        }
 
         public ICommand CreateSelectApartmentElementsCommand() => new RelayCommand(o =>
         {

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodel="clr-namespace:ApartmentPanel.Presentation.ViewModel" 
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -13,14 +14,22 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../Resources/Styles/ButtonStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <CollectionViewSource x:Key="SortedItems" Source="{Binding Circuits, ElementName=root}">
+                <CollectionViewSource.SortDescriptions>
+                    <!--<scm:SortDescription PropertyName="Number"/>-->
+                    <scm:SortDescription PropertyName=""/>
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
+
             <Style TargetType="{x:Type GridViewColumnHeader}" x:Key="columnHeaderStyle">
                 <Setter Property="Visibility" Value="Collapsed" />
                 <Setter Property="Height" Value="0" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
+    <!--<ListView ItemsSource="{Binding Source={StaticResource SortedItems}}" Height="400">-->
     <ListView ItemsSource="{Binding Circuits, ElementName=root}" Height="400">
-        <ListView.View>
+            <ListView.View>
             <GridView ColumnHeaderContainerStyle="{StaticResource columnHeaderStyle}">
                 <GridViewColumn 
                     DisplayMemberBinding="{Binding Number}"/>

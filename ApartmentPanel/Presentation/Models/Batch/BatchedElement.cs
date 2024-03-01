@@ -6,10 +6,8 @@ namespace ApartmentPanel.Presentation.Models.Batch
 {
     public class BatchedElement : BaseElement
     {
-        public BatchedElement()
-        {
-            Margin = new BatchedMargin(0,0,0,0);
-        }
+        public BatchedElement() => Margin = new BatchedMargin(0, 0, 0, 0);
+
         public string Circuit { get; set; }
         public BatchedLocation Location { get; set; }
 

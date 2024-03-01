@@ -7,14 +7,18 @@
              xmlns:vm="clr-namespace:ApartmentPanel.Presentation.ViewModel.ComponentsVM"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              d:DataContext="{d:DesignInstance vm:ListElementsViewModel, IsDesignTimeCreatable=True}"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              mc:Ignorable="d" 
              x:Name="ListItems"
-             d:DesignHeight="450" d:DesignWidth="300" Width="300">
+             d:DesignHeight="650" d:DesignWidth="300" Width="300">
     <Window.Resources>
         <CollectionViewSource x:Key="GroupedItems" Source="{Binding AllElements}">
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="Category" />
             </CollectionViewSource.GroupDescriptions>
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Name"/>
+            </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
     </Window.Resources>
     <Grid>
@@ -24,7 +28,7 @@
         </Grid.RowDefinitions>
         <TreeView ItemsSource="{Binding Source={StaticResource GroupedItems}}" 
                   Grid.Row="0" 
-                  Height="300"
+                  Height="600"
                   x:Name="elementsTree">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Items}">

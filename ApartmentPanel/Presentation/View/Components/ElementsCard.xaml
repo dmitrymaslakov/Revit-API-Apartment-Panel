@@ -4,21 +4,28 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ApartmentPanel.Presentation.View.Components"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
              x:Name="root"
-             d:DesignHeight="400" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../Resources/Styles/ButtonStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <CollectionViewSource x:Key="SortedItems" Source="{Binding Elements, ElementName=root}">
+                <CollectionViewSource.SortDescriptions>
+                    <scm:SortDescription PropertyName="Number"/>
+                    <scm:SortDescription PropertyName="Name"/>
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Background="White">
         <GroupBox Header="{Binding Header, ElementName=root}">
             <StackPanel>
-                <ListView ItemsSource="{Binding Elements, ElementName=root}" 
+                <ListView ItemsSource="{Binding Source={StaticResource SortedItems}}" 
                           Height="400"
                           x:Name="lv"                          
                           SelectionMode="Extended"
@@ -42,7 +49,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <Image Width="20" Margin="45 0 0 0">
+                                <Image Width="25" Margin="45 0 0 0">
                                     <Image.Style>
                                         <Style TargetType="Image">
                                             <Setter Property="Source" Value="{Binding Annotation}"/>

@@ -8,6 +8,9 @@ namespace ApartmentPanel.Core.Models.Interfaces
     public interface IApartmentElement
     {
         //ImageSource Annotation { get; set; }
+        event PropertyChangedEventHandler AnnotationChanged;
+        void AnnotationChanged_Handler(object sender, PropertyChangedEventArgs args);
+        bool IsSubscriber { get; set; }
         BitmapImage Annotation { get; set; }
         string Category { get; set; }
         string Name { get; set; }

@@ -1,5 +1,6 @@
 ﻿using ApartmentPanel.Core.Models.Interfaces;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 
 namespace ApartmentPanel.Core.Models
