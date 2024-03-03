@@ -18,7 +18,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" 
-                                                 Width="50"/>
+                                                 Width="130"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

@@ -62,6 +62,7 @@ namespace ApartmentPanel.Presentation.Commands
             if (_viewProperties.ElementHeight != null)
             {
                 elementDTO.Height.FromFloor = _viewProperties.ElementHeight.FromFloor;
+                elementDTO.Height.FromLevel = elementDTO.Height.FromFloor + _viewProperties.FloorHeight;
                 elementDTO.Height.TypeOf = _viewProperties.ElementHeight.TypeOf;
                 elementDTO.Height.ResponsibleForHeightParameter = 
                     _viewProperties.ConfigPanelVM.ResponsibleForHeight;
@@ -87,8 +88,8 @@ namespace ApartmentPanel.Presentation.Commands
                         },
                         Height = new Height
                         {
-                            TypeOf = row.HeightFromFloor.TypeOf,
-                            FromFloor = row.HeightFromFloor.FromFloor,
+                            TypeOf = row.MountingHeight.TypeOf,
+                            FromFloor = row.MountingHeight.FromFloor,
                             ResponsibleForHeightParameter = _viewProperties.ConfigPanelVM.ResponsibleForHeight
                         },
                         Location = new BatchedLocation

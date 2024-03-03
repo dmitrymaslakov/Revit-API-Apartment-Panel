@@ -26,8 +26,8 @@
                             <ComboBox HorizontalAlignment="Center" 
                                   VerticalAlignment="Center" 
                                   ItemsSource="{Binding Source={mex:EnumSourceExtention {x:Type models:TypeOfHeight}}}"
-                                  SelectedItem="{Binding HeightFromFloor.TypeOf}"/>
-                            <TextBox Text="{Binding HeightFromFloor.Value}" Width="20"/>
+                                  SelectedItem="{Binding MountingHeight.TypeOf}"/>
+                            <TextBox Text="{Binding MountingHeight.FromFloor}" Width="20"/>
                             <ListView ItemsSource="{Binding RowElements}"
                                       SelectedItem="{Binding SelectedBatchedElement, ElementName=root, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                 <ListView.ItemsPanel>

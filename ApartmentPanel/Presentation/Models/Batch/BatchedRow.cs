@@ -12,11 +12,11 @@ namespace ApartmentPanel.Presentation.Models.Batch
         public BatchedRow()
         {
             RowElements = new ObservableCollection<BatchedElement> ();
-            HeightFromFloor = new Height();
+            MountingHeight = new Height();
             Margins = new List<Thickness> ();
         }
         public int Number { get; set; }
-        public Height HeightFromFloor { get; set; }
+        public Height MountingHeight { get; set; }
         private ObservableCollection<BatchedElement> _rowElements;
         public ObservableCollection<BatchedElement> RowElements
         {
@@ -30,7 +30,7 @@ namespace ApartmentPanel.Presentation.Models.Batch
             return new BatchedRow
             {
                 Number = Number,
-                HeightFromFloor = new Height { TypeOf = HeightFromFloor.TypeOf, FromFloor = HeightFromFloor.FromFloor },
+                MountingHeight = new Height { TypeOf = MountingHeight.TypeOf, FromFloor = MountingHeight.FromFloor },
                 RowElements = new ObservableCollection<BatchedElement>(RowElements.Select(e => e.Clone()))
             };
         }

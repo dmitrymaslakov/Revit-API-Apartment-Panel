@@ -1,5 +1,4 @@
-﻿using ApartmentPanel.Infrastructure;
-using Autodesk.Revit.DB;
+﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System.Linq;
 

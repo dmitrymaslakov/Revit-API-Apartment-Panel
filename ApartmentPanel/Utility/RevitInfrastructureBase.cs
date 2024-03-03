@@ -2,7 +2,7 @@
 using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.UI;
 
-namespace ApartmentPanel.Infrastructure
+namespace ApartmentPanel.Utility
 {
     public abstract class RevitInfrastructureBase
     {

@@ -10,6 +10,7 @@ using ApartmentPanel.Infrastructure.Models;
 using ApartmentPanel.Utility.Exceptions;
 using System.Text;
 using System.Diagnostics;
+using System.Windows.Controls;
 
 namespace ApartmentPanel.Infrastructure
 {
@@ -94,31 +95,52 @@ namespace ApartmentPanel.Infrastructure
         {
             var setParamsDTO = Props as SetParamsDTO;
 
-            bool isInstanceExist = 
+            bool isInstanceExist =
                 TryGetInstance(_document, setParamsDTO.ElementName, out FamilyInstance element);
-
-            if (!isInstanceExist) return;
-            var element2 = new FilteredElementCollector(_document)
+            Wall tempWall = null;
+            FamilyInstance tempElement = null;
+            if (!isInstanceExist)
+            {
+                var ru = new RevitUtility(_uiapp);
+                tempWall = ru.CreateWall();
+                var symbol = new FilteredElementCollector(_document)
                 .OfClass(typeof(FamilySymbol))
                 .Where(fs => fs.Name == setParamsDTO.ElementName)
-                .FirstOrDefault() as FamilyInstance;
+                .FirstOrDefault() as FamilySymbol;
+                tempElement = ru.CreateFamilyInstance(symbol, tempWall);
+            }
 
             List<string> parameters = new List<string>();
-            ParameterSet parameterSet = element.Parameters;
-            ParameterMap parameterMap = element.ParametersMap;
+            ParameterSet parameterSet = element != null
+                ? element.Parameters
+                : tempElement.Parameters;
+
             foreach (Parameter param in parameterSet)
             {
                 if (param == null) continue;
                 parameters.Add(param.Definition.Name);
             }
             setParamsDTO.SetInstanceParameters(parameters);
+            if (tempWall != null && tempElement != null)
+            {
+                using (var tr = new Transaction(_document, "Removing temp elements"))
+                {
+                    tr.Start();
+                    List<ElementId> deletedElementIds = new List<ElementId>
+                    {
+                        tempWall.Id, tempElement.Id
+                    };
+                    _document.Delete(deletedElementIds);
+                    tr.Commit();
+                }
+            }
             Props = null;
         }
 
         private bool TryGetInstance(Document document, string elementName, out FamilyInstance element)
         {
             element = new FilteredElementCollector(document)
-                .OfClass(typeof(FamilyInstance))                
+                .OfClass(typeof(FamilyInstance))
                 .ToElements()
                 .Select(e => e as FamilyInstance)
                 //.FirstOrDefault(fi => string.Equals(fi.Name, elementName));

@@ -83,7 +83,7 @@
     <Compile Include="Infrastructure\Models\LocationStrategies\BottomLocationStrategy.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\LocationStrategyBase.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\CenterLocationStrategy.cs" />
-    <Compile Include="Infrastructure\RevitInfrastructureBase.cs" />
+    <Compile Include="Utility\RevitInfrastructureBase.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\TopLocationStrategy.cs" />
     <Compile Include="Core\Enums\TypeOfHeight.cs" />
     <Compile Include="Presentation\MarkupExtensions\EnumSourceExtention.cs" />
@@ -182,6 +182,7 @@
     <Compile Include="Utility\HeightUpdater.cs" />
     <Compile Include="Utility\Log.cs" />
     <Compile Include="Utility\ObservableDictionary.cs" />
+    <Compile Include="Utility\RevitUtility.cs" />
     <Compile Include="Utility\StaticData.cs" />
   </ItemGroup>
   <ItemGroup>

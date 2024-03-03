@@ -122,15 +122,13 @@ namespace ApartmentPanel.Infrastructure.Models
             {
                 tr.Start();
                 XYZ dir = new XYZ(0, 0, 0);
-                /*XYZ location = _offset != 0 
-                    ? new XYZ(Host.GlobalPoint.X + _offset, Host.GlobalPoint.Y, Host.GlobalPoint.Z)
-                    : Host.GlobalPoint; */
+                XYZ location = Host.GlobalPoint ?? new XYZ(0, 0, 0);
 
                 newFamilyInstance = /*_uiDocument
                     .Document*/
                     _document
                     .Create
-                    .NewFamilyInstance(Host, Host.GlobalPoint, dir, symbol);
+                    .NewFamilyInstance(Host, location, dir, symbol);
                 tr.Commit();
             }
             return newFamilyInstance.Id;
@@ -146,31 +144,6 @@ namespace ApartmentPanel.Infrastructure.Models
                 if (!string.IsNullOrEmpty(_renderedHeight)) SetHeight(familyInstance);
                 if (!string.IsNullOrEmpty(_circuit)) SetCircuit(familyInstance);
                 if (_parameters != null) SetParameters(familyInstance);
-                /*string category = familyInstance.Category.Name;
-                if (_currentLevelId != null)
-                {
-                    SetCurrentLevel(familyInstance);
-                    if (!category.Contains(StaticData.LIGHTING_FIXTURES))
-                    {
-                        SetElevationFromLevel(familyInstance);
-                        try
-                        {
-                            SetHeight(familyInstance);
-                        }
-                        catch (CustomParameterException ex)
-                        {
-                            TaskDialog.Show($"Exception", ex.Message);
-                        }
-                    }
-                }
-                try
-                {
-                    SetCircuit(familyInstance);
-                }
-                catch (CustomParameterException ex)
-                {
-                    TaskDialog.Show($"Exception", ex.Message);
-                }*/
                 tr.Commit();
             }
             if (_locationStrategy != null) _locationStrategy.SetRequiredLocation(builtInstance, _heightFromLevel);

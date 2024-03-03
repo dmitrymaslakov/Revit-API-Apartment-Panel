@@ -33,7 +33,7 @@ namespace ApartmentPanel.Infrastructure.Models
             }
             else
             {
-                Wall tempWall = CreateWall();
+                Wall tempWall = new RevitUtility(_uiapp).CreateWall();
                 FamilySymbol symbol = familyInstance.Symbol;
                 FamilyInstance tempInstance = CreateTempFamilyInstance(symbol, tempWall);
                 var instancePoints = new FamilyInstacePoints(_uiapp, tempInstance);
@@ -108,7 +108,7 @@ namespace ApartmentPanel.Infrastructure.Models
             return newFamilyInstance;
         }
 
-        private Wall CreateWall()
+        /*private Wall CreateWall()
         {
             // Create a line to define the wall's location
             Line line = Line.CreateBound(new XYZ(0, 0, 0), new XYZ(10, 0, 0));
@@ -139,16 +139,11 @@ namespace ApartmentPanel.Infrastructure.Models
                     }
                 }
                 else
-                {
                     TaskDialog.Show("Error", "No suitable level found.");
-                }
             }
             else
-            {
                 TaskDialog.Show("Error", "No suitable wall type found.");
-            }
             return wallResult;
-        }
-
+        }*/
     }
 }
