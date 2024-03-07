@@ -71,6 +71,11 @@ namespace ApartmentPanel.Infrastructure.Models
                     if (_batch.BatchedElements.IndexOf(elementData) == 0 && instanceBuilder != null)
                         host = instanceBuilder.Host;
                 }
+                else
+                {
+                    TaskDialog.Show("Insert error", $"{elementData.Name} doesn't exist in the model");
+                    return;
+                }
             }
             _selection.SetElementIds(instanceIds);
         }

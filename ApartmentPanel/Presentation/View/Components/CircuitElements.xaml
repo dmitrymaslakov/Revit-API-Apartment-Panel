@@ -38,7 +38,7 @@
                                           VerticalAlignment="Center" 
                                           ItemsSource="{Binding Source={mex:EnumSourceExtention {x:Type models:TypeOfHeight}}}"
                                           SelectedItem="{Binding MountingHeight.TypeOf, Mode=TwoWay}"/>
-                                <TextBox Text="{Binding MountingHeight.FromFloor, Mode=TwoWay}" Width="20"/>
+                                <TextBox Text="{Binding MountingHeight.FromFloor, Mode=TwoWay}" Width="30"/>
                             </WrapPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>

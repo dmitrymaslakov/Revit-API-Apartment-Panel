@@ -305,7 +305,7 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateSetAnnotationPreviewCommand() => new RelayCommand(o =>
         {
-            var bitmapSource = o as BitmapSource;
+            if (!(o is BitmapSource bitmapSource)) return;
 
             PngBitmapEncoder encoder = new PngBitmapEncoder();
             MemoryStream memoryStream = new MemoryStream();

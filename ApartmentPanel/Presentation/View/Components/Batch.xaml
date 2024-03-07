@@ -27,7 +27,7 @@
                                   VerticalAlignment="Center" 
                                   ItemsSource="{Binding Source={mex:EnumSourceExtention {x:Type models:TypeOfHeight}}}"
                                   SelectedItem="{Binding MountingHeight.TypeOf}"/>
-                            <TextBox Text="{Binding MountingHeight.FromFloor}" Width="20"/>
+                            <TextBox Text="{Binding MountingHeight.FromFloor}" Width="30"/>
                             <ListView ItemsSource="{Binding RowElements}"
                                       SelectedItem="{Binding SelectedBatchedElement, ElementName=root, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                 <ListView.ItemsPanel>
@@ -41,7 +41,7 @@
                                             <Image Source="{Binding Annotation}" 
                                                    Width="20"
                                                    Margin="0 0 10 0"/>
-                                            <TextBox Width="20" Text="{Binding Margin.Left, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                            <TextBox Width="30" Text="{Binding Margin.Left, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                                 <TextBox.Style>
                                                     <Style TargetType="TextBox">
                                                         <Setter Property="Visibility" Value="Visible"/>

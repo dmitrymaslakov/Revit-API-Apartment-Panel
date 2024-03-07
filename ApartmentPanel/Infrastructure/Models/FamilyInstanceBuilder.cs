@@ -10,6 +10,7 @@ using ApartmentPanel.Infrastructure.Models.LocationStrategies;
 using System;
 using Microsoft.Extensions.Hosting;
 using System.Security.Cryptography;
+using System.Windows.Controls;
 
 namespace ApartmentPanel.Infrastructure.Models
 {
@@ -37,11 +38,21 @@ namespace ApartmentPanel.Infrastructure.Models
 
         public BuiltInstance Build(string elementName)
         {
-            var familySymbol = new FilteredElementCollector(_document)
+            FamilySymbol familySymbol = new FilteredElementCollector(_document)
                 .OfClass(typeof(FamilySymbol))
-                .Where(fs => fs.Name == elementName)
-                .FirstOrDefault() as FamilySymbol;
+                .FirstOrDefault(fs => fs.Name == elementName) as FamilySymbol;
 
+            if (familySymbol == null) return null;
+            if (!familySymbol.IsActive)
+            {
+                using (var tr = new Transaction(_document, "Activate FamilySymbol"))
+                {
+                    tr.Start();
+                    familySymbol.Activate();
+                    _document.Regenerate();
+                    tr.Commit();
+                }
+            }
             if (Host == null)
                 Host = PickHost();
 

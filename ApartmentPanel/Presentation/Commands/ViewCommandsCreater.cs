@@ -78,6 +78,9 @@ namespace ApartmentPanel.Presentation.Commands
             {
                 foreach (BatchedElement element in row.RowElements)
                 {
+                    row.MountingHeight.FromLevel = row.MountingHeight.FromFloor + _viewProperties.FloorHeight;
+                    row.MountingHeight.ResponsibleForHeightParameter = _viewProperties.ConfigPanelVM.ResponsibleForHeight;
+                    
                     InsertElementDTO elDto = new InsertElementDTO
                     {
                         Category = element.Category,
@@ -86,12 +89,13 @@ namespace ApartmentPanel.Presentation.Commands
                             Number = element.Circuit,
                             ResponsibleForCircuitParameter = _viewProperties.ConfigPanelVM.ResponsibleForCircuit
                         },
-                        Height = new Height
+                        /*Height = new Height
                         {
                             TypeOf = row.MountingHeight.TypeOf,
                             FromFloor = row.MountingHeight.FromFloor,
                             ResponsibleForHeightParameter = _viewProperties.ConfigPanelVM.ResponsibleForHeight
-                        },
+                        },*/
+                        Height = row.MountingHeight.Clone(),
                         Location = new BatchedLocation
                         {
                             X = elementBatch.BatchedRows.IndexOf(row),

@@ -325,7 +325,14 @@ namespace ApartmentPanel.Infrastructure
                         default:
                             break;
                     }
-                    if (builtInstance != null) _selection.SetElementIds(new List<ElementId> { builtInstance.Id });
+                    if (builtInstance != null)
+                        _selection.SetElementIds(new List<ElementId> { builtInstance.Id });
+                    else
+                    {
+                        TaskDialog.Show("Insert error", $"{elementData.Name} doesn't exist in the model");
+                        return;
+                    }
+
                     if (!elementData.InsertingMode.Contains("multiple")) isMultiple = false;
                 }
                 catch (Autodesk.Revit.Exceptions.OperationCanceledException)
