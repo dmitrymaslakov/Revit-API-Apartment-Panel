@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 using ApartmentPanel.Core.Models.Interfaces;
+using ApartmentPanel.Presentation.Services;
 
 namespace ApartmentPanel.Presentation.Commands
 {
@@ -26,7 +27,8 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateConfigureCommand() => new RelayCommand(o =>
         {
-            new ConfigPanel(_viewProperties.ConfigPanelVM).Show();
+            //new ConfigPanel(_viewProperties.ConfigPanelVM).Show();
+            ConfigPanelWindowService.OpenWindow(_viewProperties.ConfigPanelVM);
         });
 
         public ICommand CreateInsertElementCommand() => new RelayCommand(o =>

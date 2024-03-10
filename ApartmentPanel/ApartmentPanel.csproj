@@ -83,6 +83,7 @@
     <Compile Include="Infrastructure\Models\LocationStrategies\BottomLocationStrategy.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\LocationStrategyBase.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\CenterLocationStrategy.cs" />
+    <Compile Include="Presentation\Services\ConfigPanelWindowService.cs" />
     <Compile Include="Utility\RevitInfrastructureBase.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\TopLocationStrategy.cs" />
     <Compile Include="Core\Enums\TypeOfHeight.cs" />

@@ -11,6 +11,7 @@ using System;
 using Microsoft.Extensions.Hosting;
 using System.Security.Cryptography;
 using System.Windows.Controls;
+using System.Xml.Linq;
 
 namespace ApartmentPanel.Infrastructure.Models
 {
@@ -126,6 +127,27 @@ namespace ApartmentPanel.Infrastructure.Models
         #region Private methods
         private Reference PickHost() =>
             _selection.PickObject(ObjectType.PointOnElement, "Pick a host in the model");
+
+        private bool IsHorizontal(Reference faceRef)
+        {
+            Element elem = _document.GetElement(faceRef);
+            if (elem is RevitLinkInstance ri)
+            {
+                Document docLinked = ri.GetLinkDocument();
+                Reference linkedref = faceRef.CreateReferenceInLink();
+                if (linkedref != null)
+                {
+                    Element linkedelement = docLinked.GetElement(linkedref);
+                    var faceLink = linkedelement.GetGeometryObjectFromReference(linkedref);
+                    if (faceLink is PlanarFace planarFace)
+                    {
+                        if (planarFace.FaceNormal.Z == 0) return false;
+                        else return true;
+                    }
+                }
+            }
+            return false;
+        }
         private ElementId FamilyInstanceCreate(FamilySymbol symbol)
         {
             FamilyInstance newFamilyInstance = null;
@@ -157,7 +179,7 @@ namespace ApartmentPanel.Infrastructure.Models
                 if (_parameters != null) SetParameters(familyInstance);
                 tr.Commit();
             }
-            if (_locationStrategy != null) _locationStrategy.SetRequiredLocation(builtInstance, _heightFromLevel);
+            if (_locationStrategy != null && !IsHorizontal(Host)) _locationStrategy.SetRequiredLocation(builtInstance, _heightFromLevel);
         }
         private ElementId GetViewLevel()
         {

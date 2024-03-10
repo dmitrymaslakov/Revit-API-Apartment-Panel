@@ -277,7 +277,8 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateCancelCommand() => new RelayCommand(o =>
         {
-            _configPanelProperties.OkApplyCancelActions(_configPanelProperties.PanelCircuits, OkApplyCancel.Cancel);
+            //_configPanelProperties.OkApplyCancelActions(_configPanelProperties.PanelCircuits, OkApplyCancel.Cancel);
+            _configPanelProperties.OkApplyCancelActions(null, OkApplyCancel.Cancel);
             if (_configPanelProperties.IsCancelEnabled)
                 _configPanelProperties.IsCancelEnabled = false;
         });
@@ -385,16 +386,17 @@ namespace ApartmentPanel.Presentation.Commands
                 Circuit = circuit,
                 Category = element.Category,
                 Name = element.Name,
-                Annotation = element.Annotation
+                Annotation = element.Annotation,
+                Parameters = element.Parameters
             };
 
-            _configPanelProperties.SetParametersToElement = OnSetParametersToBatchElementExecuted;
+            /*_configPanelProperties.SetParametersToElement = OnSetParametersToBatchElementExecuted;
             SetParamsDTO setParamsDTO = new SetParamsDTO
             {
                 ElementName = element.Name,
                 SetInstanceParameters = _configPanelProperties.SetParametersToElement
             };
-            _elementService.SetElementParameters(setParamsDTO);
+            _elementService.SetElementParameters(setParamsDTO);*/
         });
 
         public ICommand CreateAddElementToRowCommand() => new RelayCommand(o =>
@@ -482,7 +484,7 @@ namespace ApartmentPanel.Presentation.Commands
                 && !_configPanelProperties.Configs
                 .ToList()
                 .Exists(c => c == _configPanelProperties.NewConfig))
-            {
+            {                
                 _configPanelProperties.Configs.Add(_configPanelProperties.NewConfig);
 
                 if (!_configPanelProperties.IsCancelEnabled)
@@ -491,13 +493,34 @@ namespace ApartmentPanel.Presentation.Commands
             _configPanelProperties.NewConfig = string.Empty;
         });
 
+        public ICommand CreateRemoveConfigCommand() => new RelayCommand(o =>
+        {
+            string selectedConfig = _configPanelProperties.SelectedConfig;
+            if (!string.IsNullOrEmpty(selectedConfig))
+            {
+                var stringBuilder = new StringBuilder(FileUtility.GetAssemblyPath());
+                stringBuilder
+                .Append($"\\{selectedConfig}")
+                .Append("LatestConfig")
+                .Append(".json");
+
+                string selectedConfigPath = stringBuilder.ToString();
+                if(File.Exists(selectedConfigPath))
+                    File.Delete(selectedConfigPath);
+
+                _configPanelProperties.Configs.Remove(selectedConfig);
+                if (!_configPanelProperties.IsCancelEnabled)
+                    _configPanelProperties.IsCancelEnabled = true;
+            }
+        });
+
         private void OnSetParametersToBatchElementExecuted(List<string> parameterNames)
         {
             var parameters = parameterNames
                 .Select(pn => new Parameter { Name = pn })
                 .ToList();
             _configPanelProperties.NewElementForBatch.Parameters = new ObservableCollection<Parameter>(parameters);
-            TaskDialog.Show("OnSetParametersToBatchElementExecuted", "is executed");
+            //TaskDialog.Show("OnSetParametersToBatchElementExecuted", "is executed");
         }
 
         private void OnSetParametersToCircuitElementExecuted(List<string> parameterNames)
@@ -509,6 +532,5 @@ namespace ApartmentPanel.Presentation.Commands
             if (circuitElement != null)
                 circuitElement.Parameters = new ObservableCollection<Parameter>(parameters);
         }
-
     }
 }

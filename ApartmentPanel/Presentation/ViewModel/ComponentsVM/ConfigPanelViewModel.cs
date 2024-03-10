@@ -23,8 +23,8 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
     public class ConfigPanelViewModel : ViewModelBase, IConfigPanelViewModel
     {
         #region MockFields
-        static string mockAnnotation = "d:/Programming/Revit-2023/ApartmentPanelSln/ApartmentPanel/bin/Debug/Resources/Annotations/Lamp.png";
-        //static string mockAnnotation = "E:\\Different\\Study\\Programming\\C-sharp\\Revit-API\\Apartment-Panel\\ApartmentPanel\\bin\\Debug\\Resources\\Annotations\\Lamp.png";
+        //static string mockAnnotation = "d:/Programming/Revit-2023/ApartmentPanelSln/ApartmentPanel/bin/Debug/Resources/Annotations/Lamp.png";
+        static string mockAnnotation = "E:\\Different\\Study\\Programming\\C-sharp\\Revit-API\\Apartment-Panel\\ApartmentPanel\\bin\\Debug\\Resources\\Annotations\\Lamp.png";
         private static ObservableCollection<IApartmentElement> el1 = new ObservableCollection<IApartmentElement>
         {
             new ApartmentElement { Name = "Switch", Annotation = new FileAnnotationReader(mockAnnotation).Get() },
@@ -149,6 +149,7 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             AddRowToBatchCommand = _commandCreater.CreateAddRowToBatchCommand();
             RemoveRowFromBatchCommand = _commandCreater.CreateRemoveRowFromBatchCommand();
             AddConfigCommand = _commandCreater.CreateAddConfigCommand(); 
+            RemoveConfigCommand = _commandCreater.CreateRemoveConfigCommand();
         }
 
         [JsonIgnore]
@@ -390,7 +391,10 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         [JsonIgnore]
         public ICommand AddConfigCommand { get; set; }
         [JsonIgnore]
+        public ICommand RemoveConfigCommand { get; set; }
+        [JsonIgnore]
         public Action<object, OkApplyCancel> OkApplyCancelActions { get; set; }
+
         [JsonIgnore]
         public Action<List<string>> SetParametersToElement { get; set; }
 
@@ -479,6 +483,10 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             if (startIndex != -1)
                 return fileName.Substring(0, startIndex);
             return "";
+        }
+
+        private void RemoveConfig(object commandParameter)
+        {
         }
     }
 }

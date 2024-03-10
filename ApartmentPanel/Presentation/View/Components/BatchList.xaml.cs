@@ -37,9 +37,20 @@ namespace ApartmentPanel.Presentation.View.Components
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
+            try
+            {
+            /*Button button = sender as Button;
             ElementBatch batch = button.DataContext as ElementBatch;
-            HitElementCommand?.Execute(batch);
+            HitElementCommand?.Execute(batch);*/
+                ListViewItem listViewItem = e.OriginalSource as ListViewItem;
+                ElementBatch batch = listViewItem?.Content as ElementBatch;
+                HitElementCommand?.Execute(batch);
+
+            }
+            catch (System.Exception)
+            {
+
+            }
         }
     }
 }

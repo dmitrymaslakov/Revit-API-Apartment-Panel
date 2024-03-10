@@ -33,6 +33,10 @@ namespace ApartmentPanel.Infrastructure.Models
         public BuiltInstance InstallLightingFixtures(Reference host = null)
         {
             return _familyInstanceBuilder
+                .SetLocationStrategy(_locationStrategy)
+                .WithHeight(_elementData.Height.FromFloor, _elementData.Height.FromLevel)
+                .WithResponsibleForHeight(_elementData.Height.ResponsibleForHeightParameter)
+                .RenderHeightAs(_heightFormat)
                 .WithCircuit(_elementData.Circuit.Number)
                 .WithResponsibleForCircuit(_elementData.Circuit.ResponsibleForCircuitParameter)
                 .WithCurrentLevel()

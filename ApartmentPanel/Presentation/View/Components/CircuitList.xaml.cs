@@ -24,7 +24,7 @@ namespace ApartmentPanel.Presentation.View.Components
         }
 
         public static readonly DependencyProperty HitElementCommandProperty =
-            DependencyProperty.Register(nameof(HitElementCommand), typeof(ICommand), 
+            DependencyProperty.Register(nameof(HitElementCommand), typeof(ICommand),
                 typeof(CircuitList), new PropertyMetadata(null));
         public ICommand HitElementCommand
         {
@@ -66,57 +66,86 @@ namespace ApartmentPanel.Presentation.View.Components
 
         private void Button_KeyDown(object sender, KeyEventArgs e)
         {
-            Button button = sender as Button;
-            IApartmentElement element = button.DataContext as IApartmentElement;
-
-            string currentCategory = element.Category;
-            string targetCategory = "Lighting Fixtures";
-
-            if (!currentCategory.Contains(targetCategory)
-                || e.Key == Key.LeftCtrl
-                || e.Key == Key.RightCtrl)
-                return;
-
-            string characterValue = "";
-            if (e.Key >= Key.D0 && e.Key <= Key.D9)
+            try
             {
-                char numericChar = (char)('0' + (e.Key - Key.D0));
-                characterValue = numericChar.ToString();
+                /*Button button = sender as Button;
+                IApartmentElement element = button.DataContext as IApartmentElement;*/
+                Image image = sender as Image;
+                IApartmentElement element = image.DataContext as IApartmentElement;
+
+                string currentCategory = element.Category;
+                string targetCategory = "Lighting Fixtures";
+
+                if (!currentCategory.Contains(targetCategory)
+                    || e.Key == Key.LeftCtrl
+                    || e.Key == Key.RightCtrl)
+                    return;
+
+                string characterValue = "";
+                if (e.Key >= Key.D0 && e.Key <= Key.D9)
+                {
+                    char numericChar = (char)('0' + (e.Key - Key.D0));
+                    characterValue = numericChar.ToString();
+                }
+                else if (e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9)
+                {
+                    char numericChar = (char)('0' + (e.Key - Key.NumPad0));
+                    characterValue = numericChar.ToString();
+                }
+                KeyDownCommand?.Execute(characterValue);
             }
-            else if (e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9)
+            catch (System.Exception)
             {
-                char numericChar = (char)('0' + (e.Key - Key.NumPad0));
-                characterValue = numericChar.ToString();
+
             }
-            KeyDownCommand?.Execute(characterValue);
         }
 
         private void Button_MouseEnter(object sender, MouseEventArgs e)
         {
-            Button button = sender as Button;
-            IApartmentElement element = button.DataContext as IApartmentElement;
+            try
+            {
+                /*Button button = sender as Button;
+                IApartmentElement element = button.DataContext as IApartmentElement;
 
-            if (element.Category == "Lighting Devices")
-                MouseEnterCommand?.Execute("MouseEnter");
-            button.Focus();
+                if (element.Category == "Lighting Devices")
+                    MouseEnterCommand?.Execute("MouseEnter");
+                button.Focus();*/
+                Image image = sender as Image;
+                IApartmentElement element = image.DataContext as IApartmentElement;
+                if (element.Category == "Lighting Devices")
+                    MouseEnterCommand?.Execute("MouseEnter");
+                image.Focus();
+            }
+            catch (System.Exception)
+            {
+
+            }
+
         }
 
-        private void Button_MouseLeave(object sender, MouseEventArgs e) => 
+        private void Button_MouseLeave(object sender, MouseEventArgs e) =>
             MouseLeaveCommand?.Execute("MouseLeave");
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
-            IApartmentElement element = button.DataContext as IApartmentElement;
-            Circuit circuit = FindParentCircuit(button);
+            try
+            {
+                //Button button = sender as Button;
+                ListView lv = sender as ListView;
+                //IApartmentElement element = button.DataContext as IApartmentElement;
+                ListViewItem lvi = e.OriginalSource as ListViewItem;
+                IApartmentElement element = lvi.Content as IApartmentElement;
+                //Circuit circuit = FindParentCircuit(button);
+                Circuit circuit = lv.DataContext as Circuit;
 
-            /*string category = element.Category;
-            string name = element.Name;
-            ImageSource annotation = element.Annotation;*/
-            string circuitNumber = circuit?.Number;
+                string circuitNumber = circuit?.Number;
 
-            //HitElementCommand?.Execute((circuitNumber, name, category, annotation));
-            HitElementCommand?.Execute((circuitNumber, element));
+                HitElementCommand?.Execute((circuitNumber, element));
+            }
+            catch (System.Exception)
+            {
+                return;
+            }
         }
 
         private Circuit FindParentCircuit(DependencyObject child)

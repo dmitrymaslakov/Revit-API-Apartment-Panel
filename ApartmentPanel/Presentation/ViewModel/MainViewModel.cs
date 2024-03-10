@@ -163,13 +163,13 @@ namespace ApartmentPanel.Presentation.ViewModel
         private void ExecuteOkApplyCancelActions(object obj, OkApplyCancel okApplyCancel)
         {
             if (string.IsNullOrEmpty(ConfigPanelVM.LatestConfigPath)) return;
-            //(ObservableDictionary<string, ObservableCollection<IApartmentElement>> panelCircuits,
-            (ObservableCollection<Circuit> panelCircuits,
-                ObservableCollection<ElementBatch> batches,
-                ObservableCollection<double> heightsOk,
-                ObservableCollection<double> heightsUk,
-                ObservableCollection<double> heightsCenter) =
-                //(ValueTuple<ObservableDictionary<string, ObservableCollection<IApartmentElement>>,
+            ObservableCollection<Circuit> panelCircuits = null;
+            ObservableCollection<ElementBatch> batches = null;
+            ObservableCollection<double> heightsOk = null;
+            ObservableCollection<double> heightsUk = null;
+            ObservableCollection<double> heightsCenter = null;
+            if (obj != null)
+                (panelCircuits, batches, heightsOk, heightsUk, heightsCenter) =
                 (ValueTuple<ObservableCollection<Circuit>,
                 ObservableCollection<ElementBatch>,
                 ObservableCollection<double>,
@@ -181,8 +181,6 @@ namespace ApartmentPanel.Presentation.ViewModel
                 case OkApplyCancel.Ok:
                 case OkApplyCancel.Apply:
                     Circuits.Clear();
-                    //var panelCircuits =
-                    //    (ObservableDictionary<string, ObservableCollection<IApartmentElement>>)obj;
                     Circuits = GetCircuits(panelCircuits);
                     ElementBatches.Clear();
                     ElementBatches = GetBatches(batches);

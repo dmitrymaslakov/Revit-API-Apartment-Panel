@@ -197,6 +197,7 @@
                     <local:ConfigList 
                         Elements="{Binding Configs}"
                         SelectedElement="{Binding SelectedConfig, Mode=TwoWay}"
+                        RemoveElementCommand="{Binding RemoveConfigCommand}"
                         AddBtnVisibility="{x:Static Visibility.Collapsed}"
                         EditBtnVisibility="{x:Static Visibility.Collapsed}"/>
                     <!--<GroupBox Header="New config">

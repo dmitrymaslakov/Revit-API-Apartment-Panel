@@ -71,6 +71,7 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         string CurrentConfig { get; set; }
         string NewConfig { get; set; }
         ICommand AddConfigCommand { get; set; }
+        ICommand RemoveConfigCommand { get; set; }
 
         ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration);
     }

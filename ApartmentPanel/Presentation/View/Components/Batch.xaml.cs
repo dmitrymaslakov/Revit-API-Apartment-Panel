@@ -164,5 +164,12 @@ namespace ApartmentPanel.Presentation.View.Components
             else if (ListBatchedRows.Count > 1)
                 removeRowBtn.IsEnabled = true;
         }
+
+        private void ListView_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ListViewItem listViewItem = e.OriginalSource as ListViewItem;
+            BatchedElement be = listViewItem?.Content as BatchedElement;
+            if (be != null) SelectedBatchedElement = be;
+        }
     }
 }

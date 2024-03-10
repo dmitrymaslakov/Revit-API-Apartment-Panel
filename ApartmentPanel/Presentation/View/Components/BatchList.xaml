@@ -16,7 +16,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <ListView ItemsSource="{Binding Batches, ElementName=root}">
+    <ListView ItemsSource="{Binding Batches, ElementName=root}"
+              GotFocus="Button_Click">
         <ListView.ItemsPanel>
             <ItemsPanelTemplate>
                 <WrapPanel/>
@@ -24,9 +25,9 @@
         </ListView.ItemsPanel>
         <ListView.ItemTemplate>
             <DataTemplate>
-                <Button Click="Button_Click">
-                    <Image Source="{Binding Annotation}" Width="35" Height="25"/>
-                </Button>
+                <Image Source="{Binding Annotation}" Width="45" Height="35"/>
+                <!--<Button Click="Button_Click">
+                </Button>-->
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>

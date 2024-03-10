@@ -29,7 +29,8 @@
                                   SelectedItem="{Binding MountingHeight.TypeOf}"/>
                             <TextBox Text="{Binding MountingHeight.FromFloor}" Width="30"/>
                             <ListView ItemsSource="{Binding RowElements}"
-                                      SelectedItem="{Binding SelectedBatchedElement, ElementName=root, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                      SelectedItem="{Binding SelectedBatchedElement, ElementName=root, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                      GotFocus="ListView_GotFocus">
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal"/>
