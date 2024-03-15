@@ -23,6 +23,15 @@ namespace ApartmentPanel.Presentation.View.Components
             set { SetValue(CircuitsProperty, value); }
         }
 
+        public static readonly DependencyProperty AnnotationLikeButtonProperty =
+            DependencyProperty.Register(nameof(AnnotationLikeButton), typeof(bool),
+                typeof(CircuitList), new PropertyMetadata(false));
+        public bool AnnotationLikeButton
+        {
+            get { return (bool)GetValue(AnnotationLikeButtonProperty); }
+            set { SetValue(AnnotationLikeButtonProperty, value); }
+        }
+
         public static readonly DependencyProperty HitElementCommandProperty =
             DependencyProperty.Register(nameof(HitElementCommand), typeof(ICommand),
                 typeof(CircuitList), new PropertyMetadata(null));
@@ -126,7 +135,7 @@ namespace ApartmentPanel.Presentation.View.Components
         private void Button_MouseLeave(object sender, MouseEventArgs e) =>
             MouseLeaveCommand?.Execute("MouseLeave");
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ListView_GotFocus(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -141,6 +150,7 @@ namespace ApartmentPanel.Presentation.View.Components
                 string circuitNumber = circuit?.Number;
 
                 HitElementCommand?.Execute((circuitNumber, element));
+                if(AnnotationLikeButton) lvp.Focus();
             }
             catch (System.Exception)
             {

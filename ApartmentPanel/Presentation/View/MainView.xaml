@@ -30,7 +30,8 @@
             HitElementCommand="{Binding InsertElementCommand}"
             KeyDownCommand="{Binding SetCurrentSuffixCommand}"
             MouseEnterCommand="{Binding SetStatusCommand}"
-            MouseLeaveCommand ="{Binding SetStatusCommand}"/>
+            MouseLeaveCommand ="{Binding SetStatusCommand}"
+            AnnotationLikeButton="True"/>        
         <components:BatchList 
             Grid.Row="2"
             Batches="{Binding ElementBatches}"

@@ -26,14 +26,16 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <ListView ItemsSource="{Binding Source={StaticResource SortedItems}}" Height="400">
+    <ListView ItemsSource="{Binding Source={StaticResource SortedItems}}" 
+              x:Name="lvp"
+              Height="400">        
         <!--<ListView ItemsSource="{Binding Circuits, ElementName=root}" Height="400">-->
         <ListView.ItemTemplate>
             <DataTemplate>
                 <WrapPanel>
                     <TextBlock Text="{Binding Number}" Margin="0 0 10 0" Padding="0 10 0 0"/>
                     <ListView ItemsSource="{Binding Elements}"
-                              GotFocus="Button_Click">
+                              GotFocus="ListView_GotFocus">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal"/>
