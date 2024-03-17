@@ -68,6 +68,7 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
             XYZ globalXAxis = XYZ.BasisX;
             return globalXAxis.AngleOnPlaneTo(localXAxis, XYZ.BasisZ);
         }
+        
         protected ElementId GetViewLevel(Document doc)
         {
             View active = doc.ActiveView;

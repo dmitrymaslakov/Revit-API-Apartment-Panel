@@ -35,7 +35,7 @@ namespace ApartmentPanel.Presentation.View.Components
         }
         #endregion
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ListView_GotFocus(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -45,7 +45,8 @@ namespace ApartmentPanel.Presentation.View.Components
                 ListViewItem listViewItem = e.OriginalSource as ListViewItem;
                 ElementBatch batch = listViewItem?.Content as ElementBatch;
                 HitElementCommand?.Execute(batch);
-
+                root.Focusable = true;
+                root.Focus();
             }
             catch (System.Exception)
             {

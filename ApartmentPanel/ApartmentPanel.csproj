@@ -74,6 +74,7 @@
     <Compile Include="Core\Models\CategorizedFamilySymbols.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\DTO\CircuitDTO.cs" />
     <Compile Include="Infrastructure\Enums\LocationType.cs" />
+    <Compile Include="Infrastructure\Extensions\BoundingBoxXYZExtensions.cs" />
     <Compile Include="Infrastructure\Models\BatchedInstance.cs" />
     <Compile Include="Infrastructure\Models\BatchedInstanceRow.cs" />
     <Compile Include="Infrastructure\Models\BatchInstaller.cs" />

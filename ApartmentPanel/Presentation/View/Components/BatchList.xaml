@@ -17,7 +17,7 @@
     </UserControl.Resources>
 
     <ListView ItemsSource="{Binding Batches, ElementName=root}"
-              GotFocus="Button_Click">
+              GotFocus="ListView_GotFocus">
         <ListView.ItemsPanel>
             <ItemsPanelTemplate>
                 <WrapPanel/>
