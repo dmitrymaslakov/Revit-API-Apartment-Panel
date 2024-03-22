@@ -11,7 +11,6 @@ namespace RevitTest.Extensions
     {
         public static void Visualize(this Transform transform, Document document, double scale = 3)
         {
-
             var colors = new List<Color>
             {
                 new Color(255, 0, 0),
@@ -26,16 +25,6 @@ namespace RevitTest.Extensions
                 transform.Origin + x * scale))
             .Zip(colors, (line, color) => (Line: line, Color: color))
             .ToList();
-            foreach (var (line, color) in colorToLines)
-            {
-                var directShape = document.FamilyCreat
-
-                var overrideGraphics = new OverrideGraphicSettings();
-                overrideGraphics.SetProjectionLineColor(color);
-                overrideGraphics.SetProjectionLineWeight(4);
-                document.ActiveView.SetElementOverrides(directShape.Id, overrideGraphics);
-            }
-            transform.Origin.Visualize(document);
         }
     }
 }

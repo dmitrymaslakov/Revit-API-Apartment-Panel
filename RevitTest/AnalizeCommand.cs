@@ -279,4 +279,48 @@ namespace RevitTest
             }
         }
     }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class ElementDataCommand : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIApplication _uiapp = commandData.Application;
+            UIDocument _uiDocument = _uiapp.ActiveUIDocument;
+            Document _document = _uiDocument.Document;
+            Selection _selection = _uiDocument.Selection;
+            ICollection<ElementId> selectedIds = _selection.GetElementIds();
+            foreach (var selectedId in selectedIds)
+            {
+                var el = _document.GetElement(selectedId);
+                if (el is FamilyInstance familyInstance)
+                {
+                    var bb = el.get_BoundingBox(null);
+                    Options geomOpts = new Options { DetailLevel = ViewDetailLevel.Fine };
+                    GeometryElement geometryElement = el
+                        .get_Geometry(geomOpts)
+                        .OfType<GeometryInstance>()
+                        ?.FirstOrDefault()
+                        ?.GetInstanceGeometry();
+                    var max = geometryElement.GetBoundingBox().Max;
+                    var min = geometryElement.GetBoundingBox().Min;
+                    foreach (GeometryObject geo in geometryElement)
+                    {
+                        if (geo is Solid solid)
+                        {
+                            var gMax = solid.GetBoundingBox().Max;
+                            var gMin = solid.GetBoundingBox().Min;
+                        }
+                    }
+                }
+                if (el is Extrusion extrusion)
+                {
+                    var eMax = extrusion.get_BoundingBox(null).Max;
+                    var eMin = extrusion.get_BoundingBox(null).Min;
+                }
+            }
+            return Result.Succeeded;
+        }
+    }
 }

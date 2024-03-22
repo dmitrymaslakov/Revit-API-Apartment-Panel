@@ -44,13 +44,13 @@ namespace ApartmentPanel.Utility
             elementBB = boundingBoxes.Aggregate((acc, elem) => acc.Union(elem));
             if (geometryElement != null)
             {
-                /*Max = geometryElement.GetBoundingBox().Max;
-                Min = geometryElement.GetBoundingBox().Min;*/
-                var max = Location.Add(elementBB.Max);
+                Max = geometryElement.GetBoundingBox().Max;
+                Min = geometryElement.GetBoundingBox().Min;
+                /*var max = Location.Add(elementBB.Max);
                 var min = Location.Add(elementBB.Min);
 
                 Max = max;
-                Min = min;
+                Min = min;*/
             }
         }
         public XYZ Location { get; }
