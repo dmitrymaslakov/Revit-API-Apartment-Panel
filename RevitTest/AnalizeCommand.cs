@@ -290,35 +290,57 @@ namespace RevitTest
             UIDocument _uiDocument = _uiapp.ActiveUIDocument;
             Document _document = _uiDocument.Document;
             Selection _selection = _uiDocument.Selection;
-            ICollection<ElementId> selectedIds = _selection.GetElementIds();
-            foreach (var selectedId in selectedIds)
+            try
             {
-                var el = _document.GetElement(selectedId);
-                if (el is FamilyInstance familyInstance)
+                ICollection<ElementId> selectedIds = _selection.GetElementIds();
+                foreach (var selectedId in selectedIds)
                 {
-                    var bb = el.get_BoundingBox(null);
-                    Options geomOpts = new Options { DetailLevel = ViewDetailLevel.Fine };
-                    GeometryElement geometryElement = el
-                        .get_Geometry(geomOpts)
-                        .OfType<GeometryInstance>()
-                        ?.FirstOrDefault()
-                        ?.GetInstanceGeometry();
-                    var max = geometryElement.GetBoundingBox().Max;
-                    var min = geometryElement.GetBoundingBox().Min;
-                    foreach (GeometryObject geo in geometryElement)
+                    var el = _document.GetElement(selectedId);
+                    if (el is FamilyInstance familyInstance)
                     {
-                        if (geo is Solid solid)
+                        Options geomOpts = new Options { DetailLevel = ViewDetailLevel.Fine };
+                        GeometryElement geometryElement = el
+                            .get_Geometry(geomOpts)
+                            .OfType<GeometryInstance>()
+                            ?.FirstOrDefault()
+                            ?.GetSymbolGeometry();
+                        //?.GetInstanceGeometry();
+                        BoundingBoxXYZ sBoundingBox = geometryElement.GetBoundingBox();
+                        
+                        var max = geometryElement.GetBoundingBox().Max;
+                        var min = geometryElement.GetBoundingBox().Min;
+                        foreach (GeometryObject geo in geometryElement)
                         {
-                            var gMax = solid.GetBoundingBox().Max;
-                            var gMin = solid.GetBoundingBox().Min;
+                            if (geo is Solid solid)
+                            {
+                                var gMax = solid.GetBoundingBox().Max;
+                                var gMin = solid.GetBoundingBox().Min;
+                                foreach (var face in solid.Faces)
+                                {
+                                    if (face is CylindricalFace cylindrical)
+                                    {
+                                        var r = cylindrical.get_Radius(0);
+                                        BoundingBoxUV cbb = cylindrical.GetBoundingBox();
+                                    }
+                                    if (face is PlanarFace planar)
+                                    {
+                                        //double pp = planar.get_Period(180);
+                                        BoundingBoxUV pbb = planar.GetBoundingBox();
+                                    }
+                                }
+                            }
                         }
                     }
+                    if (el is Extrusion extrusion)
+                    {
+                        var eMax = extrusion.get_BoundingBox(null).Max;
+                        var eMin = extrusion.get_BoundingBox(null).Min;
+                    }
                 }
-                if (el is Extrusion extrusion)
-                {
-                    var eMax = extrusion.get_BoundingBox(null).Max;
-                    var eMin = extrusion.get_BoundingBox(null).Min;
-                }
+            }
+            catch (Exception)
+            {
+
             }
             return Result.Succeeded;
         }
