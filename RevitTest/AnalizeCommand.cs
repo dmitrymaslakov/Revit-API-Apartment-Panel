@@ -2,6 +2,7 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using RevitTest.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -306,9 +307,31 @@ namespace RevitTest
                             ?.GetSymbolGeometry();
                         //?.GetInstanceGeometry();
                         BoundingBoxXYZ sBoundingBox = geometryElement.GetBoundingBox();
-                        
+
                         var max = geometryElement.GetBoundingBox().Max;
                         var min = geometryElement.GetBoundingBox().Min;
+
+                        var solids = geometryElement
+                            .OfType<Solid>()
+                            .Where(s => s.Volume > 0);
+
+                        var unionSolid = solids.Aggregate((x, y) => BooleanOperationsUtils
+                        .ExecuteBooleanOperation(x, y, BooleanOperationsType.Union));
+
+                        using (var tr = new Transaction(_document, "Create Shape"))
+                        {
+                            tr.Start();
+                            var dsh = _document.CreateDirectShape(new List<GeometryObject> { unionSolid });
+
+                            var dshMax = dsh.get_BoundingBox(null).Max;
+                            var dshMin = dsh.get_BoundingBox(null).Min;
+                            tr.Commit();
+                        }
+
+
+                        var uMax = unionSolid.GetBoundingBox().Max;
+                        var uMin = unionSolid.GetBoundingBox().Min;
+
                         foreach (GeometryObject geo in geometryElement)
                         {
                             if (geo is Solid solid)
