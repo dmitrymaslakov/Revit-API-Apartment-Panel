@@ -293,19 +293,20 @@ namespace RevitTest
             Selection _selection = _uiDocument.Selection;
             try
             {
+
                 ICollection<ElementId> selectedIds = _selection.GetElementIds();
                 foreach (var selectedId in selectedIds)
                 {
                     var el = _document.GetElement(selectedId);
                     if (el is FamilyInstance familyInstance)
                     {
-                        Options geomOpts = new Options { DetailLevel = ViewDetailLevel.Fine };
-                        GeometryElement geometryElement = el
+                        InstancePoints(_uiapp, familyInstance);
+                        /*Options geomOpts = new Options { DetailLevel = ViewDetailLevel.Fine };
+                        var geometryElement = el
                             .get_Geometry(geomOpts)
                             .OfType<GeometryInstance>()
                             ?.FirstOrDefault()
-                            ?.GetSymbolGeometry();
-                        //?.GetInstanceGeometry();
+                            ?.GetInstanceGeometry();
                         BoundingBoxXYZ sBoundingBox = geometryElement.GetBoundingBox();
 
                         var max = geometryElement.GetBoundingBox().Max;
@@ -317,18 +318,18 @@ namespace RevitTest
 
                         var unionSolid = solids.Aggregate((x, y) => BooleanOperationsUtils
                         .ExecuteBooleanOperation(x, y, BooleanOperationsType.Union));
-
+                        ElementId dshId = null;
                         using (var tr = new Transaction(_document, "Create Shape"))
                         {
                             tr.Start();
-                            var dsh = _document.CreateDirectShape(new List<GeometryObject> { unionSolid });
-
-                            var dshMax = dsh.get_BoundingBox(null).Max;
-                            var dshMin = dsh.get_BoundingBox(null).Min;
+                            DirectShape dsh = _document.CreateDirectShape(new List<GeometryObject> { unionSolid });
+                            dshId = dsh.Id;
                             tr.Commit();
                         }
-
-
+                        Element edsh = _document.GetElement(dshId);
+                        _selection.SetElementIds(new List<ElementId> { dshId });
+                        var ebb = edsh.get_BoundingBox(null);
+                        var loc = edsh.Location as LocationPoint;
                         var uMax = unionSolid.GetBoundingBox().Max;
                         var uMin = unionSolid.GetBoundingBox().Min;
 
@@ -352,12 +353,7 @@ namespace RevitTest
                                     }
                                 }
                             }
-                        }
-                    }
-                    if (el is Extrusion extrusion)
-                    {
-                        var eMax = extrusion.get_BoundingBox(null).Max;
-                        var eMin = extrusion.get_BoundingBox(null).Min;
+                        }*/
                     }
                 }
             }
@@ -366,6 +362,73 @@ namespace RevitTest
 
             }
             return Result.Succeeded;
+        }
+    
+        private void InstancePoints(UIApplication uiapp, FamilyInstance familyInstance)
+        {
+            UIDocument _uiDocument = uiapp.ActiveUIDocument;
+            Document _document = _uiDocument.Document;
+            Selection _selection = _uiDocument.Selection;
+
+            try
+            {
+                Options geomOpts = new Options { DetailLevel = ViewDetailLevel.Fine };
+                var instanceGeometry = familyInstance
+                    .get_Geometry(geomOpts)
+                    .OfType<GeometryInstance>()
+                    ?.FirstOrDefault()
+                    ?.GetInstanceGeometry();
+
+                var hasCylindricalFace = instanceGeometry
+                    .OfType<Solid>()
+                    .SelectMany(s => s.Faces.OfType<CylindricalFace>())
+                    .Any();
+
+                XYZ max = null;
+                XYZ min = null;
+                if (hasCylindricalFace)
+                {
+                    var solids = instanceGeometry
+                        .OfType<Solid>()
+                        .Where(s => s.Volume != 0)
+                        .Where(s =>
+                        {
+                            var gStyle = _document.GetElement(s.GraphicsStyleId) as GraphicsStyle;
+                            if (s.Volume == 0 || (gStyle != null && gStyle.Name.Contains("Light Source")))
+                                return false;
+                            else
+                                return true;
+                        });
+                    var unionSolid = solids.Aggregate((x, y) => BooleanOperationsUtils
+                        .ExecuteBooleanOperation(x, y, BooleanOperationsType.Union));
+
+                    ElementId directShapeId = null;
+                    using (var tr = new Transaction(_document, "Create a temp Shape"))
+                    {
+                        tr.Start();
+                        directShapeId = _document.CreateDirectShape(new List<GeometryObject> { unionSolid }).Id;
+                        tr.Commit();
+                    }
+                    Element directShape = _document.GetElement(directShapeId);
+                    var directShapeBB = directShape.get_BoundingBox(null);
+                    max = directShapeBB.Max;
+                    min = directShapeBB.Min;
+                    using (var tr = new Transaction(_document, "Remove a temp Shape"))
+                    {
+                        tr.Start();
+                        _document.Delete(directShapeId);
+                        tr.Commit();
+                    }
+                }
+                else
+                {
+
+                }
+            }
+            catch (Exception)
+            {
+
+            }
         }
     }
 }

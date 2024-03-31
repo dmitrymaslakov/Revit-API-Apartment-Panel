@@ -1,4 +1,5 @@
 ﻿using ApartmentPanel.Infrastructure.Extensions;
+using ApartmentPanel.Utility.Extensions.RevitExtensions;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System;
@@ -12,20 +13,15 @@ namespace ApartmentPanel.Utility
     {
         public FamilyInstacePoints(UIApplication uiapp, FamilyInstance familyInstance) : base(uiapp)
         {
-            /*View3D view3D = new FilteredElementCollector(_document)
-                .OfClass(typeof(View3D))
-                .Cast<View3D>()
-                .FirstOrDefault(v => !v.IsTemplate);
-            Options geomOpts = new Options { View = view3D };*/
             Options geomOpts = new Options { DetailLevel = ViewDetailLevel.Fine };
-            GeometryElement geometryElement = familyInstance
+            GeometryElement instanceGeometry = familyInstance
                 .get_Geometry(geomOpts)
                 .OfType<GeometryInstance>()
                 ?.FirstOrDefault()
                 ?.GetInstanceGeometry();
 
             Location = (familyInstance.Location as LocationPoint)?.Point;
-            BoundingBoxXYZ elementBB = null;
+            /*BoundingBoxXYZ elementBB = null;
             List<BoundingBoxXYZ> boundingBoxes = new List<BoundingBoxXYZ>();
             foreach (GeometryObject geometryObject in geometryElement)
             {
@@ -41,16 +37,52 @@ namespace ApartmentPanel.Utility
                     boundingBoxes.Add(solid.GetBoundingBox());
                 }
             }
-            elementBB = boundingBoxes.Aggregate((acc, elem) => acc.Union(elem));
-            if (geometryElement != null)
+            elementBB = boundingBoxes.Aggregate((acc, elem) => acc.Union(elem));*/
+            if (instanceGeometry != null)
             {
-                Max = geometryElement.GetBoundingBox().Max;
-                Min = geometryElement.GetBoundingBox().Min;
-                /*var max = Location.Add(elementBB.Max);
-                var min = Location.Add(elementBB.Min);
+                var hasCylindricalFace = instanceGeometry
+                    .OfType<Solid>()
+                    .SelectMany(s => s.Faces.OfType<CylindricalFace>())
+                    .Any();
+                if (hasCylindricalFace)
+                {
+                    var solids = instanceGeometry
+                        .OfType<Solid>()
+                        .Where(s => s.Volume != 0)
+                        .Where(s =>
+                        {
+                            var gStyle = _document.GetElement(s.GraphicsStyleId) as GraphicsStyle;
+                            if (s.Volume == 0 || (gStyle != null && gStyle.Name.Contains("Light Source")))
+                                return false;
+                            else
+                                return true;
+                        });
+                    var unionSolid = solids.Aggregate((x, y) => BooleanOperationsUtils
+                        .ExecuteBooleanOperation(x, y, BooleanOperationsType.Union));
 
-                Max = max;
-                Min = min;*/
+                    ElementId directShapeId = null;
+                    using (var tr = new Transaction(_document, "Create a temp Shape"))
+                    {
+                        tr.Start();
+                        directShapeId = _document.CreateDirectShape(new List<GeometryObject> { unionSolid }).Id;
+                        tr.Commit();
+                    }
+                    Element directShape = _document.GetElement(directShapeId);
+                    var directShapeBB = directShape.get_BoundingBox(null);
+                    Max = directShapeBB.Max;
+                    Min = directShapeBB.Min;
+                    using (var tr = new Transaction(_document, "Remove a temp Shape"))
+                    {
+                        tr.Start();
+                        _document.Delete(directShapeId);
+                        tr.Commit();
+                    }
+                }
+                else
+                {
+                    Max = instanceGeometry.GetBoundingBox().Max;
+                    Min = instanceGeometry.GetBoundingBox().Min;
+                }
             }
         }
         public XYZ Location { get; }
