@@ -1,4 +1,5 @@
 ﻿using ApartmentPanel.Infrastructure.Repositories;
+using ApartmentPanel.Infrastructure.Handler;
 using Autodesk.Revit.UI;
 using ApartmentPanel.Core.Infrastructure.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,9 +13,9 @@ namespace ApartmentPanel.Infrastructure
         {
             hostBuilder.ConfigureServices(services =>
             {
-                services.AddSingleton<RequestHandler>();
+                services.AddSingleton<ExternalEventHandler>();
                 services.AddSingleton(provider =>
-                    ExternalEvent.Create(provider.GetService<RequestHandler>()));
+                    ExternalEvent.Create(provider.GetService<ExternalEventHandler>()));
                 services.AddTransient<IElementRepository, InfrastructureElementRepository>();
             });
             return hostBuilder;

@@ -40,16 +40,16 @@ namespace ApartmentPanel.Infrastructure.Models
                 var (maxPoint, minPoint) = (instancePoints.Max, instancePoints.Min);
                 width = Math.Abs(maxPoint.X - minPoint.X);
 
-                using (var tr = new Transaction(_document, "Removing temp elements"))
+                /*using (var tr = new Transaction(_document, "Removing temp elements"))
                 {
-                    tr.Start();
+                    tr.Start();*/
                     List<ElementId> deletedElementIds = new List<ElementId>
                     {
                         tempWall.Id, tempInstance.Id
                     };
                     _document.Delete(deletedElementIds);
-                    tr.Commit();
-                }
+                    /*tr.Commit();
+                }*/
             }
             return width;
         }
@@ -73,6 +73,7 @@ namespace ApartmentPanel.Infrastructure.Models
         {
             Face face = null;
             Options geomOptions = new Options { ComputeReferences = true };
+            
             GeometryElement wallGeom = wall.get_Geometry(geomOptions);
             foreach (GeometryObject geomObj in wallGeom)
             {
@@ -97,14 +98,15 @@ namespace ApartmentPanel.Infrastructure.Models
             XYZ dir = new XYZ(0, 0, 0);
 
             FamilyInstance newFamilyInstance = null;
-            using (var tr = new Transaction(_document, "Creating new FamilyInstance"))
+            /*using (var tr = new Transaction(_document, "Creating new FamilyInstance"))
             {
-                tr.Start();
+                tr.Start();*/
                 newFamilyInstance = _document
                     .Create
                     .NewFamilyInstance(face, location, refDir, symbol);
-                tr.Commit();
-            }
+            _document.Regenerate();
+                /*tr.Commit();
+            }*/
             return newFamilyInstance;
         }
 

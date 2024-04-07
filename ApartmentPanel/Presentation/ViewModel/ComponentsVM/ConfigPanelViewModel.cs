@@ -12,9 +12,6 @@ using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Core.Models;
 using ApartmentPanel.Presentation.Models.Batch;
-using System.Windows;
-using System.Windows.Media;
-using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
 using System.Text.RegularExpressions;
 using System.IO;
 
@@ -22,61 +19,6 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 {
     public class ConfigPanelViewModel : ViewModelBase, IConfigPanelViewModel
     {
-        #region MockFields
-        //static string mockAnnotation = "d:/Programming/Revit-2023/ApartmentPanelSln/ApartmentPanel/bin/Debug/Resources/Annotations/Lamp.png";
-        static string mockAnnotation = "E:\\Different\\Study\\Programming\\C-sharp\\Revit-API\\Apartment-Panel\\ApartmentPanel\\bin\\Debug\\Resources\\Annotations\\Lamp.png";
-        private static ObservableCollection<IApartmentElement> el1 = new ObservableCollection<IApartmentElement>
-        {
-            new ApartmentElement { Name = "Switch", Annotation = new FileAnnotationReader(mockAnnotation).Get() },
-            new ApartmentElement { Name = "Socket", Annotation = new FileAnnotationReader(mockAnnotation).Get() },
-            new ApartmentElement { Name = "ThroughSwitch", Annotation = new FileAnnotationReader(mockAnnotation).Get() }
-        };
-        private static ObservableCollection<IApartmentElement> el2 = new ObservableCollection<IApartmentElement>
-        {
-            new ApartmentElement { Name = "Smoke Sensor", Annotation = new FileAnnotationReader(mockAnnotation).Get() },
-            new ApartmentElement { Name = "USB", Annotation = new FileAnnotationReader(mockAnnotation).Get() },
-            new ApartmentElement { Name = "ThroughSwitch", Annotation = new FileAnnotationReader(mockAnnotation).Get() }
-        };
-        private static int _elementIndex = 1;
-        private static IEnumerable<Parameter> _parameters =
-            Enumerable.Range(1, 3).Select(i => new Parameter
-            {
-                Name = $"paramName {_elementIndex++}",
-                Value = $"paramValue {_elementIndex++}"
-            });
-        private static IEnumerable<BatchedElement> _batchedElements1 =
-            Enumerable.Range(1, 3).Select(i => new BatchedElement
-            {
-                Name = $"elName {_elementIndex++}",
-                Margin = new BatchedMargin(0, 0, i, 0),
-                Annotation = new FileAnnotationReader(mockAnnotation).Get(),
-                Parameters = new ObservableCollection<Parameter>(_parameters)
-            });
-        private static IEnumerable<BatchedRow> _rows =
-            Enumerable.Range(1, 2).Select(i => new BatchedRow
-            {
-                Number = i,
-                MountingHeight = new Height(),
-                RowElements = new ObservableCollection<BatchedElement>(_batchedElements1)
-            });
-
-        #endregion
-        #region MockProps
-        [JsonIgnore]
-        public ObservableCollection<IApartmentElement> MockEl1 { get; set; } = el1;
-        [JsonIgnore]
-        public ObservableCollection<Circuit> MockPanelCircuits { get; set; } = new ObservableCollection<Circuit>
-        {
-            new Circuit{ Number = "1", Elements = el1 },
-            new Circuit{ Number = "2", Elements = el2 },
-        };
-        [JsonIgnore]
-        public ObservableCollection<BatchedRow> MockBatchedRows { get; set; } =
-            new ObservableCollection<BatchedRow>(_rows);
-        [JsonIgnore]
-        public ImageSource MockAnnotation { get; set; } = new FileAnnotationReader(mockAnnotation).Get();
-        #endregion
-
         private readonly ConfigPanelCommandsCreater _commandCreater;
 
         public ConfigPanelViewModel() { }
@@ -84,12 +26,6 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         public ConfigPanelViewModel(IElementService elementService,
             IListElementsViewModel listElementsVM) : base(elementService)
         {
-            /*ElementBatch = new ElementBatch
-            {
-                Name = "SomeName",
-                Annotation = new FileAnnotationReader(mockAnnotation).Get(),
-                BatchedRows = new ObservableCollection<BatchedRow>(_rows)
-            };*/
             ElementBatch = new ElementBatch
             {
                 BatchedRows = new ObservableCollection<BatchedRow>
@@ -98,26 +34,20 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
                 }
             };
             Batches = new ObservableCollection<ElementBatch>();
-            //NewElementForBatch = new BatchedElement();
             SelectedBatchedElement = new BatchedElement();
             SelectedBatches = new ObservableCollection<ElementBatch>();
-            //SetParametersToBatchElement = OnSetParametersToBatchElementExecuted;
             _commandCreater = new ConfigPanelCommandsCreater(this, ElementService);
             ListElementsVM = listElementsVM;
             ApartmentElements = new ObservableCollection<IApartmentElement>();
-            //PanelCircuits = new ObservableDictionary<string, ObservableCollection<IApartmentElement>>();
             PanelCircuits = new ObservableCollection<Circuit>();
             CircuitElements = new ObservableCollection<IApartmentElement>();
             SelectedApartmentElements = new ObservableCollection<IApartmentElement>();
-            /*SelectedPanelCircuits =
-                new ObservableCollection<KeyValuePair<string, ObservableCollection<IApartmentElement>>>();*/
             SelectedPanelCircuits = new ObservableCollection<Circuit>();
 
             SelectedCircuitElements = new ObservableCollection<IApartmentElement>();
             ListHeightsOK = new ObservableCollection<double>();
             ListHeightsUK = new ObservableCollection<double>();
             ListHeightsCenter = new ObservableCollection<double>();
-            //LatestConfigPath = FileUtility.GetAssemblyPath() + "/LatestConfig.json";
             if(TryFindConfigs(out ObservableCollection<string> configs))
                 Configs = configs;
             else Configs = new ObservableCollection<string>();
@@ -170,13 +100,6 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             set => Set(ref _panelCircuits, value);
         }
 
-        /*private ObservableDictionary<string, ObservableCollection<IApartmentElement>> _panelCircuits;
-        public ObservableDictionary<string, ObservableCollection<IApartmentElement>> PanelCircuits
-        {
-            get => _panelCircuits;
-            set => Set(ref _panelCircuits, value);
-        }*/
-
         private ObservableCollection<IApartmentElement> _selectedApartmentElements;
         [JsonIgnore]
         public ObservableCollection<IApartmentElement> SelectedApartmentElements
@@ -217,10 +140,8 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             set => Set(ref _selectedCircuitElement, value);
         }
 
-        //private BitmapSource _annotationPreview;
         private BitmapImage _annotationPreview;
         [JsonIgnore]
-        //public BitmapSource AnnotationPreview { get => _annotationPreview; set => Set(ref _annotationPreview, value); }
         public BitmapImage AnnotationPreview { get => _annotationPreview; set => Set(ref _annotationPreview, value); }
 
         private string _newCircuit;
@@ -483,10 +404,6 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             if (startIndex != -1)
                 return fileName.Substring(0, startIndex);
             return "";
-        }
-
-        private void RemoveConfig(object commandParameter)
-        {
         }
     }
 }

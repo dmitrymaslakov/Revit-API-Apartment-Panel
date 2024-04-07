@@ -61,22 +61,24 @@ namespace ApartmentPanel.Utility
                         .ExecuteBooleanOperation(x, y, BooleanOperationsType.Union));
 
                     ElementId directShapeId = null;
-                    using (var tr = new Transaction(_document, "Create a temp Shape"))
+                    /*using (var tr = new Transaction(_document, "Create a temp Shape"))
                     {
-                        tr.Start();
+                        tr.Start();*/
                         directShapeId = _document.CreateDirectShape(new List<GeometryObject> { unionSolid }).Id;
-                        tr.Commit();
-                    }
-                    Element directShape = _document.GetElement(directShapeId);
+                    _document.Regenerate();
+                /*tr.Commit();
+                }*/
+                Element directShape = _document.GetElement(directShapeId);
                     var directShapeBB = directShape.get_BoundingBox(null);
                     Max = directShapeBB.Max;
                     Min = directShapeBB.Min;
-                    using (var tr = new Transaction(_document, "Remove a temp Shape"))
+                    /*using (var tr = new Transaction(_document, "Remove a temp Shape"))
                     {
-                        tr.Start();
+                        tr.Start();*/
                         _document.Delete(directShapeId);
-                        tr.Commit();
-                    }
+                    _document.Regenerate();
+                    /*tr.Commit();
+                }*/
                 }
                 else
                 {

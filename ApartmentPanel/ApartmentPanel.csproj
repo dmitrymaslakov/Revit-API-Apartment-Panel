@@ -75,6 +75,11 @@
     <Compile Include="Core\Infrastructure.Interfaces\DTO\CircuitDTO.cs" />
     <Compile Include="Infrastructure\Enums\LocationType.cs" />
     <Compile Include="Infrastructure\Extensions\BoundingBoxXYZExtensions.cs" />
+    <Compile Include="Infrastructure\Handler\HandlerStates\SetParametersHandlerState.cs" />
+    <Compile Include="Infrastructure\Handler\HandlerStates\AddElementHandlerState.cs" />
+    <Compile Include="Infrastructure\Handler\HandlerStates\InsertBatchHandlerState.cs" />
+    <Compile Include="Infrastructure\Handler\HandlerStates\InsertElementHandlerState.cs" />
+    <Compile Include="Infrastructure\Handler\HandlerStates\HandlerState.cs" />
     <Compile Include="Infrastructure\Models\BatchedInstance.cs" />
     <Compile Include="Infrastructure\Models\BatchedInstanceRow.cs" />
     <Compile Include="Infrastructure\Models\BatchInstaller.cs" />
@@ -86,6 +91,7 @@
     <Compile Include="Infrastructure\Models\LocationStrategies\CenterLocationStrategy.cs" />
     <Compile Include="Presentation\Services\ConfigPanelWindowService.cs" />
     <Compile Include="Utility\Extensions\RevitExtensions\DocumentExtensions.cs" />
+    <Compile Include="Utility\SelectionFilters\ISelectionFilterFactory.cs" />
     <Compile Include="Utility\RevitInfrastructureBase.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\TopLocationStrategy.cs" />
     <Compile Include="Core\Enums\TypeOfHeight.cs" />
@@ -142,8 +148,7 @@
     <Compile Include="Infrastructure\DependencyInjection.cs" />
     <Compile Include="Infrastructure\Repositories\BaseRepository.cs" />
     <Compile Include="Infrastructure\Repositories\InfrastructureElementRepository.cs" />
-    <Compile Include="Infrastructure\Request.cs" />
-    <Compile Include="Infrastructure\RequestHandler.cs" />
+    <Compile Include="Infrastructure\Handler\ExternalEventHandler.cs" />
     <Compile Include="Presentation\Commands\BaseCommand.cs" />
     <Compile Include="Presentation\Commands\BaseCommandsCreater.cs" />
     <Compile Include="Presentation\Commands\ConfigPanelCommandsCreater.cs" />
@@ -186,6 +191,8 @@
     <Compile Include="Utility\Log.cs" />
     <Compile Include="Utility\ObservableDictionary.cs" />
     <Compile Include="Utility\RevitUtility.cs" />
+    <Compile Include="Utility\SelectionFilters\WallFloorCeilingFaceFilterFactory.cs" />
+    <Compile Include="Utility\SelectionFilters\WallFloorCeilingFaceFilter.cs" />
     <Compile Include="Utility\StaticData.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -265,5 +272,6 @@
       <Version>1.1.39</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

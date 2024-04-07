@@ -1,5 +1,7 @@
-﻿using Autodesk.Revit.DB;
+﻿using ApartmentPanel.Utility.SelectionFilters;
+using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using Autodesk.Revit.UI.Selection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,12 +37,13 @@ namespace ApartmentPanel.Utility
 
                 if (level != null)
                 {
-                    using (Transaction transaction = new Transaction(_document, "Create Wall"))
+                    /*using (Transaction transaction = new Transaction(_document, "Create Wall"))
                     {
-                        transaction.Start();
+                        transaction.Start();*/
                         wallResult = Wall.Create(_document, line, wallType.Id, level.Id, 10, 0, false, false);
-                        transaction.Commit();
-                    }
+                    _document.Regenerate();    
+                    /*transaction.Commit();
+                    }*/
                 }
                 else
                     TaskDialog.Show("Error", "No suitable level found.");
@@ -49,7 +52,7 @@ namespace ApartmentPanel.Utility
                 TaskDialog.Show("Error", "No suitable wall type found.");
             return wallResult;
         }
-        
+
         public FamilyInstance CreateFamilyInstance(FamilySymbol symbol, Wall wall)
         {
             Face face = null;
@@ -78,15 +81,28 @@ namespace ApartmentPanel.Utility
             XYZ dir = new XYZ(0, 0, 0);
 
             FamilyInstance newFamilyInstance = null;
-            using (var tr = new Transaction(_document, "Creating new FamilyInstance"))
+            /*using (var tr = new Transaction(_document, "Creating new FamilyInstance"))
             {
-                tr.Start();
+                tr.Start();*/
+                if (!symbol.IsActive) ActivateFamilySymbol(symbol);
+
                 newFamilyInstance = _document
                     .Create
                     .NewFamilyInstance(face, location, refDir, symbol);
-                tr.Commit();
-            }
+                /*tr.Commit();
+            }*/
             return newFamilyInstance;
+        }
+
+        public void ActivateFamilySymbol(FamilySymbol symbol)
+        {
+            symbol.Activate();
+            _document.Regenerate();
+        }
+
+        public ISelectionFilter CreateSelectionFilter(ISelectionFilterFactory factory)
+        {
+            return factory.CreateSelectionFilter();
         }
     }
 }

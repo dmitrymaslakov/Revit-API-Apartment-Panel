@@ -38,7 +38,8 @@
                               GotFocus="ListView_GotFocus">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
+                                <!--<StackPanel Orientation="Horizontal"/>-->
+                                <WrapPanel Width="350"/>
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>

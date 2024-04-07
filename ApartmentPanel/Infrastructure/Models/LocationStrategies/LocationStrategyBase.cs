@@ -53,12 +53,12 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
             XYZ translation = newBasePoint - basePoint;
             Transform rotation = Transform.CreateRotation(XYZ.BasisZ, angle);
             XYZ rotatedTranslation = rotation.OfVector(translation);
-            using (var tr = new Transaction(_document, "Instance translation"))
+            /*using (var tr = new Transaction(_document, "Instance translation"))
             {
-                tr.Start();
+                tr.Start();*/
                 familyInstance.Location.Move(rotatedTranslation);
-                tr.Commit();
-            }
+                /*tr.Commit();
+            }*/
         }
 
         protected double GetAngleBetweenGlobalXAxisAndLocalXAxis(FamilyInstance familyInstance)

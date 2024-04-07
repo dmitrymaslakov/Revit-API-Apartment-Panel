@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using System.Security.Cryptography;
 using System.Windows.Controls;
 using System.Xml.Linq;
+using ApartmentPanel.Utility.SelectionFilters;
 
 namespace ApartmentPanel.Infrastructure.Models
 {
@@ -29,37 +30,37 @@ namespace ApartmentPanel.Infrastructure.Models
         private Dictionary<string, string> _parameters;
         private string _responsibleForHeightParameter;
         private string _responsibleForCircuitParameter;
+        private RevitUtility _revitUtility;
 
         #endregion
 
-        public FamilyInstanceBuilder(UIApplication uiapp) : base(uiapp) { }
+        public FamilyInstanceBuilder(UIApplication uiapp) : base(uiapp)
+        {
+            _revitUtility = new RevitUtility(_uiapp);
+        }
 
         public Reference Host { get; private set; }
         //public BuiltInstance BuiltInstance { get; private set; }
 
         public BuiltInstance Build(string elementName)
         {
-            FamilySymbol familySymbol = new FilteredElementCollector(_document)
+            BuiltInstance builtInstance = null;
+            using (var tr = new Transaction(_document, "Apartment Element"))
+            {
+                tr.Start();
+                FamilySymbol familySymbol = new FilteredElementCollector(_document)
                 .OfClass(typeof(FamilySymbol))
                 .FirstOrDefault(fs => fs.Name == elementName) as FamilySymbol;
 
-            if (familySymbol == null) return null;
-            if (!familySymbol.IsActive)
-            {
-                using (var tr = new Transaction(_document, "Activate FamilySymbol"))
-                {
-                    tr.Start();
-                    familySymbol.Activate();
-                    _document.Regenerate();
-                    tr.Commit();
-                }
-            }
-            if (Host == null)
-                Host = PickHost();
+                if (familySymbol == null) return null;
+                if (Host == null)
+                    Host = PickHost();
 
-            ElementId familyInstanceId = FamilyInstanceCreate(familySymbol);
-            BuiltInstance builtInstance = new BuiltInstance(_uiapp, familyInstanceId);
-            FamilyInstanceConfigure(builtInstance);
+                ElementId familyInstanceId = FamilyInstanceCreate(familySymbol);
+                builtInstance = new BuiltInstance(_uiapp, familyInstanceId);
+                FamilyInstanceConfigure(builtInstance);
+                tr.Commit();
+            }
             return builtInstance;
         }
 
@@ -125,8 +126,17 @@ namespace ApartmentPanel.Infrastructure.Models
         #endregion
 
         #region Private methods
-        private Reference PickHost() =>
-            _selection.PickObject(ObjectType.PointOnElement, "Pick a host in the model");
+        private Reference PickHost()
+        {
+            ISelectionFilterFactory filterFactory = new WallFloorCeilingFaceFilterFactory(_document);
+            ISelectionFilter filter = _revitUtility.CreateSelectionFilter(filterFactory);
+            var r = _selection.PickObject(ObjectType.PointOnElement, filter, "Pick a host in the model");
+            //var r = _selection.PickObject(ObjectType.LinkedElement, filter, "Pick a host in the model");
+            Element refEl = _document.GetElement(r);
+            GeometryObject geoObject = refEl.GetGeometryObjectFromReference(r);
+
+            return r;
+        }
 
         private bool IsHorizontal(Reference faceRef)
         {
@@ -151,19 +161,17 @@ namespace ApartmentPanel.Infrastructure.Models
         private ElementId FamilyInstanceCreate(FamilySymbol symbol)
         {
             FamilyInstance newFamilyInstance = null;
-            using (var tr = new Transaction(_document, "Creating new FamilyInstance"))
+            /*using (var tr = new Transaction(_document, "Creating new FamilyInstance"))
             {
-                tr.Start();
+                tr.Start();*/
+                if (!symbol.IsActive) _revitUtility.ActivateFamilySymbol(symbol);
                 XYZ dir = new XYZ(0, 0, 0);
                 XYZ location = Host.GlobalPoint ?? new XYZ(0, 0, 0);
 
-                newFamilyInstance = /*_uiDocument
-                    .Document*/
-                    _document
-                    .Create
+                newFamilyInstance = _document.Create
                     .NewFamilyInstance(Host, location, dir, symbol);
-                tr.Commit();
-            }
+                /*tr.Commit();
+            }*/
             return newFamilyInstance.Id;
         }
         private void FamilyInstanceConfigure(BuiltInstance builtInstance)
@@ -171,15 +179,16 @@ namespace ApartmentPanel.Infrastructure.Models
             FamilyInstance familyInstance = _document.GetElement(builtInstance.Id) as FamilyInstance;
 
             if (_currentLevelId != null) SetCurrentLevel(familyInstance);
-            using (var tr = new Transaction(_document, "Config FamilyInstance"))
+            /*using (var tr = new Transaction(_document, "Config FamilyInstance"))
             {
-                tr.Start();
+                tr.Start();*/
                 if (!string.IsNullOrEmpty(_renderedHeight)) SetHeight(familyInstance);
                 if (!string.IsNullOrEmpty(_circuit)) SetCircuit(familyInstance);
                 if (_parameters != null) SetParameters(familyInstance);
-                tr.Commit();
-            }
-            if (_locationStrategy != null && !IsHorizontal(Host)) _locationStrategy.SetRequiredLocation(builtInstance, _heightFromLevel);
+                /*tr.Commit();
+            }*/
+            if (_locationStrategy != null && !IsHorizontal(Host)) 
+                _locationStrategy.SetRequiredLocation(builtInstance, _heightFromLevel);
         }
         private ElementId GetViewLevel()
         {
@@ -201,14 +210,15 @@ namespace ApartmentPanel.Infrastructure.Models
         }
         private void SetCurrentLevel(FamilyInstance familyInstance)
         {
-            using (var tr = new Transaction(_document, "Set current level"))
+            /*using (var tr = new Transaction(_document, "Set current level"))
             {
-                tr.Start();
+                tr.Start();*/
                 familyInstance
                 .get_Parameter(BuiltInParameter.INSTANCE_SCHEDULE_ONLY_LEVEL_PARAM)
                 .Set(_currentLevelId);
-                tr.Commit();
-            }
+
+                /*tr.Commit();
+            }*/
         }
         /*private void SetElevationFromLevel(FamilyInstance familyInstance)
         {

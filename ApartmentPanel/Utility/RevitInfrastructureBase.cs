@@ -20,5 +20,14 @@ namespace ApartmentPanel.Utility
             _document = _uiDocument.Document;
             _selection = _uiDocument.Selection;
         }
+
+        protected void SetInfrastructure(UIApplication uiapp)
+        {
+            _uiapp = uiapp;
+            _uiDocument = _uiapp.ActiveUIDocument;
+            _document = _uiDocument.Document;
+            _selection = _uiDocument.Selection;
+        }
+
     }
 }

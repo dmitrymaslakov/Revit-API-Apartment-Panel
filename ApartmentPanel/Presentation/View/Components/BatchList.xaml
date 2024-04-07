@@ -17,10 +17,11 @@
     </UserControl.Resources>
 
     <ListView ItemsSource="{Binding Batches, ElementName=root}"
-              GotFocus="ListView_GotFocus">
+              GotFocus="ListView_GotFocus"
+              Height="85">
         <ListView.ItemsPanel>
             <ItemsPanelTemplate>
-                <WrapPanel/>
+                <WrapPanel Width="350"/>
             </ItemsPanelTemplate>
         </ListView.ItemsPanel>
         <ListView.ItemTemplate>
