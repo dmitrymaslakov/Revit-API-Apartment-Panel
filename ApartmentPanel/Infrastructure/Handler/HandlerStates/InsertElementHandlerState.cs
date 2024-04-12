@@ -1,5 +1,4 @@
 ﻿using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
-using ApartmentPanel.Infrastructure.Handler.HandlerStates;
 using ApartmentPanel.Infrastructure.Models;
 using ApartmentPanel.Utility;
 using ApartmentPanel.Utility.Exceptions;
@@ -25,9 +24,9 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
             if (elementData.Category.Contains(StaticData.LIGHTING_DEVICES))
             {
                 List<FamilyInstance> lamps = PickLamp();
-                elementData.SwitchNumbers = lamps.Count == 0
+                elementData.SwitchKeys = lamps.Count == 0
                     ? ""
-                    : GetNumbersFromLamps(lamps);
+                    : GetKeysFromLamps(lamps, elementData.Circuit.ResponsibleForCircuitParameter);
             }
 
             while (isMultiple)
@@ -90,15 +89,13 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
                             ;
             return collection;
         }
-        private string GetNumbersFromLamps(List<FamilyInstance> lamps)
+        private string GetKeysFromLamps(List<FamilyInstance> lamps, string targetCircuitParam)
         {
             var circuitParameters = new List<Parameter>();
-
-            string targetCircuitParam = StaticData.ELEMENT_CIRCUIT_PARAM_NAME;
-
+            //string targetCircuitParam = StaticData.ELEMENT_CIRCUIT_PARAM_NAME;
             foreach (var lamp in lamps)
             {
-                var lampParameter = lamp.Parameters
+                Parameter lampParameter = lamp.Parameters
                     .OfType<Parameter>()
                     .Where(p => p.Definition.Name.Contains(targetCircuitParam))
                     .FirstOrDefault();
@@ -108,7 +105,6 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
 
                 circuitParameters.Add(lampParameter);
             }
-
             var lampCircuits = new List<string>();
 
             foreach (Parameter parameter in circuitParameters)
@@ -117,12 +113,14 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
                         lampCircuits.Add(parameter.AsString());
 
             var suffixes = lampCircuits
-                .Select(c => c.Substring(c.IndexOf("/") + 1))
+                .Select(c => c.Last().ToString())
                 .Distinct()
-                .OrderBy(c => c)
-                .ToList();
-
-            return string.Join(",", suffixes);
+                .OrderBy(c => c);
+            /*.Select(c => c.Substring(c.IndexOf("/") + 1))
+            .Distinct()
+            .OrderBy(c => c)
+            .ToList();*/
+            return string.Join("", suffixes);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ApartmentPanel.Core.Models;
 using ApartmentPanel.Core.Models.Interfaces;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -101,6 +102,11 @@ namespace ApartmentPanel.Presentation.View.Components
                     char numericChar = (char)('0' + (e.Key - Key.NumPad0));
                     characterValue = numericChar.ToString();
                 }
+                else if (e.Key >= Key.A && e.Key <= Key.Z)
+                {
+                    if (char.TryParse(e.Key.ToString(), out char parsedCharacter))
+                        characterValue = parsedCharacter.ToString().ToLower();
+                }
                 KeyDownCommand?.Execute(characterValue);
             }
             catch (System.Exception)
@@ -123,6 +129,7 @@ namespace ApartmentPanel.Presentation.View.Components
                 IApartmentElement element = image.DataContext as IApartmentElement;
                 if (element.Category == "Lighting Devices")
                     MouseEnterCommand?.Execute("MouseEnter");
+                if(!image.Focusable) image.Focusable = true;
                 image.Focus();
             }
             catch (System.Exception)
@@ -143,6 +150,7 @@ namespace ApartmentPanel.Presentation.View.Components
                 ListView lv = sender as ListView;
                 //IApartmentElement element = button.DataContext as IApartmentElement;
                 ListViewItem lvi = e.OriginalSource as ListViewItem;
+                if(lvi == null) return;
                 IApartmentElement element = lvi.Content as IApartmentElement;
                 //Circuit circuit = FindParentCircuit(button);
                 Circuit circuit = lv.DataContext as Circuit;

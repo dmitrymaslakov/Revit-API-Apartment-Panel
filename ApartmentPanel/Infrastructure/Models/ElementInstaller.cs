@@ -49,7 +49,7 @@ namespace ApartmentPanel.Infrastructure.Models
         public BuiltInstance InstallLightingDevices(Reference host = null)
         {
             return _familyInstanceBuilder
-                .WithSwitchNumbers(_elementData.SwitchNumbers)
+                .WithSwitchNumbers(_elementData.SwitchKeys)
                 .SetLocationStrategy(_locationStrategy)
                 .WithHeight(_elementData.Height.FromFloor, _elementData.Height.FromLevel)
                 .WithResponsibleForHeight(_elementData.Height.ResponsibleForHeightParameter)

@@ -30,14 +30,12 @@ namespace ApartmentPanel.Infrastructure.Models
         private Dictionary<string, string> _parameters;
         private string _responsibleForHeightParameter;
         private string _responsibleForCircuitParameter;
-        private RevitUtility _revitUtility;
+        private readonly RevitUtility _revitUtility;
 
         #endregion
 
-        public FamilyInstanceBuilder(UIApplication uiapp) : base(uiapp)
-        {
+        public FamilyInstanceBuilder(UIApplication uiapp) : base(uiapp) => 
             _revitUtility = new RevitUtility(_uiapp);
-        }
 
         public Reference Host { get; private set; }
         //public BuiltInstance BuiltInstance { get; private set; }
@@ -130,12 +128,11 @@ namespace ApartmentPanel.Infrastructure.Models
         {
             ISelectionFilterFactory filterFactory = new WallFloorCeilingFaceFilterFactory(_document);
             ISelectionFilter filter = _revitUtility.CreateSelectionFilter(filterFactory);
-            var r = _selection.PickObject(ObjectType.PointOnElement, filter, "Pick a host in the model");
-            //var r = _selection.PickObject(ObjectType.LinkedElement, filter, "Pick a host in the model");
-            Element refEl = _document.GetElement(r);
+            return _selection.PickObject(ObjectType.PointOnElement, filter, "Pick a host in the model");
+            /*Element refEl = _document.GetElement(r);
             GeometryObject geoObject = refEl.GetGeometryObjectFromReference(r);
 
-            return r;
+            return r;*/
         }
 
         private bool IsHorizontal(Reference faceRef)
@@ -164,14 +161,14 @@ namespace ApartmentPanel.Infrastructure.Models
             /*using (var tr = new Transaction(_document, "Creating new FamilyInstance"))
             {
                 tr.Start();*/
-                if (!symbol.IsActive) _revitUtility.ActivateFamilySymbol(symbol);
-                XYZ dir = new XYZ(0, 0, 0);
-                XYZ location = Host.GlobalPoint ?? new XYZ(0, 0, 0);
+            if (!symbol.IsActive) _revitUtility.ActivateFamilySymbol(symbol);
+            XYZ dir = new XYZ(0, 0, 0);
+            XYZ location = Host.GlobalPoint ?? new XYZ(0, 0, 0);
 
-                newFamilyInstance = _document.Create
-                    .NewFamilyInstance(Host, location, dir, symbol);
-                /*tr.Commit();
-            }*/
+            newFamilyInstance = _document.Create
+                .NewFamilyInstance(Host, location, dir, symbol);
+            /*tr.Commit();
+        }*/
             return newFamilyInstance.Id;
         }
         private void FamilyInstanceConfigure(BuiltInstance builtInstance)
@@ -182,12 +179,12 @@ namespace ApartmentPanel.Infrastructure.Models
             /*using (var tr = new Transaction(_document, "Config FamilyInstance"))
             {
                 tr.Start();*/
-                if (!string.IsNullOrEmpty(_renderedHeight)) SetHeight(familyInstance);
-                if (!string.IsNullOrEmpty(_circuit)) SetCircuit(familyInstance);
-                if (_parameters != null) SetParameters(familyInstance);
-                /*tr.Commit();
-            }*/
-            if (_locationStrategy != null && !IsHorizontal(Host)) 
+            if (!string.IsNullOrEmpty(_renderedHeight)) SetHeight(familyInstance);
+            if (!string.IsNullOrEmpty(_circuit)) SetCircuit(familyInstance);
+            if (_parameters != null) SetParameters(familyInstance);
+            /*tr.Commit();
+        }*/
+            //if (_locationStrategy != null && !IsHorizontal(Host))
                 _locationStrategy.SetRequiredLocation(builtInstance, _heightFromLevel);
         }
         private ElementId GetViewLevel()
@@ -213,12 +210,12 @@ namespace ApartmentPanel.Infrastructure.Models
             /*using (var tr = new Transaction(_document, "Set current level"))
             {
                 tr.Start();*/
-                familyInstance
-                .get_Parameter(BuiltInParameter.INSTANCE_SCHEDULE_ONLY_LEVEL_PARAM)
-                .Set(_currentLevelId);
+            familyInstance
+            .get_Parameter(BuiltInParameter.INSTANCE_SCHEDULE_ONLY_LEVEL_PARAM)
+            .Set(_currentLevelId);
 
-                /*tr.Commit();
-            }*/
+            /*tr.Commit();
+        }*/
         }
         /*private void SetElevationFromLevel(FamilyInstance familyInstance)
         {
@@ -241,11 +238,11 @@ namespace ApartmentPanel.Infrastructure.Models
             switch (category)
             {
                 case StaticData.LIGHTING_FIXTURES:
-                    _lampSuffix = string.IsNullOrEmpty(_lampSuffix) ? _lampSuffix : "/" + _lampSuffix;
+                    //_lampSuffix = string.IsNullOrEmpty(_lampSuffix) ? _lampSuffix : "/" + _lampSuffix;
                     circuitParam.Set(_circuit + _lampSuffix);
                     break;
                 case StaticData.LIGHTING_DEVICES:
-                    _switchNumbers = string.IsNullOrEmpty(_switchNumbers) ? _switchNumbers : "/" + _switchNumbers;
+                    //_switchNumbers = string.IsNullOrEmpty(_switchNumbers) ? _switchNumbers : "/" + _switchNumbers;
                     circuitParam.Set(_circuit + _switchNumbers);
                     break;
                 case StaticData.ELECTRICAL_FIXTURES:

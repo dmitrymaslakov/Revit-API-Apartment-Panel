@@ -13,7 +13,7 @@ namespace ApartmentPanel.Core.Infrastructure.Interfaces.DTO
         public string CurrentSuffix { get; set; }
         public Height Height { get; set; }
         public string InsertingMode { get; set; }
-        public string SwitchNumbers { get; set; }
+        public string SwitchKeys { get; set; }
         public Thickness Margin { get; set; }
         public double Offset { get; set; }
         public BatchedLocation Location { get; set; }
