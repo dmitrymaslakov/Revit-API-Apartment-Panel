@@ -48,6 +48,7 @@ namespace ApartmentPanel.Infrastructure.Repositories
         public void Analize()
         {
             //_handler.Request.Make(RequestId.None);
+            _handler.SetState(new AnalyzingHandlerState());
             _exEvent.Raise();
         }
     }

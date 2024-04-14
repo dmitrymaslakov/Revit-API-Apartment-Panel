@@ -23,6 +23,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <components:CircuitList 
             Grid.Row="1"
@@ -99,8 +100,8 @@
                 </StatusBarItem.Style>
             </StatusBarItem>
         </StatusBar>
-        <!--<WrapPanel Grid.Row="6">
+        <WrapPanel Grid.Row="7">
             <Button Content="Analize" Command="{Binding AnalizeCommand}"/>
-        </WrapPanel>-->
+        </WrapPanel>
     </Grid>
 </UserControl>

@@ -4,6 +4,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Controls;
 
 namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
@@ -30,7 +31,7 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
                     break;
                 case LocationType.Center:
                     double deltaMinMaxPointsZ = maxPoint.Z - minPoint.Z;
-                    double centerPointZ = minPoint.Z + deltaMinMaxPointsZ/2;
+                    double centerPointZ = minPoint.Z + deltaMinMaxPointsZ / 2;
                     targetPoint = new XYZ(basePoint.X, basePoint.Y, centerPointZ);
                     break;
             }
@@ -45,9 +46,9 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
                 ? 0
                 : builtInstance.Width / 2 + HorizontalOffset;
 
-            double levelElevation = GetLevelElevation();
+            if (!GetLevelElevation(out double levelElevation)) return;
             XYZ newBasePoint = new XYZ(
-                basePoint.X + fullOffset, 
+                basePoint.X + fullOffset,
                 basePoint.Y,
                 levelElevation + deltaPoints.Z + heightInFeets);
             XYZ translation = newBasePoint - basePoint;
@@ -56,9 +57,9 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
             /*using (var tr = new Transaction(_document, "Instance translation"))
             {
                 tr.Start();*/
-                familyInstance.Location.Move(rotatedTranslation);
-                /*tr.Commit();
-            }*/
+            familyInstance.Location.Move(rotatedTranslation);
+            /*tr.Commit();
+        }*/
         }
 
         protected double GetAngleBetweenGlobalXAxisAndLocalXAxis(FamilyInstance familyInstance)
@@ -68,32 +69,44 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
             XYZ globalXAxis = XYZ.BasisX;
             return globalXAxis.AngleOnPlaneTo(localXAxis, XYZ.BasisZ);
         }
-        
+
         protected ElementId GetViewLevel(Document doc)
         {
             View active = doc.ActiveView;
-            ElementId levelId = null;
+            //ElementId levelId = null;
             Parameter level = active.LookupParameter("Associated Level");
             if (level == null)
                 return null;
 
             FilteredElementCollector lvlCollector = new FilteredElementCollector(doc);
             ICollection<Element> lvlCollection = lvlCollector.OfClass(typeof(Level)).ToElements();
-            foreach (Element l in lvlCollection)
+            /*foreach (Element l in lvlCollection)
             {
                 Level lvl = l as Level;
                 if (lvl.Name == level.AsString())
-                    levelId = lvl.Id;
-            }
-            return levelId;
+                    levelId = lvl.Id; break;
+            }*/
+            Level lr = lvlCollection
+                .OfType<Level>()
+                .FirstOrDefault(lvl => lvl.Name == level.AsString());
+
+            //return levelId;
+            return lr.Id;
         }
 
-        protected double GetLevelElevation()
+        protected bool GetLevelElevation(out double elevation)
         {
             ElementId levelId = GetViewLevel(_document);
+            if (levelId == null)
+            {
+                elevation = 0;
+                return false;
+            }
+
             Level level = _document.GetElement(levelId) as Level;
-            double elevation = level.Elevation;
-            return elevation;
+            //double elevation = level.Elevation;
+            elevation = level.ProjectElevation;
+            return true;
         }
     }
 }

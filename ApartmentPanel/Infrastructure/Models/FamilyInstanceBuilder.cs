@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Windows.Controls;
 using System.Xml.Linq;
 using ApartmentPanel.Utility.SelectionFilters;
+using ApartmentPanel.Utility.Extensions.RevitExtensions;
 
 namespace ApartmentPanel.Infrastructure.Models
 {
@@ -51,8 +52,18 @@ namespace ApartmentPanel.Infrastructure.Models
                 .FirstOrDefault(fs => fs.Name == elementName) as FamilySymbol;
 
                 if (familySymbol == null) return null;
+
                 if (Host == null)
-                    Host = PickHost();
+                {
+                    ISelectionFilterFactory filterFactory = null;
+                    if (familySymbol.CanBePlacedOnVerticalFace())
+                        filterFactory = new WallFloorCeilingFaceFilterFactory(_document);
+                    else
+                        filterFactory = new HorizontalFaceFilterFactory(_document);
+
+                    ISelectionFilter filter = filterFactory.CreateSelectionFilter();
+                    Host = _selection.PickHost(filter);
+                }
 
                 ElementId familyInstanceId = FamilyInstanceCreate(familySymbol);
                 builtInstance = new BuiltInstance(_uiapp, familyInstanceId);
@@ -124,16 +135,8 @@ namespace ApartmentPanel.Infrastructure.Models
         #endregion
 
         #region Private methods
-        private Reference PickHost()
-        {
-            ISelectionFilterFactory filterFactory = new WallFloorCeilingFaceFilterFactory(_document);
-            ISelectionFilter filter = _revitUtility.CreateSelectionFilter(filterFactory);
-            return _selection.PickObject(ObjectType.PointOnElement, filter, "Pick a host in the model");
-            /*Element refEl = _document.GetElement(r);
-            GeometryObject geoObject = refEl.GetGeometryObjectFromReference(r);
-
-            return r;*/
-        }
+        /*private Reference PickHost(ISelectionFilter filter) =>
+            _selection.PickObject(ObjectType.PointOnElement, filter, "Pick a host in the model");*/
 
         private bool IsHorizontal(Reference faceRef)
         {
@@ -158,17 +161,13 @@ namespace ApartmentPanel.Infrastructure.Models
         private ElementId FamilyInstanceCreate(FamilySymbol symbol)
         {
             FamilyInstance newFamilyInstance = null;
-            /*using (var tr = new Transaction(_document, "Creating new FamilyInstance"))
-            {
-                tr.Start();*/
             if (!symbol.IsActive) _revitUtility.ActivateFamilySymbol(symbol);
             XYZ dir = new XYZ(0, 0, 0);
             XYZ location = Host.GlobalPoint ?? new XYZ(0, 0, 0);
 
             newFamilyInstance = _document.Create
                 .NewFamilyInstance(Host, location, dir, symbol);
-            /*tr.Commit();
-        }*/
+            //_uiDocument.PromptForFamilyInstancePlacement(symbol);
             return newFamilyInstance.Id;
         }
         private void FamilyInstanceConfigure(BuiltInstance builtInstance)

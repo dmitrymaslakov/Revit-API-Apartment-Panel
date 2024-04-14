@@ -30,19 +30,4 @@ namespace ApartmentPanel.Infrastructure.Handler
             _state.Handler = this;
         }
     }
-
-    class LightingDeviceSelectionFilter : ISelectionFilter
-    {
-        public bool AllowElement(Element elem)
-        {
-            // Only allow elements in the Lighting Devices category
-            return elem.Category.Id.IntegerValue == (int)BuiltInCategory.OST_LightingDevices;
-        }
-
-        public bool AllowReference(Reference reference, XYZ position)
-        {
-            // Not used in this example
-            return false;
-        }
-    }
 }

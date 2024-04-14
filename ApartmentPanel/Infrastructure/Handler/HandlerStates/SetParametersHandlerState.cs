@@ -12,7 +12,7 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
         internal override void Handle(UIApplication uiapp)
         {
             SetInfrastructure(uiapp);
-            using (var tr = new Transaction(_document, "Set Parameters")) 
+            using (var tr = new Transaction(_document, "Set Parameters"))
             {
                 tr.Start();
                 SetParameters();
@@ -51,16 +51,11 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
             setParamsDTO.SetInstanceParameters(parameters);
             if (tempWall != null && tempElement != null)
             {
-                /*using (var tr = new Transaction(_document, "Removing temp elements"))
-                {
-                    tr.Start();*/
-                    List<ElementId> deletedElementIds = new List<ElementId>
+                List<ElementId> deletedElementIds = new List<ElementId>
                     {
                         tempWall.Id, tempElement.Id
                     };
-                    _document.Delete(deletedElementIds);
-                    /*tr.Commit();
-                }*/
+                _document.Delete(deletedElementIds);
             }
             _handler.Props = null;
         }
@@ -71,7 +66,6 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
                 .ToElements()
                 .Select(e => e as FamilyInstance)
                 .FirstOrDefault(fi => fi.Name.Contains(elementName));
-
             return !(element is null);
         }
     }

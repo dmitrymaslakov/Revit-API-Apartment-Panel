@@ -75,6 +75,7 @@
     <Compile Include="Core\Infrastructure.Interfaces\DTO\CircuitDTO.cs" />
     <Compile Include="Infrastructure\Enums\LocationType.cs" />
     <Compile Include="Infrastructure\Extensions\BoundingBoxXYZExtensions.cs" />
+    <Compile Include="Infrastructure\Handler\HandlerStates\AnalyzingHandlerState.cs" />
     <Compile Include="Infrastructure\Handler\HandlerStates\SetParametersHandlerState.cs" />
     <Compile Include="Infrastructure\Handler\HandlerStates\AddElementHandlerState.cs" />
     <Compile Include="Infrastructure\Handler\HandlerStates\InsertBatchHandlerState.cs" />
@@ -90,6 +91,8 @@
     <Compile Include="Infrastructure\Models\LocationStrategies\LocationStrategyBase.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\CenterLocationStrategy.cs" />
     <Compile Include="Presentation\Services\ConfigPanelWindowService.cs" />
+    <Compile Include="Utility\Extensions\RevitExtensions\SelectionExtensions.cs" />
+    <Compile Include="Utility\Extensions\RevitExtensions\FamilySymbolExtensions.cs" />
     <Compile Include="Utility\Extensions\RevitExtensions\DocumentExtensions.cs" />
     <Compile Include="Utility\SelectionFilters\ISelectionFilterFactory.cs" />
     <Compile Include="Utility\RevitInfrastructureBase.cs" />
@@ -191,6 +194,8 @@
     <Compile Include="Utility\Log.cs" />
     <Compile Include="Utility\ObservableDictionary.cs" />
     <Compile Include="Utility\RevitUtility.cs" />
+    <Compile Include="Utility\SelectionFilters\HorizontalFaceFilter.cs" />
+    <Compile Include="Utility\SelectionFilters\HorizontalFaceFilterFactory.cs" />
     <Compile Include="Utility\SelectionFilters\WallFloorCeilingFaceFilterFactory.cs" />
     <Compile Include="Utility\SelectionFilters\WallFloorCeilingFaceFilter.cs" />
     <Compile Include="Utility\StaticData.cs" />
