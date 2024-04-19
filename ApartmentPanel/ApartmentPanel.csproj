@@ -90,7 +90,11 @@
     <Compile Include="Infrastructure\Models\LocationStrategies\BottomLocationStrategy.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\LocationStrategyBase.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\CenterLocationStrategy.cs" />
+    <Compile Include="Infrastructure\Services\ReferenceDirectionProvider.cs" />
+    <Compile Include="Presentation\Enums\Direction.cs" />
+    <Compile Include="Presentation\Models\DirectionProvider.cs" />
     <Compile Include="Presentation\Services\ConfigPanelWindowService.cs" />
+    <Compile Include="Utility\Extensions\KeyboardExtentions.cs" />
     <Compile Include="Utility\Extensions\RevitExtensions\SelectionExtensions.cs" />
     <Compile Include="Utility\Extensions\RevitExtensions\FamilySymbolExtensions.cs" />
     <Compile Include="Utility\Extensions\RevitExtensions\DocumentExtensions.cs" />
@@ -199,6 +203,7 @@
     <Compile Include="Utility\SelectionFilters\WallFloorCeilingFaceFilterFactory.cs" />
     <Compile Include="Utility\SelectionFilters\WallFloorCeilingFaceFilter.cs" />
     <Compile Include="Utility\StaticData.cs" />
+    <Compile Include="Utility\KeyToStringParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

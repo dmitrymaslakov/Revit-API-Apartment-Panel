@@ -1,5 +1,6 @@
 ﻿using ApartmentPanel.Core.Models;
 using ApartmentPanel.Core.Models.Interfaces;
+using ApartmentPanel.Utility;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -74,13 +75,11 @@ namespace ApartmentPanel.Presentation.View.Components
             InitializeComponent();
         }
 
-        private void Button_KeyDown(object sender, KeyEventArgs e)
+        private void Image_KeyDown(object sender, KeyEventArgs e)
         {
             try
             {
-                /*Button button = sender as Button;
-                IApartmentElement element = button.DataContext as IApartmentElement;*/
-                Image image = sender as Image;
+                /*Image image = sender as Image;
                 IApartmentElement element = image.DataContext as IApartmentElement;
 
                 string currentCategory = element.Category;
@@ -89,9 +88,8 @@ namespace ApartmentPanel.Presentation.View.Components
                 if (!currentCategory.Contains(targetCategory)
                     || e.Key == Key.LeftCtrl
                     || e.Key == Key.RightCtrl)
-                    return;
-
-                string characterValue = "";
+                    return;*/
+                /*string characterValue = "";
                 if (e.Key >= Key.D0 && e.Key <= Key.D9)
                 {
                     char numericChar = (char)('0' + (e.Key - Key.D0));
@@ -106,53 +104,49 @@ namespace ApartmentPanel.Presentation.View.Components
                 {
                     if (char.TryParse(e.Key.ToString(), out char parsedCharacter))
                         characterValue = parsedCharacter.ToString().ToLower();
-                }
-                KeyDownCommand?.Execute(characterValue);
+                }*/
+
+                /*string characterValue = KeyToStringParser.ParseNumber(e.Key);
+                if (string.IsNullOrEmpty(characterValue))
+                    characterValue = KeyToStringParser.ParseChar(e.Key);*/
+                KeyDownCommand?.Execute(e.Key);
             }
-            catch (System.Exception)
+            catch (Exception)
             {
 
             }
         }
 
-        private void Button_MouseEnter(object sender, MouseEventArgs e)
+        private void Image_MouseEnter(object sender, MouseEventArgs e)
         {
             try
             {
-                /*Button button = sender as Button;
-                IApartmentElement element = button.DataContext as IApartmentElement;
-
-                if (element.Category == "Lighting Devices")
-                    MouseEnterCommand?.Execute("MouseEnter");
-                button.Focus();*/
                 Image image = sender as Image;
-                IApartmentElement element = image.DataContext as IApartmentElement;
+                /*IApartmentElement element = image.DataContext as IApartmentElement;
                 if (element.Category == "Lighting Devices")
-                    MouseEnterCommand?.Execute("MouseEnter");
+                    MouseEnterCommand?.Execute("MouseEnter");*/
                 if(!image.Focusable) image.Focusable = true;
                 image.Focus();
+                MouseEnterCommand?.Execute("MouseEnter");
             }
-            catch (System.Exception)
+            catch (Exception)
             {
-
+                return;
             }
 
         }
 
-        private void Button_MouseLeave(object sender, MouseEventArgs e) =>
+        private void Image_MouseLeave(object sender, MouseEventArgs e) =>
             MouseLeaveCommand?.Execute("MouseLeave");
 
         private void ListView_GotFocus(object sender, RoutedEventArgs e)
         {
             try
             {
-                //Button button = sender as Button;
                 ListView lv = sender as ListView;
-                //IApartmentElement element = button.DataContext as IApartmentElement;
-                ListViewItem lvi = e.OriginalSource as ListViewItem;
-                if(lvi == null) return;
+                if (!(e.OriginalSource is ListViewItem lvi)) return;
+
                 IApartmentElement element = lvi.Content as IApartmentElement;
-                //Circuit circuit = FindParentCircuit(button);
                 Circuit circuit = lv.DataContext as Circuit;
 
                 string circuitNumber = circuit?.Number;
@@ -160,7 +154,7 @@ namespace ApartmentPanel.Presentation.View.Components
                 HitElementCommand?.Execute((circuitNumber, element));
                 if(AnnotationLikeButton) lvp.Focus();
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 return;
             }

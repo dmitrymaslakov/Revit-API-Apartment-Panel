@@ -40,9 +40,10 @@ namespace ApartmentPanel.Infrastructure.Models
                 .WithCircuit(_elementData.Circuit.Number)
                 .WithResponsibleForCircuit(_elementData.Circuit.ResponsibleForCircuitParameter)
                 .WithCurrentLevel()
-                .WithLampSuffix(_elementData.CurrentSuffix)
+                .WithCircuitSuffix(_elementData.CurrentSuffix)
                 .WithHost(host)
                 .WithParameters(_elementData.Parameters)
+                .WithDirection(_elementData.Direction)
                 .Build(_elementData.Name);
         }
 
@@ -55,25 +56,30 @@ namespace ApartmentPanel.Infrastructure.Models
                 .WithResponsibleForHeight(_elementData.Height.ResponsibleForHeightParameter)
                 .RenderHeightAs(_heightFormat)
                 .WithCircuit(_elementData.Circuit.Number)
+                .WithCircuitSuffix(_elementData.CurrentSuffix)
                 .WithResponsibleForCircuit(_elementData.Circuit.ResponsibleForCircuitParameter)
                 .WithCurrentLevel()
                 .WithHost(host)
                 .WithParameters(_elementData.Parameters)
+                .WithDirection(_elementData.Direction)
                 .Build(_elementData.Name);
         }
 
         public BuiltInstance InstallElectricalFixtures(Reference host = null)
         {
             return _familyInstanceBuilder
+                .WithSwitchNumbers(_elementData.SwitchKeys)
                 .SetLocationStrategy(_locationStrategy)
                 .WithHeight(_elementData.Height.FromFloor, _elementData.Height.FromLevel)
                 .WithResponsibleForHeight(_elementData.Height.ResponsibleForHeightParameter)
                 .RenderHeightAs(_heightFormat)
                 .WithCircuit(_elementData.Circuit.Number)
+                .WithCircuitSuffix(_elementData.CurrentSuffix)
                 .WithResponsibleForCircuit(_elementData.Circuit.ResponsibleForCircuitParameter)
                 .WithCurrentLevel()
                 .WithHost(host)
                 .WithParameters(_elementData.Parameters)
+                .WithDirection(_elementData.Direction)
                 .Build(_elementData.Name);
         }
 
@@ -87,6 +93,7 @@ namespace ApartmentPanel.Infrastructure.Models
                 .WithCurrentLevel()
                 .WithHost(host)
                 .WithParameters(_elementData.Parameters)
+                .WithDirection(_elementData.Direction)
                 .Build(_elementData.Name);
         }
 

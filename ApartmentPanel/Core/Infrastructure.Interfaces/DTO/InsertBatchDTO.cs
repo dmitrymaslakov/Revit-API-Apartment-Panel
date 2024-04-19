@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ApartmentPanel.Presentation.Enums;
+using System.Collections.Generic;
 
 namespace ApartmentPanel.Core.Infrastructure.Interfaces.DTO
 {

@@ -8,7 +8,7 @@
              xmlns:components="clr-namespace:ApartmentPanel.Presentation.View.Components"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:MainViewModel, IsDesignTimeCreatable=True}"
-             d:DesignHeight="700" d:DesignWidth="200">
+             d:DesignHeight="820" d:DesignWidth="200">
     <UserControl.Resources>
         <Style x:Key="circuitTextBlock" TargetType="TextBlock">
             <Setter Property="Margin" Value="0 0 100 0"/>
@@ -30,13 +30,14 @@
             Circuits="{Binding Circuits}"
             HitElementCommand="{Binding InsertElementCommand}"
             KeyDownCommand="{Binding SetCurrentSuffixCommand}"
-            MouseEnterCommand="{Binding SetStatusCommand}"
-            MouseLeaveCommand ="{Binding SetStatusCommand}"
+            MouseLeaveCommand ="{Binding ClearCurrentSuffixCommand}"
             AnnotationLikeButton="True"/>        
+            <!--MouseEnterCommand="{Binding SetStatusCommand}"-->
         <components:BatchList 
             Grid.Row="2"
             Batches="{Binding ElementBatches}"
-            HitElementCommand="{Binding InsertBatchCommand}"/>
+            HitElementCommand="{Binding InsertBatchCommand}"
+            KeyDownCommand="{Binding SetDirectionCommand}"/>
         <Button Grid.Row="3" 
                 Command="{Binding ConfigureCommand}"
                 Content="Config" 
@@ -47,6 +48,12 @@
             <TextBlock>
                 <Run Text="Current suffix of circuit: "/>
                 <Run Text="{Binding CurrentSuffix}"/>
+            </TextBlock>
+            <TextBlock>
+                <Run Text="Current height: " />
+                <Run Text="{Binding ElementHeight.TypeOf}" />
+                <Run Text="=" />
+                <Run Text="{Binding ElementHeight.FromFloor}" />
             </TextBlock>
             <WrapPanel>
                 <TextBlock Text="Floor height" Margin="0 0 5 0"/>
@@ -79,14 +86,8 @@
                 </GroupBox>
             </StackPanel>
             <Button Content="Reset height" Command="{Binding ResetHeightCommand}" Width="80"/>
-            <TextBlock>
-                <Run Text="Current height: " />
-                <Run Text="{Binding ElementHeight.TypeOf}" />
-                <Run Text="=" />
-                <Run Text="{Binding ElementHeight.FromFloor}" />
-            </TextBlock>
         </StackPanel>
-        <StatusBar Grid.Row="6">
+        <!--<StatusBar Grid.Row="6">
             <StatusBarItem x:Name="statusBarItem" Content="{Binding Status}">
                 <StatusBarItem.Style>
                     <Style TargetType="StatusBarItem">
@@ -99,9 +100,9 @@
                     </Style>
                 </StatusBarItem.Style>
             </StatusBarItem>
-        </StatusBar>
-        <WrapPanel Grid.Row="7">
+        </StatusBar>-->
+        <!--<WrapPanel Grid.Row="7">
             <Button Content="Analize" Command="{Binding AnalizeCommand}"/>
-        </WrapPanel>
+        </WrapPanel>-->
     </Grid>
 </UserControl>

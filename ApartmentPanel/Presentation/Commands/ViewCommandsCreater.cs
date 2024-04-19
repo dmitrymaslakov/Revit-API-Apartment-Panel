@@ -14,16 +14,35 @@ using System.Linq;
 using System.Windows.Media;
 using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Presentation.Services;
+using ApartmentPanel.Presentation.Enums;
+using ApartmentPanel.Utility.Extensions;
+using ApartmentPanel.Presentation.Models;
+using System.Timers;
 
 namespace ApartmentPanel.Presentation.Commands
 {
     public class ViewCommandsCreater : BaseCommandsCreater
     {
         private readonly IMainViewModel _viewProperties;
+        private string _suffixBuffer;
+        private Timer _timer;
 
         public ViewCommandsCreater(IMainViewModel viewProperties,
-            IElementService apartmentElementService) : base(apartmentElementService) =>
+            IElementService apartmentElementService) : base(apartmentElementService)
+        {
             _viewProperties = viewProperties;
+            SetTimer();
+        }
+
+        private void SetTimer()
+        {
+            _timer = new Timer(1000);
+            _timer.Elapsed += OnTimedEvent;
+            _timer.AutoReset = false;
+        }
+        private void OnTimedEvent(object source, ElapsedEventArgs e) => ClearSuffixBuffer();
+
+        private void ClearSuffixBuffer() => _suffixBuffer = "";
 
         public ICommand CreateConfigureCommand() => new RelayCommand(o =>
         {
@@ -66,7 +85,7 @@ namespace ApartmentPanel.Presentation.Commands
                 elementDTO.Height.FromFloor = _viewProperties.ElementHeight.FromFloor;
                 elementDTO.Height.FromLevel = elementDTO.Height.FromFloor + _viewProperties.FloorHeight;
                 elementDTO.Height.TypeOf = _viewProperties.ElementHeight.TypeOf;
-                elementDTO.Height.ResponsibleForHeightParameter = 
+                elementDTO.Height.ResponsibleForHeightParameter =
                     _viewProperties.ConfigPanelVM.ResponsibleForHeight;
             }
             _elementService.InsertToModel(elementDTO);
@@ -82,7 +101,7 @@ namespace ApartmentPanel.Presentation.Commands
                 {
                     row.MountingHeight.FromLevel = row.MountingHeight.FromFloor + _viewProperties.FloorHeight;
                     row.MountingHeight.ResponsibleForHeightParameter = _viewProperties.ConfigPanelVM.ResponsibleForHeight;
-                    
+
                     InsertElementDTO elDto = new InsertElementDTO
                     {
                         Category = element.Category,
@@ -91,12 +110,6 @@ namespace ApartmentPanel.Presentation.Commands
                             Number = element.Circuit,
                             ResponsibleForCircuitParameter = _viewProperties.ConfigPanelVM.ResponsibleForCircuit
                         },
-                        /*Height = new Height
-                        {
-                            TypeOf = row.MountingHeight.TypeOf,
-                            FromFloor = row.MountingHeight.FromFloor,
-                            ResponsibleForHeightParameter = _viewProperties.ConfigPanelVM.ResponsibleForHeight
-                        },*/
                         Height = row.MountingHeight.Clone(),
                         Location = new BatchedLocation
                         {
@@ -113,21 +126,36 @@ namespace ApartmentPanel.Presentation.Commands
                         Name = element.Name,
                         Parameters = element.Parameters
                         .GroupBy(p => p.Name)
-                        .ToDictionary(g => g.Key, g => g.First().Value)
+                        .ToDictionary(g => g.Key, g => g.First().Value),
+                        Direction = _viewProperties.Direction
                     };
                     elementsDTO.Add(elDto);
                 }
             }
             InsertBatchDTO batchDTO = new InsertBatchDTO
             {
-                BatchedElements = elementsDTO
+                BatchedElements = elementsDTO,
             };
 
             _elementService.InsertBatchToModel(batchDTO);
         });
 
-        public ICommand CreateSetCurrentSuffixCommand()
-            => new RelayCommand(o => _viewProperties.CurrentSuffix = o as string);
+        public ICommand CreateSetCurrentSuffixCommand() => new RelayCommand(o =>
+        {
+            Key key = (Key)o;
+            if (!key.TryGetCharAsString(out string keyAsString))
+                key.TryGetNumberAsString(out keyAsString);
+            if (_timer.Enabled)
+            {
+                _timer.Stop();
+                _timer.Start();
+            }
+            else
+                _timer.Start();
+
+            _suffixBuffer += keyAsString;
+            _viewProperties.CurrentSuffix = _suffixBuffer;
+        });
 
         public ICommand CreateSetHeightCommand() => new RelayCommand(o =>
         {
@@ -153,6 +181,21 @@ namespace ApartmentPanel.Presentation.Commands
         {
             _viewProperties.IsResetHeight = true;
             _viewProperties.ElementHeight = null;
+        });
+
+        public ICommand CreateSetDirectionCommand() => new RelayCommand(o =>
+        {
+            Key key = (Key)o;
+            if (key.TryGetArrow(out Key arrow))
+            {
+                var directionProvider = new DirectionProvider(key);
+                _viewProperties.Direction = directionProvider.GetDirection();
+            }
+        });
+
+        internal ICommand CreateClearCurrentSuffixCommand() => new RelayCommand(o =>
+        {
+            _viewProperties.CurrentSuffix = "";
         });
     }
 }

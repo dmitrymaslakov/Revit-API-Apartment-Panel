@@ -14,6 +14,8 @@ using System.Windows.Controls;
 using System.Xml.Linq;
 using ApartmentPanel.Utility.SelectionFilters;
 using ApartmentPanel.Utility.Extensions.RevitExtensions;
+using ApartmentPanel.Presentation.Enums;
+using ApartmentPanel.Infrastructure.Services;
 
 namespace ApartmentPanel.Infrastructure.Models
 {
@@ -31,6 +33,7 @@ namespace ApartmentPanel.Infrastructure.Models
         private Dictionary<string, string> _parameters;
         private string _responsibleForHeightParameter;
         private string _responsibleForCircuitParameter;
+        private Direction _direction;
         private readonly RevitUtility _revitUtility;
 
         #endregion
@@ -112,7 +115,7 @@ namespace ApartmentPanel.Infrastructure.Models
             return this;
         }
 
-        public FamilyInstanceBuilder WithLampSuffix(string lampSuffix)
+        public FamilyInstanceBuilder WithCircuitSuffix(string lampSuffix)
         {
             _lampSuffix = lampSuffix;
             return this;
@@ -132,12 +135,15 @@ namespace ApartmentPanel.Infrastructure.Models
             _parameters = parameters;
             return this;
         }
+        public FamilyInstanceBuilder WithDirection(Direction direction)
+        {
+            _direction = direction;
+            return this;
+        }
+
         #endregion
 
         #region Private methods
-        /*private Reference PickHost(ISelectionFilter filter) =>
-            _selection.PickObject(ObjectType.PointOnElement, filter, "Pick a host in the model");*/
-
         private bool IsHorizontal(Reference faceRef)
         {
             Element elem = _document.GetElement(faceRef);
@@ -162,12 +168,12 @@ namespace ApartmentPanel.Infrastructure.Models
         {
             FamilyInstance newFamilyInstance = null;
             if (!symbol.IsActive) _revitUtility.ActivateFamilySymbol(symbol);
-            XYZ dir = new XYZ(0, 0, 0);
+
+            XYZ dir = new ReferenceDirectionProvider(_direction).GetReferenceDirection();
             XYZ location = Host.GlobalPoint ?? new XYZ(0, 0, 0);
 
             newFamilyInstance = _document.Create
                 .NewFamilyInstance(Host, location, dir, symbol);
-            //_uiDocument.PromptForFamilyInstancePlacement(symbol);
             return newFamilyInstance.Id;
         }
         private void FamilyInstanceConfigure(BuiltInstance builtInstance)
@@ -237,18 +243,16 @@ namespace ApartmentPanel.Infrastructure.Models
             switch (category)
             {
                 case StaticData.LIGHTING_FIXTURES:
-                    //_lampSuffix = string.IsNullOrEmpty(_lampSuffix) ? _lampSuffix : "/" + _lampSuffix;
                     circuitParam.Set(_circuit + _lampSuffix);
                     break;
                 case StaticData.LIGHTING_DEVICES:
-                    //_switchNumbers = string.IsNullOrEmpty(_switchNumbers) ? _switchNumbers : "/" + _switchNumbers;
                     circuitParam.Set(_circuit + _switchNumbers);
                     break;
                 case StaticData.ELECTRICAL_FIXTURES:
                 case StaticData.TELEPHONE_DEVICES:
                 case StaticData.FIRE_ALARM_DEVICES:
                 case StaticData.COMMUNICATION_DEVICES:
-                    circuitParam.Set(_circuit);
+                    circuitParam.Set(_circuit + _lampSuffix + _switchNumbers);
                     break;
             }
         }

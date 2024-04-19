@@ -1,4 +1,5 @@
-﻿using ApartmentPanel.Presentation.ViewModel;
+﻿using ApartmentPanel.Presentation.Enums;
+using ApartmentPanel.Presentation.ViewModel;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -25,12 +26,21 @@ namespace ApartmentPanel.Presentation.Models.Batch
             set => Set(ref _annotation, value);
         }
 
+        private Direction _direction;
+        public Direction Direction
+        {
+            get => _direction;
+            set => Set(ref _direction, value);
+        }
+
+
         public ElementBatch Clone()
         {
             return new ElementBatch
             {
                 Name = Name,
                 Annotation = Annotation?.Clone(),
+                Direction = Direction,
                 BatchedRows = new ObservableCollection<BatchedRow>(BatchedRows.Select(row => row.Clone())),
             };
         }

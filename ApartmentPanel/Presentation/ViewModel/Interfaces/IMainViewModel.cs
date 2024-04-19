@@ -1,4 +1,5 @@
 ﻿using ApartmentPanel.Core.Models;
+using ApartmentPanel.Presentation.Enums;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -23,5 +24,8 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         ICommand ResetHeightCommand { get; set; }
         bool IsResetHeight { get; set; }
         double FloorHeight { get; set; }
+        ICommand SetDirectionCommand { get; set; }
+        Direction Direction { get; set; }
+        ICommand ClearCurrentSuffixCommand { get; set; }
     }
 }

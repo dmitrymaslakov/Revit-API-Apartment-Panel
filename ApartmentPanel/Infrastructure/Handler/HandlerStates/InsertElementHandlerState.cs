@@ -6,6 +6,8 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System.Collections.Generic;
 using System.Linq;
+using static Autodesk.Revit.DB.SpecTypeId;
+using System.Text.RegularExpressions;
 
 namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
 {
@@ -21,13 +23,13 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
             var elementData = _handler.Props as InsertElementDTO;
             bool isMultiple = true;
 
-            if (elementData.Category.Contains(StaticData.LIGHTING_DEVICES))
-            {
+            /*if (elementData.Category.Contains(StaticData.LIGHTING_DEVICES))
+            {*/
                 List<FamilyInstance> lamps = PickLamp();
-                elementData.SwitchKeys = lamps.Count == 0
+                elementData.SwitchKeys = lamps == null || lamps.Count == 0
                     ? ""
                     : GetKeysFromLamps(lamps, elementData.Circuit.ResponsibleForCircuitParameter);
-            }
+            //}
 
             while (isMultiple)
             {
@@ -81,12 +83,40 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
         }
         private List<FamilyInstance> PickLamp()
         {
-            var collection = _selection.GetElementIds()
+            /*var collection = _selection.GetElementIds()
                             .Select(id => _document.GetElement(id))
                             .OfType<FamilyInstance>()
                             .Where(fs => fs.Category.Name.Contains("Lighting Fixtures"))
                             .ToList()
-                            ;
+                            ;*/
+            ICollection<ElementId> elementIds = _selection.GetElementIds();
+            if (elementIds.Count == 0) return null;
+
+            ICollection<ElementId> categories = new List<ElementId>
+            {
+                new ElementId(BuiltInCategory.OST_ElectricalFixtures),
+                new ElementId(BuiltInCategory.OST_LightingFixtures),
+                new ElementId(BuiltInCategory.OST_LightingDevices),
+                new ElementId(BuiltInCategory.OST_TelephoneDevices),
+                new ElementId(BuiltInCategory.OST_CommunicationDevices),
+                new ElementId(BuiltInCategory.OST_FireAlarmDevices),
+            };
+            FilterCategoryRule fcr = new FilterCategoryRule(categories);
+            ElementParameterFilter epf = new ElementParameterFilter(fcr);
+            /*var c = new FilteredElementCollector(_document, elementIds)
+                .WherePasses(epf)
+                .ToElementIds()
+                .OfType<FamilyInstance>()
+                .ToList()
+                ;*/
+
+            var collection = new FilteredElementCollector(_document, elementIds)
+                .WherePasses(epf)
+                .ToElementIds()
+                .Select(id => _document.GetElement(id))
+                .OfType<FamilyInstance>()
+                .ToList();
+
             return collection;
         }
         private string GetKeysFromLamps(List<FamilyInstance> lamps, string targetCircuitParam)
@@ -113,7 +143,7 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
                         lampCircuits.Add(parameter.AsString());
 
             var suffixes = lampCircuits
-                .Select(c => c.Last().ToString())
+                .Select(c => Regex.Replace(c, @"\d", ""))
                 .Distinct()
                 .OrderBy(c => c);
             /*.Select(c => c.Substring(c.IndexOf("/") + 1))

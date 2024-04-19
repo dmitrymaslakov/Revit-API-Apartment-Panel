@@ -9,6 +9,7 @@ using ApartmentPanel.Presentation.Services;
 using System;
 using ApartmentPanel.Core.Models;
 using ApartmentPanel.Presentation.Models.Batch;
+using ApartmentPanel.Presentation.Enums;
 
 namespace ApartmentPanel.Presentation.ViewModel
 {
@@ -20,26 +21,9 @@ namespace ApartmentPanel.Presentation.ViewModel
     public class MainViewModel : ViewModelBase, IMainViewModel
     {
         #region MockFields
-        private static ObservableCollection<IApartmentElement> el1 = new ObservableCollection<IApartmentElement>
-        {
-            new ApartmentElement { Name = "Switch", Category = "LightDev", },
-            new ApartmentElement { Name = "Socket", Category = "ElFix"},
-            new ApartmentElement { Name = "ThroughSwitch", Category= "LightDev"}
-        };
-        private static ObservableCollection<IApartmentElement> el2 = new ObservableCollection<IApartmentElement>
-        {
-            new ApartmentElement { Name = "Smoke Sensor", Category = "LightDev"},
-            new ApartmentElement { Name = "USB", Category = "LightDev"},
-            new ApartmentElement { Name = "ThroughSwitch", Category = "LightDev"}
-        };
         private readonly ModelAnalizing _modelAnalizing;
         #endregion
         #region MockProps
-        public ObservableCollection<Circuit> MockCircuits { get; set; } = new ObservableCollection<Circuit>
-        {
-            new Circuit{Number="1", Elements=el1},
-            new Circuit{Number="2", Elements=el2},
-        };
         public ICommand AnalizeCommand { get; set; }
         #endregion
 
@@ -63,19 +47,21 @@ namespace ApartmentPanel.Presentation.ViewModel
             _viewCommandsCreater = new ViewCommandsCreater(this, ElementService);
             ConfigPanelVM = configPanelVM;
             ConfigPanelVM.OkApplyCancelActions = ExecuteOkApplyCancelActions;
-            //ConfigPanelVM.LoadLatestConfigCommand?.Execute(null);
             Circuits = GetCircuits(ConfigPanelVM.PanelCircuits);
             ElementBatches = GetBatches(ConfigPanelVM.Batches);
             ListHeightsUK = GetHeights(ConfigPanelVM.ListHeightsUK);
             ListHeightsOK = GetHeights(ConfigPanelVM.ListHeightsOK);
             ListHeightsCenter = GetHeights(ConfigPanelVM.ListHeightsCenter);
+            Direction = Direction.None;
             ConfigureCommand = _viewCommandsCreater.CreateConfigureCommand();
             InsertElementCommand = _viewCommandsCreater.CreateInsertElementCommand();
             InsertBatchCommand = _viewCommandsCreater.CreateInsertBatchCommand();
             SetCurrentSuffixCommand = _viewCommandsCreater.CreateSetCurrentSuffixCommand();
+            ClearCurrentSuffixCommand = _viewCommandsCreater.CreateClearCurrentSuffixCommand();
             SetHeightCommand = _viewCommandsCreater.CreateSetHeightCommand();
             SetStatusCommand = _viewCommandsCreater.CreateSetStatusCommand();
             ResetHeightCommand = _viewCommandsCreater.CreateResetHeightCommand();
+            SetDirectionCommand = _viewCommandsCreater.CreateSetDirectionCommand();
         }
 
         public IConfigPanelViewModel ConfigPanelVM { get; set; }
@@ -152,13 +138,22 @@ namespace ApartmentPanel.Presentation.ViewModel
             set => Set(ref _status, value);
         }
 
+        private Direction _direction;
+        public Direction Direction
+        {
+            get => _direction;
+            set => Set(ref _direction, value);
+        }
+
         public ICommand ConfigureCommand { get; set; }
         public ICommand InsertElementCommand { get; set; }
         public ICommand InsertBatchCommand { get; set; }
         public ICommand SetCurrentSuffixCommand { get; set; }
+        public ICommand ClearCurrentSuffixCommand { get; set; }
         public ICommand SetHeightCommand { get; set; }
         public ICommand SetStatusCommand { get; set; }
         public ICommand ResetHeightCommand { get; set; }
+        public ICommand SetDirectionCommand { get; set; }
 
         private void ExecuteOkApplyCancelActions(object obj, OkApplyCancel okApplyCancel)
         {

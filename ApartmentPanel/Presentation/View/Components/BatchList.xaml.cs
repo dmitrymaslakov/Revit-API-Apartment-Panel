@@ -1,4 +1,6 @@
 ﻿using ApartmentPanel.Presentation.Models.Batch;
+using ApartmentPanel.Utility;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,23 +37,47 @@ namespace ApartmentPanel.Presentation.View.Components
         }
         #endregion
 
+        public static readonly DependencyProperty KeyDownCommandProperty =
+            DependencyProperty.Register(nameof(KeyDownCommand), typeof(ICommand),
+                typeof(BatchList), new PropertyMetadata(null));
+        public ICommand KeyDownCommand
+        {
+            get { return (ICommand)GetValue(KeyDownCommandProperty); }
+            set { SetValue(KeyDownCommandProperty, value); }
+        }
+
         private void ListView_GotFocus(object sender, RoutedEventArgs e)
         {
             try
             {
-            /*Button button = sender as Button;
-            ElementBatch batch = button.DataContext as ElementBatch;
-            HitElementCommand?.Execute(batch);*/
-                ListViewItem listViewItem = e.OriginalSource as ListViewItem;
+                /*Button button = sender as Button;
+                ElementBatch batch = button.DataContext as ElementBatch;
+                HitElementCommand?.Execute(batch);*/
+                //ListViewItem listViewItem = e.OriginalSource as ListViewItem;
+                if (!(e.OriginalSource is ListViewItem listViewItem)) return;
+
                 ElementBatch batch = listViewItem?.Content as ElementBatch;
                 HitElementCommand?.Execute(batch);
                 root.Focusable = true;
                 root.Focus();
             }
-            catch (System.Exception)
+            catch (Exception)
             {
 
             }
+        }
+
+        private void Image_KeyDown(object sender, KeyEventArgs e)
+        {
+            KeyDownCommand?.Execute(e.Key);
+        }
+
+        private void Image_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Image image = sender as Image;
+            if (!image.Focusable)
+                image.Focusable = true;
+            image.Focus();
         }
     }
 }

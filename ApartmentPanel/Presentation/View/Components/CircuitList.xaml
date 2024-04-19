@@ -46,9 +46,9 @@
                             <DataTemplate>
                                 <Image Source="{Binding Annotation}"
                                        Width="30"
-                                       KeyDown="Button_KeyDown"
-                                       MouseEnter="Button_MouseEnter"
-                                       MouseLeave="Button_MouseLeave"/>
+                                       KeyDown="Image_KeyDown"
+                                       MouseEnter="Image_MouseEnter"
+                                       MouseLeave="Image_MouseLeave"/>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>

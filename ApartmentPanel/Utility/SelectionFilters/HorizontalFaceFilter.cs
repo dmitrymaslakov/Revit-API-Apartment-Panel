@@ -25,17 +25,17 @@ namespace ApartmentPanel.Utility.SelectionFilters
             Reference refInLink = reference.CreateReferenceInLink();
             Element linkedElement = linkDocument.GetElement(refInLink);
 
-            /*if (linkedElement is Floor || linkedElement is Ceiling)
+            if (linkedElement is Floor || linkedElement is Ceiling)
             {
                 var faceLink = linkedElement.GetGeometryObjectFromReference(refInLink);
                 if (faceLink is PlanarFace planarFace)
                 {
-                    if (planarFace.FaceNormal.Z == 0) return false;
+                    if (planarFace.FaceNormal.Z != 0) return true;
                     //else return true;
                 }
             }
-            return true;*/
-            return linkedElement is Floor || linkedElement is Ceiling;
+            return false;
+            //return linkedElement is Floor || linkedElement is Ceiling;
         }
     }
 }

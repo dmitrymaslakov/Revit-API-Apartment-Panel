@@ -1,4 +1,5 @@
 ﻿using ApartmentPanel.Core.Models;
+using ApartmentPanel.Presentation.Enums;
 using ApartmentPanel.Presentation.Models.Batch;
 using System.Collections.Generic;
 using System.Windows;
@@ -18,5 +19,6 @@ namespace ApartmentPanel.Core.Infrastructure.Interfaces.DTO
         public double Offset { get; set; }
         public BatchedLocation Location { get; set; }
         public Dictionary<string, string> Parameters;
+        public Direction Direction { get; set; }
     }
 }

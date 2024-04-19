@@ -26,7 +26,11 @@
         </ListView.ItemsPanel>
         <ListView.ItemTemplate>
             <DataTemplate>
-                <Image Source="{Binding Annotation}" Width="45" Height="35"/>
+                <Image Source="{Binding Annotation}" 
+                       Width="45" 
+                       Height="35"
+                       KeyDown="Image_KeyDown"
+                       MouseEnter="Image_MouseEnter"/>                
                 <!--<Button Click="Button_Click">
                 </Button>-->
             </DataTemplate>
