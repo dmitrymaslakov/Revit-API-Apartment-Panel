@@ -125,11 +125,10 @@ namespace ApartmentPanel.Infrastructure.Models
             double instanceWidth;
 
             if (isHead)
-                instanceWidth = batchedInstance.Instance.Width / 2;
-            //instanceWidth = Math.Abs(basePoint.X - maxPoint.X);
+                instanceWidth = batchedInstance.Instance.MinLocalDelta;
+                //instanceWidth = batchedInstance.Instance.Width / 2;
             else
                 instanceWidth = batchedInstance.Instance.Width;
-            //instanceWidth = Math.Abs(minPoint.X - maxPoint.X);
 
             double leftMarginInFeets = UnitUtils.ConvertToInternalUnits(batchedInstance.Margin.Left,
                     _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());

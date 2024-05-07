@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using Utility;
 using System.Text;
 using System.Windows;
+using WpfTest.Models;
+using WpfTest.Utility;
 
 namespace WpfTest.ViewModels
 {
@@ -45,6 +47,23 @@ namespace WpfTest.ViewModels
             }
         }
 
+        public ObservableCollection<ApartmentElement> AllElements { get; set; } = new ObservableCollection<ApartmentElement>
+            (
+                Enumerable.Range(1, 20).Select(i => 
+                new ApartmentElement 
+                { 
+                    Name = $"Name {i}" ,
+                    Category = StaticData.GetCategory(i),
+                    Family = StaticData.GetFamily(i),
+                })
+            );
+        /*private ObservableCollection<ApartmentElement> _allElements;
+        public ObservableCollection<ApartmentElement> AllElements
+        {
+            get => _allElements;
+            set => Set(ref _allElements, value);
+        }*/
+
         private void PerformFindFiles(object commandParameter)
         {
             bool b = TryFindConfigs(out ObservableCollection<string> configs);
@@ -76,6 +95,5 @@ namespace WpfTest.ViewModels
             }
             return configs != null;
         }
-
     }
 }

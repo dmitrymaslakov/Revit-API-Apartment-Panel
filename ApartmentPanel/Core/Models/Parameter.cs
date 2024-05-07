@@ -1,10 +1,9 @@
 ﻿using ApartmentPanel.Utility;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using ApartmentPanel.Utility.Interfaces;
 
 namespace ApartmentPanel.Core.Models
 {
-    public class Parameter : NotifyPropertyChanged
+    public class Parameter : NotifyPropertyChanged, IDeepClone<Parameter>
     {
         private string _name;
         public string Name
@@ -19,5 +18,7 @@ namespace ApartmentPanel.Core.Models
             get => _value;
             set => Set(ref _value, value);
         }
+
+        public Parameter Clone() => MemberwiseClone() as Parameter;
     }
 }

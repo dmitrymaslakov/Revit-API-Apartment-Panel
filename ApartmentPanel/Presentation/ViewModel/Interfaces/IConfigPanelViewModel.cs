@@ -1,6 +1,6 @@
 ﻿using ApartmentPanel.Core.Models;
+using ApartmentPanel.Core.Models.Batch;
 using ApartmentPanel.Core.Models.Interfaces;
-using ApartmentPanel.Presentation.Models.Batch;
 using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
 using ApartmentPanel.Utility;
 using System;

@@ -15,7 +15,7 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
         }
         private void AddElement()
         {
-            var showListElementsPanel = _handler.Props as Action<List<(string name, string category)>>;
+            var showListElementsPanel = _handler.Props as Action<List<(string name, string category, string family)>>;
             // Create a new FilteredElementCollector and filter by FamilySymbol class
             var collector = new FilteredElementCollector(_document).OfClass(typeof(FamilySymbol));
             // Create a list of BuiltInCategory enums for the categories you want to filter by
@@ -26,7 +26,8 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
                 BuiltInCategory.OST_FireAlarmDevices,
                 BuiltInCategory.OST_LightingDevices,
                 BuiltInCategory.OST_LightingFixtures,
-                BuiltInCategory.OST_ElectricalFixtures
+                BuiltInCategory.OST_ElectricalFixtures,
+                BuiltInCategory.OST_ElectricalEquipment
             };
             // Create a list of CategoryFilters, one for each category
             List<ElementFilter> categoryFilters = categories
@@ -45,8 +46,8 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
                 .Cast<FamilySymbol>()
                 .ToList();
 
-            List<(string name, string category)> familyProps = familySymbols
-                .Select(fs => (fs.Name, fs.Category.Name))
+            List<(string name, string category, string family)> familyProps = familySymbols
+                .Select(fs => (fs.Name, fs.Category.Name, fs.FamilyName))
                 .ToList();
 
             showListElementsPanel(familyProps);

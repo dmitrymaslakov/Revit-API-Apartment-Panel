@@ -30,7 +30,8 @@
                         <DataTemplate>
                             <WrapPanel>
                                 <TextBlock Width="Auto" Text="{Binding Name}"/>
-                                <Image Width="20" 
+                                <Image Width="30" 
+                                       Height="30"
                                        Margin="45 0 0 0"
                                        Source="{Binding Annotation}">
                                 </Image>

@@ -14,8 +14,8 @@ using System.Windows.Controls;
 using System.Xml.Linq;
 using ApartmentPanel.Utility.SelectionFilters;
 using ApartmentPanel.Utility.Extensions.RevitExtensions;
-using ApartmentPanel.Presentation.Enums;
 using ApartmentPanel.Infrastructure.Services;
+using ApartmentPanel.Core.Enums;
 
 namespace ApartmentPanel.Infrastructure.Models
 {
@@ -26,6 +26,7 @@ namespace ApartmentPanel.Infrastructure.Models
         private double _heightFromLevel;
         private string _renderedHeight;
         private ILocationStrategy _locationStrategy;
+        private IHeightParameterSetter _heightParameterSetter;
         private ElementId _currentLevelId;
         private string _circuit;
         private string _lampSuffix;
@@ -34,11 +35,13 @@ namespace ApartmentPanel.Infrastructure.Models
         private string _responsibleForHeightParameter;
         private string _responsibleForCircuitParameter;
         private Direction _direction;
+        private TypeOfHeight _typeOfHeight;
+        private string _familyName;
         private readonly RevitUtility _revitUtility;
 
         #endregion
 
-        public FamilyInstanceBuilder(UIApplication uiapp) : base(uiapp) => 
+        public FamilyInstanceBuilder(UIApplication uiapp) : base(uiapp) =>
             _revitUtility = new RevitUtility(_uiapp);
 
         public Reference Host { get; private set; }
@@ -51,8 +54,11 @@ namespace ApartmentPanel.Infrastructure.Models
             {
                 tr.Start();
                 FamilySymbol familySymbol = new FilteredElementCollector(_document)
-                .OfClass(typeof(FamilySymbol))
-                .FirstOrDefault(fs => fs.Name == elementName) as FamilySymbol;
+                    .OfClass(typeof(FamilySymbol))
+                    .ToElementIds()
+                    .Select(id => _document.GetElement(id))
+                    .OfType<FamilySymbol>()
+                    .FirstOrDefault(fs => fs.Name == elementName && fs.FamilyName.Contains(_familyName));
 
                 if (familySymbol == null) return null;
 
@@ -93,15 +99,19 @@ namespace ApartmentPanel.Infrastructure.Models
             _heightFromLevel = fromLevel;
             return this;
         }
+        public FamilyInstanceBuilder WithTypeOfHeight(TypeOfHeight typeOfHeight)
+        {
+            _typeOfHeight = typeOfHeight;
+            return this;
+        }
         public FamilyInstanceBuilder WithResponsibleForHeight(string parameterName)
         {
             _responsibleForHeightParameter = parameterName;
             return this;
         }
-
         public FamilyInstanceBuilder WithCurrentLevel()
         {
-            _currentLevelId = GetViewLevel();
+            //_currentLevelId = GetViewLevel();
             return this;
         }
         public FamilyInstanceBuilder WithCircuit(string circuit)
@@ -109,12 +119,17 @@ namespace ApartmentPanel.Infrastructure.Models
             _circuit = circuit;
             return this;
         }
+        public FamilyInstanceBuilder WithFamilyName(string familyName)
+        {
+            _familyName = familyName;
+            return this;
+        }
+
         public FamilyInstanceBuilder WithResponsibleForCircuit(string parameterName)
         {
             _responsibleForCircuitParameter = parameterName;
             return this;
         }
-
         public FamilyInstanceBuilder WithCircuitSuffix(string lampSuffix)
         {
             _lampSuffix = lampSuffix;
@@ -166,47 +181,72 @@ namespace ApartmentPanel.Infrastructure.Models
         }
         private ElementId FamilyInstanceCreate(FamilySymbol symbol)
         {
-            FamilyInstance newFamilyInstance = null;
             if (!symbol.IsActive) _revitUtility.ActivateFamilySymbol(symbol);
+            
+            XYZ dir;
+            if (symbol.CanBePlacedOnVerticalFace())
+                dir = new ReferenceDirectionProvider(Direction.None, symbol).GetReferenceDirection();
+            else
+                //dir = new ReferenceDirectionProvider(Direction.None).GetReferenceDirection();
+                dir = new ReferenceDirectionProvider(_direction, symbol).GetReferenceDirection();
 
-            XYZ dir = new ReferenceDirectionProvider(_direction).GetReferenceDirection();
             XYZ location = Host.GlobalPoint ?? new XYZ(0, 0, 0);
 
-            newFamilyInstance = _document.Create
+            FamilyInstance newFamilyInstance = _document.Create
                 .NewFamilyInstance(Host, location, dir, symbol);
             return newFamilyInstance.Id;
         }
         private void FamilyInstanceConfigure(BuiltInstance builtInstance)
         {
             FamilyInstance familyInstance = _document.GetElement(builtInstance.Id) as FamilyInstance;
-
+            _currentLevelId = GetViewLevel();
+            //SetCurrentLevel(familyInstance);
             if (_currentLevelId != null) SetCurrentLevel(familyInstance);
-            /*using (var tr = new Transaction(_document, "Config FamilyInstance"))
-            {
-                tr.Start();*/
-            if (!string.IsNullOrEmpty(_renderedHeight)) SetHeight(familyInstance);
+            SetHeight(familyInstance);
             if (!string.IsNullOrEmpty(_circuit)) SetCircuit(familyInstance);
             if (_parameters != null) SetParameters(familyInstance);
-            /*tr.Commit();
-        }*/
             //if (_locationStrategy != null && !IsHorizontal(Host))
-                _locationStrategy.SetRequiredLocation(builtInstance, _heightFromLevel);
+            _locationStrategy.SetRequiredLocation(builtInstance, _heightFromLevel);
         }
         private ElementId GetViewLevel()
         {
+            string paramName = "Associated Level";
             View active = _document.ActiveView;
             ElementId levelId = null;
-            Parameter level = active.LookupParameter("Associated Level");
-            if (level == null)
-                return null;
+            Level level = null;
+            Parameter levelParam = active.LookupParameter(paramName);
+            if (levelParam == null)
+            {
+                /*if (_document.GetElement(Host) is RevitLinkInstance link)
+                {
+                    Document linkDocument = link.GetLinkDocument();
+                    Reference hostInLink = Host.CreateReferenceInLink();
+                    Element hostElementInLink = linkDocument.GetElement(hostInLink);
+                    level = linkDocument.GetElement(hostElementInLink.LevelId) as Level;
+                }
+                else
+                {
+                    Element element = _document.GetElement(Host);
+                    level = _document.GetElement(element.LevelId) as Level;
+                }*/
+            }
 
             FilteredElementCollector lvlCollector = new FilteredElementCollector(_document);
             ICollection<Element> lvlCollection = lvlCollector.OfClass(typeof(Level)).ToElements();
             foreach (Element l in lvlCollection)
             {
                 Level lvl = l as Level;
-                if (lvl.Name == level.AsString())
+                if (level != null && lvl.Name.Contains(level.Name))
+                {
                     levelId = lvl.Id;
+                    break;
+                }
+
+                if (levelParam != null && lvl.Name.Contains(levelParam.AsString()))
+                {
+                    levelId = lvl.Id;
+                    break;
+                }
             }
             return levelId;
         }
@@ -246,9 +286,10 @@ namespace ApartmentPanel.Infrastructure.Models
                     circuitParam.Set(_circuit + _lampSuffix);
                     break;
                 case StaticData.LIGHTING_DEVICES:
-                    circuitParam.Set(_circuit + _switchNumbers);
-                    break;
+                /*circuitParam.Set(_circuit + _switchNumbers);
+                break;*/
                 case StaticData.ELECTRICAL_FIXTURES:
+                case StaticData.ELECTRICAL_EQUIPMENT:
                 case StaticData.TELEPHONE_DEVICES:
                 case StaticData.FIRE_ALARM_DEVICES:
                 case StaticData.COMMUNICATION_DEVICES:
@@ -258,23 +299,43 @@ namespace ApartmentPanel.Infrastructure.Models
         }
         private void SetHeight(FamilyInstance familyInstance)
         {
-            //string customParameter = StaticData.ELEMENT_HEIGHT_PARAM_NAME;
             Parameter circuitParam = familyInstance.LookupParameter(_responsibleForHeightParameter);
             if (circuitParam == null)
                 return;
-            //throw new CustomParameterException(customParameter, familyInstance.Name);
 
             string category = familyInstance.Category.Name;
-            switch (category)
+
+            switch (circuitParam.StorageType)
+            {
+                case StorageType.None:
+                    break;
+                case StorageType.Integer:
+                    break;
+                case StorageType.Double:
+                    new HeightAsDoubleParameterSetter(_uiapp).Set(circuitParam, _heightFromFloor);
+                    break;
+                case StorageType.String:
+                    new HeightAsStringParameterSetter(_uiapp, _typeOfHeight).Set(circuitParam, _heightFromFloor);
+                    break;
+                case StorageType.ElementId:
+                    break;
+                default:
+                    break;
+            }
+            /*double.TryParse(_renderedHeight, out double heightAsDouble);
+            double heightAsFeets = UnitUtils.ConvertToInternalUnits(heightAsDouble,
+                _document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId());*/
+
+            /*switch (category)
             {
                 case StaticData.LIGHTING_DEVICES:
                 case StaticData.ELECTRICAL_FIXTURES:
                 case StaticData.TELEPHONE_DEVICES:
                 case StaticData.FIRE_ALARM_DEVICES:
                 case StaticData.COMMUNICATION_DEVICES:
-                    circuitParam.Set(_renderedHeight);
+                    circuitParam.Set(heightAsFeets);
                     break;
-            }
+            }*/
         }
         private void SetParameters(FamilyInstance familyInstance)
         {

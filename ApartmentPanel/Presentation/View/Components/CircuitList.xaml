@@ -35,16 +35,17 @@
                 <WrapPanel>
                     <TextBlock Text="{Binding Number}" Margin="0 0 10 0" Padding="0 10 0 0"/>
                     <ListView ItemsSource="{Binding Elements}"
-                              GotFocus="ListView_GotFocus">
+                              GotFocus="ListView_GotFocus"
+                              PreviewKeyDown="ListView_PreviewKeyDown">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <!--<StackPanel Orientation="Horizontal"/>-->
                                 <WrapPanel Width="350"/>
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Image Source="{Binding Annotation}"
+                                       Height="30"
                                        Width="30"
                                        KeyDown="Image_KeyDown"
                                        MouseEnter="Image_MouseEnter"

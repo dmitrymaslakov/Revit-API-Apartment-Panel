@@ -6,17 +6,12 @@ using ApartmentPanel.Utility;
 using ApartmentPanel.Presentation.View;
 using System;
 using Autodesk.Revit.DB.Events;
-using ApartmentPanel.Presentation.ViewModel;
 using ApartmentPanel.Infrastructure;
 using ApartmentPanel.Core;
 using ApartmentPanel.Presentation;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
-using Autodesk.Revit.UI.Selection;
-using System.Linq;
-using System.Diagnostics;
-using Utility.Extensions;
 
 namespace ApartmentPanel
 {
@@ -57,8 +52,8 @@ namespace ApartmentPanel
                 if (!DockablePane.PaneIsRegistered(MainView.PaneId))
                     application.RegisterDockablePane(MainView.PaneId, MainView.PaneName, MainView);
 
-                application.ControlledApplication.DocumentClosing +=
-                    Handler_DocumentClosing;
+                /*application.ControlledApplication.DocumentClosing +=
+                    Handler_DocumentClosing;*/
             }
             catch (Exception ex)
             {
@@ -79,8 +74,8 @@ namespace ApartmentPanel
             }
             finally
             {
-                application.ControlledApplication.DocumentClosing -=
-                Handler_DocumentClosing;
+                /*application.ControlledApplication.DocumentClosing -=
+                Handler_DocumentClosing;*/
             }
             return Result.Succeeded;
         }

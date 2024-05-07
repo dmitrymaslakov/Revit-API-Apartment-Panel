@@ -86,6 +86,7 @@
     <Compile Include="Models\Height.cs" />
     <Compile Include="Models\TypeOfHeight.cs" />
     <Compile Include="Utility\ObservableDictionary.cs" />
+    <Compile Include="Utility\StaticData.cs" />
     <Compile Include="Utils\Converters\HeightDataConverter.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />

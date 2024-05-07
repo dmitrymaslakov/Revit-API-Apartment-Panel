@@ -13,8 +13,9 @@
         public const string COMMUNICATION_DEVICES = "Communication Devices";
         public const string FIRE_ALARM_DEVICES = "Fire Alarm Devices";
         public const string LIGHTING_DEVICES = "Lighting Devices";
-        public const string LIGHTING_FIXTURES = "Lighting Fixtures";
+        public const string LIGHTING_FIXTURES = "Lighting Fixtures"; 
         public const string ELECTRICAL_FIXTURES = "Electrical Fixtures";
+        public const string ELECTRICAL_EQUIPMENT = "Electrical Equipment";
 
         public const string ELEMENT_HEIGHT_PARAM_NAME = "H-UK";//"UK-HEIGHT";"ASRV-H"
         public const string ELEMENT_CIRCUIT_PARAM_NAME = "NA-CIRCUIT";//"RBX-CIRCUIT" "ASRV Circuit Number"

@@ -5,12 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:mex="clr-namespace:ApartmentPanel.Presentation.MarkupExtensions"
              xmlns:local="clr-namespace:ApartmentPanel.Presentation.View.Components"
+             xmlns:cv="clr-namespace:ApartmentPanel.Presentation.Converters"
              xmlns:models="clr-namespace:ApartmentPanel.Core.Enums"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
              x:Name="root"
              Background="White"
              d:DesignHeight="310" d:DesignWidth="800" Height="310">
+    <UserControl.Resources>
+        <cv:LeftThicknessConverter x:Key="leftThicknessConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -42,7 +46,11 @@
                                             <Image Source="{Binding Annotation}" 
                                                    Width="20"
                                                    Margin="0 0 10 0"/>
-                                            <TextBox Width="30" Text="{Binding Margin.Left, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                            <TextBox Width="30"
+                                                     Text="{Binding Margin, 
+                                                            Converter={StaticResource leftThicknessConverter},
+                                                            UpdateSourceTrigger=PropertyChanged, 
+                                                            Mode=TwoWay}">
                                                 <TextBox.Style>
                                                     <Style TargetType="TextBox">
                                                         <Setter Property="Visibility" Value="Visible"/>

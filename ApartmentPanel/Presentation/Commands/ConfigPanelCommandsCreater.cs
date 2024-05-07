@@ -14,24 +14,20 @@ using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Presentation.Services;
 using ApartmentPanel.Presentation.View.Components;
-using ApartmentPanel.Presentation.Models.Batch;
 using ApartmentPanel.Utility.AnnotationUtility;
 using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
-using System.Windows.Media;
 using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
-using System.Security.Cryptography;
-using Autodesk.Revit.UI;
 using Utility;
 using System.Text;
 using ApartmentPanel.Core.Services;
-using System.Windows;
+using ApartmentPanel.Core.Models.Batch;
 
 namespace ApartmentPanel.Presentation.Commands
 {
     public class ConfigPanelCommandsCreater : BaseCommandsCreater
     {
         private readonly IConfigPanelViewModel _configPanelProperties;
-        private readonly Action<List<(string name, string category)>> _showListElements;
+        private readonly Action<List<(string name, string category, string family)>> _showListElements;
         private readonly Action<IApartmentElement> _addElementToApartment;
         private readonly CircuitService _circuitService;
 
@@ -41,8 +37,13 @@ namespace ApartmentPanel.Presentation.Commands
             _configPanelProperties = configPanelProps;
             _addElementToApartment = newElement =>
             {
-                if (!_configPanelProperties.ApartmentElements.Select(ae => ae.Name).Contains(newElement.Name))
-                {
+                bool doesNewElementExistInApartment =
+                _configPanelProperties.ApartmentElements
+                .Any(ae => ae.Name.Contains(newElement.Name) && ae.Family.Contains(newElement.Family));
+
+                //if (!_configPanelProperties.ApartmentElements.Select(ae => ae.Name).Contains(newElement.Name))
+                if (!doesNewElementExistInApartment)
+                    {
                     /*_configPanelProperties.SetParametersToElement = null;
                     _configPanelProperties.SetParametersToElement = (List<string> parameterNames) =>
                         {
@@ -58,8 +59,18 @@ namespace ApartmentPanel.Presentation.Commands
                     };
                     _elementService.SetElementParameters(setParamsDTO);*/
 
-                    IApartmentElement newApartmentElement = elementService.CloneFrom(newElement);
-                    _configPanelProperties.ApartmentElements.Add(newApartmentElement);
+                    //IApartmentElement newApartmentElement = elementService.CloneFrom(newElement);
+                    IApartmentElement newClonedElement = newElement.Clone();
+                    string annotationName = new AnnotationNameBuilder()
+                        .AddFolders(_configPanelProperties.CurrentConfig)
+                        .AddPartsOfName("-", newClonedElement.Family, newClonedElement.Name)
+                        .Build();
+
+                    newClonedElement.Annotation = elementService
+                        .SetAnnotationName(annotationName)
+                        .GetAnnotation();
+
+                    _configPanelProperties.ApartmentElements.Add(newClonedElement);
                 }
             };
             _showListElements = props =>
@@ -140,8 +151,10 @@ namespace ApartmentPanel.Presentation.Commands
                 .Where(e => e.Number == selectedPanelCircuit.Number)
                 .First()
                 .Elements
-                .Select(ae => ae.Name)
-                .Contains(selectedApartmentElement.Name);
+                .Any(ae => ae.Name.Contains(selectedApartmentElement.Name) 
+                    && ae.Family.Contains(selectedApartmentElement.Family));
+                /*.Select(ae => ae.Name)
+                .Contains(selectedApartmentElement.Name);*/
 
                 if (!IsElementExist)
                 {
@@ -201,7 +214,9 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateSelectApartmentElementsCommand() => new RelayCommand(o =>
         {
-            var selectedElements = (o as IList<object>)?.OfType<IApartmentElement>();
+            //var l = o as List<IApartmentElement>;
+            //var selectedElements = (o as IList<object>)?.OfType<IApartmentElement>();
+            var selectedElements = o as List<IApartmentElement>;
             if (_configPanelProperties.SelectedApartmentElements.Count != 0)
                 _configPanelProperties.SelectedApartmentElements.Clear();
 
@@ -285,20 +300,32 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateSetAnnotationToElementCommand() => new RelayCommand(o =>
         {
-            if (_configPanelProperties.SelectedApartmentElements.Count == 1 
+            if (_configPanelProperties.SelectedApartmentElements.Count == 1
                 && _configPanelProperties.AnnotationPreview != null)
             {
                 IApartmentElement apartmentElement =
                     _configPanelProperties.SelectedApartmentElements.FirstOrDefault();
 
-                _elementService.SetAnnotationTo(apartmentElement, _configPanelProperties.AnnotationPreview);
+                string annotationName = new AnnotationNameBuilder()
+                .AddFolders(_configPanelProperties.CurrentConfig)
+                .AddPartsOfName("-", apartmentElement.Family, apartmentElement.Name)
+                .Build();
+
+                _elementService
+                .SetAnnotationName(annotationName)
+                .SetAnnotationTo(apartmentElement, _configPanelProperties.AnnotationPreview);
             }
         });
 
         public ICommand CreateSetAnnotationToElementsBatchCommand() => new RelayCommand(o =>
         {
+            string annotationName = new AnnotationNameBuilder()
+                .AddFolders(_configPanelProperties.CurrentConfig)
+                .AddPartsOfName("", _configPanelProperties.ElementBatch.Name)
+                .Build();
+
             var annotationService = new AnnotationService(
-                new FileAnnotationCommunicatorFactory(_configPanelProperties.ElementBatch.Name));
+                new FileAnnotationCommunicatorFactory(annotationName));
 
             _configPanelProperties.ElementBatch.Annotation =
                 annotationService.Save(_configPanelProperties.AnnotationPreview);
@@ -376,27 +403,26 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateSetNewElementForBatchCommand() => new RelayCommand(o =>
         {
-            /*(string circuit, string elementName, string elementCategory, ImageSource annotation) =
-                (ValueTuple<string, string, string, ImageSource>)o;*/
             (string circuit, IApartmentElement element) = (ValueTuple<string, IApartmentElement>)o;
 
+            IApartmentElement cloneElement = element.Clone();
+
+            /*var p1 = element.Parameters.FirstOrDefault();
+            var p2 = cloneElement.Parameters.FirstOrDefault();
+
+            bool b = Equals(p1, p2);
+            var hc1 = p1.GetHashCode();
+            var hc2 = p2.GetHashCode();*/
 
             _configPanelProperties.NewElementForBatch = new BatchedElement
             {
                 Circuit = circuit,
-                Category = element.Category,
-                Name = element.Name,
-                Annotation = element.Annotation,
-                Parameters = element.Parameters
+                Category = cloneElement.Category,
+                Family = cloneElement.Family,
+                Name = cloneElement.Name,
+                Annotation = cloneElement.Annotation,
+                Parameters = cloneElement.Parameters
             };
-
-            /*_configPanelProperties.SetParametersToElement = OnSetParametersToBatchElementExecuted;
-            SetParamsDTO setParamsDTO = new SetParamsDTO
-            {
-                ElementName = element.Name,
-                SetInstanceParameters = _configPanelProperties.SetParametersToElement
-            };
-            _elementService.SetElementParameters(setParamsDTO);*/
         });
 
         public ICommand CreateAddElementToRowCommand() => new RelayCommand(o =>
@@ -480,11 +506,11 @@ namespace ApartmentPanel.Presentation.Commands
 
         public ICommand CreateAddConfigCommand() => new RelayCommand(o =>
         {
-            if (!string.IsNullOrEmpty(_configPanelProperties.NewConfig) 
+            if (!string.IsNullOrEmpty(_configPanelProperties.NewConfig)
                 && !_configPanelProperties.Configs
                 .ToList()
                 .Exists(c => c == _configPanelProperties.NewConfig))
-            {                
+            {
                 _configPanelProperties.Configs.Add(_configPanelProperties.NewConfig);
 
                 if (!_configPanelProperties.IsCancelEnabled)
@@ -505,7 +531,7 @@ namespace ApartmentPanel.Presentation.Commands
                 .Append(".json");
 
                 string selectedConfigPath = stringBuilder.ToString();
-                if(File.Exists(selectedConfigPath))
+                if (File.Exists(selectedConfigPath))
                     File.Delete(selectedConfigPath);
 
                 _configPanelProperties.Configs.Remove(selectedConfig);

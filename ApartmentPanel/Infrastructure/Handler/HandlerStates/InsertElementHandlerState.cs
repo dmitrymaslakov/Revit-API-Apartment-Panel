@@ -50,6 +50,7 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
                                 .InstallLightingDevices();
                             break;
                         case StaticData.ELECTRICAL_FIXTURES:
+                        case StaticData.ELECTRICAL_EQUIPMENT:
                             instanceBuilder = new FamilyInstanceBuilder(_uiapp);
                             builtInstance = new ElementInstaller(_uiapp, elementData, instanceBuilder)
                                 .InstallElectricalFixtures();
@@ -83,12 +84,6 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
         }
         private List<FamilyInstance> PickLamp()
         {
-            /*var collection = _selection.GetElementIds()
-                            .Select(id => _document.GetElement(id))
-                            .OfType<FamilyInstance>()
-                            .Where(fs => fs.Category.Name.Contains("Lighting Fixtures"))
-                            .ToList()
-                            ;*/
             ICollection<ElementId> elementIds = _selection.GetElementIds();
             if (elementIds.Count == 0) return null;
 
@@ -103,13 +98,7 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
             };
             FilterCategoryRule fcr = new FilterCategoryRule(categories);
             ElementParameterFilter epf = new ElementParameterFilter(fcr);
-            /*var c = new FilteredElementCollector(_document, elementIds)
-                .WherePasses(epf)
-                .ToElementIds()
-                .OfType<FamilyInstance>()
-                .ToList()
-                ;*/
-
+            
             var collection = new FilteredElementCollector(_document, elementIds)
                 .WherePasses(epf)
                 .ToElementIds()

@@ -24,9 +24,10 @@ namespace ApartmentPanel.Infrastructure.Models
             _locationStrategy = GetLocationStrategy(_elementData.Height.TypeOf);
             _heightFormat = height =>
             {
-                return _elementData.Height.TypeOf == TypeOfHeight.Center 
+                return height.ToString();
+                /*return _elementData.Height.TypeOf == TypeOfHeight.Center 
                 ? $"H={height}"
-                : $"{_elementData.Height.TypeOf}={height}";
+                : $"{_elementData.Height.TypeOf}={height}";*/
             };
         }
 
@@ -34,9 +35,11 @@ namespace ApartmentPanel.Infrastructure.Models
         {
             return _familyInstanceBuilder
                 .SetLocationStrategy(_locationStrategy)
+                .WithTypeOfHeight(_elementData.Height.TypeOf)
                 .WithHeight(_elementData.Height.FromFloor, _elementData.Height.FromLevel)
                 .WithResponsibleForHeight(_elementData.Height.ResponsibleForHeightParameter)
-                .RenderHeightAs(_heightFormat)
+                .WithFamilyName(_elementData.Family)
+                //.RenderHeightAs(_heightFormat)
                 .WithCircuit(_elementData.Circuit.Number)
                 .WithResponsibleForCircuit(_elementData.Circuit.ResponsibleForCircuitParameter)
                 .WithCurrentLevel()
@@ -52,9 +55,11 @@ namespace ApartmentPanel.Infrastructure.Models
             return _familyInstanceBuilder
                 .WithSwitchNumbers(_elementData.SwitchKeys)
                 .SetLocationStrategy(_locationStrategy)
+                .WithTypeOfHeight(_elementData.Height.TypeOf)
                 .WithHeight(_elementData.Height.FromFloor, _elementData.Height.FromLevel)
                 .WithResponsibleForHeight(_elementData.Height.ResponsibleForHeightParameter)
-                .RenderHeightAs(_heightFormat)
+                .WithFamilyName(_elementData.Family)
+                //.RenderHeightAs(_heightFormat)
                 .WithCircuit(_elementData.Circuit.Number)
                 .WithCircuitSuffix(_elementData.CurrentSuffix)
                 .WithResponsibleForCircuit(_elementData.Circuit.ResponsibleForCircuitParameter)
@@ -70,9 +75,11 @@ namespace ApartmentPanel.Infrastructure.Models
             return _familyInstanceBuilder
                 .WithSwitchNumbers(_elementData.SwitchKeys)
                 .SetLocationStrategy(_locationStrategy)
+                .WithTypeOfHeight(_elementData.Height.TypeOf)
                 .WithHeight(_elementData.Height.FromFloor, _elementData.Height.FromLevel)
                 .WithResponsibleForHeight(_elementData.Height.ResponsibleForHeightParameter)
-                .RenderHeightAs(_heightFormat)
+                .WithFamilyName(_elementData.Family)
+                //.RenderHeightAs(_heightFormat)
                 .WithCircuit(_elementData.Circuit.Number)
                 .WithCircuitSuffix(_elementData.CurrentSuffix)
                 .WithResponsibleForCircuit(_elementData.Circuit.ResponsibleForCircuitParameter)
@@ -87,9 +94,11 @@ namespace ApartmentPanel.Infrastructure.Models
         {
             return _familyInstanceBuilder
                 .SetLocationStrategy(_locationStrategy)
+                .WithTypeOfHeight(_elementData.Height.TypeOf)
                 .WithHeight(_elementData.Height.FromFloor, _elementData.Height.FromLevel)
                 .WithResponsibleForHeight(_elementData.Height.ResponsibleForHeightParameter)
-                .RenderHeightAs(_heightFormat)
+                .WithFamilyName(_elementData.Family)
+                //.RenderHeightAs(_heightFormat)
                 .WithCurrentLevel()
                 .WithHost(host)
                 .WithParameters(_elementData.Parameters)

@@ -1,10 +1,7 @@
 ﻿using ApartmentPanel.Utility;
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace ApartmentPanel.Core.Models
@@ -18,10 +15,9 @@ namespace ApartmentPanel.Core.Models
 
         public string Name { get; set; }
         public string Category { get; set; }        
-        //private ImageSource _annotation;
+        public string Family { get; set; }
         private BitmapImage _annotation;
         [JsonIgnore]
-        //public ImageSource Annotation
         public BitmapImage Annotation
         {
             get => _annotation;

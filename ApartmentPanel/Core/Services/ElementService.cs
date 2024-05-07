@@ -5,30 +5,32 @@ using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Utility.AnnotationUtility;
 using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
+using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Xml.Linq;
 
 namespace ApartmentPanel.Core.Services
 {
     public class ElementService : IElementService
     {
         private readonly IElementRepository _elementRepo;
+        private string _annotationName;
 
         public ElementService
             (IElementRepository elementRepo) => _elementRepo = elementRepo;
 
-        public List<IApartmentElement> GetAll(List<(string name, string category)> props)
+        public List<IApartmentElement> GetAll(List<(string name, string category, string family)> props)
         {
             return props
                 .Select(p => new ApartmentElement
                 {
                     Name = p.name,
                     Category = p.category,
+                    Family = p.family,
                     MountingHeight = new Height()
                 })
                 .Cast<IApartmentElement>()
@@ -36,7 +38,7 @@ namespace ApartmentPanel.Core.Services
         }
 
         public void AddToApartment
-            (Action<List<(string name, string category)>> addElementsToApartment) =>
+            (Action<List<(string name, string category, string family)>> addElementsToApartment) =>
             _elementRepo.AddToApartment(addElementsToApartment);
 
         public JsonSerializerOptions GetSerializationOptions()
@@ -54,27 +56,17 @@ namespace ApartmentPanel.Core.Services
         public void InsertToModel(InsertElementDTO apartmentElementDto) =>
             _elementRepo.InsertToModel(apartmentElementDto);
 
-        public IApartmentElement CloneFrom(IApartmentElement element)
-        {
-            IApartmentElement newApartmentElement = element.Clone();
-            if (newApartmentElement.Annotation == null)
-                newApartmentElement.Annotation = GetAnnotationFor(element.Name);
-            return newApartmentElement;
-        }
-
-        //public void SetAnnotationTo(IApartmentElement element, BitmapSource annotation)
         public void SetAnnotationTo(IApartmentElement element, BitmapImage annotation)
         {
             var annotationService = new AnnotationService(
-                new FileAnnotationCommunicatorFactory(element.Name));
+                new FileAnnotationCommunicatorFactory(_annotationName));
             element.Annotation = annotationService.Save(annotation);
         }
 
-        //public ImageSource GetAnnotationFor(string elementName)
-        public BitmapImage GetAnnotationFor(string elementName)
+        public BitmapImage GetAnnotation()
         {
             var annotationService = new AnnotationService(
-            new FileAnnotationCommunicatorFactory(elementName));
+            new FileAnnotationCommunicatorFactory(_annotationName));
 
             return annotationService.IsAnnotationExists()
                 ? annotationService.Get() : null;
@@ -85,5 +77,11 @@ namespace ApartmentPanel.Core.Services
 
         public void SetElementParameters(SetParamsDTO setParamsDTO) => 
             _elementRepo.SetParameters(setParamsDTO);
+
+        public ElementService SetAnnotationName(string annotationName)
+        {
+            _annotationName = annotationName;
+            return this;
+        }
     }
 }

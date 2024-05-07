@@ -1,10 +1,8 @@
 ﻿using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
-using ApartmentPanel.Presentation.Models.Batch;
 using ApartmentPanel.Utility;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace ApartmentPanel.Infrastructure.Models
@@ -42,6 +40,7 @@ namespace ApartmentPanel.Infrastructure.Models
                             .InstallLightingDevices(host);
                         break;
                     case StaticData.ELECTRICAL_FIXTURES:
+                    case StaticData.ELECTRICAL_EQUIPMENT:
                         instanceBuilder = new FamilyInstanceBuilder(_uiapp);
                         builtInstance = new ElementInstaller(_uiapp, elementData, instanceBuilder)
                             .InstallElectricalFixtures(host);

@@ -43,13 +43,31 @@ namespace ApartmentPanel.Presentation.View.Components
             set { SetValue(HitElementCommandProperty, value); }
         }
 
-        public static readonly DependencyProperty KeyDownCommandProperty =
-            DependencyProperty.Register(nameof(KeyDownCommand), typeof(ICommand),
+        public static readonly DependencyProperty CharKeyDownCommandProperty =
+            DependencyProperty.Register(nameof(CharKeyDownCommand), typeof(ICommand),
                 typeof(CircuitList), new PropertyMetadata(null));
-        public ICommand KeyDownCommand
+        public ICommand CharKeyDownCommand
         {
-            get { return (ICommand)GetValue(KeyDownCommandProperty); }
-            set { SetValue(KeyDownCommandProperty, value); }
+            get { return (ICommand)GetValue(CharKeyDownCommandProperty); }
+            set { SetValue(CharKeyDownCommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty NumberKeyDownCommandProperty =
+            DependencyProperty.Register(nameof(NumberKeyDownCommand), typeof(ICommand),
+                typeof(CircuitList), new PropertyMetadata(null));
+        public ICommand NumberKeyDownCommand
+        {
+            get { return (ICommand)GetValue(NumberKeyDownCommandProperty); }
+            set { SetValue(NumberKeyDownCommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty ArrowKeyDownCommandProperty =
+            DependencyProperty.Register(nameof(ArrowKeyDownCommand), typeof(ICommand),
+                typeof(CircuitList), new PropertyMetadata(null));
+        public ICommand ArrowKeyDownCommand
+        {
+            get { return (ICommand)GetValue(ArrowKeyDownCommandProperty); }
+            set { SetValue(ArrowKeyDownCommandProperty, value); }
         }
 
         public static readonly DependencyProperty MouseEnterCommandProperty =
@@ -109,7 +127,7 @@ namespace ApartmentPanel.Presentation.View.Components
                 /*string characterValue = KeyToStringParser.ParseNumber(e.Key);
                 if (string.IsNullOrEmpty(characterValue))
                     characterValue = KeyToStringParser.ParseChar(e.Key);*/
-                KeyDownCommand?.Execute(e.Key);
+                CharKeyDownCommand?.Execute(e.Key);
             }
             catch (Exception)
             {
@@ -169,6 +187,22 @@ namespace ApartmentPanel.Presentation.View.Components
             }
 
             return (parent as ContentPresenter).Content as Circuit;
+        }
+
+        private void ListView_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Left:
+                case Key.Right:
+                case Key.Up:
+                case Key.Down:
+                    e.Handled = true;
+                    break;
+                default:
+                    break;
+            }
+            ArrowKeyDownCommand?.Execute(e.Key);
         }
     }
 }

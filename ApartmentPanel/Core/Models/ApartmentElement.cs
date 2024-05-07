@@ -1,6 +1,5 @@
 ﻿using ApartmentPanel.Core.Models.Interfaces;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 
 namespace ApartmentPanel.Core.Models
@@ -12,12 +11,13 @@ namespace ApartmentPanel.Core.Models
         {
             ObservableCollection<Parameter> newP = Parameters?.ToList() == null
                 ? new ObservableCollection<Parameter>()
-                : new ObservableCollection<Parameter>(Parameters?.ToList());
+                : new ObservableCollection<Parameter>(Parameters?.Select(p => p.Clone()));
 
             return new ApartmentElement
             {
                 Name = Name,
                 Category = Category,
+                Family = Family,
                 Annotation = Annotation?.Clone(),
                 MountingHeight = MountingHeight?.Clone(),
                 Parameters = newP

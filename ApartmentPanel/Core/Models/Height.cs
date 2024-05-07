@@ -1,9 +1,10 @@
 ﻿using ApartmentPanel.Core.Enums;
 using ApartmentPanel.Utility;
+using ApartmentPanel.Utility.Interfaces;
 
 namespace ApartmentPanel.Core.Models
 {
-    public class Height : NotifyPropertyChanged
+    public class Height : NotifyPropertyChanged, IDeepClone<Height>
     {
         public TypeOfHeight TypeOf { get; set; }
         private double _fromFloor;
@@ -18,7 +19,6 @@ namespace ApartmentPanel.Core.Models
             get => _fromLevel;
             set => Set(ref _fromLevel, value);
         }
-
         private string _responsibleForHeightParameter;
         public string ResponsibleForHeightParameter 
         { 

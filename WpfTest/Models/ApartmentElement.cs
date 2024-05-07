@@ -10,6 +10,7 @@ namespace WpfTest.Models
 
         public string Name { get; set; }
         public string Category { get; set; }
+        public string Family { get; set; }
         private ImageSource _annotation;
         public ImageSource Annotation
         {

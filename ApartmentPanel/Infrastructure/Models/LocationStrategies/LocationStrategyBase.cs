@@ -44,7 +44,9 @@ namespace ApartmentPanel.Infrastructure.Models.LocationStrategies
 
             double fullOffset = HorizontalOffset == 0
                 ? 0
-                : builtInstance.Width / 2 + HorizontalOffset;
+                : builtInstance.MaxLocalDelta + HorizontalOffset;
+                //: builtInstance.MinLocalDelta + HorizontalOffset;
+            //: builtInstance.Width / 2 + HorizontalOffset;
 
             if (!GetLevelElevation(out double levelElevation)) return;
             XYZ newBasePoint = new XYZ(

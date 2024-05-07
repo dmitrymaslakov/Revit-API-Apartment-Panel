@@ -21,23 +21,6 @@ namespace ApartmentPanel.Utility
                 ?.GetInstanceGeometry();
 
             Location = (familyInstance.Location as LocationPoint)?.Point;
-            /*BoundingBoxXYZ elementBB = null;
-            List<BoundingBoxXYZ> boundingBoxes = new List<BoundingBoxXYZ>();
-            foreach (GeometryObject geometryObject in geometryElement)
-            {
-                if (geometryObject is Solid solid)
-                {
-                    var graphicsStyle = _document.GetElement(solid.GraphicsStyleId) as GraphicsStyle;
-                    if (solid.Volume == 0
-                        || (graphicsStyle != null 
-                        && graphicsStyle.Name.Contains("Light Source")))
-                    {
-                        continue;
-                    }
-                    boundingBoxes.Add(solid.GetBoundingBox());
-                }
-            }
-            elementBB = boundingBoxes.Aggregate((acc, elem) => acc.Union(elem));*/
             if (instanceGeometry != null)
             {
                 var hasCylindricalFace = instanceGeometry
@@ -61,24 +44,14 @@ namespace ApartmentPanel.Utility
                         .ExecuteBooleanOperation(x, y, BooleanOperationsType.Union));
 
                     ElementId directShapeId = null;
-                    /*using (var tr = new Transaction(_document, "Create a temp Shape"))
-                    {
-                        tr.Start();*/
-                        directShapeId = _document.CreateDirectShape(new List<GeometryObject> { unionSolid }).Id;
+                    directShapeId = _document.CreateDirectShape(new List<GeometryObject> { unionSolid }).Id;
                     _document.Regenerate();
-                /*tr.Commit();
-                }*/
-                Element directShape = _document.GetElement(directShapeId);
+                    Element directShape = _document.GetElement(directShapeId);
                     var directShapeBB = directShape.get_BoundingBox(null);
                     Max = directShapeBB.Max;
                     Min = directShapeBB.Min;
-                    /*using (var tr = new Transaction(_document, "Remove a temp Shape"))
-                    {
-                        tr.Start();*/
-                        _document.Delete(directShapeId);
+                    _document.Delete(directShapeId);
                     _document.Regenerate();
-                    /*tr.Commit();
-                }*/
                 }
                 else
                 {

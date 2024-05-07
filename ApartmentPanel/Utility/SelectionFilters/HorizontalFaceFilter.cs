@@ -20,22 +20,31 @@ namespace ApartmentPanel.Utility.SelectionFilters
 
         public bool AllowReference(Reference reference, XYZ position)
         {
-            var link = _document.GetElement(reference) as RevitLinkInstance;
-            Document linkDocument = link.GetLinkDocument();
-            Reference refInLink = reference.CreateReferenceInLink();
-            Element linkedElement = linkDocument.GetElement(refInLink);
-
-            if (linkedElement is Floor || linkedElement is Ceiling)
+            if (_document.GetElement(reference) is RevitLinkInstance link)
             {
-                var faceLink = linkedElement.GetGeometryObjectFromReference(refInLink);
-                if (faceLink is PlanarFace planarFace)
+                Document linkDocument = link.GetLinkDocument();
+                Reference refInLink = reference.CreateReferenceInLink();
+                Element linkedElement = linkDocument.GetElement(refInLink);
+
+                if (linkedElement is Floor || linkedElement is Ceiling)
                 {
-                    if (planarFace.FaceNormal.Z != 0) return true;
-                    //else return true;
+                    var faceLink = linkedElement.GetGeometryObjectFromReference(refInLink);
+                    if (faceLink is PlanarFace planarFace)
+                        if (planarFace.FaceNormal.Z != 0) return true;
+                }
+            }
+            else
+            {
+                Element element = _document.GetElement(reference);
+
+                if (element is Floor || element is Ceiling)
+                {
+                    var face = element.GetGeometryObjectFromReference(reference);
+                    if (face is PlanarFace planarFace)
+                        if (planarFace.FaceNormal.Z != 0) return true;
                 }
             }
             return false;
-            //return linkedElement is Floor || linkedElement is Ceiling;
         }
     }
 }

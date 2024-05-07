@@ -8,8 +8,8 @@ using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Presentation.Services;
 using System;
 using ApartmentPanel.Core.Models;
-using ApartmentPanel.Presentation.Models.Batch;
-using ApartmentPanel.Presentation.Enums;
+using ApartmentPanel.Core.Models.Batch;
+using ApartmentPanel.Core.Enums;
 
 namespace ApartmentPanel.Presentation.ViewModel
 {

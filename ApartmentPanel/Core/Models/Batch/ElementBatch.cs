@@ -1,13 +1,14 @@
-﻿using ApartmentPanel.Presentation.Enums;
+﻿using ApartmentPanel.Core.Enums;
 using ApartmentPanel.Presentation.ViewModel;
+using ApartmentPanel.Utility.Interfaces;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Windows.Media;
 
-namespace ApartmentPanel.Presentation.Models.Batch
+namespace ApartmentPanel.Core.Models.Batch
 {
-    public class ElementBatch : ViewModelBase
+    public class ElementBatch : ViewModelBase, IDeepClone<ElementBatch>
     {
         public ObservableCollection<BatchedRow> BatchedRows { get; set; }
 
@@ -32,7 +33,6 @@ namespace ApartmentPanel.Presentation.Models.Batch
             get => _direction;
             set => Set(ref _direction, value);
         }
-
 
         public ElementBatch Clone()
         {

@@ -3,6 +3,9 @@ using System.Runtime.CompilerServices;
 
 namespace ApartmentPanel.Utility
 {
+    /// <summary>
+    /// Implements INotifyPropertyChanged interface
+    /// </summary>
     public abstract class NotifyPropertyChanged : INotifyPropertyChanged
     {
         private bool _disposed;

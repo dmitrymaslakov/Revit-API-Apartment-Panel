@@ -1,4 +1,4 @@
-﻿using ApartmentPanel.Presentation.Models.Batch;
+﻿using ApartmentPanel.Core.Models.Batch;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -168,8 +168,8 @@ namespace ApartmentPanel.Presentation.View.Components
         private void ListView_GotFocus(object sender, RoutedEventArgs e)
         {
             ListViewItem listViewItem = e.OriginalSource as ListViewItem;
-            BatchedElement be = listViewItem?.Content as BatchedElement;
-            if (be != null) SelectedBatchedElement = be;
+            if (listViewItem?.Content is BatchedElement batchedElement) 
+                SelectedBatchedElement = batchedElement;
         }
     }
 }

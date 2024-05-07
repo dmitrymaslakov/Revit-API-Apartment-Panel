@@ -11,9 +11,10 @@ using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Core.Services.Interfaces;
 using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Core.Models;
-using ApartmentPanel.Presentation.Models.Batch;
 using System.Text.RegularExpressions;
 using System.IO;
+using ApartmentPanel.Core.Services;
+using ApartmentPanel.Core.Models.Batch;
 
 namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 {
@@ -337,16 +338,43 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 
             foreach (var apartmentElement in ApartmentElements)
             {
-                apartmentElement.Annotation = ElementService.GetAnnotationFor(apartmentElement.Name);
+                string annotationName = new AnnotationNameBuilder()
+                    .AddFolders(SelectedConfig)
+                    .AddPartsOfName("-", apartmentElement.Family, apartmentElement.Name)
+                    .Build();
+                //apartmentElement.Annotation = ElementService.GetAnnotationFor(apartmentElement.Name);
+                apartmentElement.Annotation = ElementService
+                    .SetAnnotationName(annotationName)
+                    .GetAnnotation();
             };
 
             foreach (var batch in Batches)
             {
-                batch.Annotation = ElementService.GetAnnotationFor(batch.Name);
+                //batch.Annotation = ElementService.GetAnnotationFor(batch.Name);
+                var annotationNameBuilder = new AnnotationNameBuilder();
+                string annotationName = annotationNameBuilder
+                    .AddFolders(SelectedConfig)
+                    .AddPartsOfName("", batch.Name)
+                    .Build();
+
+                //batch.Annotation = ElementService.GetAnnotationFor(batch.Name);
+                batch.Annotation = ElementService
+                    .SetAnnotationName(annotationName)
+                    .GetAnnotation();
                 foreach (var row in batch.BatchedRows)
                 {
-                    foreach (var element in row.RowElements)
-                        element.Annotation = ElementService.GetAnnotationFor(element.Name);
+                    foreach (BatchedElement element in row.RowElements)
+                    {
+                        annotationName = annotationNameBuilder
+                            .AddFolders(SelectedConfig)
+                            .AddPartsOfName("-", element.Family, element.Name)
+                            .Build();
+
+                        element.Annotation = ElementService
+                            .SetAnnotationName(annotationName)
+                            .GetAnnotation();
+                        //element.Annotation = ElementService.GetAnnotationFor(element.Name);
+                    }
                 }
             }
 
@@ -357,7 +385,7 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
                 foreach (var apartmentElement in ApartmentElements)
                 {
                     var matchingCircuitElement = circuitElements
-                        .FirstOrDefault(c => c.Name == apartmentElement.Name);
+                        .FirstOrDefault(c => c.Name == apartmentElement.Name && c.Family == apartmentElement.Family);
 
                     if (matchingCircuitElement != null)
                     {

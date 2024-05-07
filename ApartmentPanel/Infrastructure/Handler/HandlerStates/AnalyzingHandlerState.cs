@@ -13,23 +13,17 @@ namespace ApartmentPanel.Infrastructure.Handler.HandlerStates
         internal override void Handle(UIApplication uiapp)
         {
             SetInfrastructure(uiapp);
-            /*using (var tr = new Transaction(_document, "Set Parameters"))
-            {
-                tr.Start();*/
-            ISelectionFilterFactory filterFactory = new HorizontalFaceFilterFactory(_document);
-            ISelectionFilter filter = filterFactory.CreateSelectionFilter();
-            var reference = _selection.PickHost(filter);
-            /*var link = _document.GetElement(reference) as RevitLinkInstance;
-            Document linkDocument = link.GetLinkDocument();
-            UIDocument uiDoc = new UIDocument(linkDocument);
-            Reference refInLink = reference.CreateReferenceInLink();
-            Element linkedElement = linkDocument.GetElement(refInLink);
-            ElementId selectedElementId = linkDocument.GetElement(reference.LinkedElementId).Id;
-            uiDoc.Selection.SetElementIds(new List<ElementId> { selectedElementId });
-            _selection.SetElementIds(new List<ElementId> { selectedElementId });*/
-            _selection.SetReferences(new List<Reference> { reference });
-            /*tr.Commit();
-        }*/
+            var a = GetAngleBetweenBasisXAxisAndCurrentXAxis();
         }
+
+        private double GetAngleBetweenBasisXAxisAndCurrentXAxis()
+        {
+            Transform identity = Transform.Identity;
+            var origin = identity.Origin;
+            XYZ localXAxis = identity.BasisX;
+            XYZ globalXAxis = XYZ.BasisX;
+            return globalXAxis.AngleOnPlaneTo(localXAxis, XYZ.BasisX);
+        }
+
     }
 }

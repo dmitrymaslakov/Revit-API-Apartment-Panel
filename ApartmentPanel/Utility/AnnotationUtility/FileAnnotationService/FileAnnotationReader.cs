@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Media.Imaging;
-using System.Windows.Media;
 using System.IO;
 using ApartmentPanel.Utility.AnnotationUtility.Interfaces;
 
@@ -8,7 +7,6 @@ namespace ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService
 {
     public class FileAnnotationReader : IDisposable, IAnnotationReader
     {
-        //private ImageSource _annotation;
         private BitmapImage _annotation;
         private bool _disposed;
 
@@ -24,7 +22,6 @@ namespace ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService
             }
         }
 
-        //public ImageSource Get()
         public BitmapImage Get()
         {
             if (_disposed)
@@ -39,7 +36,6 @@ namespace ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService
             _annotation = null;
         }
 
-        //private ImageSource BitmapFromUri(Uri source)
         private BitmapImage BitmapFromUri(Uri source)
         {
             var bitmap = new BitmapImage();

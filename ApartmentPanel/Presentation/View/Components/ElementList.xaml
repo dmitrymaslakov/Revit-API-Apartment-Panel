@@ -15,6 +15,7 @@
         <CollectionViewSource x:Key="GroupedItems" Source="{Binding AllElements}">
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="Category" />
+                <PropertyGroupDescription PropertyName="Family" />
             </CollectionViewSource.GroupDescriptions>
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="Name"/>
@@ -35,7 +36,6 @@
                     <TextBlock Text="{Binding Name}" />
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
-
             <TreeView.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>

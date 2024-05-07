@@ -71,8 +71,8 @@
     <Compile Include="Core\Infrastructure.Interfaces\IElementRepository.cs" />
     <Compile Include="Core\Models\ApartmentElement.cs" />
     <Compile Include="Core\Models\BaseElement.cs" />
-    <Compile Include="Core\Models\CategorizedFamilySymbols.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\DTO\CircuitDTO.cs" />
+    <Compile Include="Core\Services\AnnotationNameBuilder.cs" />
     <Compile Include="Infrastructure\Enums\LocationType.cs" />
     <Compile Include="Infrastructure\Extensions\BoundingBoxXYZExtensions.cs" />
     <Compile Include="Infrastructure\Handler\HandlerStates\AnalyzingHandlerState.cs" />
@@ -86,32 +86,40 @@
     <Compile Include="Infrastructure\Models\BatchInstaller.cs" />
     <Compile Include="Infrastructure\Models\BuiltInstance.cs" />
     <Compile Include="Infrastructure\Models\ElementInstaller.cs" />
+    <Compile Include="Infrastructure\Models\HeightPresenters\HeightAsStringParameterSetter.cs" />
+    <Compile Include="Infrastructure\Models\HeightPresenters\HeightAsDoubleParameterSetter.cs" />
+    <Compile Include="Infrastructure\Models\HeightPresenters\IHeightParameterSetter.cs" />
+    <Compile Include="Infrastructure\Models\HeightPresenters\HeightParameterSetterBase.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\ILocationStrategy.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\BottomLocationStrategy.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\LocationStrategyBase.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\CenterLocationStrategy.cs" />
     <Compile Include="Infrastructure\Services\ReferenceDirectionProvider.cs" />
-    <Compile Include="Presentation\Enums\Direction.cs" />
+    <Compile Include="Presentation\Converters\LeftThicknessConverter.cs" />
+    <Compile Include="Core\Enums\Direction.cs" />
     <Compile Include="Presentation\Models\DirectionProvider.cs" />
     <Compile Include="Presentation\Services\ConfigPanelWindowService.cs" />
+    <Compile Include="Presentation\View\Components\ApartmentElementCard.xaml.cs">
+      <DependentUpon>ApartmentElementCard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utility\Extensions\KeyboardExtentions.cs" />
     <Compile Include="Utility\Extensions\RevitExtensions\SelectionExtensions.cs" />
     <Compile Include="Utility\Extensions\RevitExtensions\FamilySymbolExtensions.cs" />
     <Compile Include="Utility\Extensions\RevitExtensions\DocumentExtensions.cs" />
+    <Compile Include="Utility\Interfaces\IDeepClone.cs" />
     <Compile Include="Utility\SelectionFilters\ISelectionFilterFactory.cs" />
     <Compile Include="Utility\RevitInfrastructureBase.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\TopLocationStrategy.cs" />
     <Compile Include="Core\Enums\TypeOfHeight.cs" />
     <Compile Include="Presentation\MarkupExtensions\EnumSourceExtention.cs" />
-    <Compile Include="Presentation\Models\Batch\BatchedElement.cs" />
-    <Compile Include="Presentation\Models\Batch\BatchedRow.cs" />
-    <Compile Include="Presentation\Models\Batch\BatchedLocation.cs" />
-    <Compile Include="Presentation\Models\Batch\BatchedMargin.cs" />
+    <Compile Include="Core\Models\Batch\BatchedElement.cs" />
+    <Compile Include="Core\Models\Batch\BatchedRow.cs" />
+    <Compile Include="Core\Models\Batch\BatchedLocation.cs" />
+    <Compile Include="Core\Models\Batch\BatchedMargin.cs" />
     <Compile Include="Core\Models\Circuit.cs" />
     <Compile Include="Core\Models.Interfaces\IApartmentElement.cs" />
-    <Compile Include="Presentation\Models\Batch\ElementBatch.cs" />
+    <Compile Include="Core\Models\Batch\ElementBatch.cs" />
     <Compile Include="Core\Models\Height.cs" />
-    <Compile Include="Presentation\Models\MockData\MockCircuit.cs" />
     <Compile Include="Core\Models\Parameter.cs" />
     <Compile Include="Presentation\Services\ModelAnalizing.cs" />
     <Compile Include="Presentation\View\Components\AddingNewName.xaml.cs">
@@ -159,7 +167,6 @@
     <Compile Include="Presentation\Commands\BaseCommand.cs" />
     <Compile Include="Presentation\Commands\BaseCommandsCreater.cs" />
     <Compile Include="Presentation\Commands\ConfigPanelCommandsCreater.cs" />
-    <Compile Include="Presentation\Commands\DTO\DTO.cs" />
     <Compile Include="Presentation\Commands\RelayCommand.cs" />
     <Compile Include="Presentation\Commands\ViewCommandsCreater.cs" />
     <Compile Include="Presentation\DependencyInjection.cs" />
@@ -245,6 +252,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\View\Components\ConfigList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\View\Components\ApartmentElementCard.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

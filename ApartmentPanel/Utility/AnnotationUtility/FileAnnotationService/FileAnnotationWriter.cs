@@ -8,22 +8,22 @@ namespace ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService
     public class FileAnnotationWriter : IDisposable, IAnnotationWriter
     {
         private bool _disposed;
-        private readonly string _fileName;
+        private readonly string _fullPath;
 
-        public FileAnnotationWriter(string fileName) => _fileName = fileName;
+        public FileAnnotationWriter(string fullPath) => _fullPath = fullPath;
 
-        //public BitmapSource Save(BitmapSource annotation)
         public BitmapImage Save(BitmapImage annotation)
         {
             if (_disposed)
                 throw new Exception("Object is disposed.");
 
-            var folderPath = FileUtility.GetApplicationAnnotationsPath();
+            //var folderPath = FileUtility.GetApplicationAnnotationsPath();
+            var folderPath = Path.GetDirectoryName(_fullPath);
 
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
 
-            using (var fileStream = new FileStream(_fileName, FileMode.Create))
+            using (var fileStream = new FileStream(_fullPath, FileMode.Create))
             {
                 BitmapEncoder encoder = new PngBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create(annotation));

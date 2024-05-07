@@ -1,4 +1,4 @@
-﻿using ApartmentPanel.Presentation.Models.Batch;
+﻿using ApartmentPanel.Core.Models.Batch;
 using ApartmentPanel.Utility;
 using System;
 using System.Collections.ObjectModel;
@@ -67,10 +67,10 @@ namespace ApartmentPanel.Presentation.View.Components
             }
         }
 
-        private void Image_KeyDown(object sender, KeyEventArgs e)
+        /*private void Image_KeyDown(object sender, KeyEventArgs e)
         {
             KeyDownCommand?.Execute(e.Key);
-        }
+        }*/
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -78,6 +78,22 @@ namespace ApartmentPanel.Presentation.View.Components
             if (!image.Focusable)
                 image.Focusable = true;
             image.Focus();
+        }
+
+        private void ListView_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Left:
+                case Key.Right:
+                case Key.Up:
+                case Key.Down:
+                    e.Handled = true;
+                    break;
+                default:
+                    break;
+            }
+            KeyDownCommand?.Execute(e.Key);
         }
     }
 }

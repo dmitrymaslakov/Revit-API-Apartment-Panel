@@ -9,6 +9,7 @@
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance vm:ConfigPanelViewModel, IsDesignTimeCreatable=True}"
         d:DesignHeight="1000" d:DesignWidth="1300" Width="1300" Height="1000"
+        WindowStartupLocation="Manual" Left="100" Top="10"
         x:Name="Config">
     <Window.Resources>
         <ResourceDictionary>
@@ -38,14 +39,23 @@
                         <ColumnDefinition Width="330"/>
                         <ColumnDefinition Width="300"/>
                     </Grid.ColumnDefinitions>
-                    <local:ElementsCard
+                    <local:ApartmentElementCard
+                        Header="Apartment elements"
+                        Grid.Column="0"
+                        Elements="{Binding ApartmentElements}"
+                        AddElementCommand="{Binding ShowListElementsCommand}"
+                        RemoveElementCommand="{Binding RemoveApartmentElementsCommand}"
+                        EditBtnVisibility="{x:Static Visibility.Collapsed}"
+                        SelectElementsCommand="{Binding SelectApartmentElementsCommand}"
+                        />
+                    <!--<local:ElementsCard
                         Grid.Column="0"
                         Header="Apartment elements"
                         Elements="{Binding ApartmentElements}"
                         AddElementCommand="{Binding ShowListElementsCommand}"
                         RemoveElementCommand="{Binding RemoveApartmentElementsCommand}"
                         EditBtnVisibility="{x:Static Visibility.Collapsed}"
-                        SelectElementsCommand="{Binding SelectApartmentElementsCommand}"/>
+                        SelectElementsCommand="{Binding SelectApartmentElementsCommand}"/>-->
                     <GroupBox Header="Responsible for: " 
                               Grid.Column="1">
                         <StackPanel>
@@ -115,7 +125,8 @@
                         x:Name="mainAnnotationPreview"
                         Annotation="{Binding AnnotationPreview}"
                         SetAnnotationPreviewCommand = "{Binding SetAnnotationPreviewCommand}"
-                        SetAnnotationToElementCommand ="{Binding SetAnnotationToElementCommand}" Grid.RowSpan="3"/>
+                        SetAnnotationToElementCommand ="{Binding SetAnnotationToElementCommand}" 
+                        Grid.RowSpan="3"/>
                     <GroupBox Grid.Row="1" 
                               Grid.Column="1" 
                               Grid.ColumnSpan="4" 

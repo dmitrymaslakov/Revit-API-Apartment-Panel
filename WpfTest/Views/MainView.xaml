@@ -6,15 +6,42 @@
         xmlns:local="clr-namespace:WpfTest"
         xmlns:vm="clr-namespace:WpfTest.ViewModels"
         xmlns:components="clr-namespace:WpfTest.Views.Components"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainViewModel, IsDesignTimeCreatable=True}"
         Title="Testing WPF" 
         Height="450" Width="800">
+    <Window.Resources>
+        <CollectionViewSource x:Key="GroupedItems" Source="{Binding AllElements}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Category" />
+                <PropertyGroupDescription PropertyName="Family" />
+            </CollectionViewSource.GroupDescriptions>
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Name"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </Window.Resources>
+
     <Grid>
-        <Button 
-            Content="Check" 
-            Width="60" 
-            Height="20"
-            Command="{Binding FindFiles}"/>
+        <!--<TreeView ItemsSource="{Binding Source={StaticResource GroupedItems}}"
+                  Grid.Row="0" 
+                  Height="600"
+                  x:Name="elementsTree">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Items}">
+                    <TextBlock Text="{Binding Name}" />
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+            <TreeView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontWeight="Bold" Text="{Binding Name}" />
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </TreeView.GroupStyle>
+        </TreeView>-->
     </Grid>
 </Window>

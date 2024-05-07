@@ -1,4 +1,4 @@
-﻿namespace ApartmentPanel.Presentation.Enums
+﻿namespace ApartmentPanel.Core.Enums
 {
     public enum Direction
     {

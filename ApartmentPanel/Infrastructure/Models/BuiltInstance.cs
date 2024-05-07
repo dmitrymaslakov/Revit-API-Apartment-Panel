@@ -14,16 +14,46 @@ namespace ApartmentPanel.Infrastructure.Models
             Id = instanceId;
             FamilyInstance familyInstance = _document.GetElement(Id) as FamilyInstance;
             bool areParallel = AreGlobalXAxisAndLocalXAxisParallel(familyInstance);
-            Width = GetInstanceWidth(familyInstance, areParallel);
+            var instancePoints = GetInstancePoints(familyInstance, areParallel);
+            Width = GetInstanceWidth(instancePoints);
+            MinLocalDelta = GetMinLocalDelta(instancePoints);
+            MaxLocalDelta = GetMaxLocalDelta(instancePoints);
         }
 
         public ElementId Id { get; set; }
         public double Width { get; set; }
+        public double MinLocalDelta { get; set; }
+        public double MaxLocalDelta { get; set; }
 
-        private double GetInstanceWidth(
+        private (XYZ, XYZ, XYZ) GetInstancePoints(
             FamilyInstance familyInstance, bool areGlobalXAxisAndLocalXAxisParallel)
         {
-            double width;
+            if (areGlobalXAxisAndLocalXAxisParallel)
+            {
+                var instancePoints = new FamilyInstacePoints(_uiapp, familyInstance);
+                return (instancePoints.Max, instancePoints.Min, instancePoints.Location);
+            }
+            else
+            {
+                Wall tempWall = new RevitUtility(_uiapp).CreateWall();
+                FamilySymbol symbol = familyInstance.Symbol;
+                FamilyInstance tempInstance = CreateTempFamilyInstance(symbol, tempWall);
+                var instancePoints = new FamilyInstacePoints(_uiapp, tempInstance);
+                (XYZ, XYZ, XYZ) res = (instancePoints.Max, instancePoints.Min, instancePoints.Location);
+
+                List<ElementId> deletedElementIds = new List<ElementId>
+                    {
+                        tempWall.Id, tempInstance.Id
+                    };
+                _document.Delete(deletedElementIds);
+                return res;
+            }
+        }
+
+        private double GetInstanceWidth((XYZ max, XYZ min, XYZ location) instancePoints)
+        {
+            return Math.Abs(instancePoints.max.X - instancePoints.min.X);
+            /*double width;
 
             if (areGlobalXAxisAndLocalXAxisParallel)
             {
@@ -40,20 +70,19 @@ namespace ApartmentPanel.Infrastructure.Models
                 var (maxPoint, minPoint) = (instancePoints.Max, instancePoints.Min);
                 width = Math.Abs(maxPoint.X - minPoint.X);
 
-                /*using (var tr = new Transaction(_document, "Removing temp elements"))
-                {
-                    tr.Start();*/
-                    List<ElementId> deletedElementIds = new List<ElementId>
+                List<ElementId> deletedElementIds = new List<ElementId>
                     {
                         tempWall.Id, tempInstance.Id
                     };
-                    _document.Delete(deletedElementIds);
-                    /*tr.Commit();
-                }*/
+                _document.Delete(deletedElementIds);
             }
-            return width;
+            return width;*/
         }
-        
+        private double GetMinLocalDelta((XYZ max, XYZ min, XYZ location) instancePoints) => 
+            Math.Abs(instancePoints.min.X - instancePoints.location.X);
+        private double GetMaxLocalDelta((XYZ max, XYZ min, XYZ location) instancePoints) =>
+            Math.Abs(instancePoints.max.X - instancePoints.location.X);
+
         private bool AreGlobalXAxisAndLocalXAxisParallel(FamilyInstance familyInstance)
         {
             Transform instanceTransform = familyInstance.GetTransform();
@@ -73,7 +102,7 @@ namespace ApartmentPanel.Infrastructure.Models
         {
             Face face = null;
             Options geomOptions = new Options { ComputeReferences = true };
-            
+
             GeometryElement wallGeom = wall.get_Geometry(geomOptions);
             foreach (GeometryObject geomObj in wallGeom)
             {
@@ -95,57 +124,12 @@ namespace ApartmentPanel.Infrastructure.Models
             XYZ location = face.Evaluate(center);
             XYZ normal = face.ComputeNormal(center);
             XYZ refDir = normal.CrossProduct(XYZ.BasisZ);
-            XYZ dir = new XYZ(0, 0, 0);
 
-            FamilyInstance newFamilyInstance = null;
-            /*using (var tr = new Transaction(_document, "Creating new FamilyInstance"))
-            {
-                tr.Start();*/
-                newFamilyInstance = _document
-                    .Create
-                    .NewFamilyInstance(face, location, refDir, symbol);
+            FamilyInstance newFamilyInstance = _document
+                .Create
+                .NewFamilyInstance(face, location, refDir, symbol);
             _document.Regenerate();
-                /*tr.Commit();
-            }*/
             return newFamilyInstance;
         }
-
-        /*private Wall CreateWall()
-        {
-            // Create a line to define the wall's location
-            Line line = Line.CreateBound(new XYZ(0, 0, 0), new XYZ(10, 0, 0));
-
-            // Find a suitable wall type (you may need to adjust this based on your project)
-            FilteredElementCollector collector = new FilteredElementCollector(_document);
-            WallType wallType = collector
-                .OfClass(typeof(WallType))
-                .Cast<WallType>()
-                .FirstOrDefault(wt => wt.Kind == WallKind.Basic);
-            Wall wallResult = null;
-            if (wallType != null)
-            {
-                // Set the level for the wall (you may need to adjust this based on your project)
-                Level level = new FilteredElementCollector(_document)
-                    .OfCategory(BuiltInCategory.OST_Levels)
-                    .WhereElementIsNotElementType()
-                    .Cast<Level>()
-                    .FirstOrDefault();
-
-                if (level != null)
-                {
-                    using (Transaction transaction = new Transaction(_document, "Create Wall"))
-                    {
-                        transaction.Start();
-                        wallResult = Wall.Create(_document, line, wallType.Id, level.Id, 10, 0, false, false);
-                        transaction.Commit();
-                    }
-                }
-                else
-                    TaskDialog.Show("Error", "No suitable level found.");
-            }
-            else
-                TaskDialog.Show("Error", "No suitable wall type found.");
-            return wallResult;
-        }*/
     }
 }

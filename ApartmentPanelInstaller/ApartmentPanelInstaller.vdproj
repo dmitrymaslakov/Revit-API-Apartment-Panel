@@ -3694,12 +3694,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_5889BCF05FE797E5AFE5A1FDB6AB2786"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_12360BF8E75E4E068E14CFABB9C43A87"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -4931,6 +4925,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_30931A2E83AD1F5BAE2375EBE15AB7BE"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_5889BCF05FE797E5AFE5A1FDB6AB2786"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -11462,7 +11462,7 @@
         {
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_91578E4C99C14F9B9C7EDE3D04F66C38"
             {
-            "DefaultLocation" = "8:c:\\ProgramData\\Autodesk\\Revit\\Addins\\2024"
+            "DefaultLocation" = "8:c:\\ProgramData\\Autodesk\\Revit\\Addins\\2023"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:TRUE"
             "Condition" = "8:"
@@ -11532,15 +11532,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ApartmentPanel"
-        "ProductCode" = "8:{BD1EBF84-497B-4826-971C-3B8D93997036}"
-        "PackageCode" = "8:{B9C31955-5E49-4DF6-8D2A-201BCDB9CA26}"
+        "ProductCode" = "8:{ACFA674F-B70C-42C2-967B-C1B24CB2BDA2}"
+        "PackageCode" = "8:{EA4F00B8-87E9-411F-BE7B-E51062B49F71}"
         "UpgradeCode" = "8:{97B4BCF9-4F1E-4F06-840B-FB14FCC82081}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.1"
+        "ProductVersion" = "8:1.0.0"
         "Manufacturer" = "8:RBX"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

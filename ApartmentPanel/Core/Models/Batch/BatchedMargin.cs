@@ -1,6 +1,6 @@
 ﻿using ApartmentPanel.Presentation.ViewModel;
 
-namespace ApartmentPanel.Presentation.Models.Batch
+namespace ApartmentPanel.Core.Models.Batch
 {
     public class BatchedMargin : ViewModelBase
     {

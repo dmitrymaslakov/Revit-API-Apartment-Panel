@@ -1,4 +1,4 @@
-﻿namespace ApartmentPanel.Presentation.Models.Batch
+﻿namespace ApartmentPanel.Core.Models.Batch
 {
     public struct BatchedLocation
     {

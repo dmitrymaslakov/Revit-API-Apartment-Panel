@@ -1,11 +1,17 @@
-﻿using ApartmentPanel.Presentation.Enums;
+﻿using ApartmentPanel.Core.Enums;
 using Autodesk.Revit.DB;
 
 namespace ApartmentPanel.Infrastructure.Services
 {
     internal class ReferenceDirectionProvider
     {
-        public ReferenceDirectionProvider(Direction direction) => Direction = direction;
+        private readonly FamilySymbol _symbol;
+
+        public ReferenceDirectionProvider(Direction direction, FamilySymbol symbol)
+        {
+            Direction = direction;
+            _symbol = symbol;
+        }
 
         internal Direction Direction { get; set; }
 
@@ -25,6 +31,13 @@ namespace ApartmentPanel.Infrastructure.Services
                 default: 
                     return new XYZ(0, 0, 0);
             }            
+        }
+        private double GetAngleBetweenBasisXAxisAndCurrentXAxis()
+        {
+            Transform identity = Transform.Identity;
+            XYZ localXAxis = identity.BasisX;
+            XYZ globalXAxis = XYZ.BasisX;
+            return globalXAxis.AngleOnPlaneTo(localXAxis, XYZ.BasisX);
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using ApartmentPanel.Core.Models;
-using ApartmentPanel.Presentation.Enums;
+﻿using ApartmentPanel.Core.Enums;
+using ApartmentPanel.Core.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 

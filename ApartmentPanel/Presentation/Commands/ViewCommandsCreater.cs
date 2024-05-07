@@ -3,21 +3,17 @@ using System;
 using System.Windows.Input;
 using System.Windows;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
-using ApartmentPanel.Presentation.View.Components;
 using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
 using ApartmentPanel.Core.Enums;
 using ApartmentPanel.Core.Models;
-using ApartmentPanel.Presentation.Models.Batch;
-using System.Windows.Documents;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media;
 using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Presentation.Services;
-using ApartmentPanel.Presentation.Enums;
 using ApartmentPanel.Utility.Extensions;
 using ApartmentPanel.Presentation.Models;
 using System.Timers;
+using ApartmentPanel.Core.Models.Batch;
 
 namespace ApartmentPanel.Presentation.Commands
 {
@@ -68,6 +64,7 @@ namespace ApartmentPanel.Presentation.Commands
             {
                 Name = element.Name,
                 Category = element.Category,
+                Family = element.Family,
                 Circuit = new CircuitDTO
                 {
                     Number = circuit,
@@ -78,7 +75,8 @@ namespace ApartmentPanel.Presentation.Commands
                 Parameters = element.Parameters
                         .GroupBy(p => p.Name)
                         .ToDictionary(g => g.Key, g => g.First().Value),
-                InsertingMode = insertingMode
+                InsertingMode = insertingMode,
+                Direction = _viewProperties.Direction
             };
             if (_viewProperties.ElementHeight != null)
             {
@@ -105,13 +103,15 @@ namespace ApartmentPanel.Presentation.Commands
                     InsertElementDTO elDto = new InsertElementDTO
                     {
                         Category = element.Category,
+                        Family = element.Family,
                         Circuit = new CircuitDTO
                         {
                             Number = element.Circuit,
                             ResponsibleForCircuitParameter = _viewProperties.ConfigPanelVM.ResponsibleForCircuit
                         },
                         Height = row.MountingHeight.Clone(),
-                        Location = new BatchedLocation
+                        //Location = new BatchedLocation
+                        Location = new Point
                         {
                             X = elementBatch.BatchedRows.IndexOf(row),
                             Y = row.RowElements.IndexOf(element)
@@ -144,7 +144,8 @@ namespace ApartmentPanel.Presentation.Commands
         {
             Key key = (Key)o;
             if (!key.TryGetCharAsString(out string keyAsString))
-                key.TryGetNumberAsString(out keyAsString);
+                return;
+                //key.TryGetNumberAsString(out keyAsString);
             if (_timer.Enabled)
             {
                 _timer.Stop();

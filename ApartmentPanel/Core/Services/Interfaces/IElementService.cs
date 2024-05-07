@@ -12,14 +12,13 @@ namespace ApartmentPanel.Core.Services.Interfaces
     {
         void InsertToModel(InsertElementDTO apartmentElementDto);
         JsonSerializerOptions GetSerializationOptions();
-        List<IApartmentElement> GetAll(List<(string name, string category)> props);
-        void AddToApartment(Action<List<(string name, string category)>> addElementToApartment);
-        IApartmentElement CloneFrom(IApartmentElement element);
-        //void SetAnnotationTo(IApartmentElement element, BitmapSource img);
+        List<IApartmentElement> GetAll(List<(string name, string category, string family)> props);
+        void AddToApartment(Action<List<(string name, string category, string family)>> addElementToApartment);
+        //IApartmentElement CloneFrom(IApartmentElement element);
         void SetAnnotationTo(IApartmentElement element, BitmapImage img);
-        //ImageSource GetAnnotationFor(string elementName);
-        BitmapImage GetAnnotationFor(string elementName);
+        BitmapImage GetAnnotation();
         void InsertBatchToModel(InsertBatchDTO batchDto);
         void SetElementParameters(SetParamsDTO setParamsDTO);
+        ElementService SetAnnotationName(string annotationName);
     }
 }
