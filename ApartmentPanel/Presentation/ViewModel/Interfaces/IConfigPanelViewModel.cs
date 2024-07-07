@@ -2,7 +2,10 @@
 using ApartmentPanel.Core.Models.Batch;
 using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
+using ApartmentPanel.Presentation.ViewModel.ComponentsVM.ConfigPanelComponentsVM;
+using ApartmentPanel.UseCases.Configs.Dto;
 using ApartmentPanel.Utility;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,34 +16,33 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
 {
     public interface IConfigPanelViewModel
     {
-        //BitmapSource AnnotationPreview { get; set; }
         BitmapImage AnnotationPreview { get; set; }
         bool IsCancelEnabled { get; set; }
         string LatestConfigPath { get; set; }
-        string NewCircuit { get; set; }
         Action<object, OkApplyCancel> OkApplyCancelActions { get; set; }
-        ObservableCollection<IApartmentElement> ApartmentElements { get; set; }
-        ObservableCollection<IApartmentElement> CircuitElements { get; set; }
-        ObservableCollection<Circuit> PanelCircuits { get; set; }
-        //ObservableDictionary<string, ObservableCollection<IApartmentElement>> PanelCircuits { get; set; }
-        ObservableCollection<IApartmentElement> SelectedApartmentElements { get; set; }
-        ObservableCollection<IApartmentElement> SelectedCircuitElements { get; set; }
+        /*ObservableCollection<IApartmentElement> ApartmentElements { get; set; }
+        ObservableCollection<IApartmentElement> SelectedApartmentElements { get; set; }*/
+        /*ObservableCollection<Circuit> PanelCircuits { get; set; }
         ObservableCollection<Circuit> SelectedPanelCircuits { get; set; }
-        //ObservableCollection<KeyValuePair<string, ObservableCollection<IApartmentElement>>> SelectedPanelCircuits { get; set; }
-        ICommand ShowListElementsCommand { get; set; }
+        string NewCircuit { get; set; }*/
+        /*ObservableCollection<IApartmentElement> CircuitElements
+         * { get; set; }
+        ObservableCollection<IApartmentElement> SelectedCircuitElements { get; set; }
+        IApartmentElement SelectedCircuitElement { get; set; }*/
+        /*ICommand ShowListElementsCommand { get; }
+        ICommand SelectApartmentElementsCommand { get; set; }
+        ICommand RemoveApartmentElementsCommand { get; set; }*/
+        /*ICommand AddPanelCircuitCommand { get; set; }
+        ICommand RemovePanelCircuitsCommand { get; set; }
+        ICommand SelectPanelCircuitCommand { get; set; }*/
         ICommand AddElementToCircuitCommand { get; set; }
-        ICommand AddPanelCircuitCommand { get; set; }
         ICommand ApplyCommand { get; set; }
         ICommand CancelCommand { get; set; }
         ICommand LoadLatestConfigCommand { get; set; }
         ICommand OkCommand { get; set; }
-        ICommand RemoveApartmentElementsCommand { get; set; }
         ICommand RemoveElementsFromCircuitCommand { get; set; }
-        ICommand RemovePanelCircuitsCommand { get; set; }
         ICommand SaveLatestConfigCommand { get; set; }
-        ICommand SelectApartmentElementsCommand { get; set; }
-        ICommand SelectCircuitElementCommand { get; set; }
-        ICommand SelectPanelCircuitCommand { get; set; }
+        //ICommand SelectCircuitElementCommand { get; set; }
         ICommand SetAnnotationPreviewCommand { get; set; }
         ICommand SetAnnotationToElementCommand { get; set; }
         IListElementsViewModel ListElementsVM { get; set; }
@@ -65,14 +67,16 @@ namespace ApartmentPanel.Presentation.ViewModel.Interfaces
         Action<List<string>> SetParametersToElement { get; set; }
         string ResponsibleForHeight { get; set; }
         string ResponsibleForCircuit { get; set; }
-        IApartmentElement SelectedCircuitElement { get; set; }
         ObservableCollection<string> Configs { get; set; }
         string SelectedConfig { get; set; }
         string CurrentConfig { get; set; }
         string NewConfig { get; set; }
         ICommand AddConfigCommand { get; set; }
         ICommand RemoveConfigCommand { get; set; }
+        ApartmentElementsViewModel ApartmentElementsVM { get; set; }
+        PanelCircuitsViewModel PanelCircuitsVM { get; set; }
+        CircuitElementsViewModel CircuitElementsVM { get; set; }
 
-        ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration);
+        ConfigPanelViewModel ApplyLatestConfiguration(GetConfigDto latestConfiguration);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Windows.Media.Imaging;
-using System.Windows.Media;
 using ApartmentPanel.Utility.AnnotationUtility.Interfaces;
 
 namespace ApartmentPanel.Utility.AnnotationUtility

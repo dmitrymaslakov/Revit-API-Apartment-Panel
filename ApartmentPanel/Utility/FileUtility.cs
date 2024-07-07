@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.IO;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ApartmentPanel.Utility
 {
@@ -16,10 +12,10 @@ namespace ApartmentPanel.Utility
         private static string sm_appAnnotationsPath = null;
         #endregion
 
-        public static string GetAssemblyPath()
+        public static string GetAssemblyFolder()
         {
             if (string.IsNullOrEmpty(sm_assemblyPath))
-                sm_assemblyPath = System.IO.Path.GetDirectoryName(
+                sm_assemblyPath = Path.GetDirectoryName(
                     Assembly.GetExecutingAssembly().Location);
             return sm_assemblyPath;
         }
@@ -32,10 +28,10 @@ namespace ApartmentPanel.Utility
         public static string GetApplicationResourcesPath()
         {
             if (string.IsNullOrEmpty(sm_appResourcesPath))
-                sm_appResourcesPath = GetAssemblyPath() + "\\Resources";
+                sm_appResourcesPath = GetAssemblyFolder() + "\\Resources";
             return sm_appResourcesPath;
         }
-        public static string GetApplicationAnnotationsPath()
+        public static string GetApplicationAnnotationsFolder()
         {
             if (string.IsNullOrEmpty(sm_appAnnotationsPath))
                 sm_appAnnotationsPath = GetApplicationResourcesPath() + "\\Annotations";

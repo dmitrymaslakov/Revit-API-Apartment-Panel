@@ -5,6 +5,9 @@ using ApartmentPanel.Presentation.View;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Presentation.ViewModel.ComponentsVM;
 using ApartmentPanel.Presentation.Services;
+using MediatR;
+using System.Reflection;
+using ApartmentPanel.UseCases.ApartmentElements.Queries.GetApartmentElements;
 
 namespace ApartmentPanel.Presentation
 {
@@ -14,13 +17,11 @@ namespace ApartmentPanel.Presentation
         {
             hostBuilder.ConfigureServices(services => 
             {
-                services.AddSingleton<IListElementsViewModel, ListElementsViewModel>();
-                services.AddSingleton<IConfigPanelViewModel, ConfigPanelViewModel>();
-                services.AddSingleton<IMainViewModel, MainViewModel>();
-                services.AddSingleton(provider => new MainView(provider.GetService<IMainViewModel>()));
-                services.AddTransient<ModelAnalizing>();
-                /*services.AddTransient<IPresentationElementRepository, PresentationElementRepository>();
-                services.AddTransient<IPresentationPanelRepository, PresentationPanelRepository>();*/
+                services.AddScoped<IListElementsViewModel, ListElementsViewModel>();
+                services.AddScoped<IConfigPanelViewModel, ConfigPanelViewModel>();
+                services.AddScoped<IMainViewModel, MainViewModel>();
+                services.AddScoped(provider => new MainView(provider.GetService<IMainViewModel>()));
+                services.AddScoped<ModelAnalizing>();
             });
             return hostBuilder;
         }

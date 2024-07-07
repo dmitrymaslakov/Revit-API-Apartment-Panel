@@ -13,11 +13,11 @@ namespace ApartmentPanel.Presentation.Services
 
         public void AddCurrentCircuitElements(ObservableCollection<IApartmentElement> currentCircuitElements)
         {
-            if (_configPanelViewModel.CircuitElements.Count != 0)
-                _configPanelViewModel.CircuitElements.Clear();
+            if (_configPanelViewModel.CircuitElementsVM.CircuitElements.Count != 0)
+                _configPanelViewModel.CircuitElementsVM.CircuitElements.Clear();
 
             foreach (var item in currentCircuitElements)
-                _configPanelViewModel.CircuitElements.Add(item);
+                _configPanelViewModel.CircuitElementsVM.CircuitElements.Add(item);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ApartmentPanel.Presentation.View.Components.CircuitElements"
+﻿<UserControl x:Class="ApartmentPanel.Presentation.View.Components.ConfigPanelComponents.CircuitElementsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,25 +6,26 @@
              xmlns:mex="clr-namespace:ApartmentPanel.Presentation.MarkupExtensions"
              xmlns:models="clr-namespace:ApartmentPanel.Core.Enums"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-             xmlns:local="clr-namespace:ApartmentPanel.Presentation.View.Components"
+             xmlns:vm="clr-namespace:ApartmentPanel.Presentation.ViewModel.ComponentsVM.ConfigPanelComponentsVM"             
+             d:DataContext="{d:DesignInstance vm:CircuitElementsViewModel, IsDesignTimeCreatable=True}"
              mc:Ignorable="d" 
              x:Name="root"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <CollectionViewSource x:Key="SortedItems" Source="{Binding Elements, ElementName=root}">
+        <CollectionViewSource x:Key="SortedItems" Source="{Binding CircuitElements}">
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="Name"/>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
     </UserControl.Resources>
     <Grid Background="White">
-        <GroupBox Header="{Binding Header, ElementName=root}">
+        <GroupBox Header="Circuit elements">
             <StackPanel>
                 <ListView ItemsSource="{Binding Source={StaticResource SortedItems}}" 
                           Height="400"
                           x:Name="lv"                          
                           SelectionMode="Extended"
-                          SelectedItem="{Binding SelectedElement, ElementName=root, Mode=TwoWay}"
+                          SelectedItem="{Binding SelectedCircuitElement, Mode=TwoWay}"
                           SelectionChanged="Lv_SelectionChanged">
                     <ListView.ItemTemplate>
                         <DataTemplate>

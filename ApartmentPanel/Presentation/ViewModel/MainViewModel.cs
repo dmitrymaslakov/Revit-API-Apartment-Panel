@@ -10,6 +10,8 @@ using System;
 using ApartmentPanel.Core.Models;
 using ApartmentPanel.Core.Models.Batch;
 using ApartmentPanel.Core.Enums;
+using MediatR;
+using ApartmentPanel.UseCases.ElectricalFamily.Queries.GetElectricalFamily;
 
 namespace ApartmentPanel.Presentation.ViewModel
 {
@@ -28,26 +30,28 @@ namespace ApartmentPanel.Presentation.ViewModel
         #endregion
 
         private readonly ViewCommandsCreater _viewCommandsCreater;
+        private IMediator _mediator;
 
-        public MainViewModel()
-        {
+        public MainViewModel() { }
 
-        }
-        public MainViewModel(IElementService elementService,
-            IConfigPanelViewModel configPanelVM, ModelAnalizing modelAnalizing) : base(elementService)
+        public MainViewModel(IElementService elementService, IMediator mediator,
+        IConfigPanelViewModel configPanelVM, ModelAnalizing modelAnalizing) : base(elementService)
         {
             #region MockInitializing
+            _mediator = mediator;
             _modelAnalizing = modelAnalizing;
-            AnalizeCommand = new RelayCommand(o =>
+            
+            /*AnalizeCommand = new RelayCommandAsync(async o => 
             {
-                modelAnalizing.AnalizeElement();
-            });
+                var r = await _mediator.Send(new GetElectricalFamilyRequest());
+                var r = await _mediator.Send(new TestRequest());
+            });*/
             #endregion
 
             _viewCommandsCreater = new ViewCommandsCreater(this, ElementService);
             ConfigPanelVM = configPanelVM;
             ConfigPanelVM.OkApplyCancelActions = ExecuteOkApplyCancelActions;
-            Circuits = GetCircuits(ConfigPanelVM.PanelCircuits);
+            Circuits = GetCircuits(ConfigPanelVM.PanelCircuitsVM.PanelCircuits);
             ElementBatches = GetBatches(ConfigPanelVM.Batches);
             ListHeightsUK = GetHeights(ConfigPanelVM.ListHeightsUK);
             ListHeightsOK = GetHeights(ConfigPanelVM.ListHeightsOK);
@@ -93,7 +97,7 @@ namespace ApartmentPanel.Presentation.ViewModel
             get => _elementHeight;
             set => Set(ref _elementHeight, value);
         }
-        
+
         private double _floorHeight;
         public double FloorHeight
         {

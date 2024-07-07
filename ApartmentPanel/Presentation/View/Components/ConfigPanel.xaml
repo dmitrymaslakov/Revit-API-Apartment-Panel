@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:local="clr-namespace:ApartmentPanel.Presentation.View.Components"
+        xmlns:cpc="clr-namespace:ApartmentPanel.Presentation.View.Components.ConfigPanelComponents"
         xmlns:vm="clr-namespace:ApartmentPanel.Presentation.ViewModel.ComponentsVM"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d" 
@@ -39,23 +40,9 @@
                         <ColumnDefinition Width="330"/>
                         <ColumnDefinition Width="300"/>
                     </Grid.ColumnDefinitions>
-                    <local:ApartmentElementCard
-                        Header="Apartment elements"
-                        Grid.Column="0"
-                        Elements="{Binding ApartmentElements}"
-                        AddElementCommand="{Binding ShowListElementsCommand}"
-                        RemoveElementCommand="{Binding RemoveApartmentElementsCommand}"
-                        EditBtnVisibility="{x:Static Visibility.Collapsed}"
-                        SelectElementsCommand="{Binding SelectApartmentElementsCommand}"
-                        />
-                    <!--<local:ElementsCard
-                        Grid.Column="0"
-                        Header="Apartment elements"
-                        Elements="{Binding ApartmentElements}"
-                        AddElementCommand="{Binding ShowListElementsCommand}"
-                        RemoveElementCommand="{Binding RemoveApartmentElementsCommand}"
-                        EditBtnVisibility="{x:Static Visibility.Collapsed}"
-                        SelectElementsCommand="{Binding SelectApartmentElementsCommand}"/>-->
+                    <cpc:ApartmentElementsView 
+                        Grid.Column="0" 
+                        DataContext="{Binding ApartmentElementsVM}"/>
                     <GroupBox Header="Responsible for: " 
                               Grid.Column="1">
                         <StackPanel>
@@ -71,9 +58,7 @@
                                     Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                          Width="120"/>
                             </StackPanel>
-
                         </StackPanel>
-
                     </GroupBox>
                     <StackPanel Grid.Column="2">
                         <Button Style="{StaticResource ArrowButton}"
@@ -85,33 +70,36 @@
                             <fa:ImageAwesome Icon="ArrowLeft" Foreground="Blue"/>
                         </Button>
                     </StackPanel>
-                    <StackPanel Grid.Column="3">
+                    <cpc:PanelCircuitsView Grid.Column="3" DataContext="{Binding PanelCircuitsVM}" Margin="0,0,0,93"/>
+                    <!--<StackPanel Grid.Column="3">
                         <local:ElementsCard
                             x:Name="PanelCircuitsCard"
                             Header="Panel circuits"     
-                            Elements="{Binding PanelCircuits}"
+                            Elements="{Binding PanelCircuitsVM.PanelCircuits}"
                             AddBtnVisibility="{x:Static Visibility.Collapsed}"
                             EditBtnVisibility="{x:Static Visibility.Collapsed}"
-                            RemoveElementCommand="{Binding RemovePanelCircuitsCommand}"
-                            SelectElementsCommand ="{Binding SelectPanelCircuitCommand}"/>
+                            RemoveElementCommand="{Binding PanelCircuitsVM.RemovePanelCircuitsCommand}"
+                            SelectElementsCommand ="{Binding PanelCircuitsVM.SelectPanelCircuitCommand}"/>
                         <GroupBox Header="New circuit">
                             <WrapPanel>
-                                <TextBox Text="{Binding NewCircuit}" Width="30" Margin="0 0 10 0"/>
-                                <Button Height="20" Command="{Binding AddPanelCircuitCommand}">
+                                <TextBox Text="{Binding PanelCircuitsVM.NewCircuit}" Width="30" Margin="0 0 10 0"/>
+                                <Button Height="20" Command="{Binding PanelCircuitsVM.AddPanelCircuitCommand}">
                                     <fa:ImageAwesome Icon="Plus" Foreground="Green"/>
                                 </Button>
                             </WrapPanel>
                         </GroupBox>
-                    </StackPanel>
-                    <local:CircuitElements
+                    </StackPanel>-->
+                    <cpc:CircuitElementsView Grid.Column="4" DataContext="{Binding CircuitElementsVM}"/>
+                    <!--<local:CircuitElements
                         Grid.Column="4"
                         Header="Circuit elements"
                         Elements="{Binding CircuitElements}"
                         SelectedElement="{Binding SelectedCircuitElement, Mode=TwoWay}"
-                        SelectElementsCommand="{Binding SelectCircuitElementCommand}"/>
-                    <local:ElementParameters Grid.Column="5" 
+                        SelectElementsCommand="{Binding SelectCircuitElementCommand}"/>-->
+                    <cpc:ElementParametersView Grid.Column="5" DataContext="{Binding CircuitElementsVM}"/>
+                    <!--<local:ElementParameters Grid.Column="5" 
                                              Header="ElementParameters"
-                                             Parameters="{Binding SelectedCircuitElement.Parameters}"/>
+                                             Parameters="{Binding SelectedCircuitElement.Parameters}"/>-->
                     <!--<local:ElementsCard
                         Grid.Column="4"
                         Header="Circuit elements"
@@ -166,7 +154,7 @@
                     </Grid.ColumnDefinitions>
                     <local:CircuitList
                         Grid.Row="0"
-                        Circuits="{Binding PanelCircuits}"
+                        Circuits="{Binding PanelCircuitsVM.PanelCircuits}"
                         HitElementCommand="{Binding SetNewElementForBatchCommand}"/>
                     <local:Batch
                         Grid.Row="1"

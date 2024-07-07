@@ -8,5 +8,9 @@ namespace ApartmentPanel.Presentation.Commands
 
         protected BaseCommandsCreater(IElementService elementService) => 
             _elementService = elementService;
+        protected BaseCommandsCreater()
+        {
+            
+        }
     }
 }

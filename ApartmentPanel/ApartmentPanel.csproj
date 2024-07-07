@@ -34,6 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MediatR, Version=8.0.0.0, Culture=neutral, PublicKeyToken=bb9a41a5e8aaa7e2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\dmitr\.nuget\packages\mediatr\8.0.0\lib\net461\MediatR.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RevitAddInUtility">
@@ -65,14 +69,53 @@
   <ItemGroup>
     <Compile Include="Application.cs" />
     <Compile Include="Core\DependencyInjection.cs" />
+    <Compile Include="Core\Enums\TypeOfResponsibility.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\DTO\SetParamsDTO.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\DTO\InsertBatchDTO.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\DTO\InsertElementDTO.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\IElementRepository.cs" />
+    <Compile Include="Core\Models.Interfaces\IEntity.cs" />
     <Compile Include="Core\Models\ApartmentElement.cs" />
     <Compile Include="Core\Models\BaseElement.cs" />
     <Compile Include="Core\Infrastructure.Interfaces\DTO\CircuitDTO.cs" />
-    <Compile Include="Core\Services\AnnotationNameBuilder.cs" />
+    <Compile Include="Core\Models\Responsible.cs" />
+    <Compile Include="FileDataAccess\Services\FileCommunicator\Interfaces\IDbModelService.cs" />
+    <Compile Include="FileDataAccess\Services\FileDbModelService.cs" />
+    <Compile Include="UseCases\ApartmentElementAnnotations\Commands\CreateElementAnnotation\CreateElementAnnotationRequest.cs" />
+    <Compile Include="UseCases\ApartmentElementAnnotations\Commands\CreateElementAnnotation\CreateElementAnnotationRequestHandler.cs" />
+    <Compile Include="UseCases\ApartmentElements\Commands\UpdateApartmentElement\UpdateApartmentElementRequest.cs" />
+    <Compile Include="UseCases\ApartmentElements\Commands\UpdateApartmentElement\UpdateApartmentElementRequestHandler.cs" />
+    <Compile Include="UseCases\ApartmentElements\Dto\ApartmentElementUpdateDto.cs" />
+    <Compile Include="UseCases\Configs\Commands\UpdateConfig\UpdateConfigRequest.cs" />
+    <Compile Include="UseCases\Configs\Commands\UpdateConfig\UpdateConfigRequestHandler.cs" />
+    <Compile Include="Utility\Extensions\CollectionExtensions.cs" />
+    <Compile Include="Utility\PathBuilder.cs" />
+    <Compile Include="FileDataAccess\DependencyInjection.cs" />
+    <Compile Include="FileDataAccess\Models\FileDatabase.cs" />
+    <Compile Include="FileDataAccess\Repositories\ResponsibleForHeightRepository.cs" />
+    <Compile Include="FileDataAccess\Repositories\ResponsibleForCircuitRepository.cs" />
+    <Compile Include="FileDataAccess\Services\FileDbContextFactory.cs" />
+    <Compile Include="FileDataAccess\Models\FileDbModel.cs" />
+    <Compile Include="FileDataAccess\Models\FileDbContext.cs" />
+    <Compile Include="FileDataAccess\Services\FileDbProvider.cs" />
+    <Compile Include="FileDataAccess\Repositories\ElementBatchRepository.cs" />
+    <Compile Include="FileDataAccess\Repositories\CircuitRepository.cs" />
+    <Compile Include="FileDataAccess\Repositories\HeightRepository.cs" />
+    <Compile Include="FileDataAccess\Repositories\ApartmentElementRepository.cs" />
+    <Compile Include="FileDataAccess\Repositories\BaseRepository.cs" />
+    <Compile Include="FileDataAccess\ApartmentPanelUOW.cs" />
+    <Compile Include="FileDataAccess\Services\FileCommunicator\FileDbModelCommunicatorFactory.cs" />
+    <Compile Include="FileDataAccess\Services\FileCommunicator\FileDbCommunicator.cs" />
+    <Compile Include="FileDataAccess\Services\FileCommunicator\FileDbModelReader.cs" />
+    <Compile Include="FileDataAccess\Services\FileCommunicator\FileDbModelWriter.cs" />
+    <Compile Include="FileDataAccess\Services\FilePathService.cs" />
+    <Compile Include="FileDataAccess\Services\FileDbService.cs" />
+    <Compile Include="FileDataAccess\Services\FileCommunicator\Interfaces\IDbModelCommunicatorFactory.cs" />
+    <Compile Include="FileDataAccess\Services\FileCommunicator\Interfaces\IDbModelWriter.cs" />
+    <Compile Include="FileDataAccess\Services\FileCommunicator\Interfaces\IDbModelReader.cs" />
+    <Compile Include="Infrastructure.Interfaces\DataAccess\IDbContext.cs" />
+    <Compile Include="Infrastructure.Interfaces\DataAccess\IRepository.cs" />
+    <Compile Include="Infrastructure.Interfaces\DataAccess\IUnitOfWork.cs" />
     <Compile Include="Infrastructure\Enums\LocationType.cs" />
     <Compile Include="Infrastructure\Extensions\BoundingBoxXYZExtensions.cs" />
     <Compile Include="Infrastructure\Handler\HandlerStates\AnalyzingHandlerState.cs" />
@@ -95,18 +138,65 @@
     <Compile Include="Infrastructure\Models\LocationStrategies\LocationStrategyBase.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\CenterLocationStrategy.cs" />
     <Compile Include="Infrastructure\Services\ReferenceDirectionProvider.cs" />
+    <Compile Include="Presentation\Commands\RelayCommandAsync.cs" />
+    <Compile Include="Presentation\Models\ElectricalElement.cs" />
+    <Compile Include="RevitInfrastructure\DependencyInjection.cs" />
+    <Compile Include="RevitInfrastructure\Handler\HandlerStates\HandlerState.cs" />
+    <Compile Include="RevitInfrastructure\Handler\RevitHandler.cs" />
+    <Compile Include="RevitInfrastructure\Handler\HandlerStates\GetElectricalFamiliesHandlerState.cs" />
+    <Compile Include="RevitInfrastructure\Services\RevitService.cs" />
+    <Compile Include="UseCases\ApartmentElements\Commands\CreateApartmentElement\CreateApartmentElementRequest.cs" />
+    <Compile Include="UseCases\ApartmentElements\Commands\CreateApartmentElement\CreateApartmentElementRequestHandler.cs" />
+    <Compile Include="UseCases\ApartmentElements\Dto\ApartmentElementCreateDto.cs" />
+    <Compile Include="UseCases\ApartmentElements\Queries\GetApartmentElements\GetApartmentElementsRequestHandler.cs" />
+    <Compile Include="UseCases\ApartmentElements\Queries\GetApartmentElements\GetApartmentElementsRequest.cs" />
+    <Compile Include="UseCases\Configs\Commands\CreateConfig\CreateConfigRequest.cs" />
+    <Compile Include="UseCases\Configs\Commands\CreateConfig\CreateConfigRequestHandler.cs" />
+    <Compile Include="UseCases\Configs\Dto\GetConfigDto.cs" />
+    <Compile Include="UseCases\Configs\Queries\GetConfig\GetConfigRequest.cs" />
+    <Compile Include="UseCases\Configs\Queries\GetConfig\GetConfigRequestHandler.cs" />
+    <Compile Include="UseCases\DependencyInjection.cs" />
+    <Compile Include="UseCases\ElectricalElements\Dto\ElectricalElementDto.cs" />
+    <Compile Include="UseCases\ElectricalElements\Queries\GetElectricalElements\GetElectricalElementsRequestHandler.cs" />
+    <Compile Include="UseCases\ElectricalElements\Queries\GetElectricalElements\GetElectricalElementsRequest.cs" />
+    <Compile Include="Infrastructure.Interfaces\Services\ICadServices.cs" />
+    <Compile Include="UseCases\ElectricalElements\Queries\TestQuery\TestRequest.cs" />
+    <Compile Include="UseCases\ElectricalElements\Queries\TestQuery\TestRequestHandler.cs" />
+    <Compile Include="Utility\Comparers\StringNumberComparer.cs" />
+    <Compile Include="Utility\MediatR\MediatR.Extensions.Microsoft.DependencyInjection\MediatrServiceConfiguration.cs" />
+    <Compile Include="Utility\MediatR\MediatR.Extensions.Microsoft.DependencyInjection\Registration\ServiceRegistrar.cs" />
+    <Compile Include="Utility\MediatR\MediatR.Extensions.Microsoft.DependencyInjection\ServiceCollectionExtensions.cs" />
+    <Compile Include="Presentation\Commands\ConfigPanelCommands\CircuitElementsCommandCreater.cs" />
+    <Compile Include="Presentation\Commands\ConfigPanelCommands\PanelCircuitsCommandCreater.cs" />
+    <Compile Include="Presentation\Commands\ConfigPanelCommands\ApartmentElementsCommandCreater.cs" />
     <Compile Include="Presentation\Converters\LeftThicknessConverter.cs" />
     <Compile Include="Core\Enums\Direction.cs" />
     <Compile Include="Presentation\Models\DirectionProvider.cs" />
+    <Compile Include="Presentation\Models\LatestConfiguration.cs" />
     <Compile Include="Presentation\Services\ConfigPanelWindowService.cs" />
-    <Compile Include="Presentation\View\Components\ApartmentElementCard.xaml.cs">
-      <DependentUpon>ApartmentElementCard.xaml</DependentUpon>
+    <Compile Include="Presentation\ViewModel\ComponentsVM\ConfigPanelComponentsVM\CircuitElementsViewModel.cs" />
+    <Compile Include="Presentation\ViewModel\ComponentsVM\ConfigPanelComponentsVM\PanelCircuitsViewModel.cs" />
+    <Compile Include="Presentation\ViewModel\ComponentsVM\ConfigPanelComponentsVM\ApartmentElementsViewModel.cs" />
+    <Compile Include="Presentation\View\Components\ConfigPanelComponents\CircuitElementsView.xaml.cs">
+      <DependentUpon>CircuitElementsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\View\Components\ConfigPanelComponents\ApartmentElementsView.xaml.cs">
+      <DependentUpon>ApartmentElementsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\View\Components\ConfigPanelComponents\PanelCircuitsView.xaml.cs">
+      <DependentUpon>PanelCircuitsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\View\Components\ConfigPanelComponents\ElementParametersView.xaml.cs">
+      <DependentUpon>ElementParametersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utility\Extensions\KeyboardExtentions.cs" />
     <Compile Include="Utility\Extensions\RevitExtensions\SelectionExtensions.cs" />
     <Compile Include="Utility\Extensions\RevitExtensions\FamilySymbolExtensions.cs" />
     <Compile Include="Utility\Extensions\RevitExtensions\DocumentExtensions.cs" />
     <Compile Include="Utility\Interfaces\IDeepClone.cs" />
+    <Compile Include="Utility\Mapping\AssemblyMappingProfile.cs" />
+    <Compile Include="Utility\Mapping\IMapWith.cs" />
+    <Compile Include="Utility\Mapping\ServiceCollectionExtensions.cs" />
     <Compile Include="Utility\SelectionFilters\ISelectionFilterFactory.cs" />
     <Compile Include="Utility\RevitInfrastructureBase.cs" />
     <Compile Include="Infrastructure\Models\LocationStrategies\TopLocationStrategy.cs" />
@@ -137,9 +227,6 @@
     </Compile>
     <Compile Include="Presentation\View\Components\BatchList.xaml.cs">
       <DependentUpon>BatchList.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\View\Components\CircuitElements.xaml.cs">
-      <DependentUpon>CircuitElements.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\View\Components\CircuitList.xaml.cs">
       <DependentUpon>CircuitList.xaml</DependentUpon>
@@ -235,15 +322,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\View\Components\CircuitElements.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Presentation\View\Components\ConfigPanelComponents\CircuitElementsView.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Presentation\View\Components\CircuitList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\View\Components\ConfigPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\View\Components\ConfigPanelComponents\ApartmentElementsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\View\Components\ConfigPanelComponents\ElementParametersView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -255,7 +350,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\View\Components\ApartmentElementCard.xaml">
+    <Page Include="Presentation\View\Components\ConfigPanelComponents\PanelCircuitsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -283,6 +378,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper">
+      <Version>10.1.1</Version>
+    </PackageReference>
     <PackageReference Include="FontAwesome.WPF">
       <Version>4.7.0.9</Version>
     </PackageReference>
@@ -292,7 +390,12 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
       <Version>1.1.39</Version>
     </PackageReference>
+    <PackageReference Include="Revit.Async">
+      <Version>2.1.1</Version>
+    </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="UseCases\ApartmentElementAnnotations\Queries\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

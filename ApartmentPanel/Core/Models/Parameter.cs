@@ -1,10 +1,15 @@
-﻿using ApartmentPanel.Utility;
+﻿using ApartmentPanel.Core.Models.Interfaces;
+using ApartmentPanel.Utility;
 using ApartmentPanel.Utility.Interfaces;
+using System;
 
 namespace ApartmentPanel.Core.Models
 {
-    public class Parameter : NotifyPropertyChanged, IDeepClone<Parameter>
+    public class Parameter : NotifyPropertyChanged, IDeepClone<Parameter>, IEntity
     {
+        public Parameter() => Id = Guid.NewGuid();
+
+        public Guid Id { get; }
         private string _name;
         public string Name
         {

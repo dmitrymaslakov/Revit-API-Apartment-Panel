@@ -9,24 +9,35 @@ using System.Windows.Media.Imaging;
 using ApartmentPanel.Presentation.Commands;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
 using ApartmentPanel.Core.Services.Interfaces;
-using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Core.Models;
 using System.Text.RegularExpressions;
 using System.IO;
 using ApartmentPanel.Core.Services;
 using ApartmentPanel.Core.Models.Batch;
+using ApartmentPanel.Presentation.ViewModel.ComponentsVM.ConfigPanelComponentsVM;
+using AutoMapper;
+using ApartmentPanel.Presentation.Models;
+using ApartmentPanel.Utility.Mapping;
+using ApartmentPanel.Utility.Comparers;
+using MediatR;
+using ApartmentPanel.UseCases.Configs.Dto;
+using ApartmentPanel.Core.Models.Interfaces;
+using ApartmentPanel.Core.Enums;
 
 namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
 {
-    public class ConfigPanelViewModel : ViewModelBase, IConfigPanelViewModel
+    public class ConfigPanelViewModel : ViewModelBase, IConfigPanelViewModel//, IMapWith<LatestConfiguration>
     {
         private readonly ConfigPanelCommandsCreater _commandCreater;
+        //private readonly IMapper _mapper;
 
         public ConfigPanelViewModel() { }
 
         public ConfigPanelViewModel(IElementService elementService,
-            IListElementsViewModel listElementsVM) : base(elementService)
+            IListElementsViewModel listElementsVM, IMapper mapper, IMediator mediator) : base(elementService)
         {
+            //_mapper = mapper;
+            _commandCreater = new ConfigPanelCommandsCreater(this, ElementService, mapper, mediator);
             ElementBatch = new ElementBatch
             {
                 BatchedRows = new ObservableCollection<BatchedRow>
@@ -37,32 +48,35 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             Batches = new ObservableCollection<ElementBatch>();
             SelectedBatchedElement = new BatchedElement();
             SelectedBatches = new ObservableCollection<ElementBatch>();
-            _commandCreater = new ConfigPanelCommandsCreater(this, ElementService);
             ListElementsVM = listElementsVM;
-            ApartmentElements = new ObservableCollection<IApartmentElement>();
-            PanelCircuits = new ObservableCollection<Circuit>();
-            CircuitElements = new ObservableCollection<IApartmentElement>();
-            SelectedApartmentElements = new ObservableCollection<IApartmentElement>();
-            SelectedPanelCircuits = new ObservableCollection<Circuit>();
-
-            SelectedCircuitElements = new ObservableCollection<IApartmentElement>();
+            //ApartmentElements = new ObservableCollection<IApartmentElement>();
+            /*var aeCommandCreater = new ApartmentElementsCommandCreater(this, ElementService);
+            var aeVM = new ApartmentElementsViewModel(aeCommandCreater);*/
+            ApartmentElementsVM = new ApartmentElementsViewModel(this, ElementService, mediator, mapper);
+            PanelCircuitsVM = new PanelCircuitsViewModel(this);
+            CircuitElementsVM = new CircuitElementsViewModel(this);
+            /*PanelCircuits = new ObservableCollection<Circuit>();
+            SelectedPanelCircuits = new ObservableCollection<Circuit>();*/
+            /*CircuitElements = new ObservableCollection<IApartmentElement>();
+            SelectedCircuitElements = new ObservableCollection<IApartmentElement>();*/
             ListHeightsOK = new ObservableCollection<double>();
             ListHeightsUK = new ObservableCollection<double>();
             ListHeightsCenter = new ObservableCollection<double>();
-            if(TryFindConfigs(out ObservableCollection<string> configs))
+            if (TryFindConfigs(out ObservableCollection<string> configs))
                 Configs = configs;
             else Configs = new ObservableCollection<string>();
 
             IsCancelEnabled = false;
+            /*SelectedApartmentElements = new ObservableCollection<IApartmentElement>();
             ShowListElementsCommand = _commandCreater.CreateShowListElementsCommand();
             RemoveApartmentElementsCommand = _commandCreater.CreateRemoveElementsFromApartmentCommand();
-            AddPanelCircuitCommand = _commandCreater.CreateAddCircuitToPanelCommand();
+            SelectApartmentElementsCommand = _commandCreater.CreateSelectApartmentElementsCommand();*/
+            /*AddPanelCircuitCommand = _commandCreater.CreateAddCircuitToPanelCommand();
             RemovePanelCircuitsCommand = _commandCreater.CreateRemoveCircuitsFromPanelCommand();
+            SelectPanelCircuitCommand = _commandCreater.CreateSelectPanelCircuitCommand();*/
             AddElementToCircuitCommand = _commandCreater.CreateAddElementToCircuitCommand();
             RemoveElementsFromCircuitCommand = _commandCreater.CreateRemoveElementsFromCircuitCommand();
-            SelectApartmentElementsCommand = _commandCreater.CreateSelectApartmentElementsCommand();
-            SelectPanelCircuitCommand = _commandCreater.CreateSelectPanelCircuitCommand();
-            SelectCircuitElementCommand = _commandCreater.CreateSelectCircuitElementCommand();
+            //SelectCircuitElementCommand = _commandCreater.CreateSelectCircuitElementCommand();
             OkCommand = _commandCreater.CreateOkCommand();
             ApplyCommand = _commandCreater.CreateApplyCommand();
             CancelCommand = _commandCreater.CreateCancelCommand();
@@ -79,7 +93,7 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             RemoveBatchCommand = _commandCreater.CreateRemoveBatchCommand();
             AddRowToBatchCommand = _commandCreater.CreateAddRowToBatchCommand();
             RemoveRowFromBatchCommand = _commandCreater.CreateRemoveRowFromBatchCommand();
-            AddConfigCommand = _commandCreater.CreateAddConfigCommand(); 
+            AddConfigCommand = _commandCreater.CreateAddConfigCommand();
             RemoveConfigCommand = _commandCreater.CreateRemoveConfigCommand();
         }
 
@@ -87,18 +101,11 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         public IListElementsViewModel ListElementsVM { get; set; }
         public string LatestConfigPath { get; set; }
 
-        private ObservableCollection<IApartmentElement> _apartmentElements;
+        /*private ObservableCollection<IApartmentElement> _apartmentElements;
         public ObservableCollection<IApartmentElement> ApartmentElements
         {
             get => _apartmentElements;
             set => Set(ref _apartmentElements, value);
-        }
-
-        private ObservableCollection<Circuit> _panelCircuits;
-        public ObservableCollection<Circuit> PanelCircuits
-        {
-            get => _panelCircuits;
-            set => Set(ref _panelCircuits, value);
         }
 
         private ObservableCollection<IApartmentElement> _selectedApartmentElements;
@@ -107,6 +114,34 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         {
             get => _selectedApartmentElements;
             set => Set(ref _selectedApartmentElements, value);
+        }*/
+
+        private ApartmentElementsViewModel _apartmentElementsVM;
+        public ApartmentElementsViewModel ApartmentElementsVM
+        {
+            get => _apartmentElementsVM;
+            set => Set(ref _apartmentElementsVM, value);
+        }
+
+        private PanelCircuitsViewModel _panelCircuitsVM;
+        public PanelCircuitsViewModel PanelCircuitsVM
+        {
+            get => _panelCircuitsVM;
+            set => Set(ref _panelCircuitsVM, value);
+        }
+
+        private CircuitElementsViewModel _circuitElementsVM;
+        public CircuitElementsViewModel CircuitElementsVM
+        {
+            get => _circuitElementsVM;
+            set => Set(ref _circuitElementsVM, value);
+        }
+
+        /*private ObservableCollection<Circuit> _panelCircuits;
+        public ObservableCollection<Circuit> PanelCircuits
+        {
+            get => _panelCircuits;
+            set => Set(ref _panelCircuits, value);
         }
 
         private ObservableCollection<Circuit> _selectedPanelCircuits;
@@ -115,9 +150,13 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         {
             get => _selectedPanelCircuits;
             set => Set(ref _selectedPanelCircuits, value);
-        }
+        }*/
 
-        private ObservableCollection<IApartmentElement> _circuitElements;
+        /*private string _newCircuit;
+        [JsonIgnore]
+        public string NewCircuit { get => _newCircuit; set => Set(ref _newCircuit, value); }*/
+
+        /*private ObservableCollection<IApartmentElement> _circuitElements;
         [JsonIgnore]
         public ObservableCollection<IApartmentElement> CircuitElements
         {
@@ -139,15 +178,11 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         {
             get => _selectedCircuitElement;
             set => Set(ref _selectedCircuitElement, value);
-        }
+        }*/
 
         private BitmapImage _annotationPreview;
         [JsonIgnore]
         public BitmapImage AnnotationPreview { get => _annotationPreview; set => Set(ref _annotationPreview, value); }
-
-        private string _newCircuit;
-        [JsonIgnore]
-        public string NewCircuit { get => _newCircuit; set => Set(ref _newCircuit, value); }
 
         private bool _isCancelEnabled;
         [JsonIgnore]
@@ -255,39 +290,39 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         #endregion
 
         private ObservableCollection<string> _configs;
-        [JsonIgnore] 
+        [JsonIgnore]
         public ObservableCollection<string> Configs { get => _configs; set => Set(ref _configs, value); }
 
         private string _selectedConfig;
         [JsonIgnore]
         public string SelectedConfig { get => _selectedConfig; set => Set(ref _selectedConfig, value); }
 
-        private string _currentConfig; 
+        private string _currentConfig;
         [JsonIgnore]
         public string CurrentConfig { get => _currentConfig; set => Set(ref _currentConfig, value); }
-        
+
         private string _newConfig;
         [JsonIgnore]
         public string NewConfig { get => _newConfig; set => Set(ref _newConfig, value); }
 
-        [JsonIgnore]
+        /*[JsonIgnore]
         public ICommand ShowListElementsCommand { get; set; }
         [JsonIgnore]
         public ICommand RemoveApartmentElementsCommand { get; set; }
         [JsonIgnore]
+        public ICommand SelectApartmentElementsCommand { get; set; }*/
+        /*[JsonIgnore]
         public ICommand AddPanelCircuitCommand { get; set; }
         [JsonIgnore]
         public ICommand RemovePanelCircuitsCommand { get; set; }
         [JsonIgnore]
+        public ICommand SelectPanelCircuitCommand { get; set; }*/
+        [JsonIgnore]
         public ICommand AddElementToCircuitCommand { get; set; }
         [JsonIgnore]
         public ICommand RemoveElementsFromCircuitCommand { get; set; }
-        [JsonIgnore]
-        public ICommand SelectApartmentElementsCommand { get; set; }
-        [JsonIgnore]
-        public ICommand SelectPanelCircuitCommand { get; set; }
-        [JsonIgnore]
-        public ICommand SelectCircuitElementCommand { get; set; }
+        /*[JsonIgnore]
+        public ICommand SelectCircuitElementCommand { get; set; }*/
         [JsonIgnore]
         public ICommand OkCommand { get; set; }
         [JsonIgnore]
@@ -320,44 +355,66 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
         [JsonIgnore]
         public Action<List<string>> SetParametersToElement { get; set; }
 
-        public ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration)
+        //public ConfigPanelViewModel ApplyLatestConfiguration(ConfigPanelViewModel latestConfiguration)
+        public ConfigPanelViewModel ApplyLatestConfiguration(GetConfigDto latestConfiguration)
         {
-            ApartmentElements = latestConfiguration.ApartmentElements;
-            PanelCircuits = latestConfiguration.PanelCircuits;
-            Batches = latestConfiguration.Batches ?? new ObservableCollection<ElementBatch>();
-
-            if (latestConfiguration.ListHeightsOK != null)
+            ApartmentElementsVM.ApartmentElements =
+                //latestConfiguration.ApartmentElementsVM.ApartmentElements;
+                new ObservableCollection<IApartmentElement>(latestConfiguration.ApartmentElements);
+            var sortedCircuits = //latestConfiguration.PanelCircuitsVM.PanelCircuits
+                latestConfiguration.Circuits
+                  .OrderBy(c => c.Number, new StringNumberComparer());
+            PanelCircuitsVM.PanelCircuits
+                = new ObservableCollection<Circuit>(sortedCircuits);
+            Batches = //latestConfiguration.Batches ?? new ObservableCollection<ElementBatch>();
+                new ObservableCollection<ElementBatch>(latestConfiguration.ElementBatches);
+            /*if (latestConfiguration.ListHeightsOK != null)
                 ListHeightsOK = latestConfiguration.ListHeightsOK;
             if (latestConfiguration.ListHeightsUK != null)
                 ListHeightsUK = latestConfiguration.ListHeightsUK;
             if (latestConfiguration.ListHeightsCenter != null)
-                ListHeightsCenter = latestConfiguration.ListHeightsCenter;
+                ListHeightsCenter = latestConfiguration.ListHeightsCenter;*/
+            var groupedHeight = latestConfiguration.Heights
+                .GroupBy(g => g.TypeOf);
 
-            ResponsibleForHeight = latestConfiguration.ResponsibleForHeight;
-            ResponsibleForCircuit = latestConfiguration.ResponsibleForCircuit;
+            foreach (IGrouping<TypeOfHeight, Height> group in groupedHeight)
+            {
+                switch (group.Key)
+                {
+                    case TypeOfHeight.OK:
+                        ListHeightsOK = GetGroupedHeightValues(group);
+                        break;
+                    case TypeOfHeight.UK:
+                        ListHeightsUK = GetGroupedHeightValues(group);
+                        break;
+                    case TypeOfHeight.Center:
+                        ListHeightsCenter = GetGroupedHeightValues(group);
+                        break;
+                }
+            }
 
-            foreach (var apartmentElement in ApartmentElements)
+            ResponsibleForHeight = latestConfiguration.ResponsibleForHeights.FirstOrDefault();
+            ResponsibleForCircuit = latestConfiguration.ResponsibleForHeights.FirstOrDefault();
+
+            /*foreach (var apartmentElement in ApartmentElementsVM.ApartmentElements)
             {
                 string annotationName = new AnnotationNameBuilder()
                     .AddFolders(SelectedConfig)
                     .AddPartsOfName("-", apartmentElement.Family, apartmentElement.Name)
                     .Build();
-                //apartmentElement.Annotation = ElementService.GetAnnotationFor(apartmentElement.Name);
                 apartmentElement.Annotation = ElementService
                     .SetAnnotationName(annotationName)
                     .GetAnnotation();
-            };
+            };*/
 
-            foreach (var batch in Batches)
+            /*foreach (var batch in Batches)
             {
-                //batch.Annotation = ElementService.GetAnnotationFor(batch.Name);
-                var annotationNameBuilder = new AnnotationNameBuilder();
+                var annotationNameBuilder = new PathBuilder();
                 string annotationName = annotationNameBuilder
                     .AddFolders(SelectedConfig)
                     .AddPartsOfName("", batch.Name)
                     .Build();
 
-                //batch.Annotation = ElementService.GetAnnotationFor(batch.Name);
                 batch.Annotation = ElementService
                     .SetAnnotationName(annotationName)
                     .GetAnnotation();
@@ -373,16 +430,15 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
                         element.Annotation = ElementService
                             .SetAnnotationName(annotationName)
                             .GetAnnotation();
-                        //element.Annotation = ElementService.GetAnnotationFor(element.Name);
                     }
                 }
-            }
+            }*/
 
-            for (int i = 0; i < PanelCircuits.Count; i++)
+            /*for (int i = 0; i < PanelCircuitsVM.PanelCircuits.Count; i++)
             {
-                var circuitElements = PanelCircuits[i].Elements;
+                var circuitElements = PanelCircuitsVM.PanelCircuits[i].Elements;
 
-                foreach (var apartmentElement in ApartmentElements)
+                foreach (var apartmentElement in ApartmentElementsVM.ApartmentElements)
                 {
                     var matchingCircuitElement = circuitElements
                         .FirstOrDefault(c => c.Name == apartmentElement.Name && c.Family == apartmentElement.Family);
@@ -393,17 +449,42 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
                         apartmentElement.AnnotationChanged += matchingCircuitElement.AnnotationChanged_Handler;
                     }
                 }
-                PanelCircuits[i] =
-                    new Circuit { Number = PanelCircuits[i].Number, Elements = circuitElements };
-            }
+                PanelCircuitsVM.PanelCircuits[i] =
+                    new Circuit { Number = PanelCircuitsVM.PanelCircuits[i].Number, Elements = circuitElements };
+            }*/
 
             return this;
         }
 
+        private ObservableCollection<double> GetGroupedHeightValues(IGrouping<TypeOfHeight, Height> group)
+        {
+            return new ObservableCollection<double>(group.Select(h => h.FromFloor));
+        }
+        /*public void Mapping(Profile profile)
+        {
+            profile.CreateMap<LatestConfiguration, ConfigPanelViewModel>()
+                .ForPath(vm => vm.ApartmentElementsVM.ApartmentElements,
+                    opt => opt.MapFrom(latestConf => latestConf.ApartmentElements))
+                .ForPath(vm => vm.PanelCircuitsVM.PanelCircuits,
+                    opt => opt.MapFrom(latestConf => latestConf.PanelCircuits))
+                .ForMember(vm => vm.ResponsibleForHeight,
+                    opt => opt.MapFrom(latestConf => latestConf.ResponsibleForHeight))
+                .ForMember(vm => vm.ResponsibleForCircuit,
+                    opt => opt.MapFrom(latestConf => latestConf.ResponsibleForCircuit))
+                .ForMember(vm => vm.Batches,
+                    opt => opt.MapFrom(latestConf => latestConf.Batches))
+                .ForMember(vm => vm.ListHeightsOK,
+                    opt => opt.MapFrom(latestConf => latestConf.ListHeightsOK))
+                .ForMember(vm => vm.ListHeightsUK,
+                    opt => opt.MapFrom(latestConf => latestConf.ListHeightsUK))
+                .ForMember(vm => vm.ListHeightsCenter,
+                    opt => opt.MapFrom(latestConf => latestConf.ListHeightsCenter));
+        }*/
+
         private bool TryFindConfigs(out ObservableCollection<string> configs)
         {
             configs = null;
-            string assemblyPath = FileUtility.GetAssemblyPath();
+            string assemblyPath = FileUtility.GetAssemblyFolder();
             var files = Directory.GetFiles(assemblyPath, "*.json").Select(Path.GetFileName);
 
             string targetSubstring = "LatestConfig";

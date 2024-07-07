@@ -102,8 +102,8 @@
                 </StatusBarItem.Style>
             </StatusBarItem>
         </StatusBar>-->
-        <!--<WrapPanel Grid.Row="7">
+        <WrapPanel Grid.Row="7">
             <Button Content="Analize" Command="{Binding AnalizeCommand}"/>
-        </WrapPanel>-->
+        </WrapPanel>
     </Grid>
 </UserControl>

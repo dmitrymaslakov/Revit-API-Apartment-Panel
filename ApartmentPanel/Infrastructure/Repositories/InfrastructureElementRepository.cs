@@ -3,8 +3,8 @@ using ApartmentPanel.Core.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
 using ApartmentPanel.Core.Infrastructure.Interfaces.DTO;
-using ApartmentPanel.Infrastructure.Handler;
 using ApartmentPanel.Infrastructure.Handler.HandlerStates;
+using ApartmentPanel.Infrastructure.Handler;
 
 namespace ApartmentPanel.Infrastructure.Repositories
 {

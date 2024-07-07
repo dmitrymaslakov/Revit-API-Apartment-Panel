@@ -17,7 +17,6 @@ namespace ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService
             if (_disposed)
                 throw new Exception("Object is disposed.");
 
-            //var folderPath = FileUtility.GetApplicationAnnotationsPath();
             var folderPath = Path.GetDirectoryName(_fullPath);
 
             if (!Directory.Exists(folderPath))
@@ -31,7 +30,6 @@ namespace ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService
             }
             return annotation;
         }
-
         public void Dispose() => _disposed = true;
     }
 }

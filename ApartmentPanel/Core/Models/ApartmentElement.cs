@@ -7,6 +7,9 @@ namespace ApartmentPanel.Core.Models
     public class ApartmentElement : BaseElement, IApartmentElement
     {
         public Height MountingHeight { get; set; }
+
+        public ApartmentElement() => MountingHeight = new Height();
+
         public IApartmentElement Clone()
         {
             ObservableCollection<Parameter> newP = Parameters?.ToList() == null

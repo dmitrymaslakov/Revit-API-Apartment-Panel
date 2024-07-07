@@ -12,6 +12,13 @@ using ApartmentPanel.Presentation;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using ApartmentPanel.Presentation.ViewModel.Interfaces;
+using System.Reflection;
+using ApartmentPanel.Utility.Mapping;
+using ApartmentPanel.FileDataAccess;
+using Revit.Async;
+using ApartmentPanel.UseCases;
+using ApartmentPanel.RevitInfrastructure;
+using MediatR;
 
 namespace ApartmentPanel
 {
@@ -44,9 +51,8 @@ namespace ApartmentPanel
             try
             {
                 _host.Start();
-
+                RevitTask.Initialize(application);
                 application.ViewActivated += OnViewActivated;
-                //CreateEventHandler();
                 CreateWindow();
 
                 if (!DockablePane.PaneIsRegistered(MainView.PaneId))
@@ -126,7 +132,15 @@ namespace ApartmentPanel
         private static IHostBuilder CreateHostBuilder(string[] args = null)
         {
             return Host.CreateDefaultBuilder(args)
+                .ConfigureServices(s => s.AddAutoMapper(config =>
+                {
+                    config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
+                }))
                 .AddDomainServices()
+                .ConfigureServices(s => s.AddMediatR(typeof(Application).Assembly))
+                //.AddUseCaseServices()
+                .AddRevitInfrastructureServices()
+                .AddFileDataAccessServices()
                 .AddInfrastructureServices()
                 .AddPresentationServices()
                 .AddAnnotationService();
