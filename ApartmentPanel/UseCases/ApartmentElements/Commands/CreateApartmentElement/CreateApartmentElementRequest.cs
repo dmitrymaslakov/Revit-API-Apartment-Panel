@@ -2,7 +2,7 @@
 using ApartmentPanel.UseCases.ApartmentElements.Dto;
 using MediatR;
 
-namespace ApartmentPanel.UseCases.ApartmentElements.Commands.AddElementToApartment
+namespace ApartmentPanel.UseCases.ApartmentElements.Commands.CreateApartmentElement
 {
     public class CreateApartmentElementRequest : IRequest<ApartmentElement>
     {

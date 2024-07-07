@@ -8,7 +8,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ApartmentPanel.UseCases.ApartmentElements.Commands.AddElementToApartment
+namespace ApartmentPanel.UseCases.ApartmentElements.Commands.CreateApartmentElement
 {
     public class CreateApartmentElementRequestHandler
         : IRequestHandler<CreateApartmentElementRequest, ApartmentElement>
