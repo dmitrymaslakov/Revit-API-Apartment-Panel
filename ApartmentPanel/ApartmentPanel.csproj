@@ -86,6 +86,8 @@
     <Compile Include="UseCases\ApartmentElements\Commands\UpdateApartmentElement\UpdateApartmentElementRequest.cs" />
     <Compile Include="UseCases\ApartmentElements\Commands\UpdateApartmentElement\UpdateApartmentElementRequestHandler.cs" />
     <Compile Include="UseCases\ApartmentElements\Dto\ApartmentElementUpdateDto.cs" />
+    <Compile Include="UseCases\Circuits\Commands\CreateCircuit\CreateCircuitRequestHandler.cs" />
+    <Compile Include="UseCases\Circuits\Commands\CreateCircuit\CreateCircuitRequest.cs" />
     <Compile Include="UseCases\Configs\Commands\UpdateConfig\UpdateConfigRequest.cs" />
     <Compile Include="UseCases\Configs\Commands\UpdateConfig\UpdateConfigRequestHandler.cs" />
     <Compile Include="Utility\Extensions\CollectionExtensions.cs" />
