@@ -24,7 +24,14 @@ namespace ApartmentPanel.FileDataAccess.Repositories
                 Add(item);
             }
         }
-        public void Delete(T entity) => _entityCollection.Remove(entity);
+        public bool Delete(T entity) => return _entityCollection.Remove(entity);
+        public bool DeleteRange(ICollection<T> entities)
+        {
+            foreach (var item in entities)
+            {
+                Delete(item);
+            }
+        }
         public T Update(T entity, Action<T> updateAction)
         {
             if (entity != null)

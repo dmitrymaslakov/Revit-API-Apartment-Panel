@@ -15,6 +15,7 @@ namespace ApartmentPanel.FileDataAccess.Services.FileCommunicator
 
         public FileDbModel Save(FileDbModel fileDbModel)
         {
+            
             if (_disposed)
                 throw new Exception("Object is disposed.");
 

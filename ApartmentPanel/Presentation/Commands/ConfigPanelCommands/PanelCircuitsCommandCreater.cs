@@ -25,27 +25,24 @@ namespace ApartmentPanel.Presentation.Commands.ConfigPanelCommands
 
         public ICommand CreateAddPanelCircuitCommand() => new RelayCommand(o =>
         {
-            if (!string.IsNullOrEmpty(_configPanelVM.PanelCircuitsVM.NewCircuit)
+            var newCircuitNumber = _configPanelVM.PanelCircuitsVM.NewCircuit;
+            if (!string.IsNullOrEmpty(newCircuitNumber)
               && !_configPanelVM.PanelCircuitsVM.PanelCircuits
                   .ToList()
-                  .Exists(c => c.Number == _configPanelVM.PanelCircuitsVM.NewCircuit))
+                  .Exists(c => c.Number == newCircuitNumber))
             {
+                Circuit newCircuit = await _mediator.Send(new CreateCircuitRequest{ CircuitNumber = newCircuitNumber});
                 var panelCircuits = _configPanelVM.PanelCircuitsVM.PanelCircuits;
-                var newCircuit = new Circuit
+                /*var newCircuit = new Circuit
                 {
                     Number = _configPanelVM.PanelCircuitsVM.NewCircuit,
                     Elements = new ObservableCollection<IApartmentElement>()
-                };
+                };*/
                 panelCircuits.Add(newCircuit);
                 var sortedPanelCircuits 
                     = panelCircuits.OrderBy(c => c.Number, new StringNumberComparer()).ToList();
                 _configPanelVM.PanelCircuitsVM.PanelCircuits
                     = new ObservableCollection<Circuit> (sortedPanelCircuits);
-                /*_configPanelVM.PanelCircuitsVM.PanelCircuits.Add(new Circuit
-                {
-                    Number = _configPanelVM.PanelCircuitsVM.NewCircuit,
-                    Elements = new ObservableCollection<IApartmentElement>()
-                });*/
 
                 if (!_configPanelVM.IsCancelEnabled)
                     _configPanelVM.IsCancelEnabled = true;
@@ -59,7 +56,11 @@ namespace ApartmentPanel.Presentation.Commands.ConfigPanelCommands
             _configPanelVM.CircuitElementsVM.CircuitElements.Clear();
             _configPanelVM.CircuitElementsVM.SelectedCircuitElements.Clear();
             foreach (var circuit in _configPanelVM.PanelCircuitsVM.SelectedPanelCircuits.ToArray())
-                _configPanelVM.PanelCircuitsVM.PanelCircuits.Remove(circuit);
+            {
+                bool isDeleted = await _mediator.Send(new DeleteCircuitRequest { CircuitNumber=circuit.Number });
+                if (isDeleted)
+                    _configPanelVM.PanelCircuitsVM.PanelCircuits.Remove(circuit);
+            }
 
             _configPanelVM.PanelCircuitsVM.SelectedPanelCircuits.Clear();
 

@@ -1,11 +1,10 @@
 ﻿using ApartmentPanel.Core.Models;
-using ApartmentPanel.UseCases.ApartmentElements.Dto;
 using MediatR;
 
-namespace ApartmentPanel.UseCases.ApartmentElements.Commands.Circuits
+namespace ApartmentPanel.UseCases.Circuits.Commands.CreateCircuit
 {
     public class CreateCircuitRequest : IRequest<Circuit>
     {
-
+        public string CircuitNumber { get; set; }
     }
 }
