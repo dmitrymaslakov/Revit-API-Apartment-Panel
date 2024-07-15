@@ -11,7 +11,7 @@ namespace ApartmentPanel.Infrastructure.Interfaces.DataAccess
         void AddRange(ICollection<T> entities);
         T Update(T entity, Action<T> updateAction);
         bool Delete(T entity);
-        bool DeleteRange(ICollection<T> entities)
+        //bool DeleteRange(ICollection<T> entities);
         void Clear();
         //IQueryable<T> FindBy(Expression<Func<T, bool>> searchPredicate = null, params Expression<Func<T, object>>[] includesPredicate);
         IQueryable<T> FindBy(Expression<Func<T, bool>> searchPredicate = null);

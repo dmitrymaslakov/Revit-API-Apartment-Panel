@@ -17,6 +17,7 @@ using ApartmentPanel.UseCases.ApartmentElements.Commands.AddElementToApartment;
 using ApartmentPanel.UseCases.ElectricalElements.Dto;
 using ApartmentPanel.Core.Services;
 using ApartmentPanel.UseCases.ApartmentElements.Dto;
+using ApartmentPanel.UseCases.ApartmentElements.Commands.CreateApartmentElement;
 
 namespace ApartmentPanel.Presentation.Commands.ConfigPanelCommands
 {

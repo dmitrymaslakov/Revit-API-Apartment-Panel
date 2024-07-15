@@ -1,5 +1,4 @@
-﻿using ApartmentPanel.Core.Models;
-using MediatR;
+﻿using MediatR;
 
 namespace ApartmentPanel.UseCases.DataChanges.Commands.SaveChanges
 {

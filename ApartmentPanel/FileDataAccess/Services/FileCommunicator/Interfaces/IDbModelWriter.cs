@@ -5,6 +5,6 @@ namespace ApartmentPanel.FileDataAccess.Services.FileCommunicator.Interfaces
 {
     internal interface IDbModelWriter : IDisposable
     {
-        FileDbModel Save(FileDbModel fileDbModel);
+        bool Save(FileDbModel fileDbModel);
     }
 }

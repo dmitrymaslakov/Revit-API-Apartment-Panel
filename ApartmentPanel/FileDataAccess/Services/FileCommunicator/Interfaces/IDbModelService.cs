@@ -4,8 +4,7 @@ namespace ApartmentPanel.FileDataAccess.Services.FileCommunicator.Interfaces
 {
     internal interface IDbModelService
     {
-        //bool IsDbModelExists();
         FileDbModel Get();
-        FileDbModel Save(FileDbModel fileDbModel);
+        bool Save(FileDbModel fileDbModel);
     }
 }

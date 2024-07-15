@@ -13,20 +13,26 @@ namespace ApartmentPanel.FileDataAccess.Services.FileCommunicator
 
         public FileDbModelWriter(string fullPath) => _fullPath = fullPath;
 
-        public FileDbModel Save(FileDbModel fileDbModel)
+        public bool Save(FileDbModel fileDbModel)
         {
-            
-            if (_disposed)
-                throw new Exception("Object is disposed.");
+            try
+            {
+                if (_disposed)
+                    throw new Exception("Object is disposed.");
 
-            var folderPath = Path.GetDirectoryName(_fullPath);
+                var folderPath = Path.GetDirectoryName(_fullPath);
 
-            if (!Directory.Exists(folderPath))
-                Directory.CreateDirectory(folderPath);
+                if (!Directory.Exists(folderPath))
+                    Directory.CreateDirectory(folderPath);
 
-            string json = JsonSerializer.Serialize(fileDbModel);
-            File.WriteAllText(_fullPath, json);
-            return fileDbModel;
+                string json = JsonSerializer.Serialize(fileDbModel);
+                File.WriteAllText(_fullPath, json);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
         public void Dispose() => _disposed = true;
     }

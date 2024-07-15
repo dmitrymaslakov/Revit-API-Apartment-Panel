@@ -17,7 +17,7 @@ namespace ApartmentPanel.Utility.AnnotationUtility
                 return reader.Get();
             }
         }
-        public FileDbModel Save(FileDbModel fileDbModel)
+        public bool Save(FileDbModel fileDbModel)
         {
             using (IDbModelWriter writer = _dbModelCommunicatorFactory.CreateDbModelWriter())
             {
@@ -26,6 +26,5 @@ namespace ApartmentPanel.Utility.AnnotationUtility
         }
         public void SetCommunicatorFactory(IDbModelCommunicatorFactory dbModelCommunicatorFactory) 
             => _dbModelCommunicatorFactory = dbModelCommunicatorFactory;
-        //public bool IsDbModelExists() => _dbModelCommunicatorFactory.IsDbModelExists();
     }
 }

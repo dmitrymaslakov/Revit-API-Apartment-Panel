@@ -40,9 +40,9 @@ namespace ApartmentPanel.FileDataAccess.Models
                 return true;
             }*/
         }
-        public void SaveChanges(FileDbModel dbModel)
+        public bool SaveChanges(FileDbModel dbModel)
         {
-            _dbModelService.Save(dbModel);
+            return _dbModelService.Save(dbModel);
             /*string json = JsonSerializer.Serialize(dbModel);
             File.WriteAllText(_fullDbName, json);*/
         }

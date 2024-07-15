@@ -1,11 +1,8 @@
 ﻿using ApartmentPanel.Core.Models;
+using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Infrastructure.Interfaces.DataAccess;
-using ApartmentPanel.UseCases.ApartmentElements.Commands.Circuits;
-using ApartmentPanel.Utility;
-using ApartmentPanel.Utility.AnnotationUtility;
-using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
-using AutoMapper;
 using MediatR;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,8 +27,7 @@ namespace ApartmentPanel.UseCases.Circuits.Commands.CreateCircuit
                 };
 
             _unitOfWork.CircuitRepository.Add(newCircuit);
-            _unitOfWork.SaveChanges();
-            return apartmentElement;
+            return newCircuit;
         }
     }
 }

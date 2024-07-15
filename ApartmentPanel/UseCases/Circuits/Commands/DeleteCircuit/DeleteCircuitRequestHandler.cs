@@ -1,11 +1,6 @@
-﻿using ApartmentPanel.Core.Models;
-using ApartmentPanel.Infrastructure.Interfaces.DataAccess;
-using ApartmentPanel.UseCases.ApartmentElements.Commands.Circuits;
-using ApartmentPanel.Utility;
-using ApartmentPanel.Utility.AnnotationUtility;
-using ApartmentPanel.Utility.AnnotationUtility.FileAnnotationService;
-using AutoMapper;
+﻿using ApartmentPanel.Infrastructure.Interfaces.DataAccess;
 using MediatR;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,9 +18,10 @@ namespace ApartmentPanel.UseCases.Circuits.Commands.DeleteCircuit
         public async Task<bool> Handle(DeleteCircuitRequest request, CancellationToken cancellationToken)
         {
             await Task.Delay(0);
-            bool isDeleted = _unitOfWork.CircuitRepository.Delete(request.CircuitNumber);
-            _unitOfWork.SaveChanges();
-            return isDeleted;
+            var forDelete = _unitOfWork.CircuitRepository
+                .FindBy(c => string.Equals(c.Number, request.CircuitNumber))
+                .FirstOrDefault();
+            return _unitOfWork.CircuitRepository.Delete(forDelete);
         }
     }
 }

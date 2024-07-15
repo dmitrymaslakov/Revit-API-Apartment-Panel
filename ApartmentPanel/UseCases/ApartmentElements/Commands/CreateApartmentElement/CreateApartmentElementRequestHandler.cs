@@ -39,7 +39,6 @@ namespace ApartmentPanel.UseCases.ApartmentElements.Commands.CreateApartmentElem
             apartmentElement.Annotation = annotationService.IsAnnotationExists()
                 ? annotationService.Get() : null;
             _unitOfWork.ApartmentElementRepository.Add(apartmentElement);
-            _unitOfWork.SaveChanges();
             return apartmentElement;
         }
     }

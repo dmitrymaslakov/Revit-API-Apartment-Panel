@@ -27,7 +27,6 @@ namespace ApartmentPanel.UseCases.Configs.Commands.UpdateConfig
             _unitOfWork.ResponsibleForHeightRepository.AddRange(dto.ResponsibleForHeights);
             _unitOfWork.ResponsibleForCircuitRepository.Clear();
             _unitOfWork.ResponsibleForCircuitRepository.AddRange(dto.ResponsibleForCircuits);
-            _unitOfWork.SaveChanges();
             return Unit.Value;
         }
     }

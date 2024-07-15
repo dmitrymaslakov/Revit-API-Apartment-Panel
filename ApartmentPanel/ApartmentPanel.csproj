@@ -81,6 +81,8 @@
     <Compile Include="Core\Models\Responsible.cs" />
     <Compile Include="FileDataAccess\Services\FileCommunicator\Interfaces\IDbModelService.cs" />
     <Compile Include="FileDataAccess\Services\FileDbModelService.cs" />
+    <Compile Include="Presentation\Services\ValidationServices\CircuitNumberValidation.cs" />
+    <Compile Include="Presentation\Services\ValidationServices\IDataValidationStrategy.cs" />
     <Compile Include="UseCases\ApartmentElementAnnotations\Commands\CreateElementAnnotation\CreateElementAnnotationRequest.cs" />
     <Compile Include="UseCases\ApartmentElementAnnotations\Commands\CreateElementAnnotation\CreateElementAnnotationRequestHandler.cs" />
     <Compile Include="UseCases\ApartmentElements\Commands\UpdateApartmentElement\UpdateApartmentElementRequest.cs" />
@@ -88,8 +90,14 @@
     <Compile Include="UseCases\ApartmentElements\Dto\ApartmentElementUpdateDto.cs" />
     <Compile Include="UseCases\Circuits\Commands\CreateCircuit\CreateCircuitRequestHandler.cs" />
     <Compile Include="UseCases\Circuits\Commands\CreateCircuit\CreateCircuitRequest.cs" />
+    <Compile Include="UseCases\Circuits\Commands\DeleteCircuit\DeleteCircuitRequest.cs" />
+    <Compile Include="UseCases\Circuits\Commands\DeleteCircuit\DeleteCircuitRequestHandler.cs" />
     <Compile Include="UseCases\Configs\Commands\UpdateConfig\UpdateConfigRequest.cs" />
     <Compile Include="UseCases\Configs\Commands\UpdateConfig\UpdateConfigRequestHandler.cs" />
+    <Compile Include="UseCases\DataChanges\Commands\CancelCanges\CancelCangesRequest.cs" />
+    <Compile Include="UseCases\DataChanges\Commands\CancelCanges\CancelCangesRequestHandler.cs" />
+    <Compile Include="UseCases\DataChanges\Commands\SaveChanges\SaveChangesRequest.cs" />
+    <Compile Include="UseCases\DataChanges\Commands\SaveChanges\SaveChangesRequestHandler.cs" />
     <Compile Include="Utility\Extensions\CollectionExtensions.cs" />
     <Compile Include="Utility\PathBuilder.cs" />
     <Compile Include="FileDataAccess\DependencyInjection.cs" />
@@ -307,6 +315,10 @@
   <ItemGroup>
     <Page Include="Presentation\Resources\Styles\ButtonStyle.xaml">
       <Generator>ResXFileCodeGenerator</Generator>
+    </Page>
+    <Page Include="Presentation\Resources\Validations\PanelCircuitsValidation.xaml">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Presentation\View\Components\AddingNewName.xaml">
       <SubType>Designer</SubType>

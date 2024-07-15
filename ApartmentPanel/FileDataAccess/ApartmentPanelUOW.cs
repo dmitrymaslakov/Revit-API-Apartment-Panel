@@ -41,7 +41,7 @@ namespace ApartmentPanel.FileDataAccess
             UsedFileDb = databaseName;
         }
         public bool CreateDatabase(string databaseName) => _fileDbContext.CreateDatabase(databaseName);
-        public void SaveChanges() => _fileDbContext.SaveChanges();
+        public bool SaveChanges() => _fileDbContext.SaveChanges();
 
         public IDbContext GetDbContext() => _fileDbContext.GetDbContext();
     }

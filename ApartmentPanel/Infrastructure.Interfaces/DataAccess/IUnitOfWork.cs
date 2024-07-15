@@ -16,6 +16,6 @@ namespace ApartmentPanel.Infrastructure.Interfaces.DataAccess
         bool CreateDatabase(string databaseName);
         void UseFileDb(string databaseName);
         IDbContext GetDbContext();
-        void SaveChanges();
+        bool SaveChanges();
     }
 }

@@ -7,23 +7,30 @@ using ApartmentPanel.Core.Models.Interfaces;
 using ApartmentPanel.Core.Models;
 using ApartmentPanel.Presentation.Services;
 using ApartmentPanel.Utility.Comparers;
+using ApartmentPanel.UseCases.Circuits.Commands.CreateCircuit;
+using MediatR;
+using ApartmentPanel.UseCases.Circuits.Commands.DeleteCircuit;
+using System;
 
 namespace ApartmentPanel.Presentation.Commands.ConfigPanelCommands
 {
     public class PanelCircuitsCommandCreater : BaseCommandsCreater
     {
         private readonly IConfigPanelViewModel _configPanelVM;
+        private readonly IMediator _mediator;
         private readonly CircuitService _circuitService;
 
         /*public PanelCircuitsCommandCreater(IConfigPanelViewModel configPanelVM,
             IElementService elementService) : base(elementService)*/
-        public PanelCircuitsCommandCreater(IConfigPanelViewModel configPanelVM)
+        public PanelCircuitsCommandCreater(IConfigPanelViewModel configPanelVM, IMediator mediator)
         {
             _configPanelVM = configPanelVM;
             _circuitService = new CircuitService(_configPanelVM);
+            _mediator = mediator;
         }
 
-        public ICommand CreateAddPanelCircuitCommand() => new RelayCommand(o =>
+        public ICommand CreateAddPanelCircuitCommand(Func<object, bool> canAddCircuit) 
+            => new RelayCommand(async o =>
         {
             var newCircuitNumber = _configPanelVM.PanelCircuitsVM.NewCircuit;
             if (!string.IsNullOrEmpty(newCircuitNumber)
@@ -41,6 +48,7 @@ namespace ApartmentPanel.Presentation.Commands.ConfigPanelCommands
                 panelCircuits.Add(newCircuit);
                 var sortedPanelCircuits 
                     = panelCircuits.OrderBy(c => c.Number, new StringNumberComparer()).ToList();
+
                 _configPanelVM.PanelCircuitsVM.PanelCircuits
                     = new ObservableCollection<Circuit> (sortedPanelCircuits);
 
@@ -49,9 +57,9 @@ namespace ApartmentPanel.Presentation.Commands.ConfigPanelCommands
             }
 
             _configPanelVM.PanelCircuitsVM.NewCircuit = string.Empty;
-        });
+        }, canAddCircuit);
 
-        public ICommand CreateRemovePanelCircuitsCommand() => new RelayCommand(o =>
+        public ICommand CreateRemovePanelCircuitsCommand() => new RelayCommand(async o =>
         {
             _configPanelVM.CircuitElementsVM.CircuitElements.Clear();
             _configPanelVM.CircuitElementsVM.SelectedCircuitElements.Clear();

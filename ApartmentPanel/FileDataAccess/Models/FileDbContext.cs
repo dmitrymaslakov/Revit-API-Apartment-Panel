@@ -50,7 +50,7 @@ namespace ApartmentPanel.FileDataAccess.Models
         }
 
         public bool CreateDatabase(string dbName) => _batabase.Create(dbName);
-        public void SaveChanges() => _batabase.SaveChanges(this);
+        public bool SaveChanges() => _batabase.SaveChanges(this);
 
         public IDbContext GetDbContext() => _batabase.GetModel();
 

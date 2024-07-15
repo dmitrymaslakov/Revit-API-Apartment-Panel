@@ -11,7 +11,7 @@ namespace ApartmentPanel.Presentation.Commands
             remove => CommandManager.RequerySuggested -= value;
         }
 
-        public bool CanExecute(object parameter) => true;
+        public virtual bool CanExecute(object parameter) => true;
 
         public abstract void Execute(object parameter);
     }

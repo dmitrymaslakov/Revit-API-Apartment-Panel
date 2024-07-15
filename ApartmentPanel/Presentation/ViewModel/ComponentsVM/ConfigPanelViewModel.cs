@@ -53,7 +53,7 @@ namespace ApartmentPanel.Presentation.ViewModel.ComponentsVM
             /*var aeCommandCreater = new ApartmentElementsCommandCreater(this, ElementService);
             var aeVM = new ApartmentElementsViewModel(aeCommandCreater);*/
             ApartmentElementsVM = new ApartmentElementsViewModel(this, ElementService, mediator, mapper);
-            PanelCircuitsVM = new PanelCircuitsViewModel(this);
+            PanelCircuitsVM = new PanelCircuitsViewModel(this, mediator);
             CircuitElementsVM = new CircuitElementsViewModel(this);
             /*PanelCircuits = new ObservableCollection<Circuit>();
             SelectedPanelCircuits = new ObservableCollection<Circuit>();*/
